@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter 
 @Setter 
-@NoArgsConstructor
 public class MathTypeDomain  implements Serializable {
-	private String typeNo; 
-	private String unitUniqNo;
+	public String typeNo; 
+	public String unitUniqNo;
+	
+	public MathTypeDomain() {}
 	
 	@Builder
 	public MathTypeDomain(String typeNo, String unitUniqNo) { 

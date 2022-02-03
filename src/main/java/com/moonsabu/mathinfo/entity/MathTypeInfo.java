@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name="math_type_info")
 public class MathTypeInfo {
 	@EmbeddedId 
-	private MathTypeDomain MathTypeDomain;
+	public MathTypeDomain mathTypeDomain;
 
 	
 	@Column(length = 300, nullable = false)
