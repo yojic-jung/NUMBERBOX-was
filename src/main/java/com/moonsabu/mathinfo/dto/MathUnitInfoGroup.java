@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.entity;
+package com.moonsabu.mathinfo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

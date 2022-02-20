@@ -6,39 +6,58 @@ import javax.persistence.Id;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @Entity
 public class FormulKey {
-	
 	@Id
 	public int id;
+	
 	@Column(length = 30, nullable = false)
 	public String formulName;
+	
 	@Column(length = 45, nullable = false)
 	public String formulUi;
+	
 	@Column(length = 2, nullable = true)
 	public String shortcutKey;
-	@Column(length = 40, nullable = false)
-	public String grammer;
+	
+	@Column(length = 250, nullable = false)
+	public String latexGrammer;
+	
+	@Column(length = 250, nullable = false)
+	public String msbGrammer;
+	
 	@Column(length = 80, nullable = true)
 	public String guide;
+	
+	@Column(length = 5, nullable = true)
+	public String shortcutKeycode;
+	
 	@Column(length = 1, nullable = false)
 	public String delTarget;
+	
+	@Column(length = 1, nullable = false)
+	public int lineChange;
+	
+	@Column(length = 5, nullable = false)
+	public String classification;
 	
 	public FormulKey() { }
 	
     @Builder
-    public FormulKey(int id, String formulName, String formulUi, String shortcutKey, String grammer, String guide, String delTarget) {
+    public FormulKey(int id, String formulName, String formulUi, String shortcutKey, String latexGrammer, String msbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
         this.id = id;
         this.formulName = formulName;
         this.formulUi = formulUi;
         this.shortcutKey = shortcutKey;
-        this.grammer = grammer;
+        this.latexGrammer = latexGrammer;
+        this.msbGrammer = msbGrammer;
         this.guide = guide;
+        this.shortcutKeycode = shortcutKeycode;
         this.delTarget = delTarget;
+        this.lineChange = lineChange;
+        this.classification = classification;
     }
 	
 }
