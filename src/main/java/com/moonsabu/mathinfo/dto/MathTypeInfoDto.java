@@ -17,6 +17,4 @@ import lombok.Setter;
 public class MathTypeInfoDto {
 	public MathTypeDomain mathTypeDomain;
 	public String quesType;
-	
-
 }

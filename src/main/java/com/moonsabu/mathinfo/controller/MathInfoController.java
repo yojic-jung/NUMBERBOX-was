@@ -1,13 +1,17 @@
 package com.moonsabu.mathinfo.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.moonsabu.mathinfo.dto.MathContentsDto;
 import com.moonsabu.mathinfo.service.MathContentsInfoService;
 
 @RestController
@@ -45,4 +49,15 @@ public class MathInfoController {
 		
 		return map;
 	}
+	
+	@PostMapping("/registerContents")
+	public HashMap<String, Object> datatest(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+		String path = this.getClass().getResource("/resources/static").getPath();	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		mathContentsInfoService.registerContents(mathContentsDto, path);
+ 
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("succ","succ");
+		return map;
+	}
+	
 }
