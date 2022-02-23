@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.service;
+package com.numberbox.mathinfo.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,14 +8,14 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moonsabu.mathinfo.dto.MathContentsDto;
-import com.moonsabu.mathinfo.dto.MathUnitInfoGroup;
-import com.moonsabu.mathinfo.entity.FormulKey;
-import com.moonsabu.mathinfo.entity.MathTypeInfo;
-import com.moonsabu.mathinfo.repository.FormulKeyRepository;
-import com.moonsabu.mathinfo.repository.MathContentsRepository;
-import com.moonsabu.mathinfo.repository.MathTypeRepository;
-import com.moonsabu.mathinfo.repository.MathUnitRepository;
+import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
+import com.numberbox.mathinfo.entity.FormulKey;
+import com.numberbox.mathinfo.entity.MathTypeInfo;
+import com.numberbox.mathinfo.repository.FormulKeyRepository;
+import com.numberbox.mathinfo.repository.MathContentsRepository;
+import com.numberbox.mathinfo.repository.MathTypeRepository;
+import com.numberbox.mathinfo.repository.MathUnitRepository;
 
 @Service
 public class MathContentsInfoService {

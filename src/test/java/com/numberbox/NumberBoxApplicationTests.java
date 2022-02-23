@@ -1,10 +1,10 @@
-package com.moonsabu;
+package com.numberbox;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MoonsabuApplicationTests {
+class NumberBoxApplicationTests {
 
 	@Test
 	void contextLoads() {

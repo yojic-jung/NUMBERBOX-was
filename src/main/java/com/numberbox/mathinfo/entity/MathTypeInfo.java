@@ -1,11 +1,11 @@
-package com.moonsabu.mathinfo.entity;
+package com.numberbox.mathinfo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.moonsabu.mathinfo.domain.MathTypeDomain;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

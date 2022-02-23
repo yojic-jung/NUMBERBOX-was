@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.domain;
+package com.numberbox.mathinfo.domain;
 
 import java.io.Serializable;
 

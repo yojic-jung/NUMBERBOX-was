@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.dto;
+package com.numberbox.mathinfo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

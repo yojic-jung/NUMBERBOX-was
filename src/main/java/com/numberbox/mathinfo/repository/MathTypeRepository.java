@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.repository;
+package com.numberbox.mathinfo.repository;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.moonsabu.mathinfo.domain.MathTypeDomain;
-import com.moonsabu.mathinfo.entity.MathTypeInfo;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
+import com.numberbox.mathinfo.entity.MathTypeInfo;
 
 public interface MathTypeRepository extends JpaRepository <MathTypeInfo, MathTypeDomain> {
 	

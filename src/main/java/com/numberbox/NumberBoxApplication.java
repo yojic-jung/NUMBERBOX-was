@@ -1,13 +1,13 @@
-package com.moonsabu;
+package com.numberbox;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MoonsabuApplication {
+public class NumberBoxApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MoonsabuApplication.class, args);
+		SpringApplication.run(NumberBoxApplication.class, args);
 	}
 
 }

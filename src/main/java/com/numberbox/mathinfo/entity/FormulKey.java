@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.entity;
+package com.numberbox.mathinfo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ public class FormulKey {
 	public String latexGrammer;
 	
 	@Column(length = 250, nullable = false)
-	public String msbGrammer;
+	public String nbGrammer;
 	
 	@Column(length = 80, nullable = true)
 	public String guide;
@@ -46,13 +46,13 @@ public class FormulKey {
 	public FormulKey() { }
 	
     @Builder
-    public FormulKey(int id, String formulName, String formulUi, String shortcutKey, String latexGrammer, String msbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
+    public FormulKey(int id, String formulName, String formulUi, String shortcutKey, String latexGrammer, String nbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
         this.id = id;
         this.formulName = formulName;
         this.formulUi = formulUi;
         this.shortcutKey = shortcutKey;
         this.latexGrammer = latexGrammer;
-        this.msbGrammer = msbGrammer;
+        this.nbGrammer = nbGrammer;
         this.guide = guide;
         this.shortcutKeycode = shortcutKeycode;
         this.delTarget = delTarget;

@@ -1,8 +1,8 @@
-package com.moonsabu.mathinfo.dto;
+package com.numberbox.mathinfo.dto;
 
 import javax.persistence.Table;
 
-import com.moonsabu.mathinfo.domain.MathTypeDomain;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

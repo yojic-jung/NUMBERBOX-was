@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.controller;
+package com.numberbox.mathinfo.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moonsabu.mathinfo.dto.MathContentsDto;
-import com.moonsabu.mathinfo.service.MathContentsInfoService;
+import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.service.MathContentsInfoService;
 
 @RestController
 public class MathInfoController {

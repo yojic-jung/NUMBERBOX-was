@@ -1,4 +1,4 @@
-package com.moonsabu.mathinfo.entity;
+package com.numberbox.mathinfo.entity;
 
 import java.time.LocalDateTime;
 

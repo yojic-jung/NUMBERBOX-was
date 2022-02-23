@@ -1,10 +1,10 @@
-package com.moonsabu.mathinfo.dto;
+package com.numberbox.mathinfo.dto;
 
 import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.moonsabu.mathinfo.entity.MathContents;
+import com.numberbox.mathinfo.entity.MathContents;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
