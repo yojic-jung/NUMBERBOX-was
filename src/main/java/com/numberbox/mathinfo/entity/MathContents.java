@@ -37,6 +37,9 @@ public class MathContents {
 	@Column(length = 70, nullable = true)
 	String solutionImg;
 	
+	@Column(length = 30, nullable = true)
+	String imgPath;
+	
 	@Column(length = 3000, nullable = true)
 	String firNo;
 	@Column(length = 3000, nullable = true)

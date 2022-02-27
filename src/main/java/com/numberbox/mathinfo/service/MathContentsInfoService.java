@@ -5,12 +5,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.FormulKey;
+import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
 import com.numberbox.mathinfo.repository.FormulKeyRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
@@ -20,6 +25,9 @@ import com.numberbox.mathinfo.repository.MathUnitRepository;
 @Service
 public class MathContentsInfoService {
 	
+	@PersistenceContext
+    EntityManager entityManager;
+
 	@Autowired
 	MathUnitRepository mathUnitRepository;
 	@Autowired
@@ -61,7 +69,8 @@ public class MathContentsInfoService {
 		return formulKeyRepository.findByClassification("etc");
 	}
 	
-	public void registerContents(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException {
+	@Transactional
+	public boolean registerContents(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException {
 		//default값 설정
 		mathContentsDto.setLikeCnt(0);
 		mathContentsDto.setHateCnt(0);
@@ -74,9 +83,9 @@ public class MathContentsInfoService {
 		}else {
 			mathContentsDto.setMultiChoiceType("M");
 		}
-		
+
 		//정답 존재유무 상태코드 설정, 0은 미존재, 1은 존재
-		if(mathContentsDto.getAnswer()!=null) {
+		if(mathContentsDto.getAnswer()!=null && !mathContentsDto.getAnswer().isEmpty()) {
 			mathContentsDto.setAnsExistStts(1);
 		}else {
 			mathContentsDto.setAnsExistStts(0);
@@ -84,7 +93,7 @@ public class MathContentsInfoService {
 		
 		//이미지파일 저장
 		Random random1 = new Random();
-		if(mathContentsDto.getContentsImg()!=null) {
+		if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
 
@@ -92,12 +101,13 @@ public class MathContentsInfoService {
 			
 			File file = new File(path+"/contentsImg" , fileName);
 			mathContentsDto.getContentsImg().transferTo(file);
+			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
 			mathContentsDto.setContentsImgName(fileName);
 		}else {
 			mathContentsDto.setContentsImgName(null);
 		}
 		
-		if(mathContentsDto.getSolutionImg()!=null) {
+		if(mathContentsDto.getSolutionImg()!=null && !mathContentsDto.getSolutionImg().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
 
@@ -105,16 +115,19 @@ public class MathContentsInfoService {
 			
 			File file = new File(path+"/contentsImg" , fileName);
 			mathContentsDto.getSolutionImg().transferTo(file);
+			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
 			mathContentsDto.setSolutionImgName(fileName);
 		}else {
 			mathContentsDto.setSolutionImgName(null);
 		}
 		
-		
-		
-		
-		
 		//판별 필요 multiChoiceType, ansExistStts
-		mathContentsRepository.save(mathContentsDto.toEntity());
+		MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
+		boolean isSuccess = entityManager.contains(contents);
+		return isSuccess;
+	}
+	
+	public List<MathContents> takeContents(MathContentsDto mathContentsDto){
+		return mathContentsRepository.findByUnitUniqNoAndWorkMem(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
 	}
 }

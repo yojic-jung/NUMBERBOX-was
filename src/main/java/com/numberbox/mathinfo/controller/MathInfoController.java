@@ -52,11 +52,19 @@ public class MathInfoController {
 	
 	@PostMapping("/registerContents")
 	public HashMap<String, Object> datatest(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
-		String path = this.getClass().getResource("/resources/static").getPath();	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		mathContentsInfoService.registerContents(mathContentsDto, path);
- 
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		System.out.println(path);
+		boolean isSaved = mathContentsInfoService.registerContents(mathContentsDto, path);
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("succ","succ");
+		map.put("saveSuccess",isSaved);
+		return map;
+	}
+	
+	@PostMapping("/takeContents")
+	public HashMap<String, Object> takeContents(@ModelAttribute MathContentsDto mathContentsDto) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("isSearched", true);
+		map.put("mathContents", mathContentsInfoService.takeContents(mathContentsDto));
 		return map;
 	}
 	

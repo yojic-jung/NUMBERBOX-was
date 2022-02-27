@@ -25,6 +25,7 @@ public class MathContentsDto {
 	String solution;
 	MultipartFile solutionImg;
 	String solutionImgName;
+	String imgPath;
 	String firNo;
 	String secNo;
 	String thrNo;
@@ -47,7 +48,7 @@ public class MathContentsDto {
 	
 	public MathContents toEntity() {
 		return MathContents.builder().contentsNo(contentsNo).unitUniqNo(unitUniqNo).typeNo(typeNo).contents(contents).contentsImg(contentsImgName)
-				.solution(solution).solutionImg(solutionImgName).firNo(firNo).secNo(secNo).thrNo(thrNo).fourNo(fourNo).fifNo(fifNo)
+				.solution(solution).solutionImg(solutionImgName).imgPath(imgPath).firNo(firNo).secNo(secNo).thrNo(thrNo).fourNo(fourNo).fifNo(fifNo)
 				.multiChoiceType(multiChoiceType).answer(answer).choiceAnswer(choiceAnswer).workMem(workMem).likeCnt(likeCnt).hateCnt(hateCnt)
 				.downCnt(downCnt).originRef(originRef).originNo(originNo).quesLevel(quesLevel).ansExistStts(ansExistStts).svcPosbStts(svcPosbStts)
 				.build();
