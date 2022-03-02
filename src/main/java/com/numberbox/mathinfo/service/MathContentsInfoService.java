@@ -128,6 +128,6 @@ public class MathContentsInfoService {
 	}
 	
 	public List<MathContents> takeContents(MathContentsDto mathContentsDto){
-		return mathContentsRepository.findByUnitUniqNoAndWorkMem(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
+		return mathContentsRepository.findByUnitUniqNoAndWorkMemOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
 	}
 }
