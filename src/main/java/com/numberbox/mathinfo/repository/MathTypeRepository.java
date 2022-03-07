@@ -13,4 +13,6 @@ public interface MathTypeRepository extends JpaRepository <MathTypeInfo, MathTyp
 	
 	@Query(value = "SELECT typeInfo FROM MathTypeInfo typeInfo where typeInfo.mathTypeDomain.unitUniqNo =:uniqNo",nativeQuery = false)
 	public List<MathTypeInfo> findByUnitUniqNo(@Param("uniqNo") String uniqNo);
+	
+	
 }

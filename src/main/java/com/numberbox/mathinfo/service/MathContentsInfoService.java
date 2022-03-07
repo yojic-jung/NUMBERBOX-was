@@ -17,6 +17,7 @@ import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.FormulKey;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
+import com.numberbox.mathinfo.entity.MathUnitInfo;
 import com.numberbox.mathinfo.repository.FormulKeyRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
@@ -77,7 +78,7 @@ public class MathContentsInfoService {
 		mathContentsDto.setDownCnt(0);
 		mathContentsDto.setSvcPosbStts(0);
 		
-		//객관식 정답 없는 경우 주관식문제로 설정(정답 입력 이후 주관식 및 객관식 분류, 문제만 입력했을땐 주관식으로 우선 등록)
+		//객관식 정답 없는 경우 주관식문제로 설정(정답 입력 이후 주관식 및 객관식 분류, 문제만 입력했을땐 주관식으로 우선 등록, 객관식 주관식 둘다 있을시 객관식으로 적용)
 		if(mathContentsDto.getChoiceAnswer()==null) {
 			mathContentsDto.setMultiChoiceType("E");
 		}else {
@@ -85,13 +86,65 @@ public class MathContentsInfoService {
 		}
 
 		//정답 존재유무 상태코드 설정, 0은 미존재, 1은 존재
-		if(mathContentsDto.getAnswer()!=null && !mathContentsDto.getAnswer().isEmpty()) {
+		if((mathContentsDto.getAnswer()!=null && !mathContentsDto.getAnswer().isEmpty()) || mathContentsDto.getChoiceAnswer()!=null) {
 			mathContentsDto.setAnsExistStts(1);
 		}else {
 			mathContentsDto.setAnsExistStts(0);
 		}
 		
-		//이미지파일 저장
+		//수정모드 아닌 경우
+		if(mathContentsDto.getContentsNo()==0) {
+			//이미지파일 저장
+			Random random1 = new Random();
+			if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
+				long currentTime1 = System.currentTimeMillis();
+				int randomValue1 = random1.nextInt(100);
+
+				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImg().getOriginalFilename();
+				
+				File file = new File(path+"/contentsImg" , fileName);
+				mathContentsDto.getContentsImg().transferTo(file);
+				mathContentsDto.setImgPath("/webapp/static/contentsImg/");
+				mathContentsDto.setContentsImgName(fileName);
+			}else {
+				mathContentsDto.setContentsImgName(null);
+			}
+			
+			if(mathContentsDto.getSolutionImg()!=null && !mathContentsDto.getSolutionImg().isEmpty()) {
+				long currentTime1 = System.currentTimeMillis();
+				int randomValue1 = random1.nextInt(100);
+
+				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImg().getOriginalFilename();
+				
+				File file = new File(path+"/contentsImg" , fileName);
+				mathContentsDto.getSolutionImg().transferTo(file);
+				mathContentsDto.setImgPath("/webapp/static/contentsImg/");
+				mathContentsDto.setSolutionImgName(fileName);
+			}else {
+				mathContentsDto.setSolutionImgName(null);
+			}
+		}
+		
+		
+		//판별 필요 multiChoiceType, ansExistStts
+		MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
+		boolean isSuccess = entityManager.contains(contents);
+		return isSuccess;
+	}
+	
+	public List<MathContents> takeContents(MathContentsDto mathContentsDto){
+		return mathContentsRepository.findByUnitUniqNoAndWorkMemOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
+	}
+	
+	public MathContents takeMyContents(int contentsNo){
+		return mathContentsRepository.findByContentsNo(contentsNo);
+	}
+	
+	public MathUnitInfo takeUnitInfoByUnitUniqNo(int unitUniqNo){
+		return mathUnitRepository.findByUnitUniqNo(unitUniqNo);
+	}	
+	
+	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException{
 		Random random1 = new Random();
 		if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
@@ -103,10 +156,8 @@ public class MathContentsInfoService {
 			mathContentsDto.getContentsImg().transferTo(file);
 			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
 			mathContentsDto.setContentsImgName(fileName);
-		}else {
-			mathContentsDto.setContentsImgName(null);
-		}
-		
+			return mathContentsRepository.changeConImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getContentsImgName());
+		}		
 		if(mathContentsDto.getSolutionImg()!=null && !mathContentsDto.getSolutionImg().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
@@ -117,17 +168,29 @@ public class MathContentsInfoService {
 			mathContentsDto.getSolutionImg().transferTo(file);
 			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
 			mathContentsDto.setSolutionImgName(fileName);
-		}else {
-			mathContentsDto.setSolutionImgName(null);
+			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getSolutionImgName());
 		}
+		return 0;
 		
-		//판별 필요 multiChoiceType, ansExistStts
-		MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
-		boolean isSuccess = entityManager.contains(contents);
-		return isSuccess;
-	}
+	}	
 	
-	public List<MathContents> takeContents(MathContentsDto mathContentsDto){
-		return mathContentsRepository.findByUnitUniqNoAndWorkMemOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
-	}
+	
+	public int delConOrSolImg(int contentsNo, String conOrSol, String path){
+		System.out.println(path);
+		if(conOrSol.equals("contentsImg")) {
+			MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+			File file = new File(path+"/contentsImg/"+mathContents.getContentsImg());
+			file.delete();
+			return mathContentsRepository.changeConImg(contentsNo, "/webapp/static/contentsImg/" , null);
+		}
+		else {
+			MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+			File file = new File(path+"/contentsImg/"+mathContents.getSolutionImg());
+			file.delete();
+			return mathContentsRepository.changeSolImg(contentsNo, "/webapp/static/contentsImg/" , null);
+		} 
+		
+	}	
+	
+	
 }
