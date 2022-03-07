@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@DynamicUpdate
 public class MathContents {
 	@Id
 	int contentsNo;
@@ -29,15 +31,15 @@ public class MathContents {
 	
 	@Column(columnDefinition = "TEXT", nullable = false)
 	String contents;
-	@Column(length = 70, nullable = true)
+	@Column(length = 70, nullable = true, updatable=false)
 	String contentsImg;
 	
 	@Column(columnDefinition = "TEXT", nullable = true)
 	String solution;
-	@Column(length = 70, nullable = true)
+	@Column(length = 70, nullable = true, updatable=false)
 	String solutionImg;
 	
-	@Column(length = 30, nullable = true)
+	@Column(length = 30, nullable = true, updatable=false)
 	String imgPath;
 	
 	@Column(length = 3000, nullable = true)
@@ -80,7 +82,7 @@ public class MathContents {
 	@Column(length =1, nullable = false)
 	int svcPosbStts;
 	
-	@Column
+	@Column(updatable=false)
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
 	@Column

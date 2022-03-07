@@ -22,5 +22,5 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 	@Query(value = "SELECT new com.numberbox.mathinfo.dto.MathUnitInfoGroup(rp.unitUniqNo, rp.secUnit as parentVal, rp.thrUnit as mainVal) FROM MathUnitInfo rp order by rp.unitUniqNo asc",nativeQuery = false)
 	public List<MathUnitInfoGroup> selectThrUnitInfo();
 	
-	
+	public MathUnitInfo findByUnitUniqNo(int unitUniqNo);
 }
