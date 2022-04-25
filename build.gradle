@@ -25,6 +25,12 @@ dependencies {
 	//multipartResolver
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	//spring-security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	//UUID
+	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'

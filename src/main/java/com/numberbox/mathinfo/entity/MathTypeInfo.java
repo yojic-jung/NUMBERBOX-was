@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="math_type_info")
 public class MathTypeInfo {
+	
 	@EmbeddedId 
 	public MathTypeDomain mathTypeDomain;
 
