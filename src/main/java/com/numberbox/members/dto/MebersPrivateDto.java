@@ -2,7 +2,7 @@ package com.numberbox.members.dto;
 
 import java.util.UUID;
 
-import com.numberbox.members.entity.MembersInfo;
+import com.numberbox.members.entity.MembersPrivate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,15 +13,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MebersInfoDto {
+public class MebersPrivateDto {
 
 	private UUID userUniqId;
 	private String userName;
 	private String birth;
     private String phoneNumber;
    
-    public MembersInfo toEntity() {
-		return MembersInfo.builder().userUniqId(userUniqId).userName(userName).birth(birth).phoneNumber(phoneNumber)
+    public MembersPrivate toEntity() {
+		return MembersPrivate.builder().userUniqId(userUniqId).userName(userName).birth(birth).phoneNumber(phoneNumber)
 				.build();
 	}
 }

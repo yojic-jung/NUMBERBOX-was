@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "members_info")
-public class MembersInfo {
+@Table(name = "members_private")
+public class MembersPrivate {
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID userUniqId;

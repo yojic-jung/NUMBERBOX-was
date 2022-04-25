@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.jwt.util.JwtUtil;
-import com.numberbox.members.dto.MebersInfoDto;
+import com.numberbox.members.dto.MebersPrivateDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersNoDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
-import com.numberbox.members.repository.MembersInfoRepository;
+import com.numberbox.members.repository.MembersPrivateRepository;
 import com.numberbox.members.repository.MembersNoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
@@ -36,7 +36,7 @@ public class MembersService {
 	@Autowired
 	private MembersRoleRepository membersRoleRepository;
 	@Autowired
-	private MembersInfoRepository membersInfoRepository;
+	private MembersPrivateRepository membersInfoRepository;
 	
 	
 	/*
@@ -100,7 +100,7 @@ public class MembersService {
 		MembersRole membersRole = membersRoleRepository.save(membersRoleDto.toEntity());
 		
 		if(membersDto.getUserName() != null) {
-			MebersInfoDto mebersPrivateDto = new MebersInfoDto();
+			MebersPrivateDto mebersPrivateDto = new MebersPrivateDto();
 			mebersPrivateDto.setUserUniqId(userUniqId);
 			mebersPrivateDto.setUserName(membersDto.getUserName());
 			mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
