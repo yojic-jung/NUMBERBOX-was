@@ -50,10 +50,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Members members = user.getMembers();
         MembersNo membersNo = membersNoRepository.findByUserUniqId(members.getUserUniqId());
         
-        //failCount가 0이 아닐시 0으로 초기화
-        if(members.getFailCount() != 0) {
-        	 membersRepository.initFailCount(members.getUserUniqId());
-        }
+        membersRepository.initLastLoginDate(members.getUserUniqId());
        
         String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), members.getRole());
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
