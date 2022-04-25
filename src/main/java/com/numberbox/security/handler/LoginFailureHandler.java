@@ -63,7 +63,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         	//failCount=0로 변경 
         	if(lastFailTime.isBefore(LocalDateTime.now())) {
         		membersRoleRepository.ableEnabled(userUniqId);
-				membersRepository.initFailCount(userUniqId);
+				membersRepository.initLastLoginDate(userUniqId);
 				customErrMsg = "계정 잠금이 풀렸습니다.\n다시 로그인 시도해주세요.";
         	}else {
         		membersRepository.initLastFailTime(userUniqId);
