@@ -12,7 +12,9 @@ import com.numberbox.mathinfo.entity.MathContents;
 
 public interface MathContentsRepository extends JpaRepository <MathContents, Integer> {
 	
-	public List<MathContents> findByUnitUniqNoAndWorkMemOrderBySysCreateDateDesc(int unitUniqNo, String workMem);
+	public List<MathContents> findByUnitUniqNoOrderBySysCreateDateDesc(int unitUniqNo);
+	
+	public List<MathContents> findByUnitUniqNoAndUserNoOrderBySysCreateDateDesc(int unitUniqNo, long userNo);
 	
 	public MathContents findByContentsNo(int findByContentsNo);
 	

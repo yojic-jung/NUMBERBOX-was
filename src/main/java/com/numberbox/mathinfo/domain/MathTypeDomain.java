@@ -2,6 +2,7 @@ package com.numberbox.mathinfo.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class MathTypeDomain  implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public String typeNo; 
+	
 	public String unitUniqNo;
 	
 	public MathTypeDomain() {}

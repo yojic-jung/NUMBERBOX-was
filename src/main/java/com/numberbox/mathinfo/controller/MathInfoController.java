@@ -2,6 +2,7 @@ package com.numberbox.mathinfo.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,7 @@ import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.service.MathContentsInfoService;
 
 @RestController
+@RequestMapping("/mathInfo")
 public class MathInfoController {
 	
 	@Autowired
@@ -53,31 +56,39 @@ public class MathInfoController {
 	}
 	
 	@PostMapping("/registerContents")
-	public HashMap<String, Object> datatest(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+	public HashMap<String, Object> registerContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+		String accessToken = (String)request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		boolean isSaved = mathContentsInfoService.registerContents(mathContentsDto, path);
+		boolean isSaved = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken);
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("saveSuccess",isSaved);
+		if(isSaved) {
+			map.put("saveSuccess",isSaved);
+		}else {
+			map.put("existMsg", true);
+			map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
+		}
 		return map;
 	}
 	
 	@PostMapping("/takeContents")
-	public HashMap<String, Object> takeContents(@ModelAttribute MathContentsDto mathContentsDto) {
+	public HashMap<String, Object> takeContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isSearched", true);
-		map.put("mathContents", mathContentsInfoService.takeContents(mathContentsDto));
+		List<MathContents> list = mathContentsInfoService.takeContents(mathContentsDto);
+		map.put("mathContents", list);
 		return map;
 	}
-	
 	
 	@GetMapping("/takeMyContents")
 	public HashMap<String, Object> takeMyContents(HttpServletRequest request) {
 		String contentsNo = (String)request.getParameter("contentsno");
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		MathContents mathContents = mathContentsInfoService.takeMyContents(Integer.parseInt(contentsNo));
-		map.put("myContents", mathContents);
-		map.put("myUnitInfo", mathContentsInfoService.takeUnitInfoByUnitUniqNo(mathContents.getUnitUniqNo()));
-		map.put("myTypeInfo", mathContentsInfoService.takeMathTypeInfo(Integer.toString(mathContents.getUnitUniqNo())));
+		HashMap<String, Object> map = mathContentsInfoService.takeMyContents(Integer.parseInt(contentsNo));
+		//본인이 만든 문제인 경우
+		if(!(boolean)map.get("existMsg")) {
+			MathContents mathContents = (MathContents)map.get("myContents");
+			map.put("myUnitInfo", mathContentsInfoService.takeUnitInfoByUnitUniqNo(mathContents.getUnitUniqNo()));
+			map.put("myTypeInfo", mathContentsInfoService.takeMathTypeInfo(Integer.toString(mathContents.getUnitUniqNo())));
+		}
 		return map;
 	}
 	
@@ -95,15 +106,25 @@ public class MathInfoController {
 	public HashMap<String, Object> changeConOrSolImg(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalStateException, IOException {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("updateCond", mathContentsInfoService.changeConOrSolImg(mathContentsDto, path));
+		int updateCond = mathContentsInfoService.changeConOrSolImg(mathContentsDto, path, mathContentsDto.getUserNo());
+		if(updateCond == -1) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");
+		}
+		map.put("updateCond", updateCond);
 		return map;
 	}
 	
 	@PostMapping("/delConOrSolImg")
-	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol, HttpServletRequest request) {
+	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol, @RequestParam long userNo, HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("updateCond", mathContentsInfoService.delConOrSolImg(contentsNo, conOrSol, path));
+		int updateCond = mathContentsInfoService.delConOrSolImg(contentsNo, conOrSol, path, userNo);
+		if(updateCond == -1) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");
+		}
+		map.put("updateCond", updateCond);
 		return map;
 	}
 }

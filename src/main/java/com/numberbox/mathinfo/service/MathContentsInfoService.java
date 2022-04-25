@@ -2,6 +2,7 @@ package com.numberbox.mathinfo.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -9,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,10 @@ import com.numberbox.mathinfo.repository.FormulKeyRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
 import com.numberbox.mathinfo.repository.MathUnitRepository;
+import com.numberbox.members.entity.Members;
+import com.numberbox.members.entity.MembersNo;
+import com.numberbox.members.entity.MembersRole;
+import com.numberbox.security.dto.CustomSecurityUser;
 
 @Service
 public class MathContentsInfoService {
@@ -71,8 +78,24 @@ public class MathContentsInfoService {
 	}
 	
 	@Transactional
-	public boolean registerContents(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException {
+	public boolean registerContents(MathContentsDto mathContentsDto, String path, String accessToken) throws IllegalStateException, IOException {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
+		MembersNo membersNo = customUser.getMembersNo();
+		long userNo = membersNo.getUserNo();
+		List<MembersRole> roleList =  customUser.getMembers().getRole();
+		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
+		boolean isAdmin = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN")) isAdmin=true;
+		}
+		if(!isAdmin) {
+			if(mathContentsDto.getUserNo() != userNo) {
+				return false;
+			}
+		}
 		//default값 설정
+		mathContentsDto.setUserNo(userNo);
 		mathContentsDto.setLikeCnt(0);
 		mathContentsDto.setHateCnt(0);
 		mathContentsDto.setDownCnt(0);
@@ -132,19 +155,84 @@ public class MathContentsInfoService {
 		return isSuccess;
 	}
 	
-	public List<MathContents> takeContents(MathContentsDto mathContentsDto){
-		return mathContentsRepository.findByUnitUniqNoAndWorkMemOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), mathContentsDto.getWorkMem());
+	@Transactional
+	public List<MathContents> takeContents(MathContentsDto mathContentsDto) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
+		Members members = customUser.getMembers();
+		MembersNo membersNo = customUser.getMembersNo();
+		long userNo = membersNo.getUserNo();
+		List<MembersRole> roleList = members.getRole();
+		boolean isAdmin = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN")) {
+				isAdmin = true;
+			}
+		}
+		
+		List<MathContents> list = null;
+		if(isAdmin) {
+			list =  mathContentsRepository.findByUnitUniqNoOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo());
+		}else {
+			list =  mathContentsRepository.findByUnitUniqNoAndUserNoOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), userNo);
+		}
+		
+		return list;
 	}
 	
-	public MathContents takeMyContents(int contentsNo){
-		return mathContentsRepository.findByContentsNo(contentsNo);
+	public HashMap<String, Object> takeMyContents(int contentsNo){
+		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+		long contentsUserNo = mathContents.getUserNo();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
+		MembersNo membersNo = customUser.getMembersNo();
+		long userNo = membersNo.getUserNo();
+		
+		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
+		List<MembersRole> roleList =  customUser.getMembers().getRole();
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("myContents", mathContents);
+		boolean isAdmin = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN")) isAdmin=true;
+		}
+		if(isAdmin) {
+			map.put("existMsg", false);
+		}else {
+			if(contentsUserNo == userNo) {
+				map.put("existMsg", false);
+			}else {
+				map.put("existMsg", true);
+				map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
+				map.put("myContents", null);
+			}
+		}
+		return map;
 	}
 	
 	public MathUnitInfo takeUnitInfoByUnitUniqNo(int unitUniqNo){
 		return mathUnitRepository.findByUnitUniqNo(unitUniqNo);
 	}	
 	
-	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException{
+	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path, long userNo) throws IllegalStateException, IOException{
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
+		Members members = customUser.getMembers();
+		MembersNo membersNo = customUser.getMembersNo();
+		List<MembersRole> roleList = members.getRole();
+		boolean isAdmin = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN")) {
+				isAdmin = true;
+			}
+		}
+		if(!isAdmin) {
+			if(userNo != membersNo.getUserNo()) {
+				return -1;
+			}
+		}
+		
 		Random random1 = new Random();
 		if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
@@ -175,8 +263,23 @@ public class MathContentsInfoService {
 	}	
 	
 	
-	public int delConOrSolImg(int contentsNo, String conOrSol, String path){
-		System.out.println(path);
+	public int delConOrSolImg(int contentsNo, String conOrSol, String path, long userNo){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
+		Members members = customUser.getMembers();
+		MembersNo membersNo = customUser.getMembersNo();
+		List<MembersRole> roleList = members.getRole();
+		boolean isAdmin = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN")) {
+				isAdmin = true;
+			}
+		}
+		if(!isAdmin) {
+			if(userNo != membersNo.getUserNo()) {
+				return -1;
+			}
+		}
 		if(conOrSol.equals("contentsImg")) {
 			MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 			File file = new File(path+"/contentsImg/"+mathContents.getContentsImg());

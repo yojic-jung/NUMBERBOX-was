@@ -4,7 +4,11 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,6 +32,9 @@ public class MathContents {
 	int unitUniqNo;
 	@Column(length = 2, nullable = false)
 	int typeNo;
+	
+	@Column(length = 11, nullable = false)
+	long userNo;
 	
 	@Column(columnDefinition = "TEXT", nullable = false)
 	String contents;
@@ -61,9 +68,6 @@ public class MathContents {
 	@Column(length = 9, nullable = true)
 	String choiceAnswer;					//전체 체크해서 바이트 체크
 	
-	@Column(length = 10, nullable = false)
-	String workMem;
-	
 	@Column(length =11, nullable = false)
 	int likeCnt;
 	@Column(length =11, nullable = false)
@@ -89,5 +93,11 @@ public class MathContents {
 	@UpdateTimestamp
 	LocalDateTime sysUpdateDate;
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumns({
+        @JoinColumn(name = "unitUniqNo", referencedColumnName = "unitUniqNo", insertable=false, updatable=false),
+        @JoinColumn(name = "typeNo", referencedColumnName = "typeNo", insertable=false, updatable=false)
+	})
+	MathTypeInfo mathTypeInfo;
 
 }
