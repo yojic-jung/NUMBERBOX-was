@@ -36,7 +36,7 @@ public class MembersService {
 	@Autowired
 	private MembersRoleRepository membersRoleRepository;
 	@Autowired
-	private MembersPrivateRepository membersInfoRepository;
+	private MembersPrivateRepository membersPrivateRepository;
 	
 	
 	/*
@@ -80,7 +80,7 @@ public class MembersService {
 			map.put("isSuccess", "existsEmail");
 			return map;
 		}
-		boolean existsPhone = membersInfoRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
+		boolean existsPhone = membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
 		if(existsPhone) {
 			map.put("isSuccess", "existsPhone");
 			return map;
@@ -105,7 +105,7 @@ public class MembersService {
 			mebersPrivateDto.setUserName(membersDto.getUserName());
 			mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
 			mebersPrivateDto.setBirth(membersDto.getBirth());
-			membersInfoRepository.save(mebersPrivateDto.toEntity());
+			membersPrivateRepository.save(mebersPrivateDto.toEntity());
 		}
 		List<MembersRole> list = new ArrayList<>();
 		list.add(membersRole);
