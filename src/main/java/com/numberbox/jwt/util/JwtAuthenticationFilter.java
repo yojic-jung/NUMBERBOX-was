@@ -59,6 +59,27 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                         String email = returnMap.get("sub").toString();
                         long userNo = Long.parseLong(returnMap.get("userNo").toString());
                         List<String> roleList = (List<String>)returnMap.get("role");
+                        
+                        //임시 구현
+                        boolean isManager = false;
+                        boolean isAdmin = false;
+                        for(String role : roleList) {
+                        	if(role.equals("MANAGER")) {
+                        		isManager=true;
+                        	}
+                        	else if(role.equals("ADMIN")) {
+                        		isAdmin=true;
+                        	}
+                        }
+                        
+                        if(isAdmin) {
+                       	 	response.setHeader("role", "ADMIN");
+                       }else if(!isAdmin && isManager) {
+                       		response.setHeader("role", "MANAGER");
+                       }else {
+                    	   response.setHeader("role", "USER");
+                       }
+                        
                         String newAccessToken = jwtUtil.createAccessTokenRoleStr(email, userNo, roleList);
                         response.setHeader("access-token", newAccessToken);
                         Authentication authentication = jwtUtil.getAuthentication(newAccessToken);

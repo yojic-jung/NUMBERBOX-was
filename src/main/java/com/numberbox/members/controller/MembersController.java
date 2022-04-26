@@ -39,14 +39,13 @@ public class MembersController {
 	
 	@PostMapping("/loginSuccess")
 	public HashMap<String, Object> loginSuccess(HttpServletRequest request, HttpServletResponse response) {
-		String accessToken = (String)request.getAttribute("access-token");
 		String refreshToken = (String)request.getAttribute("refreshToken");
 		String loginState = (String)request.getAttribute("loginState");
 		Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
 		if(loginState !=null && loginState.equals("keep")) {
         	refreshTokenCookie.setMaxAge(60*60*24*60);
         }
-		response.setHeader("access-token", accessToken);
+		
 		response.addCookie(refreshTokenCookie);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
