@@ -18,6 +18,7 @@ import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersNo;
+import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersNoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.dto.CustomSecurityUser;
@@ -52,11 +53,31 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         membersRepository.initLastLoginDate(members.getUserUniqId());
        
+        //임시 구현
+        boolean isManager = false;
+        boolean isAdmin = false;
+        for(MembersRole role : members.getRole()) {
+        	if(role.getRoleName().equals("MANAGER")) {
+        		isManager=true;
+        	}
+        	else if(role.getRoleName().equals("ADMIN")) {
+        		isAdmin=true;
+        	}
+        }
+        
+        if(isAdmin) {
+        	response.setHeader("role", "ADMIN");
+        }else if(!isAdmin && isManager) {
+        	response.setHeader("role", "MANAGER");
+        }else {
+     	   response.setHeader("role", "USER");
+        }
+        
         String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), members.getRole());
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
         String loginState = (String)request.getParameter("loginState");
         
-        request.setAttribute("access-token", accessToken);
+        response.setHeader("access-token", accessToken);
         request.setAttribute("refreshToken", refreshToken);
         request.setAttribute("loginState", loginState);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/loginSuccess");
