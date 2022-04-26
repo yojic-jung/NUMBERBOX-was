@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                         long userNo = Long.parseLong(returnMap.get("userNo").toString());
                         List<String> roleList = (List<String>)returnMap.get("role");
                         
-                        //임시 구현
+                        //매니저 권한 임시 구현
                         boolean isManager = false;
                         boolean isAdmin = false;
                         for(String role : roleList) {
