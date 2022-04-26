@@ -84,16 +84,19 @@ public class MathContentsInfoService {
 		MembersNo membersNo = customUser.getMembersNo();
 		long userNo = membersNo.getUserNo();
 		List<MembersRole> roleList =  customUser.getMembers().getRole();
-		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
-		boolean isAdmin = false;
-		for(MembersRole role : roleList) {
-			if(role.getRoleName().equals("ADMIN")) isAdmin=true;
-		}
-		if(!isAdmin) {
-			if(mathContentsDto.getUserNo() != userNo) {
-				return false;
+		if(mathContentsDto.getUserNo() != 0) {
+			//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
+			boolean isAdmin = false;
+			for(MembersRole role : roleList) {
+				if(role.getRoleName().equals("ADMIN")) isAdmin=true;
+			}
+			if(!isAdmin) {
+				if(mathContentsDto.getUserNo() != userNo) {
+					return false;
+				}
 			}
 		}
+		
 		//default값 설정
 		mathContentsDto.setUserNo(userNo);
 		mathContentsDto.setLikeCnt(0);

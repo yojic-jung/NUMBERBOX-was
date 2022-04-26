@@ -53,7 +53,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         membersRepository.initLastLoginDate(members.getUserUniqId());
        
-        //임시 구현
+        //매니저 권한 임시 구현
         boolean isManager = false;
         boolean isAdmin = false;
         for(MembersRole role : members.getRole()) {
