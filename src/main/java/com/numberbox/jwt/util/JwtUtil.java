@@ -38,7 +38,7 @@ public class JwtUtil {
 	  @Value("JIC727YO930SEC777TOKEN")
 	  private String secretKey;
 	
-	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
+	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 180; //3시간 임시
 	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 60; // 2달
 	
 	  public String createAccessToken(String email, long userNo, List<MembersRole> roleList) {
