@@ -43,11 +43,11 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
             	}else {
             		response.setHeader("tokenExpired", "expire");
             	}
-                
             }
+            
             //accessToken 유효하지 않은 경우
             else {
-                boolean isExpired = jwtUtil.validateTokenExceptExpiration(refreshToken) || jwtUtil.validateRefreshToken((refreshToken));
+                boolean isExpired = !jwtUtil.validateTokenExceptExpiration(refreshToken) || !jwtUtil.validateRefreshToken((refreshToken));
                 if (refreshToken != null ) {
                 	//refreshToken 유효시 accessToken 새로 생성, refreshToken은 새로 생성하지 않음
                 	if(!isExpired) {
