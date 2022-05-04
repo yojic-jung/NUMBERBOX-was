@@ -138,9 +138,9 @@ public class JwtUtil {
     public boolean validateTokenExceptExpiration(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return claims.getBody().getExpiration().before(new Date());
+            return !claims.getBody().getExpiration().before(new Date());
         } catch(ExpiredJwtException e) {
-            return true;
+            return false;
         } catch (Exception e) {
             return false;
         }
