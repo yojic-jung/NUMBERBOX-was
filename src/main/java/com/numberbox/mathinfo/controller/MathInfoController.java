@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.entity.MathContents;
+import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.service.MathContentsInfoService;
+import com.numberbox.mathinfo.service.MathResourceService;
 
 @RestController
 @RequestMapping("/mathInfo")
@@ -24,6 +27,8 @@ public class MathInfoController {
 	
 	@Autowired
 	MathContentsInfoService mathContentsInfoService;
+	@Autowired
+	MathResourceService mathResourceService;
 	
 	@GetMapping("/unitInfo")
 	public HashMap<String, Object> contentsInfo() {
@@ -127,4 +132,24 @@ public class MathInfoController {
 		map.put("updateCond", updateCond);
 		return map;
 	}
+	
+	@GetMapping("/takeResource")
+	public HashMap<String, Object> regResource() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<MathResourceMenu> resourceMenuList = mathResourceService.takeResource();
+		map.put("resourceMenuList", resourceMenuList);
+		return map;
+	}
+	
+	@PostMapping("/registerResource")
+	public HashMap<String, Object> registerResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		mathResourceService.registerResource(path, mathResourceDto);
+		map.put("isSuccess", true);
+		return map;
+	}
+	
+	
 }

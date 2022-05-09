@@ -10,8 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +26,7 @@ import com.numberbox.mathinfo.repository.MathUnitRepository;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
-import com.numberbox.security.dto.CustomSecurityUser;
+import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
 public class MathContentsInfoService {
@@ -79,11 +77,10 @@ public class MathContentsInfoService {
 	
 	@Transactional
 	public boolean registerContents(MathContentsDto mathContentsDto, String path, String accessToken) throws IllegalStateException, IOException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		MembersNo membersNo = customUser.getMembersNo();
+
+		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		long userNo = membersNo.getUserNo();
-		List<MembersRole> roleList =  customUser.getMembers().getRole();
+		List<MembersRole> roleList =  StaticSecurityUtil.getMembers().getRole();
 		if(mathContentsDto.getUserNo() != 0) {
 			//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
 			boolean isAdmin = false;
@@ -160,10 +157,8 @@ public class MathContentsInfoService {
 	
 	@Transactional
 	public List<MathContents> takeContents(MathContentsDto mathContentsDto) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		Members members = customUser.getMembers();
-		MembersNo membersNo = customUser.getMembersNo();
+		Members members = StaticSecurityUtil.getMembers();
+		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		long userNo = membersNo.getUserNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -186,13 +181,11 @@ public class MathContentsInfoService {
 	public HashMap<String, Object> takeMyContents(int contentsNo){
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 		long contentsUserNo = mathContents.getUserNo();
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		MembersNo membersNo = customUser.getMembersNo();
+		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		long userNo = membersNo.getUserNo();
 		
 		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
-		List<MembersRole> roleList =  customUser.getMembers().getRole();
+		List<MembersRole> roleList =  StaticSecurityUtil.getMembers().getRole();
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("myContents", mathContents);
@@ -219,10 +212,8 @@ public class MathContentsInfoService {
 	}	
 	
 	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path, long userNo) throws IllegalStateException, IOException{
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		Members members = customUser.getMembers();
-		MembersNo membersNo = customUser.getMembersNo();
+		Members members = StaticSecurityUtil.getMembers();
+		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
@@ -267,10 +258,8 @@ public class MathContentsInfoService {
 	
 	
 	public int delConOrSolImg(int contentsNo, String conOrSol, String path, long userNo){
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		Members members = customUser.getMembers();
-		MembersNo membersNo = customUser.getMembersNo();
+		Members members = StaticSecurityUtil.getMembers();
+		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
