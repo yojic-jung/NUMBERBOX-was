@@ -8,6 +8,6 @@ import com.numberbox.mathinfo.entity.MathResource;
 
 public interface MathResourceRepository extends JpaRepository <MathResource, Integer> {
 	
-	public List<MathResource> findByMainCateNo(int mainCateNo);
+	public List<MathResource> findByMainCateNoOrderByDownCntDesc(int mainCateNo);
 
 }
