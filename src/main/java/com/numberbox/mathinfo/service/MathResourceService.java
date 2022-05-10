@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.mathinfo.dto.MathResourceDto;
+import com.numberbox.mathinfo.entity.MathResource;
 import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.repository.MathResourceMenuRepository;
 import com.numberbox.mathinfo.repository.MathResourceRepository;
@@ -31,8 +32,12 @@ public class MathResourceService {
 	@Autowired
 	MathResourceRepository mathResourceRepository;
 	
-	public List<MathResourceMenu> takeResource() {
-		return mathResourceMenuRepository.findAll();
+	public List<MathResourceMenu> takeResourceMenu() {
+		return mathResourceMenuRepository.findAllByOrderByAlignOrderAsc();
+	}
+	
+	public List<MathResource> takeResource(int mainCateNo) {
+		return mathResourceRepository.findByMainCateNo(mainCateNo);
 	}
 	
 	@Transactional

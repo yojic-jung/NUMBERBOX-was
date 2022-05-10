@@ -1,10 +1,15 @@
 package com.numberbox.mathinfo.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +53,13 @@ public class MathResource {
 	
 	@Column(length = 11, nullable = false)
 	public int downCnt;
+	
+	@Column(updatable=false)
+	@CreationTimestamp
+	LocalDateTime sysCreateDate;
+	@Column
+	@UpdateTimestamp
+	LocalDateTime sysUpdateDate;
 	
 	@Builder
     public MathResource(int seqNo, long userNo, String title, String description, int mainCateNo, int midCateNo, 
