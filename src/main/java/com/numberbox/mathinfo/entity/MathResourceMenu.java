@@ -29,4 +29,7 @@ public class MathResourceMenu {
 	
 	@Column(length = 20, nullable = false)
 	public String midCateName;
+	
+	@Column(length = 2, nullable = false)
+	public int alignOrder;
 }
