@@ -27,7 +27,7 @@ public class MathResource {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long userNo;
 	
-	@Column(length = 20, nullable = false)
+	@Column(length = 30, nullable = false)
 	public String title;
 	
 	@Column(length = 60)
