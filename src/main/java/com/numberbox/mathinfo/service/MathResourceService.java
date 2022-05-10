@@ -37,7 +37,7 @@ public class MathResourceService {
 	}
 	
 	public List<MathResource> takeResource(int mainCateNo) {
-		return mathResourceRepository.findByMainCateNo(mainCateNo);
+		return mathResourceRepository.findByMainCateNoOrderByDownCntDesc(mainCateNo);
 	}
 	
 	@Transactional
