@@ -21,10 +21,10 @@ import lombok.NoArgsConstructor;
 public class MathResource {
 	
 	@Id
-	public int seqNo;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	public int resourceNo;
 	
 	@Column(length = 11, nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long userNo;
 	
 	@Column(length = 30, nullable = false)
@@ -32,12 +32,6 @@ public class MathResource {
 	
 	@Column(length = 60)
 	public String description;
-	
-	@Column(length = 2, nullable = false)
-	public int mainCateNo;
-	
-	@Column(length = 2, nullable = false)
-	public int midCateNo;
 	
 	@Column(length = 30, nullable = false)
 	public String imgPath;
@@ -57,20 +51,19 @@ public class MathResource {
 	@Column(updatable=false)
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
+	
 	@Column
 	@UpdateTimestamp
 	LocalDateTime sysUpdateDate;
 	
 	@Builder
-    public MathResource(int seqNo, long userNo, String title, String description, int mainCateNo, int midCateNo, 
+    public MathResource(int resourceNo, long userNo, String title, String description, 
     		String imgPath, String imgName, String pptPath, String pptName,
     		int downCnt) {
-        this.seqNo = seqNo;
+        this.resourceNo = resourceNo;
         this.userNo = userNo;
         this.title = title;
         this.description = description;
-        this.mainCateNo = mainCateNo;
-        this.midCateNo = midCateNo;
         this.imgPath = imgPath;
         this.imgName = imgName;
         this.pptPath = pptPath;

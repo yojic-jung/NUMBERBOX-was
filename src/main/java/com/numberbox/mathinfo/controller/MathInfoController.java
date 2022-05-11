@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.entity.MathContents;
-import com.numberbox.mathinfo.entity.MathResource;
+import com.numberbox.mathinfo.entity.MathResourceCate;
 import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.service.MathContentsInfoService;
 import com.numberbox.mathinfo.service.MathResourceService;
@@ -145,7 +145,6 @@ public class MathInfoController {
 	@PostMapping("/registerResource")
 	public HashMap<String, Object> registerResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		mathResourceService.registerResource(path, mathResourceDto);
 		map.put("isSuccess", true);
@@ -155,7 +154,7 @@ public class MathInfoController {
 	@GetMapping("/takeResource")
 	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<MathResource> resourceMenuList = mathResourceService.takeResource(mainCateNo);
+		List<MathResourceCate> resourceMenuList = mathResourceService.takeResource(mainCateNo);
 		map.put("resourceList", resourceMenuList);
 		return map;
 	}
