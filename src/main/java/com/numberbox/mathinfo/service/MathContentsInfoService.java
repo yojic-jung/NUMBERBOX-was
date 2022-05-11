@@ -139,9 +139,9 @@ public class MathContentsInfoService {
 
 				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImg().getOriginalFilename();
 				
-				File file = new File(path+"/contentsImg" , fileName);
+				File file = new File(path+"/solutionImg" , fileName);
 				mathContentsDto.getSolutionImg().transferTo(file);
-				mathContentsDto.setImgPath("/webapp/static/contentsImg/");
+				mathContentsDto.setSolutionImgPath("/webapp/static/solutionImg/");
 				mathContentsDto.setSolutionImgName(fileName);
 			}else {
 				mathContentsDto.setSolutionImgName(null);
@@ -246,11 +246,11 @@ public class MathContentsInfoService {
 
 			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImg().getOriginalFilename();
 			
-			File file = new File(path+"/contentsImg" , fileName);
+			File file = new File(path+"/solutionImg" , fileName);
 			mathContentsDto.getSolutionImg().transferTo(file);
-			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
+			mathContentsDto.setSolutionImgPath("/webapp/static/solutionImg/");
 			mathContentsDto.setSolutionImgName(fileName);
-			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getSolutionImgName());
+			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/solutionImg/", mathContentsDto.getSolutionImgName());
 		}
 		return 0;
 		
@@ -276,13 +276,13 @@ public class MathContentsInfoService {
 			MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 			File file = new File(path+"/contentsImg/"+mathContents.getContentsImg());
 			file.delete();
-			return mathContentsRepository.changeConImg(contentsNo, "/webapp/static/contentsImg/" , null);
+			return mathContentsRepository.changeConImg(contentsNo, null, null);
 		}
 		else {
 			MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
-			File file = new File(path+"/contentsImg/"+mathContents.getSolutionImg());
+			File file = new File(path+"/solutionImg/"+mathContents.getSolutionImg());
 			file.delete();
-			return mathContentsRepository.changeSolImg(contentsNo, "/webapp/static/contentsImg/" , null);
+			return mathContentsRepository.changeSolImg(contentsNo, null, null);
 		} 
 		
 	}	

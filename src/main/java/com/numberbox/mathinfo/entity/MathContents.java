@@ -49,6 +49,9 @@ public class MathContents {
 	@Column(length = 30, nullable = true, updatable=false)
 	String imgPath;
 	
+	@Column(length = 30, nullable = true, updatable=false)
+	String solutionImgPath;
+	
 	@Column(length = 3000, nullable = true)
 	String firNo;
 	@Column(length = 3000, nullable = true)
