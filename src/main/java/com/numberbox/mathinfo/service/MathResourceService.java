@@ -82,7 +82,6 @@ public class MathResourceService {
 		}
 		
 		MathResource resource = mathResourceRepository.save(mathResourceDto.toEntity());
-		System.out.println(resource.getResourceNo());
 		int resourceNo = resource.getResourceNo();
 		List<MathResourceCate> resourceCateList = new ArrayList<MathResourceCate>();
 		String cateList = mathResourceDto.getCateList();

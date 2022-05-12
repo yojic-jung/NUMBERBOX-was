@@ -20,12 +20,12 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE math_contents m set m.img_path = :imgpath, m.contents_img = :contentsImg where m.contents_no = :contentsNo", nativeQuery = true)
+	@Query(value = "UPDATE MathContents m set m.imgPath =:imgpath, m.contentsImg =:contentsImg where m.contentsNo =:contentsNo", nativeQuery = false)
 	public int changeConImg(@Param("contentsNo")int contentsNo, @Param("imgpath")String imgpath, @Param("contentsImg")String contentsImg);
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE math_contents m set m.solution_img_path = :solutionImgpath, m.solution_img = :solutionImg where m.contents_no = :contentsNo", nativeQuery = true)
+	@Query(value = "UPDATE MathContents m set m.solutionImgPath =:solutionImgpath, m.solutionImg =:solutionImg where m.contentsNo =:contentsNo", nativeQuery = false)
 	public int changeSolImg(@Param("contentsNo")int contentsNo, @Param("solutionImgpath")String solutionImgpath, @Param("solutionImg")String solutionImg);
 
 }
