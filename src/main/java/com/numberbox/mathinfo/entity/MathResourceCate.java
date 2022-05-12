@@ -41,5 +41,11 @@ public class MathResourceCate {
         this.mainCateNo = mainCateNo;
         this.midCateNo = midCateNo;
     }
+	
+	public MathResourceCate(int resourceNo, int mainCateNo, MathResource mathResource){
+        this.resourceNo = resourceNo;
+        this.mainCateNo = mainCateNo;
+        this.mathResource = mathResource;
+    }
 
 }
