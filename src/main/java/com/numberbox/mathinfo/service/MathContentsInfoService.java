@@ -94,8 +94,12 @@ public class MathContentsInfoService {
 			}
 		}
 		
-		//default값 설정
-		mathContentsDto.setUserNo(userNo);
+		//수정모드 아닌 경우에만 userNo를 제작자로 셋팅, 수정모드인 경우에는 원본 제작자 그대로
+		if(mathContentsDto.getContentsNo()==0) {
+			//default값 설정
+			mathContentsDto.setUserNo(userNo);
+		}
+		
 		mathContentsDto.setLikeCnt(0);
 		mathContentsDto.setHateCnt(0);
 		mathContentsDto.setDownCnt(0);
