@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
-import com.numberbox.members.repository.MembersNoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.dto.CustomSecurityUser;
 
@@ -32,8 +30,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private ExpiredRefreshTokenService expiredRefreshTokenService;
 	@Autowired
 	private MembersRepository membersRepository;
-	@Autowired 
-	private MembersNoRepository membersNoRepository;
 	
     @Transactional(rollbackFor= {Exception.class})
     @Override
@@ -49,7 +45,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
         
         Members members = user.getMembers();
-        MembersNo membersNo = membersNoRepository.findByUserUniqId(members.getUserUniqId());
         
         membersRepository.initLastLoginDate(members.getUserUniqId());
        
@@ -73,8 +68,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
      	   response.setHeader("role", "USER");
         }
         
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), members.getRole());
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), members.getRole());
+        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         String loginState = (String)request.getParameter("loginState");
         
         response.setHeader("access-token", accessToken);

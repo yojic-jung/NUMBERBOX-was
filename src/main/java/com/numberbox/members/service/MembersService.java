@@ -13,13 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.dto.MebersPrivateDto;
 import com.numberbox.members.dto.MembersDto;
-import com.numberbox.members.dto.MembersNoDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersPrivateRepository;
-import com.numberbox.members.repository.MembersNoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 
@@ -32,45 +29,9 @@ public class MembersService {
 	@Autowired
 	private MembersRepository membersRepository;
 	@Autowired
-	private MembersNoRepository membersNoRepository;
-	@Autowired
 	private MembersRoleRepository membersRoleRepository;
 	@Autowired
 	private MembersPrivateRepository membersPrivateRepository;
-	
-	
-	/*
-	@Transactional
-	public HashMap<String, Object> login(MembersDto membersDto, HttpServletRequest request) {
-		HashMap<String, Object> map = new HashMap<>();
-		Members members = membersRepository.findByEmail(membersDto.getEmail());
-		if(members == null) {
-			map.put("isLogin", false);
-			return map;
-		}
-		boolean isMatches = bCryptPasswordEncoder.matches(membersDto.getPassword(), members.getPassword());
-		if(isMatches) {
-	        String expiredToken = jwtUtil.resolveRefreshToken(request);
-	        if (expiredToken != null && !expiredToken.isEmpty()) {
-	            expiredRefreshTokenService.addExpiredToken(expiredToken);
-	        }
-
-	        MembersNo membersNo = membersNoRepository.findByUserUniqId(members.getUserUniqId());
-	        
-	        String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), members.getRole());
-	        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
-	        
-	        map.put("accessToken", accessToken);
-	        map.put("refreshToken", refreshToken);
-	        map.put("isLogin", true);	
-	        return map;
-		}else {
-			map.put("isLogin", false);
-			return map;
-		}
-	}
-	*/
-	
 	
 	@Transactional
 	public HashMap<String, String> signUp(MembersDto membersDto) {
@@ -89,9 +50,6 @@ public class MembersService {
 		membersDto.setHumanStatus(false);
 		membersDto.setFailCount(0);
 		Members members = membersRepository.save(membersDto.toEntity());
-		MembersNoDto membersNoDto = new MembersNoDto();
-		membersNoDto.setUserUniqId(members.getUserUniqId());
-		MembersNo membersNo = membersNoRepository.save(membersNoDto.toEntity());
 		MembersRoleDto membersRoleDto = new MembersRoleDto();
 		UUID userUniqId = members.getUserUniqId();
 		membersRoleDto.setUserUniqId(userUniqId);
@@ -109,8 +67,8 @@ public class MembersService {
 		}
 		List<MembersRole> list = new ArrayList<>();
 		list.add(membersRole);
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), list);
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), list);
+        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         
         map.put("isSuccess", "success");
         map.put("accessToken", accessToken);

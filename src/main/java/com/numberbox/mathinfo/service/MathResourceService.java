@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,7 +23,7 @@ import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.repository.MathResourceCateRepository;
 import com.numberbox.mathinfo.repository.MathResourceMenuRepository;
 import com.numberbox.mathinfo.repository.MathResourceRepository;
-import com.numberbox.members.entity.MembersNo;
+import com.numberbox.members.entity.Members;
 import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
@@ -53,10 +54,10 @@ public class MathResourceService {
 	@Transactional
 	public void registerResource(String path, MathResourceDto mathResourceDto) throws IllegalStateException, IOException {
 		
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
-		long userNo = membersNo.getUserNo();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
 		mathResourceDto.setDownCnt(0);
-		mathResourceDto.setUserNo(userNo);
+		mathResourceDto.setUserUniqId(userUniqId);
 		
 		Random random1 = new Random();
 		long currentTime1 = System.currentTimeMillis();
@@ -93,12 +94,6 @@ public class MathResourceService {
 			mathResourceCate.setMainCateNo(Integer.parseInt(cateNo[0]));
 			mathResourceCate.setMidCateNo(Integer.parseInt(cateNo[1]));
 			resourceCateList.add(mathResourceCate.toEntity());
-		}
-		
-		for(MathResourceCate cate : resourceCateList) {
-			System.out.println(cate.getResourceNo());
-			System.out.println(cate.getMainCateNo());
-			System.out.println(cate.getMidCateNo());
 		}
 		
 		mathResourceCateRepository.saveAll(resourceCateList);

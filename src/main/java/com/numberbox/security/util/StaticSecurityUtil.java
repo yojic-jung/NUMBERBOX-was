@@ -4,18 +4,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
 import com.numberbox.security.dto.CustomSecurityUser;
 
 public class StaticSecurityUtil {
 
-	public static MembersNo getMembersNo() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();
-		MembersNo membersNo = customUser.getMembersNo();
-		return membersNo;
-	}
-	
 	public static Members getMembers() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomSecurityUser customUser =(CustomSecurityUser)authentication.getPrincipal();

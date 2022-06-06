@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ public class MathContents {
 	int typeNo;
 	
 	@Column(length = 11, nullable = false)
-	long userNo;
+	UUID userUniqId;
 	
 	@Column(columnDefinition = "TEXT", nullable = false)
 	String contents;
@@ -79,9 +80,9 @@ public class MathContents {
 	int downCnt;
 	
 	@Column(length =20, nullable = false)
-	String originRef;
+	String orgSrcRef;
 	@Column(length =4, nullable = false)
-	int originNo;
+	int orgSrcNo;
 	@Column(length =1, nullable = false)
 	int quesLevel;
 	@Column(length =1, nullable = false)

@@ -3,6 +3,7 @@ package com.numberbox.jwt.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,14 +42,14 @@ public class JwtUtil {
 	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
 	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 60; // 2달
 	
-	  public String createAccessToken(String email, long userNo, List<MembersRole> roleList) {
+	  public String createAccessToken(String email, UUID userUniqId, List<MembersRole> roleList) {
 		  List<String> strRoleList = new ArrayList<>();
 		  for(MembersRole role : roleList) {
 			  strRoleList.add(role.getRoleName());
 		  }
 		  
 	      Claims claims = Jwts.claims().setSubject(email);
-	      claims.put("userNo", userNo);
+	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
 	      Date now = new Date();
 	      return Jwts.builder()
@@ -59,9 +60,9 @@ public class JwtUtil {
 	          .compact();
 	  }
 	  
-	  public String createAccessTokenRoleStr(String email, long userNo, List<String> roleList) {
+	  public String createAccessTokenRoleStr(String email, UUID userUniqId, List<String> roleList) {
 	      Claims claims = Jwts.claims().setSubject(email);
-	      claims.put("userNo", userNo);
+	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", roleList);
 	      Date now = new Date();
 	      return Jwts.builder()
@@ -72,7 +73,7 @@ public class JwtUtil {
 		          .compact();
 	  }
 	
-	  public String createRefreshToken(String email, long userNo) {
+	  public String createRefreshToken(String email, UUID userUniqId) {
 	      Claims claims = Jwts.claims();
 	      Date now = new Date();
 	      Date expiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME);
@@ -95,8 +96,8 @@ public class JwtUtil {
 	      return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	  }
 	  
-	  public long getUserNo(String token) {
-	      return (long)Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userNo", Long.class);
+	  public UUID getUserUniqId(String token) {
+	      return (UUID)Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userUniqId", UUID.class);
 	  }
 	  
 	  @SuppressWarnings("unchecked")

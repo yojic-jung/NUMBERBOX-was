@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class MathResource {
 	public int resourceNo;
 	
 	@Column(length = 11, nullable = false)
-	public long userNo;
+	public UUID userUniqId;
 	
 	@Column(length = 30, nullable = false)
 	public String title;
@@ -57,11 +58,11 @@ public class MathResource {
 	LocalDateTime sysUpdateDate;
 	
 	@Builder
-    public MathResource(int resourceNo, long userNo, String title, String description, 
+    public MathResource(int resourceNo, UUID userUniqId, String title, String description, 
     		String imgPath, String imgName, String pptPath, String pptName,
     		int downCnt) {
         this.resourceNo = resourceNo;
-        this.userNo = userNo;
+        this.userUniqId = userUniqId;
         this.title = title;
         this.description = description;
         this.imgPath = imgPath;

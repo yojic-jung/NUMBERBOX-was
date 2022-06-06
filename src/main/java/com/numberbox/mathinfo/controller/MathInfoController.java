@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathResourceCate;
@@ -80,7 +81,7 @@ public class MathInfoController {
 	public HashMap<String, Object> takeContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isSearched", true);
-		List<MathContents> list = mathContentsInfoService.takeContents(mathContentsDto);
+		List<MathContentsModel> list = mathContentsInfoService.takeContents(mathContentsDto);
 		map.put("mathContents", list);
 		return map;
 	}
@@ -112,7 +113,7 @@ public class MathInfoController {
 	public HashMap<String, Object> changeConOrSolImg(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalStateException, IOException {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		int updateCond = mathContentsInfoService.changeConOrSolImg(mathContentsDto, path, mathContentsDto.getUserNo());
+		int updateCond = mathContentsInfoService.changeConOrSolImg(mathContentsDto, path);
 		if(updateCond == -1) {
 			map.put("existMsg", true);
 			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");
@@ -122,10 +123,10 @@ public class MathInfoController {
 	}
 	
 	@PostMapping("/delConOrSolImg")
-	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol, @RequestParam long userNo, HttpServletRequest request) {
+	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol, @RequestParam String userUniqId, HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		int updateCond = mathContentsInfoService.delConOrSolImg(contentsNo, conOrSol, path, userNo);
+		int updateCond = mathContentsInfoService.delConOrSolImg(contentsNo, conOrSol, path, userUniqId);
 		if(updateCond == -1) {
 			map.put("existMsg", true);
 			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");

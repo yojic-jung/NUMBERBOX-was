@@ -2,18 +2,22 @@ package com.numberbox.mathinfo.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.FormulKey;
 import com.numberbox.mathinfo.entity.MathContents;
@@ -24,7 +28,6 @@ import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
 import com.numberbox.mathinfo.repository.MathUnitRepository;
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.security.util.StaticSecurityUtil;
 
@@ -42,6 +45,8 @@ public class MathContentsInfoService {
 	FormulKeyRepository formulKeyRepository;
 	@Autowired
 	MathContentsRepository mathContentsRepository;
+	@Autowired
+	ModelMapper modelMapper;
 	
 	public List<MathUnitInfoGroup> takeMathSubjectInfo(){
 		return mathUnitRepository.selectSubjectInfo();
@@ -77,27 +82,25 @@ public class MathContentsInfoService {
 	
 	@Transactional
 	public boolean registerContents(MathContentsDto mathContentsDto, String path, String accessToken) throws IllegalStateException, IOException {
-
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
-		long userNo = membersNo.getUserNo();
-		List<MembersRole> roleList =  StaticSecurityUtil.getMembers().getRole();
-		if(mathContentsDto.getUserNo() != 0) {
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<MembersRole> roleList =  members.getRole();
+		if(mathContentsDto.getUserUniqId() != null) {
 			//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
 			boolean isAdmin = false;
 			for(MembersRole role : roleList) {
 				if(role.getRoleName().equals("ADMIN")) isAdmin=true;
 			}
 			if(!isAdmin) {
-				if(mathContentsDto.getUserNo() != userNo) {
+				if(!mathContentsDto.getUserUniqId().equals(userUniqId)) {
 					return false;
 				}
 			}
 		}
-		
-		//수정모드 아닌 경우에만 userNo를 제작자로 셋팅, 수정모드인 경우에는 원본 제작자 그대로
+		//수정모드 아닌 경우에만 userUniqId 를 제작자로 셋팅, 수정모드인 경우에는 원본 제작자 그대로
 		if(mathContentsDto.getContentsNo()==0) {
 			//default값 설정
-			mathContentsDto.setUserNo(userNo);
+			mathContentsDto.setUserUniqId(userUniqId);
 		}
 		
 		mathContentsDto.setLikeCnt(0);
@@ -160,10 +163,8 @@ public class MathContentsInfoService {
 	}
 	
 	@Transactional
-	public List<MathContents> takeContents(MathContentsDto mathContentsDto) {
+	public List<MathContentsModel> takeContents(MathContentsDto mathContentsDto) {
 		Members members = StaticSecurityUtil.getMembers();
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
-		long userNo = membersNo.getUserNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
@@ -176,18 +177,25 @@ public class MathContentsInfoService {
 		if(isAdmin) {
 			list =  mathContentsRepository.findByUnitUniqNoOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo());
 		}else {
-			list =  mathContentsRepository.findByUnitUniqNoAndUserNoOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), userNo);
+			list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId());
 		}
 		
-		return list;
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		for(MathContents mathContents : list) {
+			MathContentsModel mathContentsModel = modelMapper.map(mathContents, MathContentsModel.class);
+			mathContentsModel.setUserUniqId(null);
+			dtoList.add(mathContentsModel);
+		}
+		
+		
+		return dtoList;
 	}
 	
 	public HashMap<String, Object> takeMyContents(int contentsNo){
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
-		long contentsUserNo = mathContents.getUserNo();
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
-		long userNo = membersNo.getUserNo();
-		
+		UUID contentsUserUniqId = mathContents.getUserUniqId();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
 		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
 		List<MembersRole> roleList =  StaticSecurityUtil.getMembers().getRole();
 		
@@ -200,7 +208,7 @@ public class MathContentsInfoService {
 		if(isAdmin) {
 			map.put("existMsg", false);
 		}else {
-			if(contentsUserNo == userNo) {
+			if(contentsUserUniqId.equals(userUniqId)) {
 				map.put("existMsg", false);
 			}else {
 				map.put("existMsg", true);
@@ -215,9 +223,9 @@ public class MathContentsInfoService {
 		return mathUnitRepository.findByUnitUniqNo(unitUniqNo);
 	}	
 	
-	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path, long userNo) throws IllegalStateException, IOException{
+	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException{
+		UUID contentsUserUniqId = mathContentsDto.getUserUniqId();
 		Members members = StaticSecurityUtil.getMembers();
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
@@ -226,7 +234,7 @@ public class MathContentsInfoService {
 			}
 		}
 		if(!isAdmin) {
-			if(userNo != membersNo.getUserNo()) {
+			if(!contentsUserUniqId.equals(members.getUserUniqId())) {
 				return -1;
 			}
 		}
@@ -261,9 +269,8 @@ public class MathContentsInfoService {
 	}	
 	
 	
-	public int delConOrSolImg(int contentsNo, String conOrSol, String path, long userNo){
+	public int delConOrSolImg(int contentsNo, String conOrSol, String path, String userUniqId){
 		Members members = StaticSecurityUtil.getMembers();
-		MembersNo membersNo = StaticSecurityUtil.getMembersNo();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
@@ -272,7 +279,7 @@ public class MathContentsInfoService {
 			}
 		}
 		if(!isAdmin) {
-			if(userNo != membersNo.getUserNo()) {
+			if(!userUniqId.equals(members.getUserUniqId().toString())) {
 				return -1;
 			}
 		}

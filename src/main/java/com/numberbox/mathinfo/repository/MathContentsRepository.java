@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,7 +15,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	public List<MathContents> findByUnitUniqNoOrderBySysCreateDateDesc(int unitUniqNo);
 	
-	public List<MathContents> findByUnitUniqNoAndUserNoOrderBySysCreateDateDesc(int unitUniqNo, long userNo);
+	public List<MathContents> findByUnitUniqNoAndUserUniqIdOrderBySysCreateDateDesc(int unitUniqNo, UUID userUniqId);
 	
 	public MathContents findByContentsNo(int findByContentsNo);
 	

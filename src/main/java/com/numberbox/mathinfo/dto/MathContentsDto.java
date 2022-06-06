@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ public class MathContentsDto {
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
-	long userNo;
+	UUID userUniqId;
 	String contents;
 	MultipartFile contentsImg;
 	String contentsImgName;
@@ -40,8 +41,8 @@ public class MathContentsDto {
 	int likeCnt;
 	int hateCnt;
 	int downCnt;
-	String originRef;
-	int originNo;
+	String orgSrcRef;
+	int orgSrcNo;
 	int quesLevel;
 	int ansExistStts;
 	int svcPosbStts;
@@ -54,8 +55,8 @@ public class MathContentsDto {
 	public MathContents toEntity() {
 		return MathContents.builder().contentsNo(contentsNo).unitUniqNo(unitUniqNo).typeNo(typeNo).contents(contents).contentsImg(contentsImgName)
 				.solution(solution).solutionImg(solutionImgName).imgPath(imgPath).solutionImgPath(solutionImgPath).firNo(firNo).secNo(secNo).thrNo(thrNo).fourNo(fourNo).fifNo(fifNo)
-				.multiChoiceType(multiChoiceType).answer(answer).choiceAnswer(choiceAnswer).userNo(userNo).likeCnt(likeCnt).hateCnt(hateCnt)
-				.downCnt(downCnt).originRef(originRef).originNo(originNo).quesLevel(quesLevel).ansExistStts(ansExistStts).svcPosbStts(svcPosbStts)
+				.multiChoiceType(multiChoiceType).answer(answer).choiceAnswer(choiceAnswer).userUniqId(userUniqId).likeCnt(likeCnt).hateCnt(hateCnt)
+				.downCnt(downCnt).orgSrcRef(orgSrcRef).orgSrcNo(orgSrcNo).quesLevel(quesLevel).ansExistStts(ansExistStts).svcPosbStts(svcPosbStts)
 				.mathTypeInfo(mathTypeInfo)
 				.build();
 	}
