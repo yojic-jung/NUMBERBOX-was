@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.domain;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Embeddable;
 
@@ -11,21 +12,22 @@ import lombok.Setter;
 @Embeddable
 @Getter 
 @Setter 
-public class MathTypeDomain implements Serializable {
+public class MathConLikeDomain implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public String typeNo; 
+	public int contentsNo;
 	
-	public String unitUniqNo;
+	public UUID userUniqId;
 	
-	public MathTypeDomain() {}
+	public MathConLikeDomain() {}
 	
 	@Builder
-	public MathTypeDomain(String typeNo, String unitUniqNo) { 
-		this.typeNo = typeNo;
-		this.unitUniqNo = unitUniqNo; 
+	public MathConLikeDomain(int contentsNo, UUID userUniqId) { 
+		this.contentsNo = contentsNo;
+		this.userUniqId = userUniqId; 
 	}
+
 }

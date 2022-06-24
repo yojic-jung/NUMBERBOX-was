@@ -16,19 +16,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.mathinfo.domain.MathConLikeDomain;
+import com.numberbox.mathinfo.domain.MathConRepoDomain;
+import com.numberbox.mathinfo.dto.ContentsListModel;
+import com.numberbox.mathinfo.dto.FormulKeyDto;
+import com.numberbox.mathinfo.dto.MathConLikeInfoDto;
+import com.numberbox.mathinfo.dto.MathConRepoInfoDto;
+import com.numberbox.mathinfo.dto.MathContentsCompDto;
+import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
+import com.numberbox.mathinfo.dto.MathTypeInfoDto;
+import com.numberbox.mathinfo.dto.MathUnitInfoDto;
 import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.FormulKey;
+import com.numberbox.mathinfo.entity.MathConLikeInfo;
+import com.numberbox.mathinfo.entity.MathConRepoInfo;
 import com.numberbox.mathinfo.entity.MathContents;
+import com.numberbox.mathinfo.entity.MathContentsComp;
+import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
 import com.numberbox.mathinfo.entity.MathUnitInfo;
 import com.numberbox.mathinfo.repository.FormulKeyRepository;
+import com.numberbox.mathinfo.repository.MathConLikeInfoRepository;
+import com.numberbox.mathinfo.repository.MathConRepoInfoRepository;
+import com.numberbox.mathinfo.repository.MathContentsCompRepository;
+import com.numberbox.mathinfo.repository.MathContentsLicenseRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
 import com.numberbox.mathinfo.repository.MathUnitRepository;
+import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.entity.Members;
+import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.MembersFollowInfoRepository;
+import com.numberbox.members.repository.MembersProfileRepository;
 import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
@@ -45,6 +68,19 @@ public class MathContentsInfoService {
 	FormulKeyRepository formulKeyRepository;
 	@Autowired
 	MathContentsRepository mathContentsRepository;
+	@Autowired
+	MathContentsCompRepository mathContentsCompRepository;
+	@Autowired
+	MathContentsLicenseRepository mathContentsLicRepository;
+	@Autowired
+	MembersProfileRepository membersProfileRepository;
+	@Autowired
+	MathConLikeInfoRepository mathConLikeInfoRepository;
+	@Autowired
+	MathConRepoInfoRepository mathConRepoInfoRepository;
+	@Autowired
+	MembersFollowInfoRepository membersFollowInfoRepository;
+	
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -68,45 +104,84 @@ public class MathContentsInfoService {
 		return mathTypeRepository.findByUnitUniqNo(unitUniqNo);
 	}
 	
-	public List<FormulKey> takeShortCutKey(){
-		return formulKeyRepository.findByClassification("main");
-	}
-	
-	public List<FormulKey> takeShortCutKeyHigh1(){
-		return formulKeyRepository.findByClassification("high1");
-	}
-	
-	public List<FormulKey> takeShortCutKeyEtc(){
-		return formulKeyRepository.findByClassification("etc");
+	public HashMap<String, Object> takeShortCutKey(){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<FormulKey> formulKeyList = formulKeyRepository.findAll();
+		List<FormulKeyDto> mainList = new ArrayList<>();
+		List<FormulKeyDto> highList = new ArrayList<>();
+		List<FormulKeyDto> etcList = new ArrayList<>();
+		for(FormulKey formulKey : formulKeyList) {
+			FormulKeyDto formulKeyDto = modelMapper.map(formulKey, FormulKeyDto.class);
+			String classification = formulKeyDto.getClassification();
+			if(classification.equals("main")) {
+				mainList.add(formulKeyDto);
+			}else if(classification.equals("high1")) {
+				highList.add(formulKeyDto);
+				
+			}else if(classification.equals("etc")) {
+				etcList.add(formulKeyDto);
+				
+			}
+		}
+		map.put("shortCutKey", mainList);
+		map.put("shortCutKeyHigh1", highList);
+		map.put("shortCutKeyEtc", etcList);
+		
+		return map;
 	}
 	
 	@Transactional
-	public boolean registerContents(MathContentsDto mathContentsDto, String path, String accessToken) throws IllegalStateException, IOException {
+	public MathContentsModel takeMathContents(int contentsNo){
+		//수정모드인 경우, MathContents 화면단 전달, 모달창 초기화 위해
+		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+		MathContentsModel mathContentsModel = modelMapper.map(mathContents, MathContentsModel.class);
+		mathContentsModel.setUserUniqId(null);
+		return mathContentsModel;
+	}
+	
+	
+	@Transactional
+	public HashMap<String, Object> registerContents(MathContentsDto mathContentsDto, String path, String accessToken, boolean isManager) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		List<MembersRole> roleList =  members.getRole();
-		if(mathContentsDto.getUserUniqId() != null) {
-			//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
+		
+		//수정 모드인 경우 자기 자신 문제만 수정 가능
+		if(mathContentsDto.getContentsNo()!=0) {
+			UUID contentsUuid = mathContentsRepository.findOnlyUuidByContentsNo(mathContentsDto.getContentsNo());
 			boolean isAdmin = false;
 			for(MembersRole role : roleList) {
-				if(role.getRoleName().equals("ADMIN")) isAdmin=true;
+				if(role.getRoleName().equals("ADMIN")) isAdmin=true;		//관리자는 넘버링크 문제 모두 수정가능
 			}
 			if(!isAdmin) {
-				if(!mathContentsDto.getUserUniqId().equals(userUniqId)) {
-					return false;
+				if(!contentsUuid.equals(userUniqId)) {		//컨텐츠에 등록되어있는 uuid와 사용자 uuid 같은 경우에만 수정가능
+					map.put("saveSuccess", false);
+					return map;
 				}
 			}
-		}
-		//수정모드 아닌 경우에만 userUniqId 를 제작자로 셋팅, 수정모드인 경우에는 원본 제작자 그대로
-		if(mathContentsDto.getContentsNo()==0) {
-			//default값 설정
+			mathContentsDto.setUserUniqId(userUniqId);	//uuid updatabl false 이지만 값은 셋팅 되야함
+			
+		//수정모드 아닌 경우에만 자신의 userUniqId 를 제작자로 셋팅
+		}else {
 			mathContentsDto.setUserUniqId(userUniqId);
 		}
 		
-		mathContentsDto.setLikeCnt(0);
-		mathContentsDto.setHateCnt(0);
-		mathContentsDto.setDownCnt(0);
-		mathContentsDto.setSvcPosbStts(0);
+		//넘버링크 문제는 svcPosbStts=0
+		//사용자 제작 및 변형 문제는 svcPosbStts=1
+		if(isManager) {
+			mathContentsDto.setSvcPosbStts(0);
+		}
+		else {
+			mathContentsDto.setSvcPosbStts(1);
+		} 
+		
+		//변형문제 갯수 세팅 
+		if(mathContentsDto.getContentsClassify()==2) {
+			mathContentsDto.setUserUniqId(userUniqId);
+			int transConCnt = mathContentsRepository.countByOrgContentsNo(mathContentsDto.getOrgContentsNo());
+			mathContentsRepository.updateTransConCnt(mathContentsDto.getOrgContentsNo(), transConCnt+1);
+		}
 		
 		//객관식 정답 없는 경우 주관식문제로 설정(정답 입력 이후 주관식 및 객관식 분류, 문제만 입력했을땐 주관식으로 우선 등록, 객관식 주관식 둘다 있을시 객관식으로 적용)
 		if(mathContentsDto.getChoiceAnswer()==null) {
@@ -126,44 +201,122 @@ public class MathContentsInfoService {
 		if(mathContentsDto.getContentsNo()==0) {
 			//이미지파일 저장
 			Random random1 = new Random();
-			if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
+			if(mathContentsDto.getContentsImgFile()!=null && !mathContentsDto.getContentsImgFile().isEmpty()) {
 				long currentTime1 = System.currentTimeMillis();
 				int randomValue1 = random1.nextInt(100);
 
-				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImg().getOriginalFilename();
+				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImgFile().getOriginalFilename();
 				
 				File file = new File(path+"/contentsImg" , fileName);
-				mathContentsDto.getContentsImg().transferTo(file);
+				mathContentsDto.getContentsImgFile().transferTo(file);
 				mathContentsDto.setImgPath("/webapp/static/contentsImg/");
-				mathContentsDto.setContentsImgName(fileName);
+				mathContentsDto.setContentsImg(fileName);
 			}else {
-				mathContentsDto.setContentsImgName(null);
+				mathContentsDto.setContentsImg(null);
 			}
 			
-			if(mathContentsDto.getSolutionImg()!=null && !mathContentsDto.getSolutionImg().isEmpty()) {
+			if(mathContentsDto.getSolutionImgFile()!=null && !mathContentsDto.getSolutionImgFile().isEmpty()) {
 				long currentTime1 = System.currentTimeMillis();
 				int randomValue1 = random1.nextInt(100);
 
-				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImg().getOriginalFilename();
+				String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImgFile().getOriginalFilename();
 				
 				File file = new File(path+"/solutionImg" , fileName);
-				mathContentsDto.getSolutionImg().transferTo(file);
+				mathContentsDto.getSolutionImgFile().transferTo(file);
 				mathContentsDto.setSolutionImgPath("/webapp/static/solutionImg/");
-				mathContentsDto.setSolutionImgName(fileName);
+				mathContentsDto.setSolutionImg(fileName);
 			}else {
-				mathContentsDto.setSolutionImgName(null);
+				mathContentsDto.setSolutionImg(null);
 			}
 		}
 		
-		
 		//판별 필요 multiChoiceType, ansExistStts
 		MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
+		
 		boolean isSuccess = entityManager.contains(contents);
-		return isSuccess;
+		if(isSuccess) {
+			//사용자 제작 문제는 라이선스 등록, 변형문제는 저작권 등록 X
+			if(!isManager) {
+				if(mathContentsDto.getContentsClassify()==1) {
+					mathContentsDto.setContentsNo(contents.getContentsNo());
+					mathContentsLicRepository.save(mathContentsDto.toLicenseEntity());
+				}
+				
+			//넘버링크 문제는 유사 문제 등록
+			}else{
+				if(mathContentsDto.getContentsClassify()==0) {
+					mathContentsDto.setContentsNo(contents.getContentsNo());
+					if(mathContentsDto.getMathContentsCompSeqNo() != 0) {
+						mathContentsDto.setMathContentsCompSeqNo(mathContentsDto.getMathContentsCompSeqNo());
+					}
+					mathContentsCompRepository.save(mathContentsDto.toCompEntity());
+				}
+			}
+		}
+		
+		map.put("saveSuccess", true);
+		return map;
 	}
 	
+	
 	@Transactional
-	public List<MathContentsModel> takeContents(MathContentsDto mathContentsDto) {
+	public HashMap<String, Object> takeContentsList(MathContentsDto mathContentsDto) {
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		
+		//List<MathContents> list = mathContentsRepository.findByUnitUniqNoAndSvcPosbSttsAndContentsClassifyOrUnitUniqNoAndSvcPosbSttsAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc
+		//	(mathContentsDto.getUnitUniqNo(), 1, 0, mathContentsDto.getUnitUniqNo(), 1, 1, 1);
+		List<ContentsListModel> list = mathContentsRepository.findByUnitUniqNo(mathContentsDto.getUnitUniqNo());
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		List<Integer> contentsNoList = new ArrayList<>();
+		for(ContentsListModel content : list) {
+			MathContentsDto mathContentsDtoInner = modelMapper.map(content, MathContentsDto.class);
+			MembersProfileDto membersProfileDto = modelMapper.map(content, MembersProfileDto.class);
+			List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+			MathContentsLicenseDto mathContentsLic = modelMapper.map(content, MathContentsLicenseDto.class);
+			licenseList.add(mathContentsLic);
+			
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			mathContentsModel.setMathContentsLicense(licenseList);
+			mathContentsModel.setMembersProfile(membersProfileDto);
+			dtoList.add(mathContentsModel);
+			
+			contentsNoList.add(content.getContentsNo());
+		}
+		map.put("mathContents", dtoList);
+		
+		List<MathConLikeInfo> likeInfoList = mathConLikeInfoRepository.findByMathConLikeDomainContentsNoInAndMathConLikeDomainUserUniqId(contentsNoList, userUniqId);
+		List<MathConLikeInfoDto> likeInfoDtoList = new ArrayList<>();
+		for(MathConLikeInfo likeInfo : likeInfoList) {
+			MathConLikeInfoDto mathConLikeInfoDto = modelMapper.map(likeInfo, MathConLikeInfoDto.class);
+			MathConLikeDomain mathConLikeDomain = new MathConLikeDomain();
+			mathConLikeDomain.setContentsNo(mathConLikeInfoDto.getMathConLikeDomain().getContentsNo());
+			mathConLikeInfoDto.setMathConLikeDomain(mathConLikeDomain);
+			likeInfoDtoList.add(mathConLikeInfoDto);
+		}
+		
+		map.put("mathConLikeInfo", likeInfoDtoList);
+		
+		List<MathConRepoInfo> repoInfoList = mathConRepoInfoRepository.findByMathConRepoDomainContentsNoInAndMathConRepoDomainUserUniqId(contentsNoList, userUniqId);
+		List<MathConRepoInfoDto> repoInfoDtoList = new ArrayList<>();
+		for(MathConRepoInfo repoInfo : repoInfoList) {
+			MathConRepoInfoDto mathConRepoInfoDto = modelMapper.map(repoInfo, MathConRepoInfoDto.class);
+			MathConRepoDomain mathConRepoDomain = new MathConRepoDomain();
+			mathConRepoDomain.setContentsNo(mathConRepoInfoDto.getMathConRepoDomain().getContentsNo());
+			mathConRepoInfoDto.setMathConRepoDomain(mathConRepoDomain);
+			repoInfoDtoList.add(mathConRepoInfoDto);
+		}
+		
+		map.put("mathconRepoInfo", repoInfoDtoList);
+		
+		return map;
+	}
+	
+	
+	
+	@Transactional
+	public List<MathContentsModel> takeWorkContentsList(MathContentsDto mathContentsDto) {
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -175,32 +328,109 @@ public class MathContentsInfoService {
 		
 		List<MathContents> list = null;
 		if(isAdmin) {
-			list =  mathContentsRepository.findByUnitUniqNoOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo());
+			list =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0);
 		}else {
-			list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId());
+			list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0);
 		}
 		
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {
-			MathContentsModel mathContentsModel = modelMapper.map(mathContents, MathContentsModel.class);
+			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
+			List<MathContentsCompDto> mathContentsCompDtoList = new ArrayList<>();
+			for(MathContentsComp mathContentsComp : mathContents.getMathContentsComp()) {
+				mathContentsCompDtoList.add(modelMapper.map(mathContentsComp, MathContentsCompDto.class));
+			}
+			
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
 			mathContentsModel.setUserUniqId(null);
+			mathContentsModel.setMathContentsComp(mathContentsCompDtoList);
+			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
 			dtoList.add(mathContentsModel);
 		}
-		
-		
 		return dtoList;
 	}
 	
-	public HashMap<String, Object> takeMyContents(int contentsNo){
+	@Transactional
+	public HashMap<String, Object> takeContentsByContentsNo(int contentsNo){	//문제검색에서 변형문제 만들기 클릭시, 나의 제작문제에서 원본 문제 보기 클릭시
+		//문제검색 페이지에서는 누구나 문제 볼 수 있음, 수정 아닌 새로운 변형문제 만들기 때문, 권한 체크 안함, 수정은 권한체크 해야함
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		MathContentsModel mathContentsModel = new MathContentsModel();
+		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+		MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
+		mathContentsDto.setUserUniqId(null);
+		mathContentsModel =  modelMapper.map(mathContentsDto, MathContentsModel.class);
+		
+		if(mathContentsDto.getContentsClassify() == 1) {
+			List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+			for(MathContentsLicense license : mathContents.getMathContentsLicense()) {
+				MathContentsLicenseDto mathContentsLic = modelMapper.map(license, MathContentsLicenseDto.class);
+				licenseList.add(mathContentsLic);
+			}
+			mathContentsModel.setMathContentsLicense(licenseList);
+			
+			//원본문제 제작자 프로필
+			MembersProfile membersProfile = membersProfileRepository.findByUserUniqId(mathContents.getUserUniqId());
+			MembersProfileDto membersProfileDto = modelMapper.map(membersProfile, MembersProfileDto.class);
+			membersProfileDto.setUserUniqId(null);
+			mathContentsModel.setMembersProfile(membersProfileDto);
+		}
+		
+		MathUnitInfo mathUnitInfo= mathUnitRepository.findByUnitUniqNo(mathContents.getUnitUniqNo());
+		MathUnitInfoDto mathUnitInfoDto = modelMapper.map(mathUnitInfo, MathUnitInfoDto.class);
+		
+		List<MathTypeInfo> mathTypeInfoList = mathTypeRepository.findByUnitUniqNo(Integer.toString(mathContents.getUnitUniqNo()));
+		List<MathTypeInfoDto> mathTypeInfoDtoList = new ArrayList<>();
+		for(MathTypeInfo mathTypeInfo : mathTypeInfoList) {
+			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathTypeInfo, MathTypeInfoDto.class);
+			mathTypeInfoDtoList.add(mathTypeInfoDto);
+		}
+		
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<Integer> contentsNoList = new ArrayList<>();
+		contentsNoList.add(contentsNo);
+		List<MathConLikeInfo> likeInfoList = mathConLikeInfoRepository.findByMathConLikeDomainContentsNoInAndMathConLikeDomainUserUniqId(contentsNoList, userUniqId);
+		List<MathConLikeInfoDto> likeInfoDtoList = new ArrayList<>();
+		for(MathConLikeInfo likeInfo : likeInfoList) {
+			MathConLikeInfoDto mathConLikeInfoDto = modelMapper.map(likeInfo, MathConLikeInfoDto.class);
+			MathConLikeDomain mathConLikeDomain = new MathConLikeDomain();
+			mathConLikeDomain.setContentsNo(mathConLikeInfoDto.getMathConLikeDomain().getContentsNo());
+			mathConLikeInfoDto.setMathConLikeDomain(mathConLikeDomain);
+			likeInfoDtoList.add(mathConLikeInfoDto);
+		}
+		
+		map.put("mathConLikeInfo", likeInfoDtoList);
+		
+		List<MathConRepoInfo> repoInfoList = mathConRepoInfoRepository.findByMathConRepoDomainContentsNoInAndMathConRepoDomainUserUniqId(contentsNoList, userUniqId);
+		List<MathConRepoInfoDto> repoInfoDtoList = new ArrayList<>();
+		for(MathConRepoInfo repoInfo : repoInfoList) {
+			MathConRepoInfoDto mathConRepoInfoDto = modelMapper.map(repoInfo, MathConRepoInfoDto.class);
+			MathConRepoDomain mathConRepoDomain = new MathConRepoDomain();
+			mathConRepoDomain.setContentsNo(mathConRepoInfoDto.getMathConRepoDomain().getContentsNo());
+			mathConRepoInfoDto.setMathConRepoDomain(mathConRepoDomain);
+			repoInfoDtoList.add(mathConRepoInfoDto);
+		}
+		
+		map.put("mathconRepoInfo", repoInfoDtoList);
+		
+		map.put("myUnitInfo", mathUnitInfoDto);
+		map.put("myTypeInfo", mathTypeInfoDtoList);
+		map.put("myContents", mathContentsModel);
+		
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> takeMyWorkContents(int contentsNo){
+		//권한 체크
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 		UUID contentsUserUniqId = mathContents.getUserUniqId();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		//관리자 아닌 경우 자신이 만든 문제 외의 문제 수정 금지
 		List<MembersRole> roleList =  StaticSecurityUtil.getMembers().getRole();
-		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("myContents", mathContents);
 		boolean isAdmin = false;
 		for(MembersRole role : roleList) {
 			if(role.getRoleName().equals("ADMIN")) isAdmin=true;
@@ -208,23 +438,165 @@ public class MathContentsInfoService {
 		if(isAdmin) {
 			map.put("existMsg", false);
 		}else {
-			if(contentsUserUniqId.equals(userUniqId)) {
-				map.put("existMsg", false);
-			}else {
+			if(!contentsUserUniqId.equals(userUniqId)) {
 				map.put("existMsg", true);
 				map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
 				map.put("myContents", null);
+				return map;
+			}else {
+				map.put("existMsg", false);
 			}
 		}
+		
+		//사용자, 매니저 모두 사용(유사문제 있으면 유사문제 보여주고 라이선스 있으면 라이선스 보여주면 됨)
+		//나의 문제 가져올땐, 이미 이전에 자기 문제만 가져오니 상관 없음
+		MathContentsModel mathContentsModel = new MathContentsModel();
+		MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
+		mathContentsModel =  modelMapper.map(mathContentsDto, MathContentsModel.class);
+		if(mathContents.getContentsClassify() == 0) {
+			List<MathContentsCompDto> compList = new ArrayList<>();
+			for(MathContentsComp comp : mathContents.getMathContentsComp()) {
+				MathContentsCompDto mathContentsComp = modelMapper.map(comp, MathContentsCompDto.class);
+				compList.add(mathContentsComp);
+			}
+			mathContentsModel =  modelMapper.map(mathContentsDto, MathContentsModel.class);
+			mathContentsModel.setMathContentsComp(compList);
+		}else if(mathContents.getContentsClassify() == 1){
+			List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+			for(MathContentsLicense license : mathContents.getMathContentsLicense()) {
+				MathContentsLicenseDto mathContentsLic = modelMapper.map(license, MathContentsLicenseDto.class);
+				licenseList.add(mathContentsLic);
+			}
+			mathContentsModel.setMathContentsLicense(licenseList);
+		}else if(mathContents.getContentsClassify() == 2){	//변형문제의 경우 원본 문제 라이선스 정보 보야줘야함
+			List<MathContentsLicense> orglicenseList = mathContentsLicRepository.findByContentsNo(mathContents.getOrgContentsNo());
+			List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+			for(MathContentsLicense license : orglicenseList) {
+				MathContentsLicenseDto mathContentsLic = modelMapper.map(license, MathContentsLicenseDto.class);
+				licenseList.add(mathContentsLic);
+			}
+			mathContentsModel.setMathContentsLicense(licenseList);
+		}
+		map.put("myContents", mathContentsModel);
+		
 		return map;
 	}
+	
+	@Transactional
+	public HashMap<String, Object> takeMyContentsList(int userNo){	//나의 제작 문제 또는 다른 사용자의 제작문제 보기(프로필)
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<MathContents> list;
+		if(userNo==0) {		// userNo가 0인 경우 자기 자신 문제 조회
+			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotOrderBySysCreateDateDesc(userUniqId, 0);
+		}else {					// userNo가 있으면 userNo로 상대방 프로필 조회
+			MembersProfile profile= membersProfileRepository.findByUserNo(userNo);
+			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc
+					(profile.getUserUniqId(), 2, profile.getUserUniqId(), 1, 1);
+		}
+		
+		List<Integer> contentsNoList = new ArrayList<>();
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		for(MathContents mathContents : list) {
+			contentsNoList.add(mathContents.getContentsNo());
+			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			MathUnitInfoDto mathUnitInfoDto = modelMapper.map(mathContents.getMathUnitInfo(), MathUnitInfoDto.class);
+			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			if(mathContents.getMathContentsLicense() != null) {
+				List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+				for(MathContentsLicense license : mathContents.getMathContentsLicense()) {
+					MathContentsLicenseDto mathContentsLic = modelMapper.map(license, MathContentsLicenseDto.class);
+					licenseList.add(mathContentsLic);
+				}
+				mathContentsModel.setMathContentsLicense(licenseList);
+			}
+		
+			mathContentsModel.setUserUniqId(null);
+			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
+			mathContentsModel.setMathUnitInfo(mathUnitInfoDto);
+			dtoList.add(mathContentsModel);
+		}
+		
+		map.put("myContentsList", dtoList);
+		
+		if(userNo!=0) {	//다른 사용자 프로필 볼때에는 좋아요 및 저장 내역까지 함께 보기
+			List<MathConLikeInfo> likeInfoList = mathConLikeInfoRepository.findByMathConLikeDomainContentsNoInAndMathConLikeDomainUserUniqId(contentsNoList, userUniqId);
+			List<MathConLikeInfoDto> likeInfoDtoList = new ArrayList<>();
+			for(MathConLikeInfo likeInfo : likeInfoList) {
+				MathConLikeInfoDto mathConLikeInfoDto = modelMapper.map(likeInfo, MathConLikeInfoDto.class);
+				MathConLikeDomain mathConLikeDomain = new MathConLikeDomain();
+				mathConLikeDomain.setContentsNo(mathConLikeInfoDto.getMathConLikeDomain().getContentsNo());
+				mathConLikeInfoDto.setMathConLikeDomain(mathConLikeDomain);
+				likeInfoDtoList.add(mathConLikeInfoDto);
+			}
+			
+			map.put("mathConLikeInfo", likeInfoDtoList);
+			
+			List<MathConRepoInfo> repoInfoList = mathConRepoInfoRepository.findByMathConRepoDomainContentsNoInAndMathConRepoDomainUserUniqId(contentsNoList, userUniqId);
+			List<MathConRepoInfoDto> repoInfoDtoList = new ArrayList<>();
+			for(MathConRepoInfo repoInfo : repoInfoList) {
+				MathConRepoInfoDto mathConRepoInfoDto = modelMapper.map(repoInfo, MathConRepoInfoDto.class);
+				MathConRepoDomain mathConRepoDomain = new MathConRepoDomain();
+				mathConRepoDomain.setContentsNo(mathConRepoInfoDto.getMathConRepoDomain().getContentsNo());
+				mathConRepoInfoDto.setMathConRepoDomain(mathConRepoDomain);
+				repoInfoDtoList.add(mathConRepoInfoDto);
+			}
+			map.put("mathconRepoInfo", repoInfoDtoList);
+		}
+		
+		return map;
+	}
+	
+	
+	@Transactional
+	public HashMap<String, Object> takeMyRepo(){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<MathConRepoInfo> repoList = mathConRepoInfoRepository.findByMathConRepoDomainUserUniqId(userUniqId);
+		List<Integer> contentsNoList = new ArrayList<>();
+		for(MathConRepoInfo mathConRepo : repoList) {
+			contentsNoList.add(mathConRepo.getMathConRepoDomain().getContentsNo());
+		}
+		List<ContentsListModel> mathContetsList = mathContentsRepository.findByContentsNoIn(contentsNoList);
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		for(ContentsListModel content : mathContetsList) {
+			//sysCreateDate를 저장소에 저장한 시간으로 셋팅
+			MathContentsDto mathContentsDtoInner = modelMapper.map(content, MathContentsDto.class);
+			InnerLoop : for(MathConRepoInfo mathConRepo : repoList) {
+				if(mathContentsDtoInner.getContentsNo() == mathConRepo.getMathConRepoDomain().getContentsNo()) {
+					mathContentsDtoInner.setSysCreateDate(mathConRepo.getSysCreateDate());
+					continue InnerLoop;
+				}
+			}
+			MembersProfileDto membersProfileDto = modelMapper.map(content, MembersProfileDto.class);
+			List<MathContentsLicenseDto> licenseList = new ArrayList<>();
+			MathContentsLicenseDto mathContentsLic = modelMapper.map(content, MathContentsLicenseDto.class);
+			licenseList.add(mathContentsLic);
+			
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			
+			MathUnitInfoDto mathUnitInfoDto = modelMapper.map(content, MathUnitInfoDto.class);
+			mathContentsModel.setMathContentsLicense(licenseList);
+			mathContentsModel.setMembersProfile(membersProfileDto);
+			mathContentsModel.setMathUnitInfo(mathUnitInfoDto);
+			dtoList.add(mathContentsModel);
+			
+			contentsNoList.add(content.getContentsNo());
+		}
+		map.put("mathContents", dtoList);
+		return map;
+	}
+	
 	
 	public MathUnitInfo takeUnitInfoByUnitUniqNo(int unitUniqNo){
 		return mathUnitRepository.findByUnitUniqNo(unitUniqNo);
 	}	
 	
 	public int changeConOrSolImg(MathContentsDto mathContentsDto, String path) throws IllegalStateException, IOException{
-		UUID contentsUserUniqId = mathContentsDto.getUserUniqId();
+		UUID conUuid = mathContentsRepository.findOnlyUuidByContentsNo(mathContentsDto.getContentsNo());
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -234,42 +606,43 @@ public class MathContentsInfoService {
 			}
 		}
 		if(!isAdmin) {
-			if(!contentsUserUniqId.equals(members.getUserUniqId())) {
+			if(!conUuid.equals(members.getUserUniqId())) {
 				return -1;
 			}
 		}
 		
 		Random random1 = new Random();
-		if(mathContentsDto.getContentsImg()!=null && !mathContentsDto.getContentsImg().isEmpty()) {
+		if(mathContentsDto.getContentsImgFile()!=null && !mathContentsDto.getContentsImgFile().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
 
-			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImg().getOriginalFilename();
+			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImgFile().getOriginalFilename();
 			
 			File file = new File(path+"/contentsImg" , fileName);
-			mathContentsDto.getContentsImg().transferTo(file);
+			mathContentsDto.getContentsImgFile().transferTo(file);
 			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
-			mathContentsDto.setContentsImgName(fileName);
-			return mathContentsRepository.changeConImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getContentsImgName());
+			mathContentsDto.setContentsImg(fileName);
+			return mathContentsRepository.changeConImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getContentsImg());
 		}		
-		if(mathContentsDto.getSolutionImg()!=null && !mathContentsDto.getSolutionImg().isEmpty()) {
+		if(mathContentsDto.getSolutionImgFile()!=null && !mathContentsDto.getSolutionImgFile().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
 
-			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImg().getOriginalFilename();
+			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImgFile().getOriginalFilename();
 			
 			File file = new File(path+"/solutionImg" , fileName);
-			mathContentsDto.getSolutionImg().transferTo(file);
+			mathContentsDto.getSolutionImgFile().transferTo(file);
 			mathContentsDto.setSolutionImgPath("/webapp/static/solutionImg/");
-			mathContentsDto.setSolutionImgName(fileName);
-			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/solutionImg/", mathContentsDto.getSolutionImgName());
+			mathContentsDto.setSolutionImg(fileName);
+			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/solutionImg/", mathContentsDto.getSolutionImg());
 		}
 		return 0;
 		
 	}	
 	
 	
-	public int delConOrSolImg(int contentsNo, String conOrSol, String path, String userUniqId){
+	public int delConOrSolImg(int contentsNo, String conOrSol, String path ){
+		UUID conUuid = mathContentsRepository.findOnlyUuidByContentsNo(contentsNo);
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -279,7 +652,7 @@ public class MathContentsInfoService {
 			}
 		}
 		if(!isAdmin) {
-			if(!userUniqId.equals(members.getUserUniqId().toString())) {
+			if(!conUuid.equals(members.getUserUniqId())) {
 				return -1;
 			}
 		}
@@ -298,5 +671,141 @@ public class MathContentsInfoService {
 		
 	}	
 	
+	
+	public int changeSvcStts(int contentsNo, int svcStts) {
+		return mathContentsRepository.changeSvcStts(contentsNo, svcStts);
+	}
+	
+	public HashMap<String, Object> registerCompContents(MathContentsCompListDto compContentsList) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		List<MathContentsComp> list = new ArrayList<>();
+		for(MathContentsCompDto compDto :compContentsList.getMathContentsComp()) {
+			if(compDto.getContentsNo() != 0) {
+				compDto.setUserUniqId(members.getUserUniqId());
+				list.add(compDto.toEntity());
+			}
+		}
+		List<MathContentsComp> compList = mathContentsCompRepository.saveAll(list);
+		List<MathContentsCompDto> compDtoList = new ArrayList<>();
+		for(MathContentsComp comp : compList) {
+			MathContentsCompDto CompModel = modelMapper.map(comp, MathContentsCompDto.class);
+			compDtoList.add(CompModel);
+		}
+		map.put("isSuccess", true);
+		map.put("successObj", compDtoList);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> delCompContents(int seqNo, int contentsNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(mathContentsCompRepository.exsistOverOneByContentsNo(contentsNo)) {
+			mathContentsCompRepository.deleteById(seqNo);
+			List<MathContentsComp> compList = mathContentsCompRepository.findByContentsNo(contentsNo);
+			List<MathContentsCompDto> compDtoList = new ArrayList<>();
+			for(MathContentsComp comp : compList) {
+				MathContentsCompDto CompModel = modelMapper.map(comp, MathContentsCompDto.class);
+				compDtoList.add(CompModel);
+			}
+			map.put("successObj", compDtoList);
+			map.put("isSuccess", true);
+		}else {
+			map.put("isSuccess", false);
+		}
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> myContentsDel(int contentsNo){
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
+		UUID contentsUuid = mathContents.getUserUniqId();
+		if(!contentsUuid.equals(userUniqId)) {		// 컨텐츠에 등록되어있는 uuid와 사용자 uuid 같은 경우에만 삭제가능
+			map.put("existMsg", true);
+			map.put("serverMsg", "자신의 문제가 아닌 경우 삭제 할 수 없습니다.");
+			map.put("myContents", null);
+			return map;
+		}
+		
+		if(mathContents.getContentsClassify() == 0) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "넘버링크 제작 문제는 삭제할 수 없습니다.");
+			map.put("myContents", null);
+		}else if(mathContents.getContentsClassify() == 1) {
+			if(mathContents.getTransConCnt()==0) {	//변형문제 없는 제작문제는 바로 삭제 가능
+				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
+				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
+				mathContentsLicRepository.deleteByContentsNo(contentsNo); //라이선스 정보 삭제
+				mathContentsRepository.deleteByContentsNo(contentsNo);
+				map.put("existMsg", false);
+			}else{	//변형문제가 존재하는 제작문제는 삭제 불가, 비공개로 전환하라고 요청
+				map.put("existMsg", true);
+				map.put("serverMsg", "변형문제가 존재하는 문제는 삭제할 수 없습니다.\n비공개로 전환하여 공유되지 않도록 해주시기 바랍니다.");
+				map.put("myContents", null);
+			}
+		}else if(mathContents.getContentsClassify() == 2) {	//변형문제는 삭제 가능
+			int transConCnt = mathContentsRepository.countByOrgContentsNo(mathContents.getOrgContentsNo());
+			//원본문제 TransConCnt -1 하기
+			mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
+			mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
+			mathContentsRepository.updateTransConCnt(mathContents.getOrgContentsNo(), transConCnt-1);
+			mathContentsRepository.deleteByContentsNo(contentsNo);
+			map.put("existMsg", false);
+		}
+		
+		return map;
+	}
+	
+	
+	@Transactional
+	public int myRepoDel(int contentsNo){
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		return mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(contentsNo, userUniqId);
+	}
+	
+	
+	@Transactional
+	public int likeContents(int contentsno) {
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		
+		MathConLikeInfo mathConLikeInfo = mathConLikeInfoRepository.findByMathConLikeDomainContentsNoAndMathConLikeDomainUserUniqId(contentsno, userUniqId);
+		if(mathConLikeInfo == null) {
+			MathConLikeInfoDto mathConLikeInfoDto = new MathConLikeInfoDto();
+			MathConLikeDomain mathConLikeDomain = new MathConLikeDomain();
+			mathConLikeDomain.setContentsNo(contentsno);
+			mathConLikeDomain.setUserUniqId(userUniqId);
+			mathConLikeInfoDto.setMathConLikeDomain(mathConLikeDomain);
+			mathConLikeInfoRepository.save(mathConLikeInfoDto.toEntity());
+		}else {
+			mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNoAndMathConLikeDomainUserUniqId(contentsno, userUniqId);
+		}
+		
+		return 0;
+	}
+	
+	@Transactional
+	public int putInMyRepo(int contentsno) {
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		
+		MathConRepoInfo mathConRepoInfo = mathConRepoInfoRepository.findByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(contentsno, userUniqId);
+		if(mathConRepoInfo == null) {
+			MathConRepoInfoDto mathConRepoInfoDto = new MathConRepoInfoDto();
+			MathConRepoDomain mathConRepoDomain = new MathConRepoDomain();
+			mathConRepoDomain.setContentsNo(contentsno);
+			mathConRepoDomain.setUserUniqId(userUniqId);
+			mathConRepoInfoDto.setMathConRepoDomain(mathConRepoDomain);
+			mathConRepoInfoRepository.save(mathConRepoInfoDto.toEntity());
+		}else {
+			mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(contentsno, userUniqId);
+		}
+		
+		return 0;
+	}
 	
 }

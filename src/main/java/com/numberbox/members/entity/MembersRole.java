@@ -25,7 +25,7 @@ public class MembersRole {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long seqNo;
 
-	@Column(columnDefinition = "BINARY(16)")
+	@Column(columnDefinition = "BINARY(16)", updatable=false)
 	private UUID userUniqId;
 	
     private boolean enabled;

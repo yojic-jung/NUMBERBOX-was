@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,21 +35,28 @@ public class MathResourceService {
 
 	@Autowired
 	MathResourceMenuRepository mathResourceMenuRepository;
-	
 	@Autowired
 	MathResourceRepository mathResourceRepository;
-	
 	@Autowired
 	MathResourceCateRepository mathResourceCateRepository;
+	@Autowired
+	ModelMapper modelMapper;
 	
 	public List<MathResourceMenu> takeResourceMenu() {
 		return mathResourceMenuRepository.findAllByOrderByAlignOrderAsc();
 	}
 	
-	public List<MathResourceCate> takeResource(int mainCateNo) {
-		List<MathResourceCate> resource = mathResourceCateRepository.findByMainCateNo(mainCateNo);
-		Collections.sort(resource, (a, b) -> b.getMathResource().getDownCnt() - a.getMathResource().getDownCnt());
-		return resource;
+	@Transactional
+	public List<MathResourceDto> takeResource(int mainCateNo) {
+		List<MathResource> resourceList = mathResourceRepository.findByMathResourceCateMainCateNo(mainCateNo);
+		Collections.sort(resourceList, (a, b) -> b.getDownCnt() - a.getDownCnt());
+		List<MathResourceDto> mathResourceDtoList = new ArrayList<>();
+		for(MathResource resource : resourceList) {
+			MathResourceDto resourceDto = modelMapper.map(resource, MathResourceDto.class);
+			mathResourceDtoList.add(resourceDto);
+		}
+		
+		return mathResourceDtoList;
 	}
 	
 	@Transactional
