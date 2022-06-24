@@ -1,22 +1,29 @@
 package com.numberbox.mathinfo.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class MathResource {
 	
@@ -24,8 +31,8 @@ public class MathResource {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int resourceNo;
 	
-	@Column(length = 11, nullable = false)
-	public long userNo;
+	@Column(columnDefinition = "BINARY(16)")
+	public UUID userUniqId;
 	
 	@Column(length = 30, nullable = false)
 	public String title;
@@ -52,16 +59,20 @@ public class MathResource {
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
 	
+	@OneToMany(mappedBy="mathResource", fetch = FetchType.LAZY)
+	List<MathResourceCate> mathResourceCate;
+	
 	@Column
 	@UpdateTimestamp
 	LocalDateTime sysUpdateDate;
 	
+	/*
 	@Builder
-    public MathResource(int resourceNo, long userNo, String title, String description, 
+    public MathResource(int resourceNo, UUID userUniqId, String title, String description, 
     		String imgPath, String imgName, String pptPath, String pptName,
     		int downCnt) {
         this.resourceNo = resourceNo;
-        this.userNo = userNo;
+        this.userUniqId = userUniqId;
         this.title = title;
         this.description = description;
         this.imgPath = imgPath;
@@ -70,4 +81,5 @@ public class MathResource {
         this.pptName = pptName;
         this.downCnt = downCnt;
     }
+    */
 }

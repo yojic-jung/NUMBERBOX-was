@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -57,7 +58,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                         ObjectMapper mapper = new ObjectMapper();
                         HashMap<String, Object> returnMap = mapper.readValue(payload, HashMap.class);
                         String email = returnMap.get("sub").toString();
-                        long userNo = Long.parseLong(returnMap.get("userNo").toString());
+                        UUID userUniqId = UUID.fromString(returnMap.get("userUniqId").toString());
                         List<String> roleList = (List<String>)returnMap.get("role");
                         
                         //매니저 권한 임시 구현
@@ -80,7 +81,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                     	   response.setHeader("role", "USER");
                        }
                         
-                        String newAccessToken = jwtUtil.createAccessTokenRoleStr(email, userNo, roleList);
+                        String newAccessToken = jwtUtil.createAccessTokenRoleStr(email, userUniqId, roleList);
                         response.setHeader("access-token", newAccessToken);
                         Authentication authentication = jwtUtil.getAuthentication(newAccessToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);

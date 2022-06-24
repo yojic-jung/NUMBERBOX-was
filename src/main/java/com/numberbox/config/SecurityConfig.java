@@ -64,9 +64,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/takeResource").permitAll()
-                .antMatchers(HttpMethod.POST, "/mathInfo/takeContents").hasAnyRole("MANAGER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/mathInfo/takeMyContents").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/takeProfile").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/takeUserProfile").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/changeNickname").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/registerProfileImg").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/followingUser").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/followingCancel").hasAnyRole("USER")
+
+                .antMatchers(HttpMethod.POST, "/mathInfo/takeWorkContentsList").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/mathInfo/takeContentsList").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeMyContentsList").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeUserContentsList").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeMyRepo").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeMyWorkContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeContentsByContentsNo").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/mathInfo/myContentsDel").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/myRepoDel").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/mathInfo/likeContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/putInMyRepo").hasAnyRole("USER")
+                
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerContents").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/mathInfo/makeContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathInfo/conSvcSttsChng").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathInfo/delCompContents").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/mathInfo/registerCompContents").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerResource").hasAnyRole("USER")
                 .antMatchers("/mathInfo/**").permitAll()
                 .antMatchers("/author").hasAnyRole("user");

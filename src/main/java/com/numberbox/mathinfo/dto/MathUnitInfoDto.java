@@ -1,7 +1,5 @@
 package com.numberbox.mathinfo.dto;
 
-import com.numberbox.mathinfo.domain.MathTypeDomain;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathTypeInfoDto {
-	public MathTypeDomain mathTypeDomain;
-	public String quesType;
+public class MathUnitInfoDto {
+	
+	public int unitUniqNo;
+	public String subject;
+	public String firUnit;
+	public String secUnit;
+	public String thrUnit;
 }

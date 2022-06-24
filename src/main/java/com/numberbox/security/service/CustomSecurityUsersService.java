@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
-import com.numberbox.members.repository.MembersNoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.dto.CustomSecurityUser;
 
@@ -18,15 +16,12 @@ public class CustomSecurityUsersService implements UserDetailsService {
 
     @Autowired
     MembersRepository memberRepository;
-    @Autowired
-    MembersNoRepository membersNoRepository;
     
     @Override
     @Transactional
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
         Members members = memberRepository.findByEmail(email);
-        MembersNo membersNo = membersNoRepository.findByUserUniqId(members.getUserUniqId());
-        User user = new CustomSecurityUser(members, membersNo);
+        User user = new CustomSecurityUser(members);
         return user;
     }
 }

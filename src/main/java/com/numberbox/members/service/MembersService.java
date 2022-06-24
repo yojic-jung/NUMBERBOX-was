@@ -1,30 +1,45 @@
 package com.numberbox.members.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.jwt.util.JwtUtil;
+import com.numberbox.members.dto.FollowUsersDto;
 import com.numberbox.members.dto.MebersPrivateDto;
 import com.numberbox.members.dto.MembersDto;
-import com.numberbox.members.dto.MembersNoDto;
+import com.numberbox.members.dto.MembersFollowInfoDto;
+import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
+import com.numberbox.members.entity.MembersFollowInfo;
+import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.repository.MembersPrivateRepository;
-import com.numberbox.members.repository.MembersNoRepository;
+import com.numberbox.members.repository.MembersProfileRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
+import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
 public class MembersService {
+	
+	@PersistenceContext
+    EntityManager entityManager;
 	@Autowired 
 	private JwtUtil jwtUtil;
 	@Autowired
@@ -32,45 +47,15 @@ public class MembersService {
 	@Autowired
 	private MembersRepository membersRepository;
 	@Autowired
-	private MembersNoRepository membersNoRepository;
+	private MembersProfileRepository membersProfileRepository;
 	@Autowired
 	private MembersRoleRepository membersRoleRepository;
 	@Autowired
 	private MembersPrivateRepository membersPrivateRepository;
-	
-	
-	/*
-	@Transactional
-	public HashMap<String, Object> login(MembersDto membersDto, HttpServletRequest request) {
-		HashMap<String, Object> map = new HashMap<>();
-		Members members = membersRepository.findByEmail(membersDto.getEmail());
-		if(members == null) {
-			map.put("isLogin", false);
-			return map;
-		}
-		boolean isMatches = bCryptPasswordEncoder.matches(membersDto.getPassword(), members.getPassword());
-		if(isMatches) {
-	        String expiredToken = jwtUtil.resolveRefreshToken(request);
-	        if (expiredToken != null && !expiredToken.isEmpty()) {
-	            expiredRefreshTokenService.addExpiredToken(expiredToken);
-	        }
-
-	        MembersNo membersNo = membersNoRepository.findByUserUniqId(members.getUserUniqId());
-	        
-	        String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), members.getRole());
-	        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
-	        
-	        map.put("accessToken", accessToken);
-	        map.put("refreshToken", refreshToken);
-	        map.put("isLogin", true);	
-	        return map;
-		}else {
-			map.put("isLogin", false);
-			return map;
-		}
-	}
-	*/
-	
+	@Autowired
+	private MembersFollowInfoRepository membersFollowInfoRepository;
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@Transactional
 	public HashMap<String, String> signUp(MembersDto membersDto) {
@@ -89,9 +74,19 @@ public class MembersService {
 		membersDto.setHumanStatus(false);
 		membersDto.setFailCount(0);
 		Members members = membersRepository.save(membersDto.toEntity());
-		MembersNoDto membersNoDto = new MembersNoDto();
-		membersNoDto.setUserUniqId(members.getUserUniqId());
-		MembersNo membersNo = membersNoRepository.save(membersNoDto.toEntity());
+		MembersProfileDto membersProfileDto = new MembersProfileDto();
+		membersProfileDto.setUserUniqId(members.getUserUniqId());
+		//닉네임 10글자 임의 소문자 알파벳으로 설정
+		int leftLimit = 97; // letter 'a'
+	    int rightLimit = 122; // letter 'z'
+	    int targetStringLength = 10;
+	    Random random = new Random();
+	    String generatedString = random.ints(leftLimit, rightLimit + 1)
+	                                   .limit(targetStringLength)
+	                                   .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	                                   .toString();
+	    membersProfileDto.setNickname(generatedString);
+		membersProfileRepository.save(membersProfileDto.toEntity());
 		MembersRoleDto membersRoleDto = new MembersRoleDto();
 		UUID userUniqId = members.getUserUniqId();
 		membersRoleDto.setUserUniqId(userUniqId);
@@ -109,12 +104,181 @@ public class MembersService {
 		}
 		List<MembersRole> list = new ArrayList<>();
 		list.add(membersRole);
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), membersNo.getUserNo(), list);
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), membersNo.getUserNo());
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), list);
+        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         
         map.put("isSuccess", "success");
         map.put("accessToken", accessToken);
         map.put("refreshToken", refreshToken);
 		return map;
 	}
+	
+	@Transactional
+	public HashMap<String, Object> takeProfile(){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile profile = membersProfileRepository.findByUserUniqId(userUniqId);
+		MembersProfileDto profileDto = modelMapper.map(profile, MembersProfileDto.class);
+		profileDto.setUserUniqId(null);
+		map.put("isSuccess", true);
+		map.put("profile", profileDto);
+		
+		//내가 팔로잉한 팔로잉 정보 가져오기
+		List<MembersFollowInfo> userFollowingInfo = membersFollowInfoRepository.findByFollowUsersFollowerUserNo(profile.getUserNo());
+		map.put("followingCnt", userFollowingInfo.size());
+		
+		List<Long> userNoList = new ArrayList<>();
+		for(MembersFollowInfo followInfo : userFollowingInfo) {
+			userNoList.add(followInfo.getFollowUsers().getFollowingUserNo());
+		}
+		List<MembersProfile> followingProfile = membersProfileRepository.findByUserNoIn(userNoList);
+		List<MembersProfileDto> followingDtoList = new ArrayList<>();
+		for(MembersProfile following : followingProfile) {
+			MembersProfileDto followingDto = modelMapper.map(following, MembersProfileDto.class);
+			followingDto.setUserUniqId(null);
+			followingDtoList.add(followingDto);
+		}
+		map.put("myFollowing", followingDtoList);
+		
+		//나를 팔로잉 한 팔로워 정보 가져오기
+		List<MembersFollowInfo> userFollowInfo = membersFollowInfoRepository.findByFollowUsersFollowingUserNo(profile.getUserNo());
+		map.put("followerCnt", userFollowInfo.size());
+		
+		List<Long> userNoList2 = new ArrayList<>();
+		for(MembersFollowInfo followInfo : userFollowInfo) {
+			userNoList2.add(followInfo.getFollowUsers().getFollowerUserNo());
+		}
+		List<MembersProfile> followerProfile = membersProfileRepository.findByUserNoIn(userNoList2);
+		List<MembersProfileDto> followerDtoList = new ArrayList<>();
+		for(MembersProfile follower : followerProfile) {
+			MembersProfileDto followerDto = modelMapper.map(follower, MembersProfileDto.class);
+			followerDto.setUserUniqId(null);
+			followerDtoList.add(followerDto);
+		}
+		map.put("myFollower", followerDtoList);
+		
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> takeUserProfile(long userNo){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile userProfile = membersProfileRepository.findByUserNo(userNo);
+		map.put("isSuccess", true);
+		map.put("profile", userProfile);
+		
+		//팔로우 여부 정보 가져오기
+		MembersProfile myProfile= membersProfileRepository.findByUserUniqId(userUniqId);
+		MembersFollowInfo membersFollowInfo =membersFollowInfoRepository.findByFollowUsersFollowingUserNoAndFollowUsersFollowerUserNo(userNo, myProfile.getUserNo());
+		if(membersFollowInfo != null) {
+			map.put("isFollowed", true);
+		}else {
+			map.put("isFollowed", false);
+		}
+		
+		//팔로워 수 가져오기
+		List<MembersFollowInfo> userFollowInfo = membersFollowInfoRepository.findByFollowUsersFollowingUserNo(userNo);
+		map.put("followerCnt", userFollowInfo.size());
+		
+		
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> registerProfileImg(MembersProfileDto membersProfileDto, String path) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile profile = membersProfileRepository.findByUserUniqId(userUniqId);
+		
+		String alreadyExistedImgName = profile.getProfileImgName();
+		Random random1 = new Random();
+		if(membersProfileDto.getProfileImgFile()!=null && !membersProfileDto.getProfileImgFile().isEmpty()) {
+			long currentTime1 = System.currentTimeMillis();
+			int randomValue1 = random1.nextInt(100);
+
+			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+membersProfileDto.getProfileImgFile().getOriginalFilename();
+			File file = new File(path+"/profileImg" , fileName);
+			membersProfileDto.getProfileImgFile().transferTo(file);
+			membersProfileDto.setProfileImgPath("/webapp/static/profileImg/");
+			membersProfileDto.setProfileImgName(fileName);
+			membersProfileRepository.changeProfileImg(userUniqId, "/webapp/static/profileImg/", membersProfileDto.getProfileImgName());
+			
+			if(alreadyExistedImgName != null) {
+				//이미지삭제
+				File file2 = new File(path+"/profileImg/"+alreadyExistedImgName);
+				file2.delete();
+			}
+			map.put("isSuccess", true);
+			map.put("profileImgPath", "/profileImg");
+			map.put("profileImgName", membersProfileDto.getProfileImgName());
+		}else {
+			//실패 메시지
+			map.put("isSucess", false);
+		}
+		
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> changeNickname(String nickname){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		int isSuccess = membersProfileRepository.changeNickname(userUniqId, nickname);
+		
+		if(isSuccess==1) map.put("isSuccess", true);
+		else map.put("isSuccess", false);
+		
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> followingUser(int userNo){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile membersProfile= membersProfileRepository.findByUserUniqId(userUniqId);
+		MembersFollowInfoDto membersFollowInfoDto = new MembersFollowInfoDto();
+		FollowUsersDto followUsersDto = new FollowUsersDto();
+		followUsersDto.setFollowingUserNo(userNo);
+		followUsersDto.setFollowerUserNo(membersProfile.getUserNo());
+		membersFollowInfoDto.setFollowUsersDto(followUsersDto);
+		MembersFollowInfo membersFollowInfo = membersFollowInfoRepository.save(membersFollowInfoDto.toEntity());
+		boolean isSuccess = entityManager.contains(membersFollowInfo);
+		if(isSuccess) {
+			//팔로워 수 가져오기
+			List<MembersFollowInfo> userFollowInfo = membersFollowInfoRepository.findByFollowUsersFollowingUserNo(userNo);
+			map.put("followerCnt", userFollowInfo.size());
+			map.put("isSuccess", true);
+		} 
+		else {
+			map.put("isSuccess", false);
+		} 
+		
+		return map;
+	}
+	
+	
+	@Transactional
+	public HashMap<String, Object> followingCancel(int userNo){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile membersProfile= membersProfileRepository.findByUserUniqId(userUniqId);
+		int isSuccess = membersFollowInfoRepository.deleteByFollowUsersFollowingUserNoAndFollowUsersFollowerUserNo(userNo, membersProfile.getUserNo());
+		if(isSuccess == 1) {
+			map.put("isSuccess", true);
+			//팔로워 수 가져오기
+			List<MembersFollowInfo> userFollowInfo = membersFollowInfoRepository.findByFollowUsersFollowingUserNo(userNo);
+			map.put("followerCnt", userFollowInfo.size());
+		}else {
+			map.put("isSuccess", false);
+		}
+		return map;
+	}
+	
 }

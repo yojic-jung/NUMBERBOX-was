@@ -8,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersNo;
 import com.numberbox.members.entity.MembersRole;
 
 import lombok.Getter;
@@ -24,12 +23,10 @@ public class CustomSecurityUser extends User {
 	private static final String ROLE_PREFIX = "ROLE_";
 
     private Members members;
-    private MembersNo membersNo;
-    public CustomSecurityUser(Members members, MembersNo membersNo) {
+    public CustomSecurityUser(Members members) {
         super(members.getEmail(), members.getPassword(), enableCheck(members.getRole()), true, true, true, makeGrantedeAuth(members.getRole()) );
        
         this.members = members;
-        this.membersNo =membersNo;
     }
 
     private static List<GrantedAuthority> makeGrantedeAuth(List<MembersRole> roles) {

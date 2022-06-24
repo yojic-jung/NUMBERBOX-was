@@ -1,5 +1,6 @@
 package com.numberbox.members.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
@@ -7,10 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.members.dto.MembersDto;
+import com.numberbox.members.dto.MembersProfileDto;
+import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.service.MembersService;
 
 @RestController
@@ -18,7 +25,8 @@ public class MembersController {
 	
 	@Autowired
 	MembersService membersService;
-	
+	@Autowired
+	MembersFollowInfoRepository membersFollowInfoRepository;
 	/*
 	@PostMapping("/login")
 	public HashMap<String, Object> login(@ModelAttribute MembersDto membersDto, HttpServletRequest request, HttpServletResponse response) {
@@ -78,8 +86,7 @@ public class MembersController {
 		return map;
 	}
 	
-	
-	@PostMapping("/accessDenied")
+	@RequestMapping("/accessDenied")
 	public HashMap<String, Object> accessDenied(HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("existMsg", true);
@@ -87,6 +94,41 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping("/takeProfile")
+	public HashMap<String, Object> takeProfile(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = membersService.takeProfile();
+		return map;
+	}
 	
+	@GetMapping("/takeUserProfile")
+	public HashMap<String, Object> takeUserProfile(@RequestParam int userNo, HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = membersService.takeUserProfile(userNo);
+		return map;
+	}
+	
+	@PostMapping("/registerProfileImg")
+	public HashMap<String, Object> registerProfileImg(@ModelAttribute MembersProfileDto membersProfileDto, HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = membersService.registerProfileImg(membersProfileDto, path);
+		return map;
+	}
+	
+	@GetMapping("/changeNickname")
+	public HashMap<String, Object> changeNickname(@RequestParam String nickname, HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = membersService.changeNickname(nickname);
+		return map;
+	}
+	
+	@GetMapping("/followingUser")
+	public HashMap<String, Object> followingUser(@RequestParam int userNo, HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = membersService.followingUser(userNo);
+		return map;
+	}
+	
+	@GetMapping("/followingCancel")
+	public HashMap<String, Object> followingCancel(@RequestParam int userNo, HttpServletRequest request, HttpServletResponse response) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = membersService.followingCancel(userNo);
+		return map;
+	}
 	
 }
