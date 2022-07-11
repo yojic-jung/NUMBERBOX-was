@@ -280,5 +280,10 @@ public class MembersService {
 		}
 		return map;
 	}
+
+	public void tmpPasswordChange() {
+		Members members = membersRepository.findByEmail("cjfwns@naver.com");
+		membersRepository.changePassword(members.getUserUniqId(), bCryptPasswordEncoder.encode("snack12!"));
+	}
 	
 }

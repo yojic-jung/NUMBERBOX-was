@@ -131,4 +131,10 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping("/tmpPasswordChange")
+	public String tmpPasswordChange() {
+		membersService.tmpPasswordChange();
+		return "";
+	}
+	
 }
