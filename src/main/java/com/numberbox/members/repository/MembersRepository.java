@@ -20,6 +20,11 @@ public interface MembersRepository extends JpaRepository <Members, UUID> {
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE members m set m.password =:password where m.user_uniq_id = :userUniqId", nativeQuery = true)
+	public int changePassword(@Param("userUniqId")UUID userUniqId, @Param("password")String password);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE members m set m.fail_count = m.fail_count+1 where m.user_uniq_id = :userUniqId", nativeQuery = true)
 	public int increaseFailCount(@Param("userUniqId")UUID userUniqId);
 	
