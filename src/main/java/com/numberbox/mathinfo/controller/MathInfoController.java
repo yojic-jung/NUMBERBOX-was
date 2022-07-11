@@ -35,7 +35,7 @@ public class MathInfoController {
 	public HashMap<String, Object> contentsInfo() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathSubjectInfo", mathContentsInfoService.takeMathSubjectInfo());
-		map.put("mathFirUnitInfo", mathContentsInfoService.takeMathFirUnitInfo());
+		//map.put("mathFirUnitInfo", mathContentsInfoService.takeMathFirUnitInfo());
 		map.put("mathSecUnitInfo", mathContentsInfoService.takeMathSecUnitInfo());
 		map.put("mathThrUnitInfo", mathContentsInfoService.takeMathThrUnitInfo());
 		//map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfo());
