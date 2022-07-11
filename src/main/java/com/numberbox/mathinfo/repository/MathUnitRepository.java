@@ -16,7 +16,7 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 	@Query(value = "SELECT new com.numberbox.mathinfo.dto.MathUnitInfoGroup(min(rp.unitUniqNo), rp.subject as parentVal, rp.firUnit as mainVal) FROM MathUnitInfo rp GROUP BY rp.subject, rp.firUnit order by rp.unitUniqNo asc",nativeQuery = false)
 	public List<MathUnitInfoGroup> selectFirUnitInfo();
 	
-	@Query(value = "SELECT new com.numberbox.mathinfo.dto.MathUnitInfoGroup(min(rp.unitUniqNo), rp.firUnit as parentVal, rp.secUnit as mainVal) FROM MathUnitInfo rp GROUP BY rp.firUnit, rp.secUnit order by rp.unitUniqNo asc",nativeQuery = false)
+	@Query(value = "SELECT new com.numberbox.mathinfo.dto.MathUnitInfoGroup(min(rp.unitUniqNo), rp.subject as parentVal, rp.secUnit as mainVal) FROM MathUnitInfo rp GROUP BY rp.firUnit, rp.secUnit order by rp.unitUniqNo asc",nativeQuery = false)
 	public List<MathUnitInfoGroup> selectSecUnitInfo();
 	
 	@Query(value = "SELECT new com.numberbox.mathinfo.dto.MathUnitInfoGroup(rp.unitUniqNo, rp.secUnit as parentVal, rp.thrUnit as mainVal) FROM MathUnitInfo rp order by rp.unitUniqNo asc",nativeQuery = false)
