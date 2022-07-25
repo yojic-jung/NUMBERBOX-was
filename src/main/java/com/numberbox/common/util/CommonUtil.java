@@ -24,7 +24,7 @@ public class CommonUtil {
 
 	public static HashMap<String, Object> convertPPtSlidePngImge(String filePath, String fileName, boolean onlyOne) throws FileNotFoundException, IOException {
 		final List<String> imageStrList = new ArrayList<>();
-		XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath+"\\"+fileName));
+		XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath+"/"+fileName));
 		originalPpt.close();
 		Dimension pgsize = originalPpt.getPageSize();
 		List<XSLFSlide> slides = originalPpt.getSlides();
