@@ -82,7 +82,7 @@ public class CommonUtil {
 	}
 	
 	public static String savePPtFirstSlideToPngImge(String filePath, String fileName, String imgFilePath) throws FileNotFoundException, IOException {
-		XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath+"\\"+fileName));
+		XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath+"/"+fileName));
 		originalPpt.close();
 		Dimension pgsize = originalPpt.getPageSize();
 		List<XSLFSlide> slides = originalPpt.getSlides();
