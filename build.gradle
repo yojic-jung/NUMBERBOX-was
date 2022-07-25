@@ -33,7 +33,9 @@ dependencies {
 	implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
 	//modelmapper
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.0'
-	
+	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'

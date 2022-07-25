@@ -7,4 +7,6 @@ import com.numberbox.mathinfo.entity.MathResourceCate;
 
 public interface MathResourceCateRepository extends JpaRepository <MathResourceCate, Integer> {
 	
+	public int deleteByResourceNo(int resourceNo);
+	
 }

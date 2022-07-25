@@ -93,6 +93,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/mathInfo/delCompContents").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerCompContents").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerResource").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/mathInfo/updateResource").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/mathInfo/takeMyResource").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/mathInfo/myResourceDel").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/mathDocs/mathDocs").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathDocs/similarContents").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/customCenter/takeErrReport").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/customCenter/registerError").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.POST, "/common/download").hasAnyRole("USER")
+                
+                
                 .antMatchers("/mathInfo/**").permitAll()
                 .antMatchers("/author").hasAnyRole("user");
           

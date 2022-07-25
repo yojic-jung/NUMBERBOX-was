@@ -17,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathContentsModel {
+	
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
