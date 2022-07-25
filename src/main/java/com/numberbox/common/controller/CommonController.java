@@ -20,7 +20,8 @@ public class CommonController {
 	        // 직접 파일 정보를 변수에 저장해 놨지만, 이 부분이 db에서 읽어왔다고 가정한다.
 			String fileName = request.getParameter("fileName");
 			String filePath = request.getParameter("filePath");
-			String saveFileName = request.getSession().getServletContext().getRealPath("/static/")+filePath+"\\"+fileName;
+			String saveFileName = request.getSession().getServletContext().getRealPath("/static/")+filePath+"/"+fileName;
+			System.out.println();
 			String contentType = "application/vnd.ms-PowerPoint";
             File file = new File(saveFileName);
             long fileLength = file.length();
