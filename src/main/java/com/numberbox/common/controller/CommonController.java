@@ -21,7 +21,6 @@ public class CommonController {
 			String fileName = request.getParameter("fileName");
 			String filePath = request.getParameter("filePath");
 			String saveFileName = request.getSession().getServletContext().getRealPath("/static/")+filePath+"/"+fileName;
-			System.out.println();
 			String contentType = "application/vnd.ms-PowerPoint";
             File file = new File(saveFileName);
             long fileLength = file.length();
