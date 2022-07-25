@@ -279,40 +279,6 @@ public class MathResourceService {
 	
 	
 	@Transactional
-	public HashMap<String, Object> takePPtSlideImge() throws FileNotFoundException, IOException {
-		List<String> imageStrList = new ArrayList<>();
-		XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream("C:\\Users\\82108\\git\\NUMBERBOX-was\\src\\main\\webapp\\static\\resourcePpt\\aaa.pptx"));
-		originalPpt.close();
-		Dimension pgsize = originalPpt.getPageSize();
-		List<XSLFSlide> slides = originalPpt.getSlides();
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		for(XSLFSlide slide : slides) {
-			final BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.SCALE_SMOOTH);
-	        final Graphics2D graphics = img.createGraphics();
-
-	        //clear the drawing area
-	        graphics.setPaint(Color.white);
-	        graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
-			
-	        //render
-	        slide.draw(graphics);
-	        
-	        File slideFile = null;
-	        slideFile = File.createTempFile("C:\\Users\\82108\\git\\NUMBERBOX-was\\src\\main\\webapp\\static\\resourcePpt\\aaa.pptx", ".png");
-        	ImageIO.write(img, "png", slideFile);
-        	
-    	    byte[] fileContent = FileUtils.readFileToByteArray(slideFile);
-        	String encodedString = Base64.getEncoder().encodeToString(fileContent);
-        	
-        	imageStrList.add(encodedString);
-		}
-		
-		map.put("imgList", imageStrList);
-        return map;
-	}
-	
-	
-	@Transactional
 	public HashMap<String, Object> myResourceDel(int resourceNo, String path) {
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
