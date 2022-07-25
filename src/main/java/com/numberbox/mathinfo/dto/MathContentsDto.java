@@ -19,7 +19,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathContentsDto {
+public class MathContentsDto implements Comparable<MathContentsDto>{
+	
+	@Override
+    public int compareTo(MathContentsDto mathContents) {
+        return Integer.compare(getQuesLevel(), mathContents.getQuesLevel());
+    }
+	
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;

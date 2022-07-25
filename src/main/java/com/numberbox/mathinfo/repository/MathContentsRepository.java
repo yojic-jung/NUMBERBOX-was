@@ -22,6 +22,9 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	public List<MathContents> findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, int contentsClassify);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
+	public List<MathContents> findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(int unitUniqNo, int typeNo, int contentsClassify, int svcPosbStts);
+	
+	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
 	public List<MathContents> findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, UUID userUniqId, int contentsClassify);
 	
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo"})		//n+1 문제 해결, 사용자 나의 제작문제(유사문제 조회 안함)
@@ -49,8 +52,8 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" order by a.sysCreateDate desc", nativeQuery = false)
 	public List<ContentsListModel> findByUnitUniqNo(@Param("unitUniqNo")int unitUniqNo);
     
-    @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
-    		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
+    @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"+
+    		"(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
     		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
     		", a.choiceAnswer, a.quesLevel, a.ansExistStts, a.svcPosbStts, a.contentsClassify, a.orgContentsNo"+
     		", a.transConCnt, a.sysCreateDate, a.sysUpdateDate"+
@@ -65,7 +68,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" and ( (a.contentsClassify=0) or (a.contentsClassify=2) or (a.contentsClassify =1  and b.shareStts=1) ) and a.contentsNo in(:contentsNoList)" + 
     		" order by a.sysCreateDate desc", nativeQuery = false)
 	public List<ContentsListModel> findByContentsNoIn(@Param("contentsNoList")List<Integer> contentsNoList);
-	
+    
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo", "membersProfile"})		//n+1 문제 해결, 사용자 문제검색(유사문제 조회 안함)
     public List<MathContents> findByUnitUniqNoAndSvcPosbSttsAndContentsClassifyOrUnitUniqNoAndSvcPosbSttsAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc(
     		int unitUniqNo, int svcPosbStts, int contentsClassify, int unitUniqNo2, int svcPosbStts2, int contentsClassify2, int shareStts);
@@ -99,4 +102,49 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	public int changeSvcStts(@Param("contentsNo")int contentsNo, @Param("svcPosbStts")int svcPosbStts);
 
 	public int deleteByContentsNo(int contentsNo);
+	
+	@Query(value = "select count(1) from MathContents where contentsClassify=0 and svcPosbStts=1 and (quesLevel BETWEEN :startLv and :endLv) and CONCAT(unitUniqNo, ',', typeNo) in (:unitUniqNoAndTypeNoList)", nativeQuery = false)
+	public int countByQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+
+	@Query(value = "select count(1) from MathContents where contentsClassify=0 and svcPosbStts=1 and not (quesLevel BETWEEN :startLv and :endLv) and CONCAT(unitUniqNo, ',', typeNo) in (:unitUniqNoAndTypeNoList)", nativeQuery = false)
+	public int countByNotQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+
+	
+	@Query(value = "select count(contentsNo) from MathContents where contentsClassify=0 and svcPosbStts=1 and (quesLevel BETWEEN :startLv and :endLv) and CONCAT(unitUniqNo, ',', typeNo) in (:unitUniqNoAndTypeNoList) group by unitUniqNo, typeNo", nativeQuery = false)
+	public List<String> countQuesLevelAndQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+	
+	@Query(value = "select count(contentsNo) from MathContents where contentsClassify=0 and svcPosbStts=1 and not (quesLevel BETWEEN :startLv and :endLv) and CONCAT(unitUniqNo, ',', typeNo) in (:unitUniqNoAndTypeNoList) group by unitUniqNo, typeNo", nativeQuery = false)
+	public List<String> countNotQuesLevelAndQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+	
+	@Query(value = 
+			"select *" + 
+			" from (" + 
+				"select" + 
+					" *, ROW_NUMBER() OVER (PARTITION BY unit_uniq_no, type_no) as row_num" + 
+				" from" + 
+					" math_contents" + 
+				" where" + 
+					" contents_classify=0 and svc_posb_stts=1 and (ques_level between :startLv and :endLv)" + 
+				" and" + 
+					" CONCAT(unit_uniq_no, ',', type_no) in (:unitUniqNoAndTypeNoList) order by Rand()" + 
+				") as A" + 
+			" where A.row_num<=:n limit :conCnt", nativeQuery = true)
+	public List<MathContents> findByQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList, @Param("n")int n, @Param("conCnt")int conCnt);
+
+	@Query(value = 
+			"select *" + 
+			" from (" + 
+				"select" + 
+					" *, ROW_NUMBER() OVER (PARTITION BY unit_uniq_no, type_no) as row_num" + 
+				" from" + 
+					" math_contents" + 
+				" where" + 
+					" contents_classify=0 and svc_posb_stts=1 and not (ques_level between :startLv and :endLv)" + 
+				" and" + 
+					" CONCAT(unit_uniq_no, ',', type_no) in (:unitUniqNoAndTypeNoList)" + 
+				" order by Rand()) as A" + 
+			" where A.row_num<=:n limit :conCnt", nativeQuery = true)
+	public List<MathContents> findByNotQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList, @Param("n")int n, @Param("conCnt")int conCnt);
+
+
 }

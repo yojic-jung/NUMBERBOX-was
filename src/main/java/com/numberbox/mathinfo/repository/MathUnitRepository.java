@@ -23,4 +23,7 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 	public List<MathUnitInfoGroup> selectThrUnitInfo();
 	
 	public MathUnitInfo findByUnitUniqNo(int unitUniqNo);
+	
+	public List<MathUnitInfo> findBySubject(String subject);
+	
 }

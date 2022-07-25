@@ -1,5 +1,6 @@
 package com.numberbox.mathinfo.dto;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +23,6 @@ public class MathResourceDto {
 	public UUID userUniqId;
 	
 	public String title;
-	public String description;
-	
 
 	public String cateList;
 	
@@ -33,13 +32,19 @@ public class MathResourceDto {
 	
 	public String pptPath;
 	public String pptName;
+	public int pptPageCnt;
+	
+	public String pptFistSlideImgName;
+	
 	public MultipartFile pptFile;
 	
 	public int downCnt;
 	
+	public List<MathResourceCateDto> mathResourceCate;
+	
 	public MathResource toEntity() {
-		return MathResource.builder().resourceNo(resourceNo).userUniqId(userUniqId).title(title).description(description)
-										.imgPath(imgPath).imgName(imgName).pptPath(pptPath).pptName(pptName)
+		return MathResource.builder().resourceNo(resourceNo).userUniqId(userUniqId).title(title)
+										.imgPath(imgPath).imgName(imgName).pptPath(pptPath).pptName(pptName).pptPageCnt(pptPageCnt)
 										.downCnt(downCnt)
 										.build();
 	}

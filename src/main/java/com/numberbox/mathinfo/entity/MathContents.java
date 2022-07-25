@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,9 +31,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SqlResultSetMapping(name="MathContents", entities={@EntityResult(entityClass=MathContents.class)},columns={@ColumnResult(name="contentsNo")})
 @Entity
 @DynamicUpdate
 public class MathContents {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int contentsNo;

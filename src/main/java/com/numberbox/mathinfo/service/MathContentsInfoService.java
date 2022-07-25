@@ -104,6 +104,20 @@ public class MathContentsInfoService {
 		return mathTypeRepository.findByUnitUniqNo(unitUniqNo);
 	}
 	
+	public MathTypeInfo takeMathTypeInfoOnlyOne(String unitUniqNo, String typeNo){
+		return mathTypeRepository.findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(unitUniqNo, typeNo);
+	}
+	
+	public List<MathTypeInfo> takeMathTypeInfoList(String unitNoList){
+		String[] unitNoArr = unitNoList.split(",");
+		List<String> unitUniqNoList = new ArrayList<>();
+		for(String unitNo : unitNoArr) {
+			unitUniqNoList.add(unitNo);
+		}
+		
+		return mathTypeRepository.findByMathTypeDomainUnitUniqNoIn(unitUniqNoList);
+	}
+	
 	public HashMap<String, Object> takeShortCutKey(){
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<FormulKey> formulKeyList = formulKeyRepository.findAll();

@@ -1,5 +1,6 @@
 package com.numberbox.mathinfo.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.numberbox.common.util.CommonUtil;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
@@ -50,6 +52,13 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@GetMapping("/typeInfoList")
+	public HashMap<String, Object> typeInfoList(HttpServletRequest request) {
+		String unitUniqNoList = (String) request.getParameter("unitUniqNoList");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mathTypeInfoList", mathContentsInfoService.takeMathTypeInfoList(unitUniqNoList));
+		return map;
+	}
 	
 	@GetMapping("/takeShortCutKey")
 	public HashMap<String, Object> takeShortCutKey() {
@@ -159,6 +168,15 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@GetMapping("/mathTypeInfo")
+	public HashMap<String, Object> myUnitTypeInfoOnlyOne(HttpServletRequest request) {
+		String unitUniqNo = request.getParameter("unitUniqNo");
+		String typeNo = request.getParameter("typeNo");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfoOnlyOne(unitUniqNo, typeNo));
+		return map;
+	}
+	
 	@PostMapping("/changeConOrSolImg")
 	public HashMap<String, Object> changeConOrSolImg(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalStateException, IOException {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
@@ -203,18 +221,47 @@ public class MathInfoController {
 	
 	@PostMapping("/registerResource")
 	public HashMap<String, Object> registerResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
-		HashMap<String, Object> map = new HashMap<String, Object>();
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		mathResourceService.registerResource(path, mathResourceDto);
-		map.put("isSuccess", true);
+		HashMap<String, Object>  map = mathResourceService.registerResource(path, mathResourceDto);
+		return map;
+	}
+	
+	@PostMapping("/updateResource")
+	public HashMap<String, Object> updateResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object>  map = mathResourceService.updateResource(path, mathResourceDto);
+		if((boolean)map.get("isSuccess") == true) {
+			HashMap<String, Object>  map2 = mathResourceService.takeNewMathResource(mathResourceDto.getResourceNo());
+			map.put("newMathResource", map2.get("newMathResource"));
+		}
+		
 		return map;
 	}
 	
 	@GetMapping("/takeResource")
-	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo) {
+	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo, HttpServletRequest request) throws FileNotFoundException, IOException {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<MathResourceDto> resourceMenuList = mathResourceService.takeResource(mainCateNo);
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		List<MathResourceDto> resourceMenuList = mathResourceService.takeResource(mainCateNo, path);
 		map.put("resourceList", resourceMenuList);
+		return map;
+	}
+	
+	@GetMapping("/takeMyResource")
+	public HashMap<String, Object> takeMyResource(HttpServletRequest request) throws FileNotFoundException, IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<MathResourceDto> myResource = mathResourceService.takeMyResource();
+		List<MathResourceMenu> resourceMenuList = mathResourceService.takeResourceMenu();
+		map.put("myResourceList", myResource);
+		map.put("resourceMenuList", resourceMenuList);
+		return map;
+	}
+	
+	@GetMapping("/myResourceDel")
+	public HashMap<String, Object> myResourceDel(HttpServletRequest request) {
+		int resourceNo = Integer.parseInt(request.getParameter("resourceNo"));
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathResourceService.myResourceDel(resourceNo, path);
 		return map;
 	}
 	
@@ -270,6 +317,16 @@ public class MathInfoController {
 		HashMap<String, Object> successObj = new HashMap<>();
 		int success = mathContentsInfoService.putInMyRepo(contentsno);
 		successObj.put("isSuccess", success);
+		return successObj;
+	}
+	
+	@GetMapping("/takePPtSlideImge")
+	public HashMap<String, Object> takePPtSlideImge(HttpServletRequest request) throws FileNotFoundException, IOException {
+		String filePath = (String) request.getParameter("filePath");
+		String fileName = (String) request.getParameter("fileName");
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		filePath =path+"\\"+filePath;
+		HashMap<String, Object> successObj = CommonUtil.convertPPtSlidePngImge(filePath, fileName, false);
 		return successObj;
 	}
 }

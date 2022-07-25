@@ -37,20 +37,20 @@ public class MathResource {
 	@Column(length = 30, nullable = false)
 	public String title;
 	
-	@Column(length = 60)
-	public String description;
-	
 	@Column(length = 30, nullable = false)
 	public String imgPath;
 	
 	@Column(length = 70, nullable = false)
 	public String imgName;
 	
-	@Column(length = 30)
+	@Column(length = 30, nullable = false)
 	public String pptPath;
 	
-	@Column(length = 70)
+	@Column(length = 70, nullable = false)
 	public String pptName;
+	
+	@Column(length = 3, nullable = false)
+	public int pptPageCnt;
 	
 	@Column(length = 11, nullable = false)
 	public int downCnt;
