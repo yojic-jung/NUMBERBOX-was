@@ -41,7 +41,7 @@ public class CommonUtil {
 	        slides.get(0).draw(graphics);
 	        
 	        File slideFile = null;
-	        slideFile = File.createTempFile(filePath+"\\"+fileName, ".png");
+	        slideFile = File.createTempFile(filePath+"/"+fileName, ".png");
         	ImageIO.write(img, "png", slideFile);
         	
     	    byte[] fileContent = FileUtils.readFileToByteArray(slideFile);
@@ -61,7 +61,7 @@ public class CommonUtil {
 		        slide.draw(graphics);
 		        
 		        File slideFile = null;
-		        slideFile = File.createTempFile(filePath+"\\"+fileName, ".png");
+		        slideFile = File.createTempFile(filePath+"/"+fileName, ".png");
 	        	ImageIO.write(img, "png", slideFile);
 	        	
 	    	    byte[] fileContent = FileUtils.readFileToByteArray(slideFile);
