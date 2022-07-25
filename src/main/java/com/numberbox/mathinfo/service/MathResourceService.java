@@ -194,9 +194,7 @@ public class MathResourceService {
 		if(pptName.equals("")) {
 			mathResourceDto.setPptPath(mathResource.getPptPath());
 			mathResourceDto.setPptName(mathResource.getPptName());
-			XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(path+"/resourcePpt/"+mathResource.getPptName()));
-			List<XSLFSlide> slides = originalPpt.getSlides();
-			mathResourceDto.setPptPageCnt(slides.size());
+			mathResourceDto.setPptPageCnt(mathResource.getPptPageCnt());
 		}else {
 			pptFileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathResourceDto.getPptFile().getOriginalFilename();
 			File pptFile = new File(path+"/resourcePpt" , pptFileName);

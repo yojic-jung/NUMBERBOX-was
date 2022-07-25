@@ -2,7 +2,9 @@ package com.numberbox.common.util;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -32,7 +34,11 @@ public class CommonUtil {
 		if(onlyOne) {
 			final BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.SCALE_SMOOTH);
 	        final Graphics2D graphics = img.createGraphics();
-
+	        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	        Font[] fonts = e.getAllFonts();
+	        for (Font font : fonts) {
+	          System.out.println(font.getFontName());
+	        }
 	        //clear the drawing area
 	        graphics.setPaint(Color.white);
 	        graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
