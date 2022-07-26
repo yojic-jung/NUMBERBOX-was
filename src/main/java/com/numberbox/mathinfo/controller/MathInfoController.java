@@ -322,11 +322,8 @@ public class MathInfoController {
 	
 	@GetMapping("/takePPtSlideImge")
 	public HashMap<String, Object> takePPtSlideImge(HttpServletRequest request) throws FileNotFoundException, IOException {
-		String filePath = (String) request.getParameter("filePath");
-		String fileName = (String) request.getParameter("fileName");
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		filePath =path+"/"+filePath;
-		HashMap<String, Object> successObj = CommonUtil.convertPPtSlidePngImge(filePath, fileName, false);
+		int resourceNo = Integer.parseInt(request.getParameter("resourceNo"));
+		HashMap<String, Object> successObj = mathResourceService.takePPtSlideImge(resourceNo);
 		return successObj;
 	}
 }
