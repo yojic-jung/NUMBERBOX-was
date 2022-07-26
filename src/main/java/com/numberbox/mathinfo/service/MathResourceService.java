@@ -1,27 +1,19 @@
 package com.numberbox.mathinfo.service;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.modelmapper.ModelMapper;
@@ -32,10 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.mathinfo.dto.MathResourceCateDto;
 import com.numberbox.mathinfo.dto.MathResourceDto;
+import com.numberbox.mathinfo.dto.MathResourceImgDto;
 import com.numberbox.mathinfo.entity.MathResource;
 import com.numberbox.mathinfo.entity.MathResourceCate;
+import com.numberbox.mathinfo.entity.MathResourceImg;
 import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.repository.MathResourceCateRepository;
+import com.numberbox.mathinfo.repository.MathResourceImgRepository;
 import com.numberbox.mathinfo.repository.MathResourceMenuRepository;
 import com.numberbox.mathinfo.repository.MathResourceRepository;
 import com.numberbox.members.entity.Members;
@@ -53,6 +48,8 @@ public class MathResourceService {
 	MathResourceRepository mathResourceRepository;
 	@Autowired
 	MathResourceCateRepository mathResourceCateRepository;
+	@Autowired
+	MathResourceImgRepository mathResourceImgRepository;
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -133,7 +130,6 @@ public class MathResourceService {
 		}
 		mathResourceDto.setPptPageCnt(slides.size());
 		
-		
 		if(!mathResourceDto.getImgFile().getOriginalFilename().equals("")) {
 			String imgFileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathResourceDto.getImgFile().getOriginalFilename();
 			
@@ -146,7 +142,6 @@ public class MathResourceService {
 			mathResourceDto.setImgName(savedImgName);
 			mathResourceDto.setImgPath("/webapp/static/resourceImg/");
 		}
-		
 		
 		MathResource resource = mathResourceRepository.save(mathResourceDto.toEntity());
 		int resourceNo = resource.getResourceNo();
@@ -163,10 +158,32 @@ public class MathResourceService {
 		}
 		
 		mathResourceCateRepository.saveAll(resourceCateList);
+		
+		HashMap<String, Object> nameListMap = CommonUtil.savePPtSlideToPngImge(path+"/resourcePpt/", pptFileName, path+"/resourcePptImg/");
+		List<MathResourceImg> mathResourceImgList = new ArrayList<>();
+		List<String> imgNameList = (List<String>) nameListMap.get("imgNameList");
+		for(String imgName : imgNameList) {
+			MathResourceImgDto mathResourceImgDto = new MathResourceImgDto();
+			mathResourceImgDto.setResourceNo(resourceNo);
+			mathResourceImgDto.setImgPath("/webapp/static/resourcePptImg/");
+			mathResourceImgDto.setImgName(imgName);
+			mathResourceImgList.add(mathResourceImgDto.toEntity());
+		}
+		
+		mathResourceImgRepository.saveAll(mathResourceImgList);
+		
 		map.put("isSuccess", true);
 		return map;
 	}
 	
+	@Transactional
+	public HashMap<String, Object> takePPtSlideImge(int resourceNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<MathResourceImg>  list = mathResourceImgRepository.findByResourceNo(resourceNo);
+		map.put("imgList", list);
+		map.put("isSuccess", true);
+		return map;
+	}
 	
 	@Transactional
 	public HashMap<String, Object> updateResource(String path, MathResourceDto mathResourceDto) throws IllegalStateException, IOException {
@@ -253,6 +270,31 @@ public class MathResourceService {
 		
 		mathResourceCateRepository.saveAll(resourceCateList);
 		
+		if(!pptName.equals("")){
+			List<MathResourceImg> pptImgList = mathResourceImgRepository.findByResourceNo(resourceNo);
+			
+			mathResourceImgRepository.deleteByResourceNo(resourceNo);
+			
+			HashMap<String, Object> nameListMap = CommonUtil.savePPtSlideToPngImge(path+"/resourcePpt/", pptFileName, path+"/resourcePptImg/");
+			List<MathResourceImg> mathResourceImgList = new ArrayList<>();
+			List<String> imgNameList = (List<String>) nameListMap.get("imgNameList");
+			for(String img : imgNameList) {
+				MathResourceImgDto mathResourceImgDto = new MathResourceImgDto();
+				mathResourceImgDto.setResourceNo(resourceNo);
+				mathResourceImgDto.setImgPath("/webapp/static/resourcePptImg/");
+				mathResourceImgDto.setImgName(img);
+				mathResourceImgList.add(mathResourceImgDto.toEntity());
+			}
+			
+			mathResourceImgRepository.saveAll(mathResourceImgList);
+			
+			for(MathResourceImg img : pptImgList) {
+				File file = new File(path+"/resourcePptImg/"+img.getImgName());
+				file.delete();
+			}
+		}
+		
+		
 		map.put("isSuccess", true);
 		return map;
 	}
@@ -288,12 +330,21 @@ public class MathResourceService {
 			map.put("serverMsg", "자기 자신의 컨텐츠 외에는 삭제할 수 없습니다.");
 			return map;
 		}
+		
+		mathResourceRepository.deleteByResourceNo(resourceNo);
+		mathResourceCateRepository.deleteByResourceNo(resourceNo);
+		
+		List<MathResourceImg> pptImgList = mathResourceImgRepository.findByResourceNo(resourceNo);
+		mathResourceImgRepository.deleteByResourceNo(resourceNo);
+		
 		File file = new File(path+"/resourcePpt/"+mathResource.getPptName());
 		file.delete();
 		File file2 = new File(path+"/resourceImg/"+mathResource.getImgName());
 		file2.delete();
-		mathResourceRepository.deleteByResourceNo(resourceNo);
-		mathResourceCateRepository.deleteByResourceNo(resourceNo);
+		for(MathResourceImg img : pptImgList) {
+			File file3 = new File(path+"/resourcePptImg/"+img.getImgName());
+			file3.delete();
+		}
 		map.put("existMsg", false);
 		return map;
 	}
