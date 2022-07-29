@@ -1,4 +1,4 @@
-package com.numberbox.customcenter.entity;
+package com.numberbox.serivcecenter.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +20,7 @@ public class ErrorReport {
 	public int reportId;
 	
 	/*
+	 * errType==0 : 기타 오류신고
 	 * errType==1 : 문제 오류신고
 	 * errType==2 : 컨텐츠 오류신고
 	 */
@@ -35,11 +36,33 @@ public class ErrorReport {
 	@Column(length = 500, nullable = true)
 	public String reportContents;
 	
-	@Column(columnDefinition = "BINARY(16)", nullable = true, updatable=false)
+	@Column(columnDefinition = "BINARY(16)", nullable = true)
 	public UUID replyUser;
 	
 	@Column(length = 500, nullable = true)
 	public String replyContents;
+	
+	@Column(length = 30, nullable = true)
+	public String firstImgPath;
+	@Column(length = 70, nullable = true)
+	public String firstImgName;
+	
+	@Column(length = 30, nullable = true)
+	public String secondImgPath;
+	@Column(length = 70, nullable = true)
+	public String secondImgName;
+	
+	@Column(length = 30, nullable = true)
+	public String thirdImgPath;
+	@Column(length = 70, nullable = true)
+	public String thirdImgName;
+	
+	/*
+	 * 접수 : 0
+	 * 답변완료 : 1
+	 */
+	@Column(length = 1, nullable = false)
+	public int reportStts;
 	
 	@Column
 	@UpdateTimestamp
@@ -52,7 +75,9 @@ public class ErrorReport {
 	public ErrorReport() { }
 	
     @Builder
-    public ErrorReport(int reportId, int errType, int contentsNo, UUID reportUser, String reportContents, UUID replyUser, String replyContents, LocalDateTime sysUpdateDate, LocalDateTime sysCreateDate) {
+    public ErrorReport(int reportId, int errType, int contentsNo, UUID reportUser, String reportContents, UUID replyUser, String replyContents
+    		, String firstImgPath, String firstImgName, String secondImgPath, String secondImgName
+    		, String thirdImgPath, String thirdImgName, int reportStts, LocalDateTime sysUpdateDate, LocalDateTime sysCreateDate) {
         this.reportId = reportId;
         this.errType = errType;
         this.contentsNo = contentsNo;
@@ -60,6 +85,13 @@ public class ErrorReport {
         this.reportContents = reportContents;
         this.replyUser = replyUser;
         this.replyContents = replyContents;
+        this.firstImgPath = firstImgPath;
+        this.firstImgName = firstImgName;
+        this.secondImgPath = secondImgPath;
+        this.secondImgName = secondImgName;
+        this.thirdImgPath = thirdImgPath;
+        this.thirdImgName = thirdImgName;
+        this.reportStts = reportStts;
         this.sysUpdateDate = sysUpdateDate;
         this.sysCreateDate = sysCreateDate;
     }

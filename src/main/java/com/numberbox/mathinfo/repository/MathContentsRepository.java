@@ -52,6 +52,23 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" order by a.sysCreateDate desc", nativeQuery = false)
 	public List<ContentsListModel> findByUnitUniqNo(@Param("unitUniqNo")int unitUniqNo);
     
+    @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
+    		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
+    		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
+    		", a.choiceAnswer, a.quesLevel, a.ansExistStts, a.svcPosbStts, a.contentsClassify, a.orgContentsNo"+
+    		", a.transConCnt, a.sysCreateDate, a.sysUpdateDate"+
+    		", b.onlineLicStts, b.perLicStts, b.perLicPrice, b.entLicStts, b.entLicPrice, b.shareStts"+
+    		", c.userNo, c.nickname, c.profileImgName, c.profileImgPath"+
+    		", d.subject, d.firUnit, d.secUnit, d.thrUnit)"+
+    		" from MathContents a INNER JOIN MembersProfile c on a.userUniqId = c.userUniqId" +
+    		" INNER JOIN MathUnitInfo d on a.unitUniqNo = d.unitUniqNo" + 
+    		" LEFT JOIN MathContentsLicense b on a.contentsNo = b.contentsNo" + 
+    		" where" + 
+    		" a.svcPosbStts=1 " + 
+    		" and ( (a.contentsClassify=0) or (a.contentsClassify =1  and b.shareStts=1) ) and a.contentsNo=:contentsNo" + 
+    		" order by a.sysCreateDate desc", nativeQuery = false)
+	public List<ContentsListModel> findByContentsNoCustom(@Param("contentsNo")int contentsNo);
+    
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"+
     		"(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
     		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
