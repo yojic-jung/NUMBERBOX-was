@@ -43,6 +43,7 @@ public class ServiceCenterService {
 		if(existErr != null) {
 			ErrorReportDto errorReportDto = modelMapper.map(existErr, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			map.put("existErrReport", errorReportDto);
 		}else {
 			map.put("existErrReport", existErr);
@@ -61,6 +62,7 @@ public class ServiceCenterService {
 		for(ErrorReport errReport : existErr) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			list.add(errorReportDto);
 		}
 		
@@ -75,7 +77,6 @@ public class ServiceCenterService {
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		errorReportDto.setReportUser(userUniqId);
-		
 		/*(
 		if(errorReportDto.getErrType() == 1 || errorReportDto.getErrType() == 2) {	//문제 및 컨텐츠 오류 신고는 같은 문제 재신고시 신고내용 수정
 			ErrorReport existErr = errorReportRepository.findByReportUserAndContentsNoAndErrType(userUniqId, errorReportDto.getContentsNo(), errorReportDto.getErrType());
@@ -170,6 +171,7 @@ public class ServiceCenterService {
 		for(ErrorReport errReport : oneToOneErrReportList) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			oneToOneList.add(errorReportDto);
 		}
 		
@@ -177,6 +179,7 @@ public class ServiceCenterService {
 		for(ErrorReport errReport : conErrReportList) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			conErrList.add(errorReportDto);
 		}
 		
@@ -184,6 +187,7 @@ public class ServiceCenterService {
 		for(ErrorReport errReport : resErrReportList) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			resErrList.add(errorReportDto);
 		}
 		map.put("oneToOneList", oneToOneList);
@@ -204,6 +208,7 @@ public class ServiceCenterService {
 		for(ErrorReport errReport : errReportList) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
 			reportList.add(errorReportDto);
 		}
 		map.put("errReportList", reportList);
