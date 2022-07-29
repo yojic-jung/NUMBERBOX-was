@@ -274,14 +274,23 @@ public class MathContentsInfoService {
 	
 	
 	@Transactional
-	public HashMap<String, Object> takeContentsList(MathContentsDto mathContentsDto) {
+	public HashMap<String, Object> takeContentsList(MathContentsDto mathContentsDto, String contentsNo) {
 		HashMap<String, Object> map = new HashMap<>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		
 		//List<MathContents> list = mathContentsRepository.findByUnitUniqNoAndSvcPosbSttsAndContentsClassifyOrUnitUniqNoAndSvcPosbSttsAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc
 		//	(mathContentsDto.getUnitUniqNo(), 1, 0, mathContentsDto.getUnitUniqNo(), 1, 1, 1);
-		List<ContentsListModel> list = mathContentsRepository.findByUnitUniqNo(mathContentsDto.getUnitUniqNo());
+		List<ContentsListModel> list;
+		if(contentsNo != null) {	// 문제 번호 검색하는 경우
+			list = mathContentsRepository.findByContentsNoCustom(Integer.parseInt(contentsNo));
+		}else {						// 단원으로 검색하는 경우
+			list = mathContentsRepository.findByUnitUniqNo(mathContentsDto.getUnitUniqNo());
+		}
+		
+		
+		
+		
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		List<Integer> contentsNoList = new ArrayList<>();
 		for(ContentsListModel content : list) {
@@ -330,7 +339,7 @@ public class MathContentsInfoService {
 	
 	
 	@Transactional
-	public List<MathContentsModel> takeWorkContentsList(MathContentsDto mathContentsDto) {
+	public List<MathContentsModel> takeWorkContentsList(MathContentsDto mathContentsDto, String contentsNo) {
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -340,12 +349,18 @@ public class MathContentsInfoService {
 			}
 		}
 		
-		List<MathContents> list = null;
-		if(isAdmin) {
-			list =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0);
+		List<MathContents> list = new ArrayList<>();
+		if(contentsNo != null) {
+			MathContents mathContents =  mathContentsRepository.findByContentsNo(Integer.parseInt(contentsNo));
+			list.add(mathContents);
 		}else {
-			list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0);
+			if(isAdmin) {
+				list =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0);
+			}else {
+				list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0);
+			}
 		}
+		
 		
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.numberbox.common.util.CommonUtil;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
@@ -104,7 +103,16 @@ public class MathInfoController {
 	
 	@PostMapping("/takeContentsList")
 	public HashMap<String, Object> takeContentsList(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeContentsList(mathContentsDto);
+		HashMap<String, Object> map = mathContentsInfoService.takeContentsList(mathContentsDto, null);
+		map.put("isSearched", true);
+		return map;
+	}
+	
+	
+	@GetMapping("/takeContentsListByContentsNo")
+	public HashMap<String, Object> takeContentsListByContentsNo(HttpServletRequest request) {
+		String contentsNo = (String)request.getParameter("contentsno");
+		HashMap<String, Object>	map = mathContentsInfoService.takeContentsList(null, contentsNo);
 		map.put("isSearched", true);
 		return map;
 	}
@@ -113,9 +121,18 @@ public class MathInfoController {
 	public HashMap<String, Object> takeWorkContentsList(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isSearched", true);
-		List<MathContentsModel> list = mathContentsInfoService.takeWorkContentsList(mathContentsDto);
+		List<MathContentsModel> list = mathContentsInfoService.takeWorkContentsList(mathContentsDto, null);
 		map.put("mathContents", list);
-		
+		return map;
+	}
+	
+	@GetMapping("/takeWorkContentsListByContentsNo")
+	public HashMap<String, Object> takeWorkContentsListByContentsNo(HttpServletRequest request) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String contentsNo = (String)request.getParameter("contentsno");
+		map.put("isSearched", true);
+		List<MathContentsModel> list = mathContentsInfoService.takeWorkContentsList(null, contentsNo);
+		map.put("mathContents", list);
 		return map;
 	}
 	

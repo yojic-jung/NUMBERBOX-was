@@ -73,6 +73,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/followingCancel").hasAnyRole("USER")
 
                 .antMatchers(HttpMethod.POST, "/mathInfo/takeWorkContentsList").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeWorkContentsListByContentsNo").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathInfo/takeContentsListByContentsNo").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/mathInfo/takeContentsList").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathInfo/takeMyContentsList").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathInfo/takeUserContentsList").hasAnyRole("USER")
@@ -100,8 +102,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/mathDocs/mathDocs").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathDocs/similarContents").hasAnyRole("USER")
                 
-                .antMatchers(HttpMethod.GET, "/customCenter/takeErrReport").hasAnyRole("USER")
-                .antMatchers(HttpMethod.POST, "/customCenter/registerError").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReport").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/serviceCenter/registerError").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeMyErrReport").hasAnyRole("USER")
+                
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportCount").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
                 
                 .antMatchers(HttpMethod.POST, "/common/download").hasAnyRole("USER")
                 
