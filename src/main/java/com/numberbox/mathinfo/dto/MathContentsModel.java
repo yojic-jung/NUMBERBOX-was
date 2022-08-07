@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.members.dto.MembersProfileDto;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class MathContentsModel {
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
-	
+	@JsonIgnore
 	UUID userUniqId;
 	
 	String contents;

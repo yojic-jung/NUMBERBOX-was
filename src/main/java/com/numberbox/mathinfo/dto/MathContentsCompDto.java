@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.mathinfo.entity.MathContentsComp;
 
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class MathContentsCompDto implements Serializable{
 	Integer orgSrcPage;
 	String copyrightYear;
 	String mathTypeClassify;
+	@JsonIgnore
 	UUID userUniqId;
 	
 	Date sysCreateDate;

@@ -23,6 +23,7 @@ public class ErrorReport {
 	 * errType==0 : 기타 오류신고
 	 * errType==1 : 문제 오류신고
 	 * errType==2 : 컨텐츠 오류신고
+	 * errType==3 : 학습지 오류신고
 	 */
 	@Column(length = 1, nullable = false)
 	public int errType;

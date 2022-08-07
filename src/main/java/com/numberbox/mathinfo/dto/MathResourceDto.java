@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.mathinfo.entity.MathResource;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import lombok.Setter;
 public class MathResourceDto {
 	
 	public int resourceNo;
-	
+	@JsonIgnore
 	public UUID userUniqId;
 	
 	public String title;

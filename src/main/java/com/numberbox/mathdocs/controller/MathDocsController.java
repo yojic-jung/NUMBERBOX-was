@@ -1,4 +1,4 @@
-package com.numberbox.mathinfo.controller;
+package com.numberbox.mathdocs.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,11 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.numberbox.mathdocs.dto.MathDocsPaperDto;
+import com.numberbox.mathdocs.service.MathDocsSevice;
 import com.numberbox.mathinfo.dto.MathContentsDto;
-import com.numberbox.mathinfo.service.MathDocsSevice;
 
 @RestController
 @RequestMapping("/mathDocs")
@@ -38,6 +40,32 @@ public class MathDocsController {
 		List<MathContentsDto> list = mathDocsSevice.takeSimilarContents(unitUniqNo, typeNo);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathSimilarConList", list);
+		return map;
+	}
+	
+	@PostMapping("/registerMathDocsPaper")
+	public HashMap<String, Object> registerMathDocsPaper(MathDocsPaperDto mathDocsPaperDto, HttpServletRequest request) {
+		HashMap<String, Object> map = mathDocsSevice.registerMathDocsPaper(mathDocsPaperDto);
+		return map;
+	}
+	
+	@GetMapping("/myMathDocs")
+	public HashMap<String, Object> myMathDocs(HttpServletRequest request) {
+		HashMap<String, Object> map = mathDocsSevice.myMathDocs();
+		return map;
+	}
+	
+	@GetMapping("/delMyMathDocs")
+	public HashMap<String, Object> delMyMathDocs(HttpServletRequest request) {
+		String docsNo = (String)request.getParameter("docsNo");
+		HashMap<String, Object> map = mathDocsSevice.delMyMathDocs(Integer.parseInt(docsNo));
+		return map;
+	}
+	
+	@GetMapping("/mathDocsByMyMathDocsPage")
+	public HashMap<String, Object> mathDocsByMyMathDocsPage(HttpServletRequest request) {
+		String docsNo = (String)request.getParameter("docsNo");
+		HashMap<String, Object> map = mathDocsSevice.mathDocsByMyMathDocsPage(Integer.parseInt(docsNo));
 		return map;
 	}
 	

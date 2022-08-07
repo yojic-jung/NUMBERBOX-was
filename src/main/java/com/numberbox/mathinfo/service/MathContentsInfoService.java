@@ -149,7 +149,6 @@ public class MathContentsInfoService {
 		//수정모드인 경우, MathContents 화면단 전달, 모달창 초기화 위해
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 		MathContentsModel mathContentsModel = modelMapper.map(mathContents, MathContentsModel.class);
-		mathContentsModel.setUserUniqId(null);
 		return mathContentsModel;
 	}
 	
@@ -372,7 +371,6 @@ public class MathContentsInfoService {
 			}
 			
 			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
-			mathContentsModel.setUserUniqId(null);
 			mathContentsModel.setMathContentsComp(mathContentsCompDtoList);
 			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
 			dtoList.add(mathContentsModel);
@@ -387,7 +385,6 @@ public class MathContentsInfoService {
 		MathContentsModel mathContentsModel = new MathContentsModel();
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 		MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
-		mathContentsDto.setUserUniqId(null);
 		mathContentsModel =  modelMapper.map(mathContentsDto, MathContentsModel.class);
 		
 		if(mathContentsDto.getContentsClassify() == 1) {
@@ -401,7 +398,6 @@ public class MathContentsInfoService {
 			//원본문제 제작자 프로필
 			MembersProfile membersProfile = membersProfileRepository.findByUserUniqId(mathContents.getUserUniqId());
 			MembersProfileDto membersProfileDto = modelMapper.map(membersProfile, MembersProfileDto.class);
-			membersProfileDto.setUserUniqId(null);
 			mathContentsModel.setMembersProfile(membersProfileDto);
 		}
 		
@@ -542,7 +538,6 @@ public class MathContentsInfoService {
 				mathContentsModel.setMathContentsLicense(licenseList);
 			}
 		
-			mathContentsModel.setUserUniqId(null);
 			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
 			mathContentsModel.setMathUnitInfo(mathUnitInfoDto);
 			dtoList.add(mathContentsModel);
@@ -589,7 +584,7 @@ public class MathContentsInfoService {
 		for(MathConRepoInfo mathConRepo : repoList) {
 			contentsNoList.add(mathConRepo.getMathConRepoDomain().getContentsNo());
 		}
-		List<ContentsListModel> mathContetsList = mathContentsRepository.findByContentsNoIn(contentsNoList);
+		List<ContentsListModel> mathContetsList = mathContentsRepository.findByContentsNoInCustom(contentsNoList);
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(ContentsListModel content : mathContetsList) {
 			//sysCreateDate를 저장소에 저장한 시간으로 셋팅

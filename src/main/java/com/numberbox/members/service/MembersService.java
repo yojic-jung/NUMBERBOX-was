@@ -120,7 +120,6 @@ public class MembersService {
 		UUID userUniqId = members.getUserUniqId();
 		MembersProfile profile = membersProfileRepository.findByUserUniqId(userUniqId);
 		MembersProfileDto profileDto = modelMapper.map(profile, MembersProfileDto.class);
-		profileDto.setUserUniqId(null);
 		map.put("isSuccess", true);
 		map.put("profile", profileDto);
 		
@@ -136,7 +135,6 @@ public class MembersService {
 		List<MembersProfileDto> followingDtoList = new ArrayList<>();
 		for(MembersProfile following : followingProfile) {
 			MembersProfileDto followingDto = modelMapper.map(following, MembersProfileDto.class);
-			followingDto.setUserUniqId(null);
 			followingDtoList.add(followingDto);
 		}
 		map.put("myFollowing", followingDtoList);
@@ -153,7 +151,6 @@ public class MembersService {
 		List<MembersProfileDto> followerDtoList = new ArrayList<>();
 		for(MembersProfile follower : followerProfile) {
 			MembersProfileDto followerDto = modelMapper.map(follower, MembersProfileDto.class);
-			followerDto.setUserUniqId(null);
 			followerDtoList.add(followerDto);
 		}
 		map.put("myFollower", followerDtoList);
