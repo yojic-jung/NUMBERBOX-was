@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathContentsComp;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
@@ -29,7 +30,9 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
+	@JsonIgnore
 	UUID userUniqId;
+	@JsonIgnore
 	String userUniqIdStr;
 	
 	String contents;

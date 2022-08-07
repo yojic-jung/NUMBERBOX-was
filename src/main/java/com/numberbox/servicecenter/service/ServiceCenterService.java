@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.mathdocs.dto.MathDocsPaperDto;
+import com.numberbox.mathdocs.entity.MathDocsPaper;
+import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
 import com.numberbox.members.entity.Members;
 import com.numberbox.security.util.StaticSecurityUtil;
 import com.numberbox.serivcecenter.entity.ErrorReport;
@@ -30,6 +33,9 @@ public class ServiceCenterService {
 
 	@Autowired
 	ErrorReportRepository errorReportRepository;
+	
+	@Autowired
+	MathDocsPaperRepository mathDocsPaperRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -143,6 +149,15 @@ public class ServiceCenterService {
 		boolean isSuccess = entityManager.contains(err);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		if(isSuccess) {
+			if(errorReportDto.getErrType() == 3) {
+				MathDocsPaper mathDocs = mathDocsPaperRepository.findByDocsNo(errorReportDto.contentsNo);
+				MathDocsPaperDto mathDocsDto = modelMapper.map(mathDocs, MathDocsPaperDto.class);
+				if(mathDocsDto.getDocsErrStts() != 2) {
+					mathDocsDto.setDocsErrStts(1);
+				}
+				
+				mathDocsPaperRepository.save(mathDocsDto.toEntity());
+			}
 			map.put("isSuccess", true);
 		}else {
 			map.put("isSuccess", false);
@@ -155,9 +170,11 @@ public class ServiceCenterService {
 		int oneToOneQuestionCnt = errorReportRepository.countByReportSttsAndErrType(0, 0);
 		int conErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 1);
 		int resErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 2);
+		int mathDocsErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 3);
 		map.put("oneToOneQuestionCnt", oneToOneQuestionCnt);
 		map.put("conErrCnt", conErrCnt);
 		map.put("resErrCnt", resErrCnt);
+		map.put("mathDocsErrCnt", mathDocsErrCnt);
 		return map;
 	}
 
@@ -166,6 +183,7 @@ public class ServiceCenterService {
 		List<ErrorReport> oneToOneErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 0);
 		List<ErrorReport> conErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 1);
 		List<ErrorReport> resErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 2);
+		List<ErrorReport> docsErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 3);
 		
 		List<ErrorReportDto> oneToOneList = new ArrayList<>();
 		for(ErrorReport errReport : oneToOneErrReportList) {
@@ -190,9 +208,19 @@ public class ServiceCenterService {
 			errorReportDto.setReplyUser(null);
 			resErrList.add(errorReportDto);
 		}
+		
+		List<ErrorReportDto> docsErrReportListDto = new ArrayList<>();
+		for(ErrorReport errReport : docsErrReportList) {
+			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
+			errorReportDto.setReportUser(null);
+			errorReportDto.setReplyUser(null);
+			docsErrReportListDto.add(errorReportDto);
+		}
+		
 		map.put("oneToOneList", oneToOneList);
 		map.put("conErrList", conErrList);
 		map.put("resErrList", resErrList);
+		map.put("mathDocsErrList", docsErrReportListDto);
 		return map;
 	}
 	

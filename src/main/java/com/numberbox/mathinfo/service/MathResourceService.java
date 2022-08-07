@@ -72,7 +72,6 @@ public class MathResourceService {
 				mathResourceCateDtoList.add(resourceCateDto);
 			}
 			
-			resourceDto.setUserUniqId(null);
 			mathResourceDtoList.add(resourceDto);
 		}
 		
@@ -95,7 +94,6 @@ public class MathResourceService {
 				mathResourceCateDtoList.add(resourceCateDto);
 			}
 			resourceDto.setMathResourceCate(mathResourceCateDtoList);
-			resourceDto.setUserUniqId(null);
 			mathResourceDtoList.add(resourceDto);
 		}
 		
@@ -311,7 +309,6 @@ public class MathResourceService {
 			MathResourceCateDto resourceCateDto = modelMapper.map(mathResourceCate, MathResourceCateDto.class);
 			mathResourceCateDtoList.add(resourceCateDto);
 		}
-		resourceDto.setUserUniqId(null);
 		resourceDto.setMathResourceCate(mathResourceCateDtoList);
 		map.put("newMathResource", resourceDto);
 		return map;

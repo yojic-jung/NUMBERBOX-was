@@ -1,8 +1,10 @@
-package com.numberbox.mathinfo.service;
+package com.numberbox.mathdocs.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,10 +12,16 @@ import javax.persistence.PersistenceContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.mathdocs.dto.MathDocsPaperDto;
+import com.numberbox.mathdocs.entity.MathDocsPaper;
+import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
+import com.numberbox.members.entity.Members;
+import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
 public class MathDocsSevice {
@@ -23,6 +31,9 @@ public class MathDocsSevice {
 
 	@Autowired
 	MathContentsRepository mathContentsRepository;
+	
+	@Autowired
+	MathDocsPaperRepository mathDocsPaperRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -156,7 +167,6 @@ public class MathDocsSevice {
 		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
 		for(MathContents mathContents: mainConList) {
 			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
-			mathContentsDto.setUserUniqId(null);
 			mathContentsDto.setOrgContentsNo(0);
 			mathContentsDto.setOrgSrcPage(0);
 			mathContentsDto.setOrgSrcRef(null);
@@ -175,7 +185,6 @@ public class MathDocsSevice {
 		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
 		for(MathContents mathContents: similarConList) {
 			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
-			mathContentsDto.setUserUniqId(null);
 			mathContentsDto.setOrgContentsNo(0);
 			mathContentsDto.setOrgSrcPage(0);
 			mathContentsDto.setOrgSrcRef(null);
@@ -184,4 +193,92 @@ public class MathDocsSevice {
 		return mathContentsDtoList;
 	}
 	
+	public HashMap<String, Object> registerMathDocsPaper(MathDocsPaperDto mathDocsPaperDto) {
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		mathDocsPaperDto.setUserUniqId(userUniqId);
+		MathDocsPaper mathDocsPaper = mathDocsPaperRepository.save(mathDocsPaperDto.toEntity());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("isSuccess", true);
+		map.put("docsNo", mathDocsPaper.getDocsNo());
+		return map;
+	}
+	
+	public HashMap<String, Object> myMathDocs(){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<MathDocsPaper> myDocsList = mathDocsPaperRepository.findByUserUniqIdAndDocsErrSttsNotOrderBySysCreateDateDesc(userUniqId, 2);
+		List<MathDocsPaperDto> myDocsDtoList = new ArrayList<>();
+		for(MathDocsPaper myDocs : myDocsList) {
+			MathDocsPaperDto myDocsDto = modelMapper.map(myDocs, MathDocsPaperDto.class);
+			myDocsDtoList.add(myDocsDto);
+		}
+		map.put("isSuccess", true);
+		map.put("myDocsList", myDocsDtoList);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> delMyMathDocs(int docsNo){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		MathDocsPaper mathDocsPaper = mathDocsPaperRepository.findByDocsNo(docsNo);
+		if(mathDocsPaper.getUserUniqId().equals(members.getUserUniqId())) {
+			int isSuccess = 0;
+			if(mathDocsPaper.getDocsErrStts() == 1) {
+				MathDocsPaperDto myDocsDto = modelMapper.map(mathDocsPaper, MathDocsPaperDto.class);
+				myDocsDto.setDocsErrStts(2);
+				MathDocsPaper newDocs = mathDocsPaperRepository.save(myDocsDto.toEntity());
+				boolean isSaved = entityManager.contains(newDocs);
+				if(isSaved) {
+					isSuccess = 1;
+				}
+			}else {
+				isSuccess = mathDocsPaperRepository.deleteByDocsNo(docsNo);
+			}
+			
+			if(isSuccess == 1) {
+				map.put("isSuccess", true);
+			}else {
+				map.put("isSuccess", false);
+			}
+		}else {
+			map.put("existMsg", true);
+			map.put("serverMsg", "본인이 만든 학습지가 아닌 경우 삭제 할 수 없습니다.");
+		}
+		
+		
+		return map;
+	}
+	
+	
+	public HashMap<String, Object> mathDocsByMyMathDocsPage(int docsNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		MathDocsPaper mathDocsPaper = mathDocsPaperRepository.findByDocsNo(docsNo);
+		MathDocsPaperDto mathDocsPaperDto = modelMapper.map(mathDocsPaper, MathDocsPaperDto.class);
+		
+		String contentsNoListStr = mathDocsPaper.getContentsNoList();
+		String[] contentsNoArr = contentsNoListStr.split(",");
+		List<Integer> contentsNoList = new ArrayList<>();
+		for(String contentsNo : contentsNoArr) {
+			contentsNoList.add(Integer.parseInt(contentsNo));
+		}
+		List<MathContents> mainConList = mathContentsRepository.findByContentsNoIn(contentsNoList);
+		
+		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
+		for(MathContents mathContents: mainConList) {
+			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
+			mathContentsDto.setOrgContentsNo(0);
+			mathContentsDto.setOrgSrcPage(0);
+			mathContentsDto.setOrgSrcRef(null);
+			mathContentsDtoList.add(mathContentsDto);
+		}
+		
+		//문제 난이도에 따라 오름차순으로 정렬
+		Collections.sort(mathContentsDtoList);
+		map.put("mathContentsList", mathContentsDtoList);
+		map.put("mathDocsPaper", mathDocsPaperDto);
+		return map;
+	}
 }

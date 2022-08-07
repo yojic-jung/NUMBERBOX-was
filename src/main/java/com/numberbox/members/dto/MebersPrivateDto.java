@@ -2,6 +2,7 @@ package com.numberbox.members.dto;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.members.entity.MembersPrivate;
 
 import lombok.AllArgsConstructor;
@@ -14,8 +15,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MebersPrivateDto {
-
+	@JsonIgnore
 	private UUID userUniqId;
+	
 	private String userName;
 	private String birth;
     private String phoneNumber;

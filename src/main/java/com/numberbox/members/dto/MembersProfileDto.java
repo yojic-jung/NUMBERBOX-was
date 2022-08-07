@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.members.entity.MembersProfile;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.Setter;
 public class MembersProfileDto {
 	
 	private long userNo;
+	@JsonIgnore
     private UUID userUniqId;
     public String nickname;
     public String profileImgName;

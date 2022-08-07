@@ -84,7 +84,10 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" a.svcPosbStts=1 " + 
     		" and ( (a.contentsClassify=0) or (a.contentsClassify=2) or (a.contentsClassify =1  and b.shareStts=1) ) and a.contentsNo in(:contentsNoList)" + 
     		" order by a.sysCreateDate desc", nativeQuery = false)
-	public List<ContentsListModel> findByContentsNoIn(@Param("contentsNoList")List<Integer> contentsNoList);
+	public List<ContentsListModel> findByContentsNoInCustom(@Param("contentsNoList")List<Integer> contentsNoList);
+    
+    
+    public List<MathContents> findByContentsNoIn(List<Integer> contentsNoList);
     
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo", "membersProfile"})		//n+1 문제 해결, 사용자 문제검색(유사문제 조회 안함)
     public List<MathContents> findByUnitUniqNoAndSvcPosbSttsAndContentsClassifyOrUnitUniqNoAndSvcPosbSttsAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc(
