@@ -64,6 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/takeResource").permitAll()
+                .antMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
+                
                 .antMatchers(HttpMethod.GET, "/takeProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/takeUserProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/changeNickname").hasAnyRole("USER")

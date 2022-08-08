@@ -256,10 +256,19 @@ public class MathInfoController {
 	}
 	
 	@GetMapping("/takeResource")
-	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo, HttpServletRequest request) throws FileNotFoundException, IOException {
+	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		List<MathResourceDto> resourceMenuList = mathResourceService.takeResource(mainCateNo, path);
+		map.put("resourceList", resourceMenuList);
+		return map;
+	}
+	
+	@GetMapping("/takeResourceByResourceNo")
+	public HashMap<String, Object> takeResourceByResourceNo(@RequestParam int resourceNo, HttpServletRequest request) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		List<MathResourceDto> resourceMenuList = mathResourceService.takeResourceByResourceNo(resourceNo, path);
 		map.put("resourceList", resourceMenuList);
 		return map;
 	}
