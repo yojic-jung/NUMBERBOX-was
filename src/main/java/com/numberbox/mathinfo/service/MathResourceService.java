@@ -58,24 +58,46 @@ public class MathResourceService {
 	}
 	
 	@Transactional
-	public List<MathResourceDto> takeResource(int mainCateNo, String path) throws FileNotFoundException, IOException {
+	public List<MathResourceDto> takeResource(int mainCateNo, String path) {
 		List<MathResource> resourceList = mathResourceRepository.findDistinctByMathResourceCateMainCateNo(mainCateNo);
 		Collections.sort(resourceList, (a, b) -> b.getDownCnt() - a.getDownCnt());
 		List<MathResourceDto> mathResourceDtoList = new ArrayList<>();
 		for(MathResource resource : resourceList) {
 			MathResourceDto resourceDto = modelMapper.map(resource, MathResourceDto.class);
-			
+			/*
 			List<MathResourceCateDto> mathResourceCateDtoList = new ArrayList<>();
 			List<MathResourceCate> mathResourceCateList = resource.getMathResourceCate();
 			for(MathResourceCate mathResourceCate : mathResourceCateList) {
 				MathResourceCateDto resourceCateDto = modelMapper.map(mathResourceCate, MathResourceCateDto.class);
 				mathResourceCateDtoList.add(resourceCateDto);
 			}
+			*/
+			//resourceDto.setMathResourceCate(mathResourceCateDtoList);
 			
 			mathResourceDtoList.add(resourceDto);
 		}
 		
 		return mathResourceDtoList;
+	}
+	
+	@Transactional
+	public List<MathResourceDto> takeResourceByResourceNo(int resourceNo, String path) {
+		MathResource resource = mathResourceRepository.findByResourceNo(resourceNo);
+		MathResourceDto resourceDto = modelMapper.map(resource, MathResourceDto.class);
+		
+		/*
+		List<MathResourceCateDto> mathResourceCateDtoList = new ArrayList<>();
+		List<MathResourceCate> mathResourceCateList = resource.getMathResourceCate();
+		for(MathResourceCate mathResourceCate : mathResourceCateList) {
+			MathResourceCateDto resourceCateDto = modelMapper.map(mathResourceCate, MathResourceCateDto.class);
+			mathResourceCateDtoList.add(resourceCateDto);
+		}
+		*/
+		//resourceDto.setMathResourceCate(mathResourceCateDtoList);
+		
+		List<MathResourceDto> resourceDtoList = new ArrayList<>();
+		resourceDtoList.add(resourceDto);
+		return resourceDtoList;
 	}
 	
 	@Transactional
