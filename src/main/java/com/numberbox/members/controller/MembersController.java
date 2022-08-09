@@ -99,7 +99,9 @@ public class MembersController {
 		if(isSuccess.equals("loginSuccess") || isSuccess.equals("signUpSuccess")) {
 			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
 			response.setHeader("access-token", returnMap.get("accessToken"));
+			response.setHeader("role", returnMap.get("role"));
 	        response.addCookie(refreshTokenCookie);
+	        
 		}
 		map.put("isSuccess", isSuccess);
 		return map;
