@@ -91,6 +91,20 @@ public class MembersController {
 		return map;
 	}
 	
+	@PostMapping("/naverLogin")
+	public HashMap<String, Object> naverLogin(MembersDto members, HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, String> returnMap = membersService.naverLogin(members, request);
+		String isSuccess = returnMap.get("isSuccess");
+		if(isSuccess.equals("loginSuccess") || isSuccess.equals("signUpSuccess")) {
+			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
+			response.setHeader("access-token", returnMap.get("accessToken"));
+	        response.addCookie(refreshTokenCookie);
+		}
+		map.put("isSuccess", isSuccess);
+		return map;
+	}
+	
 	@RequestMapping("/accessDenied")
 	public HashMap<String, Object> accessDenied(HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();

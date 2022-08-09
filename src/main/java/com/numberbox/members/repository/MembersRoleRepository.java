@@ -1,5 +1,6 @@
 package com.numberbox.members.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +22,7 @@ public interface MembersRoleRepository extends JpaRepository <MembersRole, Long>
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE members_role m set m.enabled = true where m.user_uniq_id = :userUniqId", nativeQuery = true)
 	public int ableEnabled(@Param("userUniqId")UUID userUniqId);
+	
+	public List<MembersRole> findByUserUniqId(UUID uuid);
 	
 }
