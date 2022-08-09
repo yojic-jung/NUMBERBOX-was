@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.dto.FollowUsersDto;
 import com.numberbox.members.dto.MebersPrivateDto;
@@ -42,6 +44,8 @@ public class MembersService {
     EntityManager entityManager;
 	@Autowired 
 	private JwtUtil jwtUtil;
+	@Autowired 
+	private ExpiredRefreshTokenService expiredRefreshTokenService;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
@@ -57,6 +61,8 @@ public class MembersService {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	private static String[] randomStr = {"~", "!", "@", "#", "%", "^", "&", "*", "-", "_", "=", "+", "?", ";", ":", ",", "."};
+	
 	@Transactional
 	public HashMap<String, String> signUp(MembersDto membersDto) {
 		HashMap<String, String> map = new HashMap<>();
@@ -70,6 +76,7 @@ public class MembersService {
 			map.put("isSuccess", "existsPhone");
 			return map;
 		}
+		
 		membersDto.setPassword(bCryptPasswordEncoder.encode(membersDto.getPassword()) );
 		membersDto.setHumanStatus(false);
 		membersDto.setFailCount(0);
@@ -108,6 +115,76 @@ public class MembersService {
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         
         map.put("isSuccess", "success");
+        map.put("accessToken", accessToken);
+        map.put("refreshToken", refreshToken);
+		return map;
+	}
+	
+	
+	@Transactional
+	public HashMap<String, String> naverLogin(MembersDto membersDto, HttpServletRequest request) {
+		String expiredToken = jwtUtil.resolveRefreshToken(request);
+        //로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰을 만료시킴(클라이언트단에 로그아웃시 refresh토큰 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
+        if (expiredToken != null && !expiredToken.isEmpty()) {
+            expiredRefreshTokenService.addExpiredToken(expiredToken);
+        }
+	        
+		HashMap<String, String> map = new HashMap<>();
+		Members members = membersRepository.findByEmail(membersDto.getEmail());
+		List<MembersRole> roleList = new ArrayList<>();
+		if(members != null) {
+			roleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
+			map.put("isSuccess", "loginSuccess");
+		}else {
+			//로그인 API로  회원가입하는 경우
+			//휴대폰 인증 체크
+			boolean existsPhone = membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
+			if(existsPhone) {
+				map.put("isSuccess", "existsPhone");
+				return map;
+			}
+			Random random = new Random();
+			String generatedString = random.ints(97, 123).limit(10).collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+			generatedString = generatedString+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)];
+			membersDto.setPassword(bCryptPasswordEncoder.encode(generatedString) );
+			membersDto.setHumanStatus(false);
+			membersDto.setFailCount(0);
+			members = membersRepository.save(membersDto.toEntity());
+			MembersProfileDto membersProfileDto = new MembersProfileDto();
+			membersProfileDto.setUserUniqId(members.getUserUniqId());
+			//닉네임 10글자 임의 소문자 알파벳으로 설정
+			int leftLimit = 97; // letter 'a'
+		    int rightLimit = 122; // letter 'z'
+		    int targetStringLength = 10;
+		    random = new Random();
+		    generatedString = random.ints(leftLimit, rightLimit + 1)
+		                                   .limit(targetStringLength)
+		                                   .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+		                                   .toString();
+		    membersProfileDto.setNickname(generatedString);
+			membersProfileRepository.save(membersProfileDto.toEntity());
+			MembersRoleDto membersRoleDto = new MembersRoleDto();
+			UUID userUniqId = members.getUserUniqId();
+			membersRoleDto.setUserUniqId(userUniqId);
+			membersRoleDto.setEnabled(true);
+			membersRoleDto.setRoleName("USER");
+			MembersRole membersRole = membersRoleRepository.save(membersRoleDto.toEntity());
+			roleList.add(membersRole);
+			if(membersDto.getUserName() != null) {
+				MebersPrivateDto mebersPrivateDto = new MebersPrivateDto();
+				mebersPrivateDto.setUserUniqId(userUniqId);
+				mebersPrivateDto.setUserName(membersDto.getUserName());
+				mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
+				mebersPrivateDto.setBirth(membersDto.getBirth());
+				membersPrivateRepository.save(mebersPrivateDto.toEntity());
+			}
+			
+			 map.put("isSuccess", "signUpSuccess");
+		}
+		
+		
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), roleList);
+        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         map.put("accessToken", accessToken);
         map.put("refreshToken", refreshToken);
 		return map;
