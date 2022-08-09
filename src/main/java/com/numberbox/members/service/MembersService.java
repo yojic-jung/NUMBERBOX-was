@@ -133,7 +133,36 @@ public class MembersService {
 		Members members = membersRepository.findByEmail(membersDto.getEmail());
 		List<MembersRole> roleList = new ArrayList<>();
 		if(members != null) {
-			roleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
+			List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
+			boolean isManager = false;
+			int mangerRoleIdx = 0;
+	        boolean isAdmin = false;
+	        int adminRoleIdx = 0;
+	        int userRoleIdx = 0;
+	        
+	        int idx = 0;
+			for(MembersRole role : membersRoleList) {
+	        	if(role.getRoleName().equals("MANAGER")) {
+	        		isManager=true;
+	        		adminRoleIdx = idx;
+	        	}
+	        	else if(role.getRoleName().equals("ADMIN")) {
+	        		isAdmin=true;
+	        		mangerRoleIdx = idx;
+	        	}else {
+	        		userRoleIdx = idx;
+	        	}
+	        	idx = idx++;
+	        }
+			
+			if(isAdmin) {
+				roleList.add(membersRoleList.get(adminRoleIdx));
+	        }else if(!isAdmin && isManager) {
+	        	roleList.add(membersRoleList.get(mangerRoleIdx));
+	        }else {
+	        	roleList.add(membersRoleList.get(userRoleIdx));
+	        }
+			
 			map.put("isSuccess", "loginSuccess");
 		}else {
 			//로그인 API로  회원가입하는 경우
