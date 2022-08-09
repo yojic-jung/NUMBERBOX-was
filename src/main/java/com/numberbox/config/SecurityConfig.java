@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()
                 .antMatchers(HttpMethod.GET, "/certifications/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/findEmail").permitAll()
                 
                 .antMatchers(HttpMethod.GET, "/takeProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/takeUserProfile").hasAnyRole("USER")

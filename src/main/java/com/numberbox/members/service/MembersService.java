@@ -28,6 +28,7 @@ import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersFollowInfo;
+import com.numberbox.members.entity.MembersPrivate;
 import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
@@ -36,6 +37,8 @@ import com.numberbox.members.repository.MembersProfileRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.security.util.StaticSecurityUtil;
+
+import purplebook.solapi.app.SendJsonSMS;
 
 @Service
 public class MembersService {
@@ -380,6 +383,20 @@ public class MembersService {
 	public void tmpPasswordChange() {
 		Members members = membersRepository.findByEmail("cjfwns@naver.com");
 		membersRepository.changePassword(members.getUserUniqId(), bCryptPasswordEncoder.encode("snack12!"));
+	}
+	
+	
+	public HashMap<String, Object> findEmail(MembersDto memberDto){
+		HashMap<String, Object> map = new HashMap<>();
+		MembersPrivate membersPrivate = membersPrivateRepository.findByPhoneNumberAndUserName(memberDto.getPhoneNumber(), memberDto.getUserName());
+		if(membersPrivate != null) {
+			Members members = membersRepository.findByUserUniqId(membersPrivate.getUserUniqId());
+			map.put("isExist", true);
+			SendJsonSMS.sendSMS(memberDto.getPhoneNumber(), "N명의수학입니다. 고객님이 요청하신 고객님의 N명의수학 계정 이메일은 "+members.getEmail()+"입니다. 고객님이 요청하신 경우가 아니라면 고객센터로 문의 해주시기 바랍니다.");
+		}else {
+			map.put("isExist", false);
+		}
+		return map;
 	}
 	
 }

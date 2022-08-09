@@ -185,4 +185,10 @@ public class MembersController {
 		return map;
 	}
 	
+	@PostMapping(value="/findEmail")
+	public Object findEmail(MembersDto memberDto) {
+		HashMap<String, Object> map = membersService.findEmail(memberDto);
+		return map;
+	}
+	
 }
