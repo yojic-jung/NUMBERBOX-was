@@ -65,6 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/takeResource").permitAll()
                 .antMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()
+                .antMatchers(HttpMethod.GET, "/certifications/*").permitAll()
                 
                 .antMatchers(HttpMethod.GET, "/takeProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/takeUserProfile").hasAnyRole("USER")
@@ -118,7 +120,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
                 
                 .antMatchers(HttpMethod.POST, "/common/download").hasAnyRole("USER")
-                
                 
                 .antMatchers("/mathInfo/**").permitAll()
                 .antMatchers("/author").hasAnyRole("user");
