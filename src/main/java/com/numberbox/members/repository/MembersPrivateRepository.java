@@ -9,4 +9,6 @@ import com.numberbox.members.entity.MembersPrivate;
 public interface MembersPrivateRepository extends JpaRepository <MembersPrivate, UUID> {
 
 	public boolean existsByPhoneNumber(String phoneNumber);
+	
+	public MembersPrivate findByPhoneNumberAndUserName(String phoneNumber, String userName);
 }
