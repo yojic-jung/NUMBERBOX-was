@@ -1,6 +1,7 @@
 package com.numberbox.members.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
@@ -10,15 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.siot.IamportRestClient.response.Certification;
+import com.numberbox.iamport.IamportClient;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.service.MembersService;
+import com.siot.IamportRestClient.response.IamportResponse;
 
 @RestController
 public class MembersController {
@@ -135,6 +140,33 @@ public class MembersController {
 	public String tmpPasswordChange() {
 		membersService.tmpPasswordChange();
 		return "";
+	}
+	
+	@GetMapping(value="/certifications/{imp_uid}")
+	public Object certifications(@PathVariable String imp_uid, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		IamportClient iam = new IamportClient("2626730431329357", "jm37bnUp381Ov6hQjE8fXJZry3Tj53NopRwAeq0hz1548nVr14HYNGqmKjGPntdMlJnzanRKpXOykK0m");
+		IamportResponse<Certification> cer = iam.certificationByImpUid(imp_uid);
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyMMdd");
+		
+		Certification cer1 = cer.getResponse();
+		cer1.getPhone();
+		HashMap<String, String> map = new HashMap<>();
+		map.put("name", cer.getResponse().getName());
+		map.put("birth", date.format(cer.getResponse().getBirth()) );
+		map.put("phone", cer.getResponse().getPhone());
+		
+		return map;
+	}
+	
+	@GetMapping(value="/takeMerchantUid")
+	public Object takeMerchantUid() {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("merchantUid", "ORD20180131-0000011");
+		map.put("merchantIdCode", "imp48047014");
+		
+		return map;
 	}
 	
 }
