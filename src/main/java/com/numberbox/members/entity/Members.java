@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.uuid.Generators;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class Members {
 	
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
+	@JsonIgnore
 	private UUID userUniqId;
 	
 	@PrePersist
@@ -59,10 +61,13 @@ public class Members {
     private LocalDateTime lastFailTime;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userUniqId", referencedColumnName = "userUniqId")
+    @JoinColumn(name = "userUniqId", referencedColumnName = "userUniqId", updatable=false)
     List<MembersRole> role;
 
-  
+    //0 : 일반계정
+    //1 : 임시 비밀번호 발급계정(임시 비밀번호 발급계정 비밀번호 수정 안 하는 경우 새로운 비밀번호로 수정(스케쥴러로 구현))
+    private boolean tmpPassword;
+    
     @CreationTimestamp
     private LocalDateTime signupDate;
     @UpdateTimestamp

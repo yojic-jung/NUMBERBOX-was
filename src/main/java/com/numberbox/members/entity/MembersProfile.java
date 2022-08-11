@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,7 @@ public class MembersProfile implements Serializable {	//조인시 pk로 조인 �
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public long userNo;
 
+	@JsonIgnore
 	@Column(name="userUniqId" ,columnDefinition = "BINARY(16)", updatable=false)
 	private UUID userUniqId;
 	

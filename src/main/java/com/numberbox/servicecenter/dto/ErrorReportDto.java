@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.serivcecenter.entity.ErrorReport;
 
 import lombok.AllArgsConstructor;
@@ -21,8 +22,12 @@ public class ErrorReportDto {
 	public int reportId;
 	public int errType;
 	public int contentsNo;
+	
+	@JsonIgnore
 	public UUID reportUser;
 	public String reportContents;
+	
+	@JsonIgnore
 	public UUID replyUser;
 	public String replyContents;
 	

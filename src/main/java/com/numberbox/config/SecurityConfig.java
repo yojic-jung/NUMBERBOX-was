@@ -70,6 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/certifications/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/findEmail").permitAll()
                 
+                .antMatchers(HttpMethod.GET, "/takeMyEmail").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/confirmPassword").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/changePassword").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/changePhoneNumber").hasAnyRole("USER")
+                
                 .antMatchers(HttpMethod.GET, "/takeProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/takeUserProfile").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/changeNickname").hasAnyRole("USER")

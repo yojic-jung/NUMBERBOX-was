@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +33,7 @@ public class MathResource {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int resourceNo;
 	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)")
 	public UUID userUniqId;
 	

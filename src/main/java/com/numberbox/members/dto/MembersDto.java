@@ -21,6 +21,7 @@ public class MembersDto {
 	private String email;
     private String password;
     private boolean humanStatus;
+    private boolean tmpPassword;
     private int failCount;
     private LocalDateTime lastFailTime;
     
@@ -34,7 +35,7 @@ public class MembersDto {
     
     public Members toEntity() {
 		return Members.builder().userUniqId(userUniqId).email(email).password(password)
-				.humanStatus(humanStatus).failCount(failCount).lastFailTime(lastFailTime).signupDate(signupDate).lastLoginDate(lastLoginDate)
+				.humanStatus(humanStatus).tmpPassword(tmpPassword).failCount(failCount).lastFailTime(lastFailTime).signupDate(signupDate).lastLoginDate(lastLoginDate)
 				.build();
 	}
 }

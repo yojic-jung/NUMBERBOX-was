@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class MembersRole {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long seqNo;
 
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)", updatable=false)
 	private UUID userUniqId;
 	

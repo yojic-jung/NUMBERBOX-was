@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +22,7 @@ public class MathConLikeDomain implements Serializable {
 	
 	public int contentsNo;
 	
+	@JsonIgnore
 	public UUID userUniqId;
 	
 	public MathConLikeDomain() {}

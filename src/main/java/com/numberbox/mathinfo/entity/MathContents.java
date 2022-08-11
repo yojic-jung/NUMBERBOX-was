@@ -22,6 +22,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +46,7 @@ public class MathContents {
 	@Column(length = 2, nullable = false)
 	int typeNo;
 	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
 	UUID userUniqId;
 	

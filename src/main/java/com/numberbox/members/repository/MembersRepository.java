@@ -1,5 +1,6 @@
 package com.numberbox.members.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,10 +14,14 @@ import com.numberbox.members.entity.Members;
 public interface MembersRepository extends JpaRepository <Members, UUID> {
 
 	public boolean existsByEmail(String email);
+	
+	public int countByTmpPassword(boolean tmpPassword);
 
 	public Members findByUserUniqId(UUID id);
 	
 	public Members findByEmail(String email);
+	
+	public List<Members> findTop10000ByTmpPassword(boolean tmpPassword);
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다

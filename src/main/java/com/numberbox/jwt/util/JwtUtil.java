@@ -40,7 +40,7 @@ public class JwtUtil {
 	  private String secretKey;
 	
 	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
-	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 60; // 2달
+	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
 	
 	  public String createAccessToken(String email, UUID userUniqId, List<MembersRole> roleList) {
 		  List<String> strRoleList = new ArrayList<>();

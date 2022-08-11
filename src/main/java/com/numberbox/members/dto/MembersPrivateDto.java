@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MebersPrivateDto {
+public class MembersPrivateDto {
 	@JsonIgnore
 	private UUID userUniqId;
 	
