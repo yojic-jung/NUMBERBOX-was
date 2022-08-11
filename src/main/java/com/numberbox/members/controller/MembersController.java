@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.siot.IamportRestClient.response.Certification;
 import com.numberbox.iamport.IamportClient;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersProfileDto;
+import com.numberbox.members.dto.PasswordModel;
+import com.numberbox.members.entity.Members;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.service.MembersService;
+import com.numberbox.security.util.StaticSecurityUtil;
+import com.siot.IamportRestClient.response.Certification;
 import com.siot.IamportRestClient.response.IamportResponse;
 
 @RestController
@@ -56,7 +61,7 @@ public class MembersController {
 		String loginState = (String)request.getAttribute("loginState");
 		Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
 		if(loginState !=null && loginState.equals("keep")) {
-        	refreshTokenCookie.setMaxAge(60*60*24*60);
+        	refreshTokenCookie.setMaxAge(60*60*24*30);
         }
 		
 		response.addCookie(refreshTokenCookie);
@@ -100,6 +105,10 @@ public class MembersController {
 			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
 			response.setHeader("access-token", returnMap.get("accessToken"));
 			response.setHeader("role", returnMap.get("role"));
+			String loginState = (String)request.getParameter("loginState");
+	        if(loginState !=null && loginState.equals("keep")) {
+	        	refreshTokenCookie.setMaxAge(60*60*24*30);
+	        }
 	        response.addCookie(refreshTokenCookie);
 	        
 		}
@@ -188,6 +197,40 @@ public class MembersController {
 	@PostMapping(value="/findEmail")
 	public Object findEmail(MembersDto memberDto) {
 		HashMap<String, Object> map = membersService.findEmail(memberDto);
+		return map;
+	}
+	
+	@GetMapping(value="/findPassword")
+	public Object findPassWd(HttpServletRequest request) throws AddressException, MessagingException {
+		String email = (String) request.getParameter("email");
+		HashMap<String, Object> map = membersService.findPassword(request, email);
+		return map;
+	}
+	
+	@GetMapping(value="/takeMyEmail")
+	public HashMap<String, String> takeMyEmail(){
+		Members members = StaticSecurityUtil.getMembers();
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("email", members.getEmail());
+		return map;
+	}
+	
+	@PostMapping(value="/confirmPassword")
+	public HashMap<String, Object> confirmPassword(MembersDto memberDto) {
+		HashMap<String, Object> map = membersService.confirmPassword(memberDto.getPassword());
+		return map;
+	}
+	
+	
+	@PostMapping(value="/changePassword")
+	public HashMap<String, Object> changePassword(PasswordModel passwordModel) {
+		HashMap<String, Object> map = membersService.changePassword(passwordModel);
+		return map;
+	}
+	
+	@PostMapping(value="/changePhoneNumber")
+	public HashMap<String, Object> changePhoneNumber(MembersDto MembersDto) {
+		HashMap<String, Object> map = membersService.changePhoneNumber(MembersDto);
 		return map;
 	}
 	

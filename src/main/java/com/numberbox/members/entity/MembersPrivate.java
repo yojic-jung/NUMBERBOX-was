@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class MembersPrivate {
 	@Id
 	@Column(columnDefinition = "BINARY(16)")
+	@JsonIgnore
 	private UUID userUniqId;
 
     private String userName;

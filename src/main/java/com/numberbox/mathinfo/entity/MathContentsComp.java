@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +43,8 @@ public class MathContentsComp {
 	String copyrightYear;
 	@Column(length = 20, nullable = true)
 	String mathTypeClassify;
+	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)")
 	UUID userUniqId;
 	

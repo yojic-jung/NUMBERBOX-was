@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -31,12 +33,14 @@ public class ErrorReport {
 	@Column(length = 11, nullable = true, updatable=false)
 	int contentsNo;
 	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
 	public UUID reportUser;
 	
 	@Column(length = 500, nullable = true)
 	public String reportContents;
 	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)", nullable = true)
 	public UUID replyUser;
 	

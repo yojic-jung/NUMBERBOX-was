@@ -11,4 +11,7 @@ public interface MembersPrivateRepository extends JpaRepository <MembersPrivate,
 	public boolean existsByPhoneNumber(String phoneNumber);
 	
 	public MembersPrivate findByPhoneNumberAndUserName(String phoneNumber, String userName);
+	
+	public MembersPrivate findByUserUniqId(UUID userUniqId);
+	
 }

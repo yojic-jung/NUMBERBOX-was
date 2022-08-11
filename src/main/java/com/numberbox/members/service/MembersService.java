@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +20,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.dto.FollowUsersDto;
-import com.numberbox.members.dto.MebersPrivateDto;
+import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersFollowInfoDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
+import com.numberbox.members.dto.PasswordModel;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersFollowInfo;
 import com.numberbox.members.entity.MembersPrivate;
@@ -37,8 +41,6 @@ import com.numberbox.members.repository.MembersProfileRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.security.util.StaticSecurityUtil;
-
-import purplebook.solapi.app.SendJsonSMS;
 
 @Service
 public class MembersService {
@@ -64,7 +66,7 @@ public class MembersService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	private static String[] randomStr = {"~", "!", "@", "#", "%", "^", "&", "*", "-", "_", "=", "+", "?", ";", ":", ",", "."};
+	
 	
 	@Transactional
 	public HashMap<String, String> signUp(MembersDto membersDto) {
@@ -105,7 +107,7 @@ public class MembersService {
 		MembersRole membersRole = membersRoleRepository.save(membersRoleDto.toEntity());
 		
 		if(membersDto.getUserName() != null) {
-			MebersPrivateDto mebersPrivateDto = new MebersPrivateDto();
+			MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
 			mebersPrivateDto.setUserUniqId(userUniqId);
 			mebersPrivateDto.setUserName(membersDto.getUserName());
 			mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
@@ -147,10 +149,8 @@ public class MembersService {
 				map.put("isSuccess", "existsPhone");
 				return map;
 			}
-			Random random = new Random();
-			String generatedString = random.ints(97, 123).limit(10).collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-			generatedString = generatedString+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)]+randomStr[random.nextInt(randomStr.length-1)];
-			membersDto.setPassword(bCryptPasswordEncoder.encode(generatedString) );
+			
+			membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()) );
 			membersDto.setHumanStatus(false);
 			membersDto.setFailCount(0);
 			members = membersRepository.save(membersDto.toEntity());
@@ -160,8 +160,8 @@ public class MembersService {
 			int leftLimit = 97; // letter 'a'
 		    int rightLimit = 122; // letter 'z'
 		    int targetStringLength = 10;
-		    random = new Random();
-		    generatedString = random.ints(leftLimit, rightLimit + 1)
+		    Random random = new Random();
+		    String generatedString = random.ints(leftLimit, rightLimit + 1)
 		                                   .limit(targetStringLength)
 		                                   .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 		                                   .toString();
@@ -175,7 +175,7 @@ public class MembersService {
 			MembersRole membersRole = membersRoleRepository.save(membersRoleDto.toEntity());
 			roleList.add(membersRole);
 			if(membersDto.getUserName() != null) {
-				MebersPrivateDto mebersPrivateDto = new MebersPrivateDto();
+				MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
 				mebersPrivateDto.setUserUniqId(userUniqId);
 				mebersPrivateDto.setUserName(membersDto.getUserName());
 				mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
@@ -381,20 +381,94 @@ public class MembersService {
 	}
 
 	public void tmpPasswordChange() {
-		Members members = membersRepository.findByEmail("cjfwns@naver.com");
+		Members members = membersRepository.findByEmail("wogus@naver.com");
 		membersRepository.changePassword(members.getUserUniqId(), bCryptPasswordEncoder.encode("snack12!"));
 	}
 	
-	
+    
 	public HashMap<String, Object> findEmail(MembersDto memberDto){
 		HashMap<String, Object> map = new HashMap<>();
 		MembersPrivate membersPrivate = membersPrivateRepository.findByPhoneNumberAndUserName(memberDto.getPhoneNumber(), memberDto.getUserName());
 		if(membersPrivate != null) {
 			Members members = membersRepository.findByUserUniqId(membersPrivate.getUserUniqId());
 			map.put("isExist", true);
-			SendJsonSMS.sendSMS(memberDto.getPhoneNumber(), "N명의수학입니다. 고객님이 요청하신 고객님의 N명의수학 계정 이메일은 "+members.getEmail()+"입니다. 고객님이 요청하신 경우가 아니라면 고객센터로 문의 해주시기 바랍니다.");
+			map.put("email", members.getEmail());
 		}else {
 			map.put("isExist", false);
+		}
+		return map;
+	}
+	
+	public HashMap<String, Object> findPassword(HttpServletRequest request, String email) throws AddressException, MessagingException{
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = membersRepository.findByEmail(email);
+		if(members != null) {
+			map.put("isExist", true);
+			String randPasswrod = CommonUtil.makeRandomPassword();
+			MembersDto membersDto = modelMapper.map(members, MembersDto.class);
+			membersDto.setPassword(bCryptPasswordEncoder.encode(randPasswrod));
+			membersDto.setTmpPassword(true);
+			membersRepository.save(membersDto.toEntity());
+			CommonUtil.mailSender(request, email, randPasswrod);
+		}else {
+			map.put("isExist", false);
+		}
+		return map;
+	}
+	
+	public HashMap<String, Object> confirmPassword(String password){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		Members corfirmMembers =membersRepository.findByEmail(members.getEmail());
+		boolean isCertified = bCryptPasswordEncoder.matches(password, corfirmMembers.getPassword());
+		if(isCertified) {
+			map.put("isCertified", true);
+			MembersPrivate membersPrivate= membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
+			map.put("memberInfo", membersPrivate);
+		}else {
+			map.put("isCertified", false);
+		}
+		return map;
+	}
+	
+	public HashMap<String, Object> changePassword(PasswordModel passwordModel){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		Members corfirmMembers =membersRepository.findByEmail(members.getEmail());
+		boolean isCertified = bCryptPasswordEncoder.matches(passwordModel.getOldPassword(), corfirmMembers.getPassword());
+		if(isCertified) {
+			MembersDto membersDto = modelMapper.map(corfirmMembers, MembersDto.class);
+			membersDto.setPassword(bCryptPasswordEncoder.encode(passwordModel.getNewPassword()));
+			membersRepository.save(membersDto.toEntity());
+			map.put("isPassChanged", true);
+		}else {
+			map.put("isPassChanged", false);
+		}
+		return map;
+	}
+	
+	
+	public HashMap<String, Object> changePhoneNumber(MembersDto memberDto){
+		HashMap<String, Object> map = new HashMap<>();
+		Members members = StaticSecurityUtil.getMembers();
+		Members corfirmMembers =membersRepository.findByEmail(members.getEmail());
+		MembersPrivate membersPrivate= membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
+		boolean isUserCertified = true;
+		if(!membersPrivate.getUserName().equals(memberDto.getUserName())) {
+			isUserCertified=false;
+		}
+		if(!membersPrivate.getBirth().equals(memberDto.getBirth())) {
+			isUserCertified=false;
+		}
+		
+		if(isUserCertified) {
+			map.put("isChanged", true);
+			MembersPrivateDto membersPrivateDto = modelMapper.map(membersPrivate, MembersPrivateDto.class);
+			membersPrivateDto.setPhoneNumber(memberDto.getPhoneNumber());
+			membersPrivateRepository.save(membersPrivateDto.toEntity());
+			map.put("isChanged", true);
+		}else {
+			map.put("isChanged", false);
 		}
 		return map;
 	}
