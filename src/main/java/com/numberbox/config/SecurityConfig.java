@@ -126,7 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
                 
-                .antMatchers(HttpMethod.GET, "/common/download").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/common/download").permitAll()
                 
                 .antMatchers("/mathInfo/**").permitAll()
                 .antMatchers("/author").hasAnyRole("user");
