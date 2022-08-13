@@ -26,6 +26,7 @@ public class SchedulerService {
 	
 	@Transactional
 	public void tmpPassChange() {
+		System.out.println("잡스케줄러 테스트");
 		//tmpPassword가 1인 값 새로운 비밀번호로 변경
 		int tmpPasswordLength = membersRepository.countByTmpPassword(true);
 		int loopCnt = tmpPasswordLength/10000;

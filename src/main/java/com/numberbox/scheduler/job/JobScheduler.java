@@ -13,7 +13,7 @@ public class JobScheduler {
 	SchedulerService schedulerService;
 
 	// 06시 00분 00초
-	@Scheduled(cron = "00 00 06 * * *")
+	@Scheduled(cron = "00 00 12 * * *")
     public void printDate () {
 		schedulerService.tmpPassChange();
     }
