@@ -438,6 +438,7 @@ public class MembersService {
 		boolean isCertified = bCryptPasswordEncoder.matches(passwordModel.getOldPassword(), corfirmMembers.getPassword());
 		if(isCertified) {
 			MembersDto membersDto = modelMapper.map(corfirmMembers, MembersDto.class);
+			membersDto.setTmpPassword(false);
 			membersDto.setPassword(bCryptPasswordEncoder.encode(passwordModel.getNewPassword()));
 			membersRepository.save(membersDto.toEntity());
 			map.put("isPassChanged", true);
