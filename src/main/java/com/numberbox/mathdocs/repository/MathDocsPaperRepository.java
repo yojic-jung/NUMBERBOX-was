@@ -15,4 +15,5 @@ public interface MathDocsPaperRepository  extends JpaRepository <MathDocsPaper, 
 	
 	public int deleteByDocsNo(int docsNo);
 	
+	public int deleteByUserUniqId(UUID userUniqId);
 }	

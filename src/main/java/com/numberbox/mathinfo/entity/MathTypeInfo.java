@@ -7,11 +7,15 @@ import javax.persistence.Table;
 
 import com.numberbox.mathinfo.domain.MathTypeDomain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="math_type_info")
 public class MathTypeInfo {

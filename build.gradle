@@ -43,6 +43,7 @@ dependencies {
 	
 	implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
 	
+	implementation group: 'org.qlrm', name: 'qlrm', version: '3.0.4'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'

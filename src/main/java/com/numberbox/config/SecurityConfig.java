@@ -83,6 +83,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/followingUser").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/followingCancel").hasAnyRole("USER")
 
+                .antMatchers(HttpMethod.POST, "/myAccountDrop").hasAnyRole("USER")
+                
                 .antMatchers(HttpMethod.POST, "/mathInfo/takeWorkContentsList").hasAnyRole("MANAGER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/mathInfo/takeWorkContentsListByContentsNo").hasAnyRole("MANAGER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/mathInfo/takeContentsListByContentsNo").hasAnyRole("USER")

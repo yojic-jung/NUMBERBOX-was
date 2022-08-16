@@ -1,5 +1,6 @@
 package com.numberbox.members.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,9 @@ public interface MembersRepository extends JpaRepository <Members, UUID> {
 	
 	public List<Members> findTop10000ByTmpPassword(boolean tmpPassword);
 	
+	public List<Members> findByHumanStatusAndLastLoginDateLessThan(int humanStatus, LocalDateTime time);
+	
+	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE members m set m.password =:password where m.user_uniq_id = :userUniqId", nativeQuery = true)
@@ -37,6 +41,12 @@ public interface MembersRepository extends JpaRepository <Members, UUID> {
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE members m set last_login_date=now() ,m.fail_count = 0 where m.user_uniq_id = :userUniqId", nativeQuery = true)
 	public int initLastLoginDate(@Param("userUniqId")UUID userUniqId);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE members m set m.human_status = 0 where m.user_uniq_id = :userUniqId", nativeQuery = true)
+	public int initHumanStatus(@Param("userUniqId")UUID userUniqId);
+	
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다

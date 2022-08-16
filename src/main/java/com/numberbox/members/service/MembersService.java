@@ -2,6 +2,7 @@ package com.numberbox.members.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,9 @@ import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.dto.FollowUsersDto;
-import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersFollowInfoDto;
+import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.dto.PasswordModel;
@@ -83,7 +84,7 @@ public class MembersService {
 		}
 		
 		membersDto.setPassword(bCryptPasswordEncoder.encode(membersDto.getPassword()) );
-		membersDto.setHumanStatus(false);
+		membersDto.setHumanStatus(0);
 		membersDto.setFailCount(0);
 		Members members = membersRepository.save(membersDto.toEntity());
 		MembersProfileDto membersProfileDto = new MembersProfileDto();
@@ -140,6 +141,23 @@ public class MembersService {
 		if(members != null) {
 			List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
 			roleList = membersRoleList;
+			
+			//탈퇴회원인 경우 로그인 불가 처리
+			boolean isDropAccount = false;
+			for(MembersRole role : roleList) {
+				if(!role.isEnabled()) {
+					isDropAccount = true;
+				}
+			}
+			
+			if(isDropAccount) {
+				map.put("isSuccess", "dropAccount");
+				return map;
+			}
+			
+			//로그인 시간 및 휴먼상태 초기화
+			membersRepository.initLastLoginDate(members.getUserUniqId());
+	        membersRepository.initHumanStatus(members.getUserUniqId());
 			map.put("isSuccess", "loginSuccess");
 		}else {
 			//로그인 API로  회원가입하는 경우
@@ -151,7 +169,7 @@ public class MembersService {
 			}
 			
 			membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()) );
-			membersDto.setHumanStatus(false);
+			membersDto.setHumanStatus(0);
 			membersDto.setFailCount(0);
 			members = membersRepository.save(membersDto.toEntity());
 			MembersProfileDto membersProfileDto = new MembersProfileDto();
@@ -452,7 +470,7 @@ public class MembersService {
 	public HashMap<String, Object> changePhoneNumber(MembersDto memberDto){
 		HashMap<String, Object> map = new HashMap<>();
 		Members members = StaticSecurityUtil.getMembers();
-		Members corfirmMembers =membersRepository.findByEmail(members.getEmail());
+		Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
 		MembersPrivate membersPrivate= membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
 		boolean isUserCertified = true;
 		if(!membersPrivate.getUserName().equals(memberDto.getUserName())) {
@@ -471,6 +489,53 @@ public class MembersService {
 		}else {
 			map.put("isChanged", false);
 		}
+		return map;
+	}
+	
+	public HashMap<String, Object> myAccountDrop(MembersDto memberDto){
+		HashMap<String, Object> map = new HashMap<>();
+		boolean isCertified = true;
+		Members members = StaticSecurityUtil.getMembers();
+		List<MembersRole> roleList =  members.getRole();
+		boolean isAdminOrManager = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("ADMIN") || role.getRoleName().equals("MANAGER")) isAdminOrManager=true;		//관리자는 넘버링크 문제 모두 수정가능
+		}
+		
+		if(isAdminOrManager) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "매니저 또는 관리자 계정은 탈퇴가 불가능합니다.");
+			return map;
+		}
+		
+		isCertified = memberDto.getEmail().equals(members.getEmail());
+		if(!isCertified) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "계정 정보가 올바르지 않습니다.");
+			return map;
+		}
+		Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
+		isCertified = bCryptPasswordEncoder.matches(memberDto.getPassword(), corfirmMembers.getPassword());
+		if(!isCertified) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "계정 정보가 올바르지 않습니다.");
+			return map;
+		}
+		
+		MembersPrivate membersPrivate= membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
+		if(!membersPrivate.getUserName().equals(memberDto.getUserName())
+			|| !membersPrivate.getPhoneNumber().equals(memberDto.getPhoneNumber())
+			|| !membersPrivate.getBirth().equals(memberDto.getBirth())) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "가입하신 사용자 정보와 입력하신 휴대폰 본인인증 정보가 다릅니다.");
+			return map;
+		}
+		
+		MembersDto corfirmMembersDto = modelMapper.map(corfirmMembers, MembersDto.class);
+		corfirmMembersDto.setHumanStatus(2);
+		corfirmMembersDto.setLastLoginDate(LocalDateTime.now());
+		map.put("isSuccess", true);
+		membersRepository.save(corfirmMembersDto.toEntity());
 		return map;
 	}
 	

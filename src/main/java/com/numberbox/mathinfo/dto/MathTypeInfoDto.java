@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.dto;
 
 import com.numberbox.mathinfo.domain.MathTypeDomain;
+import com.numberbox.mathinfo.entity.MathTypeInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,4 +15,9 @@ import lombok.Setter;
 public class MathTypeInfoDto {
 	public MathTypeDomain mathTypeDomain;
 	public String quesType;
+	
+	public MathTypeInfo toEntity() {
+		return MathTypeInfo.builder().mathTypeDomain(mathTypeDomain).quesType(quesType)
+				.build();
+	}
 }

@@ -20,7 +20,7 @@ public class MembersDto {
 	private UUID userUniqId;
 	private String email;
     private String password;
-    private boolean humanStatus;
+    private int humanStatus;
     private boolean tmpPassword;
     private int failCount;
     private LocalDateTime lastFailTime;

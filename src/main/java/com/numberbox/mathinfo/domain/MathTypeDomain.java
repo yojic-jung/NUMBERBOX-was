@@ -21,7 +21,9 @@ public class MathTypeDomain implements Serializable {
 	
 	public String unitUniqNo;
 	
-	public MathTypeDomain() {}
+	public MathTypeDomain() {
+		
+	}
 	
 	@Builder
 	public MathTypeDomain(String typeNo, String unitUniqNo) { 

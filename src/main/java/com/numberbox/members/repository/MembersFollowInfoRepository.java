@@ -16,4 +16,8 @@ public interface MembersFollowInfoRepository extends JpaRepository <MembersFollo
 	public List<MembersFollowInfo> findByFollowUsersFollowerUserNo(long followingUserNo);
 	
 	public int deleteByFollowUsersFollowingUserNoAndFollowUsersFollowerUserNo(long followingUserNo, long followerUserNo);
+	
+	public int deleteByFollowUsersFollowingUserNo(long followingUserNo);
+	
+	public int deleteByFollowUsersFollowerUserNo(long followerUserNo);
 }

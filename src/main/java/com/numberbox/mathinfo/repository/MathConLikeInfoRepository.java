@@ -16,4 +16,7 @@ public interface MathConLikeInfoRepository extends JpaRepository <MathConLikeInf
 	public int deleteByMathConLikeDomainContentsNoAndMathConLikeDomainUserUniqId(int contentsNo, UUID userUniqId);
 	
 	public int deleteByMathConLikeDomainContentsNo(int contentsNo);
+	
+	public int deleteByMathConLikeDomainUserUniqId(UUID userUniqId);
+	
 }
