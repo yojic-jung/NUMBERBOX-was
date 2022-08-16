@@ -2,6 +2,7 @@ package com.numberbox.security.handler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.members.entity.Members;
+import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 
@@ -68,6 +70,12 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         	}else {
         		membersRepository.initLastFailTime(userUniqId);
         		customErrMsg = "해당 계정이 잠금되었습니다.\n15분 후 다시 시도해주세요.";
+        		List<MembersRole> roleList = membersRoleRepository.findByUserUniqId(userUniqId);
+        		for(MembersRole role : roleList) {
+        			if(!role.isEnabled()) {
+        				customErrMsg = "탈퇴한 회원입니다. \n새로운 계정으로 회원가입해 주시기 바랍니다.";
+            		}
+        		}
         	}
         } else if(exception instanceof CredentialsExpiredException) {
         	customErrMsg = "계정이 만료되었습니다.";

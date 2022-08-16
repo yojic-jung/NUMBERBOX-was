@@ -18,4 +18,7 @@ public interface MathConRepoInfoRepository extends JpaRepository <MathConRepoInf
 	public int deleteByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(int contentsNo, UUID userUniqId);
 	
 	public int deleteByMathConRepoDomainContentsNo(int contentsNo);
+	
+	public int deleteByMathConRepoDomainUserUniqId(UUID userUniqId);
+	
 }

@@ -55,7 +55,13 @@ public class Members {
 	private String email;
     private String password;
     
-    private boolean humanStatus;
+    /*
+     *  0 : 일반 계정
+     *  1 : 휴먼계정
+     *  2 : 탈퇴 요청
+     *  3 : 탈퇴 계정(유령계정)
+     */
+    private int humanStatus;
     private int failCount;
     @CreationTimestamp
     private LocalDateTime lastFailTime;

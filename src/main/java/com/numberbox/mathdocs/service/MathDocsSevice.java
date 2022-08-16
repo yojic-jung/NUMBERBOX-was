@@ -8,8 +8,10 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.modelmapper.ModelMapper;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
 import com.numberbox.mathdocs.entity.MathDocsPaper;
 import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsDtoForDocs;
+import com.numberbox.mathinfo.dto.MathTypeInfoDto;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.entity.Members;
@@ -93,12 +98,14 @@ public class MathDocsSevice {
 			mainLvConCnt= contentCnt-subLvConRealCnt;
 		}
 		
+		
+		
 		//유형별 존재하는 메인 문제 수
 		List<String> mainContCntList = mathContentsRepository.countQuesLevelAndQuesLevelAndUnitUniqNoTypeNoIn(startLv, endLv, unitUniqNoAndTypeNoList);
 		
 		//각 유형별로 몇 문제씩 뽑아와야할지 기준 설정
 		int[] typeGropSelCntStandardList = {1, 2, 3, 4, 5, 10, 15, 20, 30, 50, 100};
-		int typeGropSelCntStandard=1;	//각 유형별 n개씩 뽑아오는 기준
+		int perN=1;	//각 유형별 n개씩 뽑아오는 기준
 		Loop1 : 
 		for(int n : typeGropSelCntStandardList) {
 			int mainLvConRealCnt = 0;
@@ -106,17 +113,41 @@ public class MathDocsSevice {
 				if(n<=Integer.parseInt(contetnsCount)) {
 					mainLvConRealCnt +=n;
 					if(mainLvConRealCnt>mainLvConCnt) {
-						typeGropSelCntStandard = n;
+						perN = n;
 						break Loop1;
 					}
 				}else {
 					mainLvConRealCnt += Integer.parseInt(contetnsCount);
 				}
 			}
-			typeGropSelCntStandard = n;
+			perN = n;
 		}
 		//mainLvConCnt 수 만큼 조회, 각 유형별 selectStandard개 씩
-		List<MathContents> mainConList = mathContentsRepository.findByQuesLevelAndUnitUniqNoTypeNoIn(startLv, endLv, unitUniqNoAndTypeNoList, typeGropSelCntStandard, mainLvConCnt);
+		StringBuffer queryString = new StringBuffer(); 
+		queryString.append("select A.contents_no as contentsNo, A.unit_uniq_no as unitUniqNo, A.type_no as typeNo, A.contents, A.contents_img, A.img_path, A.solution, A.solution_img, A.solution_img_path,A.fir_no, A.sec_no, A.thr_no, A.four_no, A.fif_no,A.multi_choice_type, A.answer, A.choice_answer, A.ques_level,A.ans_exist_stts,A.contents_classify,B.subject, B.fir_unit, B.sec_unit, B.thr_unit, C.ques_type");
+		queryString.append(" from (select *, ROW_NUMBER() OVER (PARTITION BY unit_uniq_no, type_no) as row_num from math_contents where contents_classify=0 and svc_posb_stts=1 and (ques_level between :startLv and :endLv) and");
+		queryString.append(" CONCAT(unit_uniq_no, ',', type_no) in (:inList) order by Rand() ) as A,");
+		queryString.append("math_unit_info as B, math_type_info as C");
+		queryString.append(" where A.row_num<= :perN and A.unit_uniq_no = B.unit_uniq_no and (A.unit_uniq_no = C.unit_uniq_no and A.type_no = C.type_no) limit :contentsCnt ");
+		Query query  = (Query) entityManager.createNativeQuery(queryString.toString())
+						.setParameter("startLv", startLv)
+						.setParameter("endLv", endLv)
+						.setParameter("inList", unitUniqNoAndTypeNoList)
+						.setParameter("perN", perN)
+						.setParameter("contentsCnt", mainLvConCnt);
+		JpaResultMapper result = new JpaResultMapper();
+		List<MathContentsDtoForDocs> mainConListModel = result.list(query, MathContentsDtoForDocs.class);
+		List<MathContentsDto> mainConList = new ArrayList<>();
+		for(MathContentsDtoForDocs mainCon : mainConListModel) {
+			MathTypeDomain typeDomain = new MathTypeDomain();
+			typeDomain.setTypeNo(mainCon.getTypeNo().toString());
+			typeDomain.setUnitUniqNo(mainCon.getUnitUniqNo().toString());
+			MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, mainCon.getQuesType());
+			MathContentsDto mathContentsDto = modelMapper.map(mainCon, MathContentsDto.class);
+			
+			mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
+			mainConList.add(mathContentsDto);
+		}
 		mainLvConCnt = mainConList.size();
 		subLvConCnt = contentCnt-mainLvConCnt;
 		//유형별 존재하는 서브 문제 수
@@ -135,48 +166,109 @@ public class MathDocsSevice {
 				if(n<=Integer.parseInt(contetnsCount)) {
 					subLvConRealCnt +=n;
 					if(subLvConRealCnt>subLvConCnt) {
-						typeGropSelCntStandard = n;
+						perN = n;
 						break Loop1;
 					}
 				}else {
 					subLvConRealCnt += Integer.parseInt(contetnsCount);
 				}
 			}
-			typeGropSelCntStandard = n;
+			perN = n;
 		}
 		
 		//subLvConCnt 수 만큼 조회, 각 유형별 selectStandard개 씩
-		List<MathContents> subConList;
+		
+		List<MathContentsDto> subConList = new ArrayList<>();
 		if(isLvOneOrLvFive) {
-			subConList = mathContentsRepository.findByQuesLevelAndUnitUniqNoTypeNoIn(subStartLv, subEndtLv, unitUniqNoAndTypeNoList, typeGropSelCntStandard, subLvConCnt);
+			query  = (Query) entityManager.createNativeQuery(queryString.toString())
+					.setParameter("startLv", subStartLv)
+					.setParameter("endLv", subEndtLv)
+					.setParameter("inList", unitUniqNoAndTypeNoList)
+					.setParameter("perN", perN)
+					.setParameter("contentsCnt", subLvConCnt);
+			List<MathContentsDtoForDocs> subConModelList = result.list(query, MathContentsDtoForDocs.class);
+			for(MathContentsDtoForDocs subConModel : subConModelList) {
+				MathTypeDomain typeDomain = new MathTypeDomain();
+				typeDomain.setTypeNo(subConModel.getTypeNo().toString());
+				typeDomain.setUnitUniqNo(subConModel.getUnitUniqNo().toString());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType());
+				MathContentsDto mathContentsDto = modelMapper.map(subConModel, MathContentsDto.class);
+				
+				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
+				subConList.add(mathContentsDto);
+			}
 		}else {
-			subConList = mathContentsRepository.findByNotQuesLevelAndUnitUniqNoTypeNoIn(startLv, endLv, unitUniqNoAndTypeNoList, typeGropSelCntStandard, subLvConCnt);
+			String queryString1 = "select "+
+					"A.contents_no, A.unit_uniq_no, A.type_no, A.contents, A.contents_img, A.img_path,"
+					+ " A.solution, A.solution_img, A.solution_img_path,"+
+					"A.fir_no, A.sec_no, A.thr_no, A.four_no, A.fif_no,"
+					+ " A.multi_choice_type, A.answer, A.choice_answer, A.ques_level,"
+					+ " A.ans_exist_stts,"+
+					"A.contents_classify,"+
+					"B.subject, B.fir_unit, B.sec_unit, B.thr_unit, C.ques_type" + 
+				" from (" + 
+					"select" + 
+						" *, ROW_NUMBER() OVER (PARTITION BY unit_uniq_no, type_no) as row_num" + 
+					" from" + 
+						" math_contents" + 
+					" where" + 
+						" contents_classify=0 and svc_posb_stts=1 and not (ques_level between :startLv and :endLv)" + 
+					" and" + 
+						" CONCAT(unit_uniq_no, ',', type_no) in (:inList)" + 
+					" order by Rand()) as A," + 
+					"math_unit_info as B,"+
+					"math_type_info as C"+
+			" where A.row_num<= :perN and A.unit_uniq_no = B.unit_uniq_no and (A.unit_uniq_no = C.unit_uniq_no and A.type_no = C.type_no) limit :contentsCnt";
+			query  = (Query) entityManager.createNativeQuery(queryString1)
+					.setParameter("startLv", startLv)
+					.setParameter("endLv", endLv)
+					.setParameter("inList", unitUniqNoAndTypeNoList)
+					.setParameter("perN", perN)
+					.setParameter("contentsCnt", subLvConCnt);
+			List<MathContentsDtoForDocs> subConModelList= result.list(query, MathContentsDtoForDocs.class);
+			for(MathContentsDtoForDocs subConModel : subConModelList) {
+				MathTypeDomain typeDomain = new MathTypeDomain();
+				typeDomain.setTypeNo(subConModel.getTypeNo().toString());
+				typeDomain.setUnitUniqNo(subConModel.getUnitUniqNo().toString());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType());
+				MathContentsDto mathContentsDto = modelMapper.map(subConModel, MathContentsDto.class);
+				
+				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
+				subConList.add(mathContentsDto);
+			}
 		}
 		subLvConCnt = subConList.size();
 		
-		List<MathContents> finalLvConList;
+		List<MathContentsDto> finalLvConList = new ArrayList<>();
 		//레벨 하 또는 상 선택한 경우 서브레벨에서 문제 부족한 경우 finalLv에서 문제 추가
 		if(isLvOneOrLvFive && contentCnt>mainLvConCnt+subLvConCnt) {
 			int finalLvConCnt = contentCnt-(mainLvConCnt+subLvConCnt);
-			finalLvConList = mathContentsRepository.findByQuesLevelAndUnitUniqNoTypeNoIn(finalLv, finalLv, unitUniqNoAndTypeNoList, typeGropSelCntStandard, finalLvConCnt);
+			query  = (Query) entityManager.createNativeQuery(queryString.toString())
+					.setParameter("startLv", finalLv)
+					.setParameter("endLv", finalLv)
+					.setParameter("inList", unitUniqNoAndTypeNoList)
+					.setParameter("perN", perN)
+					.setParameter("contentsCnt", finalLvConCnt);
+			List<MathContentsDtoForDocs> finalLvConModelList = result.list(query, MathContentsDtoForDocs.class);
+			for(MathContentsDtoForDocs finalConModel : finalLvConModelList) {
+				MathTypeDomain typeDomain = new MathTypeDomain();
+				typeDomain.setTypeNo(finalConModel.getTypeNo().toString());
+				typeDomain.setUnitUniqNo(finalConModel.getUnitUniqNo().toString());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, finalConModel.getQuesType());
+				MathContentsDto mathContentsDto = modelMapper.map(finalConModel, MathContentsDto.class);
+				
+				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
+				finalLvConList.add(mathContentsDto);
+			}
 			mainConList.addAll(finalLvConList);
 		}
 		//문제 모두 합치기
 		mainConList.addAll(subConList);
 		
-		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
-		for(MathContents mathContents: mainConList) {
-			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
-			mathContentsDto.setOrgContentsNo(0);
-			mathContentsDto.setOrgSrcPage(0);
-			mathContentsDto.setOrgSrcRef(null);
-			mathContentsDtoList.add(mathContentsDto);
-		}
-		
 		//문제 난이도에 따라 오름차순으로 정렬
-		Collections.sort(mathContentsDtoList);
+		Collections.sort(mainConList);
 		
-		return mathContentsDtoList;
+		return mainConList;
 	}
 	
 	
@@ -264,7 +356,7 @@ public class MathDocsSevice {
 		for(String contentsNo : contentsNoArr) {
 			contentsNoList.add(Integer.parseInt(contentsNo));
 		}
-		List<MathContents> mainConList = mathContentsRepository.findByContentsNoIn(contentsNoList);
+		List<MathContents> mainConList = mathContentsRepository.findByContentsNoInAndSvcPosbSttsAndContentsClassifyNot(contentsNoList, 1, 3);
 		
 		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
 		for(MathContents mathContents: mainConList) {

@@ -47,7 +47,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Members members = user.getMembers();
         
         membersRepository.initLastLoginDate(members.getUserUniqId());
-       
+        membersRepository.initHumanStatus(members.getUserUniqId());
+        
         //매니저 권한 임시 구현
         boolean isManager = false;
         boolean isAdmin = false;

@@ -234,4 +234,10 @@ public class MembersController {
 		return map;
 	}
 	
+	@PostMapping(value="/myAccountDrop")
+	public HashMap<String, Object> myAccountDrop(MembersDto MembersDto) {
+		HashMap<String, Object> map = membersService.myAccountDrop(MembersDto);
+		return map;
+	}
+	
 }

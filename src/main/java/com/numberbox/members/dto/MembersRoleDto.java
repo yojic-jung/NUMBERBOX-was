@@ -22,7 +22,7 @@ public class MembersRoleDto {
     private String roleName;
     
     public MembersRole toEntity() {
-		return MembersRole.builder().userUniqId(userUniqId).enabled(enabled).roleName(roleName)
+		return MembersRole.builder().seqNo(seqNo).userUniqId(userUniqId).enabled(enabled).roleName(roleName)
 				.build();
 	}
 }

@@ -514,7 +514,10 @@ public class MathContentsInfoService {
 		UUID userUniqId = members.getUserUniqId();
 		List<MathContents> list;
 		if(userNo==0) {		// userNo가 0인 경우 자기 자신 문제 조회
-			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotOrderBySysCreateDateDesc(userUniqId, 0);
+			List<Integer> classifyList = new ArrayList<>();
+			classifyList.add(0);
+			classifyList.add(3);
+			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(userUniqId, classifyList);
 		}else {					// userNo가 있으면 userNo로 상대방 프로필 조회
 			MembersProfile profile= membersProfileRepository.findByUserNo(userNo);
 			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc
@@ -765,10 +768,11 @@ public class MathContentsInfoService {
 				mathContentsLicRepository.deleteByContentsNo(contentsNo); //라이선스 정보 삭제
 				mathContentsRepository.deleteByContentsNo(contentsNo);
 				map.put("existMsg", false);
-			}else{	//변형문제가 존재하는 제작문제는 삭제 불가, 비공개로 전환하라고 요청
-				map.put("existMsg", true);
-				map.put("serverMsg", "변형문제가 존재하는 문제는 삭제할 수 없습니다.\n비공개로 전환하여 공유되지 않도록 해주시기 바랍니다.");
-				map.put("myContents", null);
+			}else{	//변형문제가 존재하는 제작문제는 contents_classify 3으로 변경
+				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
+				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
+				mathContentsRepository.updateContentsClassify(contentsNo, 3);
+				map.put("existMsg", false);
 			}
 		}else if(mathContents.getContentsClassify() == 2) {	//변형문제는 삭제 가능
 			int transConCnt = mathContentsRepository.countByOrgContentsNo(mathContents.getOrgContentsNo());
