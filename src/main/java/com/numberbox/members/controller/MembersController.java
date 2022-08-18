@@ -240,4 +240,9 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping(value="/takeMyPrivateTmp")
+	public HashMap<String, Object> takeMyPrivateTmp(){
+		HashMap<String, Object> map = membersService.takeMyPrivateTmp();
+		return map;
+	}
 }
