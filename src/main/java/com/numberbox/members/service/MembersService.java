@@ -539,14 +539,4 @@ public class MembersService {
 		return map;
 	}
 	
-	
-	public HashMap<String, Object> takeMyPrivateTmp(){
-		Members members = StaticSecurityUtil.getMembers();
-		Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
-		MembersPrivate membersPrivate = membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("myPrivate", membersPrivate);
-		return map;
-	}
-	
 }
