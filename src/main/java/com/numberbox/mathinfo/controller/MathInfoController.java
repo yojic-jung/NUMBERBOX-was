@@ -19,6 +19,8 @@ import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
+import com.numberbox.mathinfo.dto.MathTypeInfoListDto;
+import com.numberbox.mathinfo.dto.MathTypeInfoModel;
 import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.service.MathContentsInfoService;
 import com.numberbox.mathinfo.service.MathResourceService;
@@ -352,4 +354,42 @@ public class MathInfoController {
 		HashMap<String, Object> successObj = mathResourceService.takePPtSlideImge(resourceNo);
 		return successObj;
 	}
+	
+	@PostMapping("/changeQuesType")
+	public HashMap<String, Object> chngQuesType(MathTypeInfoModel mathTypeInfoModel) {
+		HashMap<String, Object> map = mathContentsInfoService.chngQuesType(mathTypeInfoModel);
+		return map;
+	}
+	
+	@GetMapping("/takeConCntByUnitUniqNo")
+	public HashMap<String, Object> takeConCntByUnitUniqNo(@RequestParam String unitUniqNo) {
+		HashMap<String, Object> map = mathContentsInfoService.takeConCntByUnitUniqNo(unitUniqNo);
+		return map;
+	}
+	
+	@GetMapping("/typeDel")
+	public HashMap<String, Object> typeDel(@RequestParam String unitUniqNo, @RequestParam String typeNo) {
+		HashMap<String, Object> map = mathContentsInfoService.typeDel(unitUniqNo, typeNo);
+		return map;
+	}
+	
+	@PostMapping("/mathTypeAdd")
+	public HashMap<String, Object> mathTypeAdd(MathTypeInfoModel mathTypeInfoModel) {
+		HashMap<String, Object> map = mathContentsInfoService.mathTypeAdd(mathTypeInfoModel);
+		return map;
+	}
+	
+	@GetMapping("/contentsMoveFromTo")
+	public HashMap<String, Object> contentsMoveFromTo(@RequestParam String fromUnitUniqNo, @RequestParam String fromTypeNo, @RequestParam String toUnitUniqNo, @RequestParam String toTypeNo) {
+		HashMap<String, Object> map = mathContentsInfoService.contentsMoveFromTo(fromUnitUniqNo, fromTypeNo, toUnitUniqNo, toTypeNo);
+		return map;
+	}
+	
+	@PostMapping("/mathTypeOrderChng")
+	public HashMap<String, Object> mathTypeOrderChng(MathTypeInfoListDto mathTypeInfoListDto) {
+		HashMap<String, Object> map = mathContentsInfoService.mathTypeOrderChng(mathTypeInfoListDto.getMathTypeInfoModel());
+		return map;
+	}
+	
+	
 }

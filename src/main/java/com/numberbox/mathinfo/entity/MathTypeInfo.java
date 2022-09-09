@@ -27,6 +27,9 @@ public class MathTypeInfo {
 	@Column(length = 300, nullable = false)
 	public String quesType;
 	
+	@Column(length = 2, nullable = false)
+	public int typeOrder;
+	
 	/*
 	@Builder
     public MathTypeInfo(int type_id, int unitUniqNo, String quesType) {
