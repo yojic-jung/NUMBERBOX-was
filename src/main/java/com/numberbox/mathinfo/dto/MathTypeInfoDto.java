@@ -15,9 +15,10 @@ import lombok.Setter;
 public class MathTypeInfoDto {
 	public MathTypeDomain mathTypeDomain;
 	public String quesType;
+	public int typeOrder;
 	
 	public MathTypeInfo toEntity() {
-		return MathTypeInfo.builder().mathTypeDomain(mathTypeDomain).quesType(quesType)
+		return MathTypeInfo.builder().mathTypeDomain(mathTypeDomain).quesType(quesType).typeOrder(typeOrder)
 				.build();
 	}
 }

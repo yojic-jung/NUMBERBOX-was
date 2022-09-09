@@ -11,11 +11,15 @@ import com.numberbox.mathinfo.entity.MathTypeInfo;
 
 public interface MathTypeRepository extends JpaRepository <MathTypeInfo, MathTypeDomain> {
 	
-	@Query(value = "SELECT typeInfo FROM MathTypeInfo typeInfo where typeInfo.mathTypeDomain.unitUniqNo =:uniqNo",nativeQuery = false)
-	public List<MathTypeInfo> findByUnitUniqNo(@Param("uniqNo") String uniqNo);
+	@Query(value = "SELECT typeInfo FROM MathTypeInfo typeInfo where typeInfo.mathTypeDomain.unitUniqNo =:uniqNo order by typeOrder asc",nativeQuery = false)
+	public List<MathTypeInfo> findByUnitUniqNoOrderByTypeOrderAsc(@Param("uniqNo") String uniqNo);
 	
 	public MathTypeInfo findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(String uniqNo, String typeNo);
 	
-	public List<MathTypeInfo> findByMathTypeDomainUnitUniqNoIn(List<String> unitUniqNoList);
+	public List<MathTypeInfo> findByMathTypeDomainUnitUniqNoInOrderByMathTypeDomainUnitUniqNoAscTypeOrderAsc(List<String> unitUniqNoList);
+	
+	public int deleteByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(String unitUniqNo, String typeNo);
+	
+	public List<MathTypeInfo> findByMathTypeDomainUnitUniqNo(String unitUniqNo);
 	
 }

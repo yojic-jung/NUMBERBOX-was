@@ -142,7 +142,7 @@ public class MathDocsSevice {
 			MathTypeDomain typeDomain = new MathTypeDomain();
 			typeDomain.setTypeNo(mainCon.getTypeNo().toString());
 			typeDomain.setUnitUniqNo(mainCon.getUnitUniqNo().toString());
-			MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, mainCon.getQuesType());
+			MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, mainCon.getQuesType(), 0);
 			MathContentsDto mathContentsDto = modelMapper.map(mainCon, MathContentsDto.class);
 			
 			mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
@@ -191,7 +191,7 @@ public class MathDocsSevice {
 				MathTypeDomain typeDomain = new MathTypeDomain();
 				typeDomain.setTypeNo(subConModel.getTypeNo().toString());
 				typeDomain.setUnitUniqNo(subConModel.getUnitUniqNo().toString());
-				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType(), 0);
 				MathContentsDto mathContentsDto = modelMapper.map(subConModel, MathContentsDto.class);
 				
 				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
@@ -230,7 +230,7 @@ public class MathDocsSevice {
 				MathTypeDomain typeDomain = new MathTypeDomain();
 				typeDomain.setTypeNo(subConModel.getTypeNo().toString());
 				typeDomain.setUnitUniqNo(subConModel.getUnitUniqNo().toString());
-				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, subConModel.getQuesType(), 0);
 				MathContentsDto mathContentsDto = modelMapper.map(subConModel, MathContentsDto.class);
 				
 				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());
@@ -254,7 +254,7 @@ public class MathDocsSevice {
 				MathTypeDomain typeDomain = new MathTypeDomain();
 				typeDomain.setTypeNo(finalConModel.getTypeNo().toString());
 				typeDomain.setUnitUniqNo(finalConModel.getUnitUniqNo().toString());
-				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, finalConModel.getQuesType());
+				MathTypeInfoDto typeInfoDto = new MathTypeInfoDto(typeDomain, finalConModel.getQuesType(), 0);
 				MathContentsDto mathContentsDto = modelMapper.map(finalConModel, MathContentsDto.class);
 				
 				mathContentsDto.setMathTypeInfo(typeInfoDto.toEntity());

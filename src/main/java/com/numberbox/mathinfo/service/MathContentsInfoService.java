@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.mathinfo.domain.MathConLikeDomain;
 import com.numberbox.mathinfo.domain.MathConRepoDomain;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
+import com.numberbox.mathinfo.dto.ContentsCnt;
 import com.numberbox.mathinfo.dto.ContentsListModel;
 import com.numberbox.mathinfo.dto.FormulKeyDto;
 import com.numberbox.mathinfo.dto.MathConLikeInfoDto;
@@ -28,6 +30,7 @@ import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathTypeInfoDto;
+import com.numberbox.mathinfo.dto.MathTypeInfoModel;
 import com.numberbox.mathinfo.dto.MathUnitInfoDto;
 import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.FormulKey;
@@ -101,7 +104,7 @@ public class MathContentsInfoService {
 	}
 	
 	public List<MathTypeInfo> takeMathTypeInfo(String unitUniqNo){
-		return mathTypeRepository.findByUnitUniqNo(unitUniqNo);
+		return mathTypeRepository.findByUnitUniqNoOrderByTypeOrderAsc(unitUniqNo);
 	}
 	
 	public MathTypeInfo takeMathTypeInfoOnlyOne(String unitUniqNo, String typeNo){
@@ -115,7 +118,7 @@ public class MathContentsInfoService {
 			unitUniqNoList.add(unitNo);
 		}
 		
-		return mathTypeRepository.findByMathTypeDomainUnitUniqNoIn(unitUniqNoList);
+		return mathTypeRepository.findByMathTypeDomainUnitUniqNoInOrderByMathTypeDomainUnitUniqNoAscTypeOrderAsc(unitUniqNoList);
 	}
 	
 	public HashMap<String, Object> takeShortCutKey(){
@@ -404,7 +407,7 @@ public class MathContentsInfoService {
 		MathUnitInfo mathUnitInfo= mathUnitRepository.findByUnitUniqNo(mathContents.getUnitUniqNo());
 		MathUnitInfoDto mathUnitInfoDto = modelMapper.map(mathUnitInfo, MathUnitInfoDto.class);
 		
-		List<MathTypeInfo> mathTypeInfoList = mathTypeRepository.findByUnitUniqNo(Integer.toString(mathContents.getUnitUniqNo()));
+		List<MathTypeInfo> mathTypeInfoList = mathTypeRepository.findByUnitUniqNoOrderByTypeOrderAsc(Integer.toString(mathContents.getUnitUniqNo()));
 		List<MathTypeInfoDto> mathTypeInfoDtoList = new ArrayList<>();
 		for(MathTypeInfo mathTypeInfo : mathTypeInfoList) {
 			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathTypeInfo, MathTypeInfoDto.class);
@@ -835,5 +838,118 @@ public class MathContentsInfoService {
 		
 		return 0;
 	}
+	
+	@Transactional
+	public HashMap<String, Object> chngQuesType(MathTypeInfoModel mathTypeInfoModel) {
+		MathTypeInfo orgMathTypeInfo = mathTypeRepository.findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(mathTypeInfoModel.getUnitUniqNo(), mathTypeInfoModel.getTypeNo());
+		MathTypeDomain mathTypeDomain = new MathTypeDomain();
+		mathTypeDomain.setUnitUniqNo(mathTypeInfoModel.getUnitUniqNo());
+		mathTypeDomain.setTypeNo(mathTypeInfoModel.getTypeNo());
+		MathTypeInfoDto mathTypeInfoDto = new MathTypeInfoDto();
+		mathTypeInfoDto.setMathTypeDomain(mathTypeDomain);
+		mathTypeInfoDto.setQuesType(mathTypeInfoModel.getQuesType());
+		mathTypeInfoDto.setTypeOrder(orgMathTypeInfo.getTypeOrder());
+		MathTypeInfo mathTypeInfo = mathTypeRepository.save(mathTypeInfoDto.toEntity());
+		boolean isSuccess = entityManager.contains(mathTypeInfo);
+		HashMap<String, Object> map = new HashMap<>();
+		if(isSuccess) {
+			map.put("isSuccess", true);
+			MathTypeInfoDto newMathTypeInfoDto = modelMapper.map(mathTypeInfo, MathTypeInfoDto.class);
+			map.put("mathTypeInfo", newMathTypeInfoDto);
+		}else {
+			map.put("isSuccess", false);
+		}
+		
+		return map;
+	}
+	
+	public HashMap<String, Object> takeConCntByUnitUniqNo(String unitUnqiNo){
+		List<ContentsCnt> list = mathContentsRepository.contentsCntByUnitUniqNo(Integer.parseInt(unitUnqiNo));
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("cntList", list);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> typeDel(String unitUnqiNo, String typeNo){
+		 long contentsCnt = mathContentsRepository.countByUnitUniqNoAndTypeNo(Integer.parseInt(unitUnqiNo), Integer.parseInt(typeNo));
+		 HashMap<String, Object> map = new HashMap<>();
+		 if(contentsCnt>0) {
+			 map.put("isSuccess", false);
+			 return map;
+		 }
+		 mathTypeRepository.deleteByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(unitUnqiNo, typeNo);
+		 map.put("isSuccess", true);
+		 return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> mathTypeAdd(MathTypeInfoModel mathTypeInfoModel){
+		 List<MathTypeInfo> mathTypeInfoList = mathTypeRepository.findByMathTypeDomainUnitUniqNo(mathTypeInfoModel.getUnitUniqNo());
+		 int lastTypeNo = 1;
+		 int lastTypeOrder = 1;
+		 for(MathTypeInfo mathTypeInfo : mathTypeInfoList) {
+			 if(lastTypeNo<Integer.parseInt(mathTypeInfo.getMathTypeDomain().getTypeNo())) {
+				 lastTypeNo=Integer.parseInt(mathTypeInfo.getMathTypeDomain().getTypeNo());
+			 }
+			 if(lastTypeOrder<mathTypeInfo.getTypeOrder()) {
+				 lastTypeOrder=mathTypeInfo.getTypeOrder();
+			 }
+		 }
+		 MathTypeDomain mathTypeDomain= new MathTypeDomain();
+		 mathTypeDomain.setUnitUniqNo(mathTypeInfoModel.getUnitUniqNo());
+		 mathTypeDomain.setTypeNo(Integer.toString(lastTypeNo+1));
+		 
+		 MathTypeInfoDto mathTypeInfoDto = new MathTypeInfoDto();
+		 mathTypeInfoDto.setMathTypeDomain(mathTypeDomain);
+		 mathTypeInfoDto.setQuesType(mathTypeInfoModel.getQuesType());
+		 mathTypeInfoDto.setTypeOrder(lastTypeOrder+1);
+		 MathTypeInfo mathTypeInfo = mathTypeRepository.save(mathTypeInfoDto.toEntity());
+		 
+		 boolean isSuccess = entityManager.contains(mathTypeInfo);
+		 HashMap<String, Object> map = new HashMap<>();
+		 if(isSuccess) {
+			map.put("isSuccess", true);
+			map.put("mathTypeInfo", mathTypeInfo);
+		 }else {
+			map.put("isSuccess", false);
+		 }
+		 return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> contentsMoveFromTo(String fromUnitUniqNo, String fromTypeNo, String toUnitUniqNo, String toTypeNo){
+		mathContentsRepository.contentsMoveFromTo(Integer.parseInt(fromUnitUniqNo), Integer.parseInt(fromTypeNo), Integer.parseInt(toUnitUniqNo), Integer.parseInt(toTypeNo));
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> mathTypeOrderChng(List<MathTypeInfoModel> mathTypeInfoModelList){
+		List<MathTypeInfo> mathTypeInfoList = mathTypeRepository.findByMathTypeDomainUnitUniqNo(mathTypeInfoModelList.get(0).getUnitUniqNo());
+		
+		List<MathTypeInfo> mathTypeList = new ArrayList<>();
+		for(MathTypeInfoModel mathTypeInfoModel : mathTypeInfoModelList) {
+			 MathTypeDomain mathTypeDomain= new MathTypeDomain();
+			 mathTypeDomain.setUnitUniqNo(mathTypeInfoModel.getUnitUniqNo());
+			 mathTypeDomain.setTypeNo(mathTypeInfoModel.getTypeNo());
+			 MathTypeInfoDto mathTypeInfoDto = new MathTypeInfoDto();
+			 mathTypeInfoDto.setMathTypeDomain(mathTypeDomain);
+			 for(MathTypeInfo mathTypeInfo : mathTypeInfoList) {
+				 if(mathTypeInfo.getMathTypeDomain().getTypeNo().equals(mathTypeInfoModel.getTypeNo())) {
+					 mathTypeInfoDto.setQuesType(mathTypeInfo.getQuesType());
+				 }
+			 }
+			 mathTypeInfoDto.setTypeOrder(mathTypeInfoModel.getTypeOrder());
+			 mathTypeList.add(mathTypeInfoDto.toEntity());
+		}
+		mathTypeRepository.saveAll(mathTypeList);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		return map;
+	}
+	
+	
 	
 }

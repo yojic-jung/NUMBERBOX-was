@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.mathinfo.dto.ContentsCnt;
 import com.numberbox.mathinfo.dto.ContentsListModel;
 import com.numberbox.mathinfo.entity.MathContents;
 
@@ -19,6 +20,11 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	@Query(value = "select userUniqId from MathContents where contentsNo=:contentsNo", nativeQuery = false)
 	public UUID findOnlyUuidByContentsNo(@Param("contentsNo")int contentsNo);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MathContents m set m.unitUniqNo =:toUnitUniqNo, m.typeNo=:toTypeNo where m.unitUniqNo =:fromUnitUniqNo and m.typeNo =:fromTypeNo", nativeQuery = false)
+	public int contentsMoveFromTo(@Param("fromUnitUniqNo")int fromUnitUniqNo, @Param("fromTypeNo")int fromTypeNo, @Param("toUnitUniqNo")int toUnitUniqNo, @Param("toTypeNo")int toTypeNo);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
 	public List<MathContents> findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, int contentsClassify);
@@ -36,6 +42,15 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	public List<MathContents> findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc(
 			UUID userUniqId, int contentsClassify, UUID userUniqId2, int contentsClassify2, int shareStts);
 	
+	@Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsCnt"
+    		+ "(a.unitUniqNo, a.typeNo, count(*) as cnt)"+
+    		" from MathContents a " +
+    		" where" + 
+    		" a.unitUniqNo=:unitUniqNo "
+    		+ "group by a.unitUniqNo, a.typeNo" )
+	public List<ContentsCnt> contentsCntByUnitUniqNo(@Param("unitUniqNo")int unitUniqNo);
+	
+	public long countByUnitUniqNoAndTypeNo(int unitUniqNo, int typeNo);
 	
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
     		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
