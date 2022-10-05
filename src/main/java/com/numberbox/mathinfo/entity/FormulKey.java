@@ -13,6 +13,9 @@ public class FormulKey {
 	@Id
 	public int id;
 	
+	@Column(length = 3, nullable = false)
+	public int formulOrder;
+	
 	@Column(length = 30, nullable = false)
 	public String formulName;
 	
@@ -46,8 +49,9 @@ public class FormulKey {
 	public FormulKey() { }
 	
     @Builder
-    public FormulKey(int id, String formulName, String formulUi, String shortcutKey, String latexGrammer, String nbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
+    public FormulKey(int id, int formulOrder, String formulName, String formulUi, String shortcutKey, String latexGrammer, String nbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
         this.id = id;
+        this.formulOrder = formulOrder;
         this.formulName = formulName;
         this.formulUi = formulUi;
         this.shortcutKey = shortcutKey;

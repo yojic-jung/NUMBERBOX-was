@@ -8,5 +8,7 @@ import com.numberbox.mathinfo.entity.FormulKey;
 
 public interface FormulKeyRepository  extends JpaRepository <FormulKey, Integer> {
 
+	List<FormulKey> findAllByOrderByFormulOrderAsc();
+	
 	List<FormulKey> findByClassification(String classification);
 }	
