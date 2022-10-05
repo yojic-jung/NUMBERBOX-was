@@ -66,7 +66,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" where" + 
     		" a.svcPosbStts=1 " + 
     		" and ( (a.contentsClassify=0) or (a.contentsClassify =1  and b.shareStts=1) ) and a.unitUniqNo=:unitUniqNo" + 
-    		" order by a.sysCreateDate desc", nativeQuery = false)
+    		" order by ques_level desc", nativeQuery = false)
 	public List<ContentsListModel> findByUnitUniqNo(@Param("unitUniqNo")int unitUniqNo);
     
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"

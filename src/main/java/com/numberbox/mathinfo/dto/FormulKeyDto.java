@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FormulKeyDto {
 	public int id;
+	public int formulOrder;
 	public String formulName;
 	public String formulUi;
 	public String shortcutKey;

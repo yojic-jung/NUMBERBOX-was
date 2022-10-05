@@ -24,7 +24,7 @@ public class MathTypeInfo {
 	public MathTypeDomain mathTypeDomain;
 
 	
-	@Column(length = 300, nullable = false)
+	@Column(length = 1500, nullable = false)
 	public String quesType;
 	
 	@Column(length = 2, nullable = false)

@@ -20,6 +20,8 @@ import javax.persistence.SqlResultSetMapping;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -124,6 +126,7 @@ public class MathContents {
 	MathUnitInfo mathUnitInfo;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
+	@NotFound(action=NotFoundAction.IGNORE) 
 	@JoinColumns({
         @JoinColumn(name = "unitUniqNo", referencedColumnName = "unitUniqNo", insertable=false, updatable=false),
         @JoinColumn(name = "typeNo", referencedColumnName = "typeNo", insertable=false, updatable=false)

@@ -123,7 +123,7 @@ public class MathContentsInfoService {
 	
 	public HashMap<String, Object> takeShortCutKey(){
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<FormulKey> formulKeyList = formulKeyRepository.findAll();
+		List<FormulKey> formulKeyList = formulKeyRepository.findAllByOrderByFormulOrderAsc();
 		List<FormulKeyDto> mainList = new ArrayList<>();
 		List<FormulKeyDto> highList = new ArrayList<>();
 		List<FormulKeyDto> etcList = new ArrayList<>();
@@ -291,8 +291,6 @@ public class MathContentsInfoService {
 		}
 		
 		
-		
-		
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		List<Integer> contentsNoList = new ArrayList<>();
 		for(ContentsListModel content : list) {
@@ -367,6 +365,7 @@ public class MathContentsInfoService {
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {
 			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			System.out.println(mathContents.getContentsNo());
 			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
 			List<MathContentsCompDto> mathContentsCompDtoList = new ArrayList<>();
 			for(MathContentsComp mathContentsComp : mathContents.getMathContentsComp()) {
