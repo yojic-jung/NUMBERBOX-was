@@ -315,8 +315,9 @@ public class MathInfoController {
 	}
 	
 	@GetMapping("/myContentsDel")
-	public HashMap<String, Object> myContentsDel(@RequestParam int contentsno) {
-		HashMap<String, Object> successObj = mathContentsInfoService.myContentsDel(contentsno);
+	public HashMap<String, Object> myContentsDel(@RequestParam int contentsno, HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> successObj = mathContentsInfoService.myContentsDel(contentsno, path);
 		return successObj;
 	}
 	

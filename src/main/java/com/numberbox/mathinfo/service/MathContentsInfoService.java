@@ -123,7 +123,7 @@ public class MathContentsInfoService {
 	
 	public HashMap<String, Object> takeShortCutKey(){
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<FormulKey> formulKeyList = formulKeyRepository.findAllByOrderByFormulOrderAsc();
+		List<FormulKey> formulKeyList = formulKeyRepository.findAllByOrderByFormulOrderAscIdAsc();
 		List<FormulKeyDto> mainList = new ArrayList<>();
 		List<FormulKeyDto> highList = new ArrayList<>();
 		List<FormulKeyDto> etcList = new ArrayList<>();
@@ -162,7 +162,6 @@ public class MathContentsInfoService {
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		List<MembersRole> roleList =  members.getRole();
-		
 		//수정 모드인 경우 자기 자신 문제만 수정 가능
 		if(mathContentsDto.getContentsNo()!=0) {
 			UUID contentsUuid = mathContentsRepository.findOnlyUuidByContentsNo(mathContentsDto.getContentsNo());
@@ -646,24 +645,38 @@ public class MathContentsInfoService {
 			int randomValue1 = random1.nextInt(100);
 
 			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getContentsImgFile().getOriginalFilename();
-			
+			MathContents mathContents = mathContentsRepository.findByContentsNo(mathContentsDto.getContentsNo());
+			String contentsImgName = mathContents.getContentsImg();
+			// 새이미지 추가
 			File file = new File(path+"/contentsImg" , fileName);
 			mathContentsDto.getContentsImgFile().transferTo(file);
 			mathContentsDto.setImgPath("/webapp/static/contentsImg/");
 			mathContentsDto.setContentsImg(fileName);
-			return mathContentsRepository.changeConImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getContentsImg());
+			int isSuccess = mathContentsRepository.changeConImg(mathContentsDto.getContentsNo(), "/webapp/static/contentsImg/", mathContentsDto.getContentsImg());
+			
+			//이전 이미지 삭제
+			File delFile = new File(path+"/contentsImg/"+contentsImgName);
+			delFile.delete();
+			return isSuccess;
 		}		
 		if(mathContentsDto.getSolutionImgFile()!=null && !mathContentsDto.getSolutionImgFile().isEmpty()) {
 			long currentTime1 = System.currentTimeMillis();
 			int randomValue1 = random1.nextInt(100);
 
 			String fileName = Long.toString(currentTime1) + "_"+randomValue1+"_"+mathContentsDto.getSolutionImgFile().getOriginalFilename();
-			
+			MathContents mathContents = mathContentsRepository.findByContentsNo(mathContentsDto.getContentsNo());
+			String solutionImgName = mathContents.getSolutionImg();
+			//새 이미지 추가
 			File file = new File(path+"/solutionImg" , fileName);
 			mathContentsDto.getSolutionImgFile().transferTo(file);
 			mathContentsDto.setSolutionImgPath("/webapp/static/solutionImg/");
 			mathContentsDto.setSolutionImg(fileName);
-			return mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/solutionImg/", mathContentsDto.getSolutionImg());
+			int isSuccess = mathContentsRepository.changeSolImg(mathContentsDto.getContentsNo(), "/webapp/static/solutionImg/", mathContentsDto.getSolutionImg());
+			
+			//이전 이미지 삭제
+			File delFile = new File(path+"/solutionImg/"+solutionImgName);
+			delFile.delete();
+			return isSuccess;
 		}
 		return 0;
 		
@@ -746,7 +759,7 @@ public class MathContentsInfoService {
 	}
 	
 	@Transactional
-	public HashMap<String, Object> myContentsDel(int contentsNo){
+	public HashMap<String, Object> myContentsDel(int contentsNo, String path){
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -764,6 +777,16 @@ public class MathContentsInfoService {
 			map.put("serverMsg", "넘버링크 제작 문제는 삭제할 수 없습니다.");
 			map.put("myContents", null);
 		}else if(mathContents.getContentsClassify() == 1) {
+			MathContents mathContentsForDel = mathContentsRepository.findByContentsNo(contentsNo);
+			if(mathContentsForDel.getContentsImg() != null && !mathContentsForDel.getContentsImg().isEmpty()) {
+				File conFile = new File(path+"/contentsImg/"+mathContentsForDel.getContentsImg());
+				conFile.delete();
+			}
+			if(mathContentsForDel.getSolutionImg() != null && !mathContentsForDel.getSolutionImg().isEmpty()) {
+				File solFile = new File(path+"/solutionImg/"+mathContentsForDel.getSolutionImg());
+				solFile.delete();
+			}
+			
 			if(mathContents.getTransConCnt()==0) {	//변형문제 없는 제작문제는 바로 삭제 가능
 				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
