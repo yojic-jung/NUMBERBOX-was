@@ -19,7 +19,7 @@ public class FormulKeyDto {
 	public String nbGrammer;
 	public String guide;
 	public String shortcutKeycode;
-	public String delTarget;
+	public String texGrammer;
 	public int lineChange;
 	public String classification;
 }
