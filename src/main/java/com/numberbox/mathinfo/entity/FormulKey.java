@@ -37,8 +37,8 @@ public class FormulKey {
 	@Column(length = 5, nullable = true)
 	public String shortcutKeycode;
 	
-	@Column(length = 1, nullable = false)
-	public String delTarget;
+	@Column(length = 40, nullable = false)
+	public String texGrammer;
 	
 	@Column(length = 1, nullable = false)
 	public int lineChange;
@@ -49,7 +49,7 @@ public class FormulKey {
 	public FormulKey() { }
 	
     @Builder
-    public FormulKey(int id, int formulOrder, String formulName, String formulUi, String shortcutKey, String latexGrammer, String nbGrammer, String guide, String shortcutKeycode, String delTarget, int lineChange, String classification) {
+    public FormulKey(int id, int formulOrder, String formulName, String formulUi, String shortcutKey, String latexGrammer, String nbGrammer, String guide, String shortcutKeycode, String texGrammer, int lineChange, String classification) {
         this.id = id;
         this.formulOrder = formulOrder;
         this.formulName = formulName;
@@ -59,7 +59,7 @@ public class FormulKey {
         this.nbGrammer = nbGrammer;
         this.guide = guide;
         this.shortcutKeycode = shortcutKeycode;
-        this.delTarget = delTarget;
+        this.texGrammer = texGrammer;
         this.lineChange = lineChange;
         this.classification = classification;
     }
