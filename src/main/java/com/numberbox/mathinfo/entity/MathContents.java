@@ -52,12 +52,12 @@ public class MathContents {
 	@Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
 	UUID userUniqId;
 	
-	@Column(columnDefinition = "TEXT", nullable = false)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = false)
 	String contents;
 	@Column(length = 70, nullable = true, updatable=false)
 	String contentsImg;
 	
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String solution;
 	@Column(length = 70, nullable = true, updatable=false)
 	String solutionImg;
@@ -68,15 +68,15 @@ public class MathContents {
 	@Column(length = 30, nullable = true, updatable=false)
 	String solutionImgPath;
 	
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String firNo;
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String secNo;
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String thrNo;
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String fourNo;
-	@Column(columnDefinition = "TEXT", nullable = true)
+	@Column(columnDefinition = "MEDIUMTEXT", nullable = true)
 	String fifNo;
 	
 	@Column(length = 1, nullable = false)
