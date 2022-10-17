@@ -45,8 +45,9 @@ public class ServiceCenterController {
 	}
 	
 	@GetMapping("/takeErrReportCount")
-	public HashMap<String, Object> takeErrReportByAdmin() {
-		HashMap<String, Object> map = customCenterService.takeErrReportCount();
+	public HashMap<String, Object> takeErrReportCount(HttpServletRequest request) {
+		int reportStts = Integer.parseInt(request.getParameter("reportStts"));
+		HashMap<String, Object> map = customCenterService.takeErrReportCount(reportStts);
 		return map;
 	}
 	

@@ -13,7 +13,7 @@ public interface ErrorReportRepository extends JpaRepository <ErrorReport, Integ
 	
 	public List<ErrorReport> findByReportUserOrderBySysCreateDateDesc(UUID reportUser);
 	
-	public int countByReportSttsAndErrType(int reportStts, int errType);
+	public List<ErrorReport> findByReportSttsOrderBySysCreateDateDesc(int reportStts);
 	
 	public List<ErrorReport> findByErrTypeOrderBySysCreateDateDesc(int errType);
 	
