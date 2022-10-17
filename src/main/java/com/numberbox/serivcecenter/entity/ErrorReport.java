@@ -26,6 +26,7 @@ public class ErrorReport {
 	 * errType==1 : 문제 오류신고
 	 * errType==2 : 컨텐츠 오류신고
 	 * errType==3 : 학습지 오류신고
+	 * errType==4 : 문제 만들기 페이지 오류신고
 	 */
 	@Column(length = 1, nullable = false)
 	public int errType;

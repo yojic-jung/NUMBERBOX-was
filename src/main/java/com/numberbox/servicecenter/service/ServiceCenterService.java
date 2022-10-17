@@ -165,62 +165,49 @@ public class ServiceCenterService {
 		return map;
 	}
 	
-	public HashMap<String, Object> takeErrReportCount() {
+	public HashMap<String, Object> takeErrReportCount(int reportStts) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		int oneToOneQuestionCnt = errorReportRepository.countByReportSttsAndErrType(0, 0);
-		int conErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 1);
-		int resErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 2);
-		int mathDocsErrCnt = errorReportRepository.countByReportSttsAndErrType(0, 3);
+		List<ErrorReport> errReport = errorReportRepository.findByReportSttsOrderBySysCreateDateDesc(reportStts);
+		int oneToOneQuestionCnt = 0;
+		int conErrCnt = 0;
+		int resErrCnt = 0;
+		int mathDocsErrCnt = 0;
+		int makeContentsErrCnt = 0;
+		for(ErrorReport err : errReport) {
+			if(err.getErrType() == 0) {
+				oneToOneQuestionCnt +=1;
+			}else if(err.getErrType() == 1) {
+				conErrCnt +=1;
+			}else if(err.getErrType() == 2) {
+				resErrCnt+=1;
+			}else if(err.getErrType() == 3) {
+				mathDocsErrCnt +=1;
+			}else if(err.getErrType() == 4) {
+				makeContentsErrCnt+=1;
+			}
+		}
+		
 		map.put("oneToOneQuestionCnt", oneToOneQuestionCnt);
 		map.put("conErrCnt", conErrCnt);
 		map.put("resErrCnt", resErrCnt);
 		map.put("mathDocsErrCnt", mathDocsErrCnt);
+		map.put("makeContentsErrCnt", makeContentsErrCnt);
 		return map;
 	}
 
 	public HashMap<String, Object> takeErrReportByAdmin(int reportStts) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<ErrorReport> oneToOneErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 0);
-		List<ErrorReport> conErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 1);
-		List<ErrorReport> resErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 2);
-		List<ErrorReport> docsErrReportList = errorReportRepository.findByReportSttsAndErrTypeOrderBySysCreateDateDesc(reportStts, 3);
+		List<ErrorReport> errReportList = errorReportRepository.findByReportSttsOrderBySysCreateDateDesc(reportStts);
 		
-		List<ErrorReportDto> oneToOneList = new ArrayList<>();
-		for(ErrorReport errReport : oneToOneErrReportList) {
+		List<ErrorReportDto> errReportListDto = new ArrayList<>();
+		for(ErrorReport errReport : errReportList) {
 			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
 			errorReportDto.setReportUser(null);
 			errorReportDto.setReplyUser(null);
-			oneToOneList.add(errorReportDto);
+			errReportListDto.add(errorReportDto);
 		}
 		
-		List<ErrorReportDto> conErrList = new ArrayList<>();
-		for(ErrorReport errReport : conErrReportList) {
-			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
-			errorReportDto.setReportUser(null);
-			errorReportDto.setReplyUser(null);
-			conErrList.add(errorReportDto);
-		}
-		
-		List<ErrorReportDto> resErrList = new ArrayList<>();
-		for(ErrorReport errReport : resErrReportList) {
-			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
-			errorReportDto.setReportUser(null);
-			errorReportDto.setReplyUser(null);
-			resErrList.add(errorReportDto);
-		}
-		
-		List<ErrorReportDto> docsErrReportListDto = new ArrayList<>();
-		for(ErrorReport errReport : docsErrReportList) {
-			ErrorReportDto errorReportDto = modelMapper.map(errReport, ErrorReportDto.class);
-			errorReportDto.setReportUser(null);
-			errorReportDto.setReplyUser(null);
-			docsErrReportListDto.add(errorReportDto);
-		}
-		
-		map.put("oneToOneList", oneToOneList);
-		map.put("conErrList", conErrList);
-		map.put("resErrList", resErrList);
-		map.put("mathDocsErrList", docsErrReportListDto);
+		map.put("errReportList", errReportListDto);
 		return map;
 	}
 	
