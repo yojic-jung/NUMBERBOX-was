@@ -353,22 +353,35 @@ public class MathDocsSevice {
 		String contentsNoListStr = mathDocsPaper.getContentsNoList();
 		String[] contentsNoArr = contentsNoListStr.split(",");
 		List<Integer> contentsNoList = new ArrayList<>();
+		HashMap<Integer, Integer> contentsOrderMap = new HashMap<>();		//in절 순서대로 정렬하기 위해 순서 값을 가진 맵
+		int i=0;
 		for(String contentsNo : contentsNoArr) {
 			contentsNoList.add(Integer.parseInt(contentsNo));
+			contentsOrderMap.put(Integer.parseInt(contentsNo), i);
+			i++;
 		}
 		List<MathContents> mainConList = mathContentsRepository.findByContentsNoInAndSvcPosbSttsAndContentsClassifyNot(contentsNoList, 1, 3);
 		
-		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
+		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();	//arrayList는 초기 크기 지정 안되 null 값으로 미리 지정
+		for(int j=0; j<contentsOrderMap.size(); j++) {
+			mathContentsDtoList.add(null);
+		}
+		
 		for(MathContents mathContents: mainConList) {
 			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
 			mathContentsDto.setOrgContentsNo(0);
 			mathContentsDto.setOrgSrcPage(0);
 			mathContentsDto.setOrgSrcRef(null);
-			mathContentsDtoList.add(mathContentsDto);
+			mathContentsDtoList.set(contentsOrderMap.get(mathContents.getContentsNo()), mathContentsDto);
 		}
 		
-		//문제 난이도에 따라 오름차순으로 정렬
-		Collections.sort(mathContentsDtoList);
+		//만약 문제가 비공개 됬거나 미출시, 삭제되어 조회가 안되는 경우, null로 리턴 될 수 있으니 null제거
+		for(int k=mathContentsDtoList.size()-1; k>=0; k--) {
+			if(mathContentsDtoList.get(k) == null) {
+				mathContentsDtoList.remove(k);
+			}
+		}
+		
 		map.put("mathContentsList", mathContentsDtoList);
 		map.put("mathDocsPaper", mathDocsPaperDto);
 		return map;
