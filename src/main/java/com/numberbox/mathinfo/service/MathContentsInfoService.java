@@ -172,6 +172,8 @@ public class MathContentsInfoService {
 			if(!isAdmin) {
 				if(!contentsUuid.equals(userUniqId)) {		//컨텐츠에 등록되어있는 uuid와 사용자 uuid 같은 경우에만 수정가능
 					map.put("saveSuccess", false);
+					map.put("existMsg", true);
+					map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
 					return map;
 				}
 			}
@@ -190,6 +192,16 @@ public class MathContentsInfoService {
 		else {
 			mathContentsDto.setSvcPosbStts(1);
 		} 
+		
+		//삭제한 유형에 등록하면 에러 날 수 있음
+		//관리자가 유형 삭제 하더라도 사용자가 홈페이지 새로고침 안하면 삭제한 유형 그대로 보일 수 있음
+		MathTypeInfo mathType = mathTypeRepository.findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(Integer.toString(mathContentsDto.getUnitUniqNo()), Integer.toString(mathContentsDto.getTypeNo()));
+		if(mathType == null) {
+			map.put("saveSuccess", false);
+			map.put("existMsg", true);
+			map.put("serverMsg", "해당 유형은 삭제 되었습니다. 새로운 유형에 등록 후 새로고침하여 주시기 바랍니다.");
+			return map;
+		}
 		
 		//변형문제 갯수 세팅 
 		if(mathContentsDto.getContentsClassify()==2) {

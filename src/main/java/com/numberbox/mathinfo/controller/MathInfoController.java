@@ -76,11 +76,6 @@ public class MathInfoController {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
 		}
-		
-		if(!(boolean)map.get("saveSuccess")) {
-			map.put("existMsg", true);
-			map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
-		}
 		return map;
 	}
 	
@@ -94,11 +89,6 @@ public class MathInfoController {
 		if(isUpdtMode) {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
-		}
-		
-		if(!(boolean)map.get("saveSuccess")) {
-			map.put("existMsg", true);
-			map.put("serverMsg", "본인이 만든 문제 외의 문제는 수정할 수 없습니다.");
 		}
 		return map;
 	}

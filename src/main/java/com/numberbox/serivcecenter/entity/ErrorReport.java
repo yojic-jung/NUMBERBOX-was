@@ -48,6 +48,12 @@ public class ErrorReport {
 	@Column(length = 500, nullable = true)
 	public String replyContents;
 	
+	@Column(length = 7, nullable = false)
+	public String osInfo;
+	@Column(length = 7, nullable = false)
+	public String browser;
+	
+	
 	@Column(length = 30, nullable = true)
 	public String firstImgPath;
 	@Column(length = 70, nullable = true)
@@ -81,7 +87,7 @@ public class ErrorReport {
 	public ErrorReport() { }
 	
     @Builder
-    public ErrorReport(int reportId, int errType, int contentsNo, UUID reportUser, String reportContents, UUID replyUser, String replyContents
+    public ErrorReport(int reportId, int errType, int contentsNo, UUID reportUser, String reportContents, UUID replyUser, String replyContents, String osInfo, String browser 
     		, String firstImgPath, String firstImgName, String secondImgPath, String secondImgName
     		, String thirdImgPath, String thirdImgName, int reportStts, LocalDateTime sysUpdateDate, LocalDateTime sysCreateDate) {
         this.reportId = reportId;
@@ -91,6 +97,8 @@ public class ErrorReport {
         this.reportContents = reportContents;
         this.replyUser = replyUser;
         this.replyContents = replyContents;
+        this.osInfo = osInfo;
+        this.browser = browser;
         this.firstImgPath = firstImgPath;
         this.firstImgName = firstImgName;
         this.secondImgPath = secondImgPath;
