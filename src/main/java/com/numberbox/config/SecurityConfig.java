@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
     	super.configure(auth);
         http.csrf().disable().authorizeRequests()
-        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()		//cors 추가
                 .antMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/naverLogin").permitAll()
@@ -143,9 +143,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/common/download").permitAll()
                 
                 .antMatchers("/mathInfo/**").permitAll()
-                .antMatchers("/author").hasAnyRole("user")
-                .anyRequest().authenticated().and()
-                .cors().and();
+                .antMatchers("/author").hasAnyRole("user")		//cors 추가
+                .anyRequest().authenticated().and()				//cors 추가
+                .cors().and();									//cors 추가
           
         http
         .httpBasic().disable()
@@ -185,8 +185,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(customUsersService);
     }
     
+    //현재 cors 설정 사실상 의미 없음, web서버와 was 같은 서버에서 동작되고
+  	//web서버의 로컬에서 경로에 따라 같은 서버의 was로 연결되게끔 설정 (도메인 설정하지 않음)
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {	//cors 추가
         CorsConfiguration configuration = new CorsConfiguration();
         // - (3)
         configuration.addAllowedOriginPattern("*");
@@ -196,7 +198,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setMaxAge(3600L);
         configuration.addExposedHeader("access-token");			// 추가한 코드
         configuration.addExposedHeader("role");			// 추가한 코드
-        configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
+        //configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
