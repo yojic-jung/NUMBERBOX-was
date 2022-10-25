@@ -72,11 +72,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), members.getRole());
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         String loginState = (String)request.getParameter("loginState");
-        
         response.setHeader("access-token", accessToken);
         request.setAttribute("refreshToken", refreshToken);
         request.setAttribute("loginState", loginState);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/loginSuccess");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/loginSuccess");
         dispatcher.forward(request, response);
     }
 }
