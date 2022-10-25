@@ -63,6 +63,8 @@ public class MembersController {
 		refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
 		if(loginState !=null && loginState.equals("keep")) {
         	refreshTokenCookie.setMaxAge(60*60*24*30);
+        }else {
+        	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
         }
 		
 		response.addCookie(refreshTokenCookie);
@@ -103,6 +105,7 @@ public class MembersController {
 			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
 			response.setHeader("access-token", returnMap.get("accessToken"));
 			refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
+        	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
 	        response.addCookie(refreshTokenCookie);
 		}
 		map.put("isSuccess", isSuccess);
@@ -120,7 +123,9 @@ public class MembersController {
 			response.setHeader("role", returnMap.get("role"));
 			String loginState = (String)request.getParameter("loginState");
 	        if(loginState !=null && loginState.equals("keep")) {
-	        	refreshTokenCookie.setMaxAge(60*60*24*30);
+	        	refreshTokenCookie.setMaxAge(60*60*24*30);		//30일
+	        }else {
+	        	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
 	        }
 	        refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
 	        response.addCookie(refreshTokenCookie);
