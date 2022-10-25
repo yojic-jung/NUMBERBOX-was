@@ -24,7 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
             .allowedOrigins("http://localhost:3000")
             .allowedOrigins("https://nsoohak.com")
+            .allowedOrigins("https://nsoohak.com:8080")
             .allowedOrigins("https://www.nsoohak.com")
+            .allowedOrigins("https://www.nsoohak.com:8080")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
     }
     
