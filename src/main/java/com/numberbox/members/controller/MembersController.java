@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +67,18 @@ public class MembersController {
 		
 		response.addCookie(refreshTokenCookie);
 		
+		/*
+		ResponseCookie cookie = ResponseCookie.from("refresh-token", refreshToken)
+            	.path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(60*60*24*30)
+                .build();
+    	
+        response.setHeader("Set-Cookie", cookie.toString());
+        */
+        System.out.println("디스패치 성공");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isLogin", true);
 		return map;

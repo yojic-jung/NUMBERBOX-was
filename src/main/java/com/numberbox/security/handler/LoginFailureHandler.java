@@ -38,7 +38,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		String userEmail = (String)request.getParameter("username");
-		
 		String customErrMsg = "";
 		if(exception instanceof BadCredentialsException) {
 			Members members = membersRepository.findByEmail(userEmail);
