@@ -22,6 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+        //cors 재설정
             .allowedOrigins("http://localhost:3000", "https://nsoohak.com", "https://nsoohak.com:8080", "https://www.nsoohak.com", "https://www.nsoohak.com:8080")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
     }
