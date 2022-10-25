@@ -376,7 +376,6 @@ public class MathContentsInfoService {
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {
 			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
-			System.out.println(mathContents.getContentsNo());
 			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
 			List<MathContentsCompDto> mathContentsCompDtoList = new ArrayList<>();
 			for(MathContentsComp mathContentsComp : mathContents.getMathContentsComp()) {
