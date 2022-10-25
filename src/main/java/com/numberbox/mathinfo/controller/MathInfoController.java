@@ -26,7 +26,7 @@ import com.numberbox.mathinfo.service.MathContentsInfoService;
 import com.numberbox.mathinfo.service.MathResourceService;
 
 @RestController
-@RequestMapping("/api/mathInfo")
+@RequestMapping("/mathInfo")
 public class MathInfoController {
 	
 	@Autowired
