@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,6 +60,7 @@ public class MembersController {
 		String refreshToken = (String)request.getAttribute("refreshToken");
 		String loginState = (String)request.getAttribute("loginState");
 		Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
+		refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
 		if(loginState !=null && loginState.equals("keep")) {
         	refreshTokenCookie.setMaxAge(60*60*24*30);
         }
@@ -78,7 +78,6 @@ public class MembersController {
     	
         response.setHeader("Set-Cookie", cookie.toString());
         */
-        System.out.println("디스패치 성공");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isLogin", true);
 		return map;
@@ -103,6 +102,7 @@ public class MembersController {
 		if(isSuccess.equals("success")) {
 			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
 			response.setHeader("access-token", returnMap.get("accessToken"));
+			refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
 	        response.addCookie(refreshTokenCookie);
 		}
 		map.put("isSuccess", isSuccess);
@@ -122,6 +122,7 @@ public class MembersController {
 	        if(loginState !=null && loginState.equals("keep")) {
 	        	refreshTokenCookie.setMaxAge(60*60*24*30);
 	        }
+	        refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
 	        response.addCookie(refreshTokenCookie);
 	        
 		}
