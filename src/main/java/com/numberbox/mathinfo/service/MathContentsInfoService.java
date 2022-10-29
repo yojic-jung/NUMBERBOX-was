@@ -87,20 +87,32 @@ public class MathContentsInfoService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	public List<MathUnitInfoGroup> takeMathSubjectInfo(){
-		return mathUnitRepository.selectSubjectInfo();
+	public List<MathUnitInfoGroup> takeMathSubjectInfo(String isOnlyExist){
+		if(isOnlyExist != null) {
+			return mathUnitRepository.selectSubjectInfoOnlyExistContents();
+		}else {
+			return mathUnitRepository.selectSubjectInfo();
+		}
 	}
 	
 	public List<MathUnitInfoGroup> takeMathFirUnitInfo(){
 		return mathUnitRepository.selectFirUnitInfo();
 	}
 	
-	public List<MathUnitInfoGroup> takeMathSecUnitInfo(){
-		return mathUnitRepository.selectSecUnitInfo();
+	public List<MathUnitInfoGroup> takeMathSecUnitInfo(String isOnlyExist){
+		if(isOnlyExist != null) {
+			return mathUnitRepository.selectSecUnitInfoOnlyExistContents();
+		}else {
+			return mathUnitRepository.selectSecUnitInfo();
+		}
 	}
 	
-	public List<MathUnitInfoGroup> takeMathThrUnitInfo(){
-		return mathUnitRepository.selectThrUnitInfo();
+	public List<MathUnitInfoGroup> takeMathThrUnitInfo(String isOnlyExist){
+		if(isOnlyExist != null) {
+			return mathUnitRepository.selectThrUnitInfoOnlyExistContents();
+		}else {
+			return mathUnitRepository.selectThrUnitInfo();
+		}
 	}
 	
 	public List<MathTypeInfo> takeMathTypeInfo(String unitUniqNo){
