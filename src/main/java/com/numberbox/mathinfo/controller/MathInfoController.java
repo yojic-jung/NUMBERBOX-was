@@ -35,15 +35,17 @@ public class MathInfoController {
 	MathResourceService mathResourceService;
 	
 	@GetMapping("/unitInfo")
-	public HashMap<String, Object> contentsInfo() {
+	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("mathSubjectInfo", mathContentsInfoService.takeMathSubjectInfo());
+		String onlyExistUnit = (String) request.getParameter("onlyExistUnit");
+		map.put("mathSubjectInfo", mathContentsInfoService.takeMathSubjectInfo(onlyExistUnit));
 		//map.put("mathFirUnitInfo", mathContentsInfoService.takeMathFirUnitInfo());
-		map.put("mathSecUnitInfo", mathContentsInfoService.takeMathSecUnitInfo());
-		map.put("mathThrUnitInfo", mathContentsInfoService.takeMathThrUnitInfo());
+		map.put("mathSecUnitInfo", mathContentsInfoService.takeMathSecUnitInfo(onlyExistUnit));
+		map.put("mathThrUnitInfo", mathContentsInfoService.takeMathThrUnitInfo(onlyExistUnit));
 		//map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfo());
 		return map;
 	}
+	
 	
 	@GetMapping("/typeInfo")
 	public HashMap<String, Object> typeInfo(HttpServletRequest request) {
