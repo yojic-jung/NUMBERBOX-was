@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
+import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.dto.FollowUsersDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersFollowInfoDto;
@@ -64,6 +65,9 @@ public class MembersService {
 	private MembersPrivateRepository membersPrivateRepository;
 	@Autowired
 	private MembersFollowInfoRepository membersFollowInfoRepository;
+	@Autowired
+	private MathContentsRepository mathContentsRepository;
+	
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -536,6 +540,42 @@ public class MembersService {
 		corfirmMembersDto.setLastLoginDate(LocalDateTime.now());
 		map.put("isSuccess", true);
 		membersRepository.save(corfirmMembersDto.toEntity());
+		return map;
+	}
+	
+	public HashMap<String, Object> myContentsCheckForHwpDown(String contentsNo) {
+		Members members = StaticSecurityUtil.getMembers();
+		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
+		
+		HashMap<String, Object> map = new HashMap<>();
+		//이미 3회 이상 다운 받은 경우 다운 불가
+		if(memProfile.getHwpDownCnt() >= 3) {
+			map.put("existMsg", true);
+			map.put("contentsNo", -1);
+			map.put("serverMsg", "일일 다운로드 허용 횟수 3회를 모두 사용하셨습니다.");
+			return map;
+		}
+		
+		if(contentsNo.equals("all")) {
+			//hwp 다운 카운트 +1 증가
+			membersProfileRepository.changeHwpDownCnt(memProfile.getUserUniqId(), memProfile.getHwpDownCnt()+1);
+			return map;
+		}
+		
+		int contentsNum = Integer.parseInt(contentsNo);
+		
+		UUID conOwnUuid = mathContentsRepository.findOnlyUuidByContentsNo(contentsNum);
+		//자기자신의 문제 아닌 경우 다운 불가
+		if(!conOwnUuid.equals(members.getUserUniqId())) {
+			map.put("existMsg", true);
+			map.put("contentsNo", -1);
+			map.put("serverMsg", "본인의 문제가 아닌 경우 다운이 불가능합니다.");
+			return map;
+		}
+		
+		//hwp 다운 카운트 +1 증가
+		membersProfileRepository.changeHwpDownCnt(memProfile.getUserUniqId(), memProfile.getHwpDownCnt()+1);
+		map.put("contentsNo", contentsNum);
 		return map;
 	}
 	

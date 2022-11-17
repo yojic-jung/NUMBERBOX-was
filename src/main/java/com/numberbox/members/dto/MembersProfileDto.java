@@ -25,9 +25,10 @@ public class MembersProfileDto {
     public String profileImgName;
     public String profileImgPath;
     public MultipartFile profileImgFile;
+    public int hwpDownCnt;
     
     public MembersProfile toEntity() {
-		return MembersProfile.builder().userNo(userNo).userUniqId(userUniqId).nickname(nickname)
+		return MembersProfile.builder().userNo(userNo).userUniqId(userUniqId).nickname(nickname).hwpDownCnt(hwpDownCnt)
 				.build();
 	}
 }

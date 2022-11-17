@@ -72,6 +72,7 @@ public class SchedulerService {
 	@Autowired
 	ServletContext context; 
 	
+	
 	@Transactional
 	public void tmpPassChange() {
 		//tmpPassword가 1인 값 새로운 비밀번호로 변경
@@ -195,5 +196,12 @@ public class SchedulerService {
 		}
 		
 	}
+	
+	
+	@Transactional
+	public void initHwpDownCnt() {
+		membersProfileRepository.initHwpDownCnt();
+	}
+	
 	
 }
