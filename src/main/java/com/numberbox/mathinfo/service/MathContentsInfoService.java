@@ -461,6 +461,14 @@ public class MathContentsInfoService {
 			repoInfoDtoList.add(mathConRepoInfoDto);
 		}
 		
+		//나의 제작문제가 아닌 경우 복사 금지
+		UUID contentsUuid = mathContentsRepository.findOnlyUuidByContentsNo(contentsNo);
+		if(!contentsUuid.equals(members.getUserUniqId())) {		//컨텐츠에 등록되어있는 uuid와 사용자 uuid 같은 경우에만 수정가능
+			map.put("isMyContents", false);
+		}else {
+			map.put("isMyContents", true);
+		}
+		
 		map.put("mathconRepoInfo", repoInfoDtoList);
 		
 		map.put("myUnitInfo", mathUnitInfoDto);
@@ -526,6 +534,14 @@ public class MathContentsInfoService {
 			}
 			mathContentsModel.setMathContentsLicense(licenseList);
 		}
+		
+		//변형문제 복사 금지
+		if(mathContentsModel.getContentsClassify() == 2){
+			map.put("isMyContents", false);
+		}else {
+			map.put("isMyContents", true);
+		}
+				
 		map.put("myContents", mathContentsModel);
 		
 		return map;

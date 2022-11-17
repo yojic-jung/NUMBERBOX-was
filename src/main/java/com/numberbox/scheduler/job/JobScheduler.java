@@ -27,4 +27,11 @@ public class JobScheduler {
 		schedulerService.dropAccount();
     }
 	
+	// 00시 00분 00초
+	@Scheduled(cron = "00 00 00 * * *")
+    public void initHwpDownCnt() {
+		//사용자 일일 hwp 다운 카운트 초기화
+		schedulerService.initHwpDownCnt();
+    }
+	
 }

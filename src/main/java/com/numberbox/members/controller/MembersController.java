@@ -259,4 +259,11 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping(value="/myContentsCheckForHwpDown")
+	public HashMap<String, Object> myContentsCheckForHwpDown(HttpServletRequest request) {
+		String contentsNo = (String)request.getParameter("contentsNo");
+		HashMap<String, Object> map = membersService.myContentsCheckForHwpDown(contentsNo);
+		return map;
+	}
+	
 }

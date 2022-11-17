@@ -28,4 +28,14 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE MembersProfile m set m.nickname =:nickname where m.userUniqId =:uuid", nativeQuery = false)
 	public int changeNickname(@Param("uuid") UUID uuid, @Param("nickname") String nickname);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MembersProfile m set m.hwpDownCnt =:hwpDownCnt where m.userUniqId =:uuid", nativeQuery = false)
+	public int changeHwpDownCnt(@Param("uuid") UUID uuid, @Param("hwpDownCnt") int hwpDownCnt);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MembersProfile m set m.hwpDownCnt =0", nativeQuery = false)
+	public int initHwpDownCnt();
 }
