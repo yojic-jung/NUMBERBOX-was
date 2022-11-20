@@ -1,8 +1,11 @@
 package com.numberbox.scheduler.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -204,4 +207,30 @@ public class SchedulerService {
 	}
 	
 	
+	public void deleteOldFile() throws IOException {
+		// Calendar 객체 생성
+		Calendar cal = Calendar.getInstance() ;
+		long todayMil = cal.getTimeInMillis() ;     // 현재 시간(밀리 세컨드)
+		long oneHourMil = 1*60*60*1000 ;            // 1시간 단위
+		 
+		Calendar fileCal = Calendar.getInstance() ;
+		Date fileDate = null ;
+		String staticPath = System.getProperty("user.dir");
+		File path = new File(staticPath+"/src/main/webapp/static/userHwp") ;
+		File[] list = path.listFiles() ;            // 파일 리스트 가져오기
+		 
+		for(int j=0 ; j < list.length; j++){
+		    // 파일의 마지막 수정시간 가져오기
+		    fileDate = new Date(list[j].lastModified()) ;
+		    // 현재시간과 파일 수정시간 시간차 계산(단위 : 밀리 세컨드)
+		    fileCal.setTime(fileDate);
+		    long diffMil = todayMil - fileCal.getTimeInMillis() ;
+		    //날짜로 계산
+		    int diffDay = (int)(diffMil/oneHourMil) ;
+		    // 6시간 지난 파일 삭제
+		    if(diffDay > 6 && list[j].exists()){
+		        list[j].delete() ;
+		    }
+		}
+	}
 }
