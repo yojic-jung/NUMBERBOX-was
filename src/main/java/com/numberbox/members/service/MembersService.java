@@ -21,11 +21,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.dto.FollowUsersDto;
+import com.numberbox.members.dto.HwpJsonStrDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersFollowInfoDto;
 import com.numberbox.members.dto.MembersPrivateDto;
@@ -543,6 +545,7 @@ public class MembersService {
 		return map;
 	}
 	
+	
 	public HashMap<String, Object> myContentsCheckForHwpDown(String contentsNo) {
 		Members members = StaticSecurityUtil.getMembers();
 		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
@@ -557,8 +560,6 @@ public class MembersService {
 		}
 		
 		if(contentsNo.equals("all")) {
-			//hwp 다운 카운트 +1 증가
-			membersProfileRepository.changeHwpDownCnt(memProfile.getUserUniqId(), memProfile.getHwpDownCnt()+1);
 			return map;
 		}
 		
@@ -573,10 +574,20 @@ public class MembersService {
 			return map;
 		}
 		
-		//hwp 다운 카운트 +1 증가
-		membersProfileRepository.changeHwpDownCnt(memProfile.getUserUniqId(), memProfile.getHwpDownCnt()+1);
 		map.put("contentsNo", contentsNum);
 		return map;
+	}
+	
+	
+	public String connectPyServerForMakeHwp(String path, HwpJsonStrDto hwpJsonDto) throws IOException {
+		Members members = StaticSecurityUtil.getMembers();
+		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
+		ClientConnect cc = new ClientConnect();	
+		String newFileName= cc.getFile(path, hwpJsonDto.getJsonString());
+		cc.closeConnections();
+		//hwp 다운 카운트 +1 증가
+		membersProfileRepository.changeHwpDownCnt(memProfile.getUserUniqId(), memProfile.getHwpDownCnt()+1);
+		return newFileName;
 	}
 	
 }

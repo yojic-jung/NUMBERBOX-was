@@ -1,5 +1,7 @@
 package com.numberbox.scheduler.job;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -33,5 +35,11 @@ public class JobScheduler {
 		//사용자 일일 hwp 다운 카운트 초기화
 		schedulerService.initHwpDownCnt();
     }
+	
+	// 6시간 마다 실행
+	@Scheduled(cron = "0 0 0/6 * * *") 
+	public void deleteOldFile() throws IOException {
+		schedulerService.deleteOldFile();
+	}
 	
 }
