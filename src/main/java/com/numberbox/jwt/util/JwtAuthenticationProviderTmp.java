@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationProviderTmp {
-	private String secretKey = "secret";
+	private String secretKey = System.getProperty("jwt_secret_key");
 
     private long tokenValidTime = 1000L * 60 * 60;
 
