@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,8 @@ import com.numberbox.security.util.StaticSecurityUtil;
 @Service
 public class MembersService {
 	
+	@Value("${numberbox.hwpSocketIp}")
+	private String customsocketip;
 	@PersistenceContext
     EntityManager entityManager;
 	@Autowired 
@@ -582,7 +585,7 @@ public class MembersService {
 	public String connectPyServerForMakeHwp(String path, HwpJsonStrDto hwpJsonDto) throws IOException {
 		Members members = StaticSecurityUtil.getMembers();
 		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
-		ClientConnect cc = new ClientConnect();	
+		ClientConnect cc = new ClientConnect(customsocketip);	
 		String newFileName= cc.getFile(path, hwpJsonDto.getJsonString());
 		cc.closeConnections();
 		//hwp 다운 카운트 +1 증가
