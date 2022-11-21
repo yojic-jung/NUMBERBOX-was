@@ -1,6 +1,7 @@
 package com.numberbox.jwt.util;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class JwtUtil {
 	  @Autowired
 	  private CustomSecurityUsersService customUsersService;
 	
-	  @Value("JIC727YO930SEC777TOKEN")
+	  @Value("${numberbox.jwtSecretKey}")
 	  private String secretKey;
 	
 	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
@@ -51,6 +52,8 @@ public class JwtUtil {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
+	      System.out.println("테스트");
+	      System.out.println(secretKey);
 	      Date now = new Date();
 	      return Jwts.builder()
 	          .setClaims(claims)
