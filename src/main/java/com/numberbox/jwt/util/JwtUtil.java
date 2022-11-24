@@ -19,6 +19,7 @@ import org.springframework.web.util.WebUtils;
 
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.service.CustomSecurityUsersService;
 
 import io.jsonwebtoken.Claims;
@@ -36,7 +37,9 @@ public class JwtUtil {
 	  private ExpiredRefreshTokenService expiredRefreshTokenService;
 	  @Autowired
 	  private CustomSecurityUsersService customUsersService;
-	
+	  @Autowired
+	  private MembersRepository membersRepository;
+	  
 	  @Value("${numberbox.jwtSecretKey}")
 	  private String secretKey;
 	
@@ -52,8 +55,6 @@ public class JwtUtil {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
-	      System.out.println("테스트");
-	      System.out.println(secretKey);
 	      Date now = new Date();
 	      return Jwts.builder()
 	          .setClaims(claims)
@@ -67,6 +68,9 @@ public class JwtUtil {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", roleList);
+	      
+	      //액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
+	      membersRepository.initLastLoginDate(userUniqId);
 	      Date now = new Date();
 	      return Jwts.builder()
 		          .setClaims(claims)
