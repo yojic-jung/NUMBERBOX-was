@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
+import com.numberbox.mathdocs.dto.MathDocsUsageDto;
 import com.numberbox.mathdocs.service.MathDocsSevice;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 
@@ -46,6 +47,12 @@ public class MathDocsController {
 	@PostMapping("/registerMathDocsPaper")
 	public HashMap<String, Object> registerMathDocsPaper(MathDocsPaperDto mathDocsPaperDto, HttpServletRequest request) {
 		HashMap<String, Object> map = mathDocsSevice.registerMathDocsPaper(mathDocsPaperDto);
+		return map;
+	}
+	
+	@PostMapping("/registerMathDocsUsage")
+	public HashMap<String, Object> registerMathDocsUsage(MathDocsUsageDto mathDocsUsageDto, HttpServletRequest request) {
+		HashMap<String, Object> map = mathDocsSevice.registerMathDocsUsage(mathDocsUsageDto);
 		return map;
 	}
 	

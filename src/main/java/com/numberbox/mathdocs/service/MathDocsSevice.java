@@ -17,8 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
+import com.numberbox.mathdocs.dto.MathDocsUsageDto;
 import com.numberbox.mathdocs.entity.MathDocsPaper;
+import com.numberbox.mathdocs.entity.MathDocsUsage;
 import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
+import com.numberbox.mathdocs.repository.MathDocsUsageRepository;
 import com.numberbox.mathinfo.domain.MathTypeDomain;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsDtoForDocs;
@@ -39,6 +42,9 @@ public class MathDocsSevice {
 	
 	@Autowired
 	MathDocsPaperRepository mathDocsPaperRepository;
+	@Autowired
+	MathDocsUsageRepository mathDocsUsageRepository;
+	
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -272,6 +278,7 @@ public class MathDocsSevice {
 	}
 	
 	
+	
 	public List<MathContentsDto> takeSimilarContents(int unitUniqNo, int typeNo){
 		List<MathContents> similarConList = mathContentsRepository.findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(unitUniqNo, typeNo, 0, 1);
 		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
@@ -290,6 +297,17 @@ public class MathDocsSevice {
 		UUID userUniqId = members.getUserUniqId();
 		mathDocsPaperDto.setUserUniqId(userUniqId);
 		MathDocsPaper mathDocsPaper = mathDocsPaperRepository.save(mathDocsPaperDto.toEntity());
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("isSuccess", true);
+		map.put("docsNo", mathDocsPaper.getDocsNo());
+		return map;
+	}
+	
+	public HashMap<String, Object> registerMathDocsUsage(MathDocsUsageDto mathDocsUsageDto) {
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		mathDocsUsageDto.setUserUniqId(userUniqId);
+		MathDocsUsage mathDocsPaper = mathDocsUsageRepository.save(mathDocsUsageDto.toEntity());
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("isSuccess", true);
 		map.put("docsNo", mathDocsPaper.getDocsNo());

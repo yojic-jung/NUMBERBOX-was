@@ -87,8 +87,7 @@ public class ClientConnect {
 
             // Get content in bytes and write to a file
             byte[] buffer = new byte[8192];
-            for(int counter=0; (counter = din.read(buffer, 0, buffer.length)) >= 0;)
-            {
+            for(int counter=0; (counter = din.read(buffer, 0, buffer.length)) >= 0;) {
                     fos.write(buffer, 0, counter);
             }
             fos.flush();
@@ -101,18 +100,19 @@ public class ClientConnect {
     }
     
     public void saveFile() throws IOException {
-            InputStream in = socket.getInputStream();
-            //바이트 단위로 데이터를 읽는다, 외부로 부터 읽어들이는 역할을 담당
-            BufferedInputStream bis = new BufferedInputStream(in);
-            //파일을 읽는 경우라면,BufferedReader보다 BufferedInputStream이 더 적절하다.
-            FileOutputStream fos = new FileOutputStream("testfile2.hwp");
-            //파일을 열어서 어떤식으로 저장할지 알려준다. FileOutputStream을 쓰면 들어오는 파일과 일치하게 파일을 작성해줄 수 있는 장점이 있다.
-            int ch;
-            while ((ch = bis.read()) != -1) {
-                fos.write(ch);
-                //열린 파일시스템에 BufferedInputStream으로 외부로 부터 읽어들여온 파일을 FileOutputStream에 바로 써준다.
-            }
-    fos.close();
-    in.close();
+        InputStream in = socket.getInputStream();
+        //바이트 단위로 데이터를 읽는다, 외부로 부터 읽어들이는 역할을 담당
+        BufferedInputStream bis = new BufferedInputStream(in);
+        //파일을 읽는 경우라면,BufferedReader보다 BufferedInputStream이 더 적절하다.
+        FileOutputStream fos = new FileOutputStream("testfile2.hwp");
+        //파일을 열어서 어떤식으로 저장할지 알려준다. FileOutputStream을 쓰면 들어오는 파일과 일치하게 파일을 작성해줄 수 있는 장점이 있다.
+        int ch;
+        while ((ch = bis.read()) != -1) {
+            fos.write(ch);
+            //열린 파일시스템에 BufferedInputStream으로 외부로 부터 읽어들여온 파일을 FileOutputStream에 바로 써준다.
+        }
+	    fos.close();
+	    in.close();
     }
+    
 }
