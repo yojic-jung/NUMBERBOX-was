@@ -593,4 +593,16 @@ public class MembersService {
 		return newFileName;
 	}
 	
+	public HashMap<String, Object> registerMemberProfile(int profileType){
+		Members members = StaticSecurityUtil.getMembers();
+		int isSuccess = membersProfileRepository.registerProfileType(members.getUserUniqId(), profileType);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(isSuccess == 1) {
+			map.put("isSuccess", true);
+		}else {
+			map.put("isSuccess", false);
+		}
+		return map;
+	}
+	
 }

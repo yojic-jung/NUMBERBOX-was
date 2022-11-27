@@ -47,5 +47,8 @@ public class MembersProfile implements Serializable {	//조인시 pk로 조인 �
 	public String profileImgPath;
 	
 	@Column(length = 1, nullable = false, insertable=false, updatable=false)
+	public int profileType;
+	
+	@Column(length = 1, nullable = false, insertable=false, updatable=false)
 	public int hwpDownCnt;
 }

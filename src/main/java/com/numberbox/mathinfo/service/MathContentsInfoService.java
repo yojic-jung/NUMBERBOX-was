@@ -27,6 +27,7 @@ import com.numberbox.mathinfo.dto.MathConRepoInfoDto;
 import com.numberbox.mathinfo.dto.MathContentsCompDto;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
 import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathTypeInfoDto;
@@ -45,6 +46,7 @@ import com.numberbox.mathinfo.repository.FormulKeyRepository;
 import com.numberbox.mathinfo.repository.MathConLikeInfoRepository;
 import com.numberbox.mathinfo.repository.MathConRepoInfoRepository;
 import com.numberbox.mathinfo.repository.MathContentsCompRepository;
+import com.numberbox.mathinfo.repository.MathContentsGramRepository;
 import com.numberbox.mathinfo.repository.MathContentsLicenseRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
@@ -75,6 +77,8 @@ public class MathContentsInfoService {
 	MathContentsCompRepository mathContentsCompRepository;
 	@Autowired
 	MathContentsLicenseRepository mathContentsLicRepository;
+	@Autowired
+	MathContentsGramRepository mathContentsGramRepository;
 	@Autowired
 	MembersProfileRepository membersProfileRepository;
 	@Autowired
@@ -271,6 +275,7 @@ public class MathContentsInfoService {
 		
 		//판별 필요 multiChoiceType, ansExistStts
 		MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
+		map.put("contentsNo", contents.getContentsNo());
 		
 		boolean isSuccess = entityManager.contains(contents);
 		if(isSuccess) {
@@ -297,6 +302,11 @@ public class MathContentsInfoService {
 		return map;
 	}
 	
+	
+	@Transactional
+	public void registerContentsGram(MathContentsGrammerDto mathContentsGrammerDto){
+		mathContentsGramRepository.save(mathContentsGrammerDto.toEntity());
+	}
 	
 	@Transactional
 	public HashMap<String, Object> takeContentsList(MathContentsDto mathContentsDto, String contentsNo) {
@@ -401,6 +411,7 @@ public class MathContentsInfoService {
 		}
 		return dtoList;
 	}
+	
 	
 	@Transactional
 	public HashMap<String, Object> takeContentsByContentsNo(int contentsNo){	//문제검색에서 변형문제 만들기 클릭시, 나의 제작문제에서 원본 문제 보기 클릭시
@@ -826,25 +837,27 @@ public class MathContentsInfoService {
 				solFile.delete();
 			}
 			
-			if(mathContents.getTransConCnt()==0) {	//변형문제 없는 제작문제는 바로 삭제 가능
+			if(mathContents.getTransConCnt()==0) {	//변형문제 없는 제작문제는 바로 삭제 가능(문법테이블 행도 삭제 가능)
 				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
 				mathContentsLicRepository.deleteByContentsNo(contentsNo); //라이선스 정보 삭제
 				mathContentsRepository.deleteByContentsNo(contentsNo);
+				mathContentsGramRepository.deleteByContentsNo(contentsNo);
 				map.put("existMsg", false);
-			}else{	//변형문제가 존재하는 제작문제는 contents_classify 3으로 변경
+			}else{	//변형문제가 존재하는 제작문제는 contents_classify 3으로 변경(문법테이블 행 삭제 불가)
 				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
 				mathContentsRepository.updateContentsClassify(contentsNo, 3);
 				map.put("existMsg", false);
 			}
-		}else if(mathContents.getContentsClassify() == 2) {	//변형문제는 삭제 가능
+		}else if(mathContents.getContentsClassify() == 2) {	//변형문제는 삭제 가능(문법테이블 행도 삭제 가능)
 			int transConCnt = mathContentsRepository.countByOrgContentsNo(mathContents.getOrgContentsNo());
 			//원본문제 TransConCnt -1 하기
 			mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 			mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
 			mathContentsRepository.updateTransConCnt(mathContents.getOrgContentsNo(), transConCnt-1);
 			mathContentsRepository.deleteByContentsNo(contentsNo);
+			mathContentsGramRepository.deleteByContentsNo(contentsNo);
 			map.put("existMsg", false);
 		}
 		

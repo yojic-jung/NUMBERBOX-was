@@ -25,10 +25,21 @@ public class MembersProfileDto {
     public String profileImgName;
     public String profileImgPath;
     public MultipartFile profileImgFile;
+    
+    /*
+     * 0 : 미등록
+     * 1 : 원장
+     * 2 : 강사
+     * 3 : 교사
+     * 4 : 학부모/학생
+     * 5 : 기타
+     */
+    public int profileType;
+    @JsonIgnore
     public int hwpDownCnt;
     
     public MembersProfile toEntity() {
-		return MembersProfile.builder().userNo(userNo).userUniqId(userUniqId).nickname(nickname).hwpDownCnt(hwpDownCnt)
+		return MembersProfile.builder().userNo(userNo).userUniqId(userUniqId).nickname(nickname)
 				.build();
 	}
 }

@@ -270,6 +270,13 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping(value="/registerMemberProfile")
+	public HashMap<String, Object> registerMemberProfile(HttpServletRequest request) {
+		String profileType = (String)request.getParameter("profileType");
+		HashMap<String, Object> map = membersService.registerMemberProfile(Integer.parseInt(profileType));
+		return map;
+	}
+	
 	@PostMapping(value="/takeHwpFile")
 	public void takeHwpFile(HwpJsonStrDto hwpJsonDto, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String path = request.getSession().getServletContext().getRealPath("/static/")+"/userHwp/";

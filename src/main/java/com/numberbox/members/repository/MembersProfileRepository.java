@@ -38,4 +38,9 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE MembersProfile m set m.hwpDownCnt =0", nativeQuery = false)
 	public int initHwpDownCnt();
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MembersProfile m set m.profileType =:profileType where m.userUniqId=:uuid", nativeQuery = false)
+	public int registerProfileType(@Param("uuid") UUID uuid, @Param("profileType") int profileType);
 }

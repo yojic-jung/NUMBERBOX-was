@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/findEmail").permitAll()
                 
                 .antMatchers(HttpMethod.GET, "/myContentsCheckForHwpDown").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/registerMemberProfile").hasAnyRole("USER")
                 
                 .antMatchers(HttpMethod.GET, "/takeMyEmail").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/confirmPassword").hasAnyRole("USER")
@@ -111,6 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerContents").hasAnyRole("MANAGER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/mathInfo/makeContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/mathInfo/registerContentsGrammer").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathInfo/conSvcSttsChng").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/mathInfo/delCompContents").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerCompContents").hasAnyRole("ADMIN")

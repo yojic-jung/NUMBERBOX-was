@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
+import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.dto.MathTypeInfoListDto;
@@ -81,6 +82,13 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@PostMapping("/registerContentsGrammer")
+	public HashMap<String, Object> registerContentsGrammer(@ModelAttribute MathContentsGrammerDto mathContentsGramDto)  {
+		mathContentsInfoService.registerContentsGram(mathContentsGramDto);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("saveSuccess", true);
+		return map;
+	}
 	
 	@PostMapping("/registerContents")
 	public HashMap<String, Object> registerContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
