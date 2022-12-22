@@ -173,6 +173,7 @@ public class ServiceCenterService {
 		int resErrCnt = 0;
 		int mathDocsErrCnt = 0;
 		int makeContentsErrCnt = 0;
+		int fileConvertErrCnt = 0;
 		for(ErrorReport err : errReport) {
 			if(err.getErrType() == 0) {
 				oneToOneQuestionCnt +=1;
@@ -184,6 +185,8 @@ public class ServiceCenterService {
 				mathDocsErrCnt +=1;
 			}else if(err.getErrType() == 4) {
 				makeContentsErrCnt+=1;
+			}else if(err.getErrType() == 5) {
+				fileConvertErrCnt+=1;
 			}
 		}
 		
@@ -192,6 +195,7 @@ public class ServiceCenterService {
 		map.put("resErrCnt", resErrCnt);
 		map.put("mathDocsErrCnt", mathDocsErrCnt);
 		map.put("makeContentsErrCnt", makeContentsErrCnt);
+		map.put("fileConvertErrCnt", fileConvertErrCnt);
 		return map;
 	}
 

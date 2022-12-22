@@ -140,10 +140,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/serviceCenter/registerError").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeMyErrReport").hasAnyRole("USER")
                 
-                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportCount").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/convert/convertHwpToWeb").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/convert/myHwpConvertContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/convert/saveMyHwpContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/convert/removeConvertContents").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/convert/errHwpConvertContents").hasAnyRole("MANAGER", "ADMIN")
+                
+                .antMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
+                
                 
                 .antMatchers(HttpMethod.GET, "/common/download").permitAll()
                 

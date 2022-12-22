@@ -18,7 +18,9 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 			+ "FROM"
 			+ " MathUnitInfo rp "
 			+ "WHERE "
-			+ "rp.unitUniqNo in (select distinct mc.unitUniqNo from MathContents mc where mc.svcPosbStts=1) "
+			+ "rp.unitUniqNo in (select distinct mc.unitUniqNo from MathContents mc "
+			+ "LEFT JOIN MathContentsLicense mcLic on mc.contentsNo = mcLic.contentsNo "
+			+ "where (mc.svcPosbStts=1 and mc.contentsClassify=0) or (mc.svcPosbStts=1 and mc.contentsClassify=1 and mcLic.shareStts=1)) "
 			+ "GROUP BY rp.subject order by rp.unitUniqNo asc",nativeQuery = false)
 	public List<MathUnitInfoGroup> selectSubjectInfoOnlyExistContents();
 	

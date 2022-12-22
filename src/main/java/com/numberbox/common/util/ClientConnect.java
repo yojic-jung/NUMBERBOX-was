@@ -2,7 +2,9 @@ package com.numberbox.common.util;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,13 +12,18 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class ClientConnect {
 	
     private Socket socket = null;
     private FileOutputStream fos = null;
+    private DataOutputStream  dos = null;
+    private FileInputStream fin = null;
     private DataInputStream din = null;
     private PrintStream pout = null;
     private Scanner scan = null;
@@ -29,14 +36,102 @@ public class ClientConnect {
     }
 
     public void send(String msg) throws IOException {
+    	//모드 작성(모드 바이트 크기는 4)
+        pout.print("SEND");
+        pout.flush();
+    	
     	byte[] data = msg.getBytes();
+    	//데이터 크기 작성(4바이트 할당)
     	ByteBuffer b = ByteBuffer.allocate(4);
-        // byte포멧은 little 엔디언이다.
         b.order(ByteOrder.LITTLE_ENDIAN);
         b.putInt(data.length);
         pout.write(b.array(), 0, 4);
+        
+        //메시지 작성
         pout.print(msg);
         pout.flush();
+    }
+    
+    public HashMap<String, Object> sendFile(MultipartFile multipartFile, String path) throws IOException {
+    	//모드 작성(모드 바이트 크기는 4)
+        pout.print("FILE");
+        pout.flush();
+    	
+    	//MultipartFile to File
+    	CommonUtil util = new CommonUtil();
+    	File file = util.convertMultipartFileToFile(multipartFile);
+		
+    	//데이터 크기 작성(4바이트 할당)
+		byte[] data = new byte[(int)file.length()];
+		ByteBuffer bufferSize = ByteBuffer.allocate(4);
+		bufferSize.order(ByteOrder.LITTLE_ENDIAN);
+		bufferSize.putInt(data.length);
+		dos = new DataOutputStream(socket.getOutputStream());
+		dos.write(bufferSize.array(), 0, 4);
+		
+		//확장자 작성(확장자 바이트 크기는 4)
+		//1: hwp, 2: hwpx, 3: hwt, 4: hwtx, 5: hml
+		String fileName = file.getName();
+		String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
+		int extNum = 1;
+		if(ext.equals("hwp")) {
+			extNum = 1;
+		}else if(ext.equals("hwpx")) {
+			extNum = 2;
+		}else if(ext.equals("hwt")) {
+			extNum = 3;
+		}else if(ext.equals("hwtx")) {
+			extNum = 4;
+		}else if(ext.equals("hml")) {
+			extNum = 5;
+		}
+		ByteBuffer extBufferSize = ByteBuffer.allocate(4);
+		extBufferSize.order(ByteOrder.LITTLE_ENDIAN);
+		extBufferSize.putInt(extNum);
+		dos = new DataOutputStream(socket.getOutputStream());
+		dos.write(extBufferSize.array(), 0, 4);
+		
+		//파일 작성
+		fin = new FileInputStream(file);
+		int length;
+		byte[] buffer = new byte[1024];
+		while((length = fin.read(buffer))!=-1) {
+			dos.write(buffer,0,length);
+			dos.flush();
+		}
+		
+		//파일 받기
+		Random random1 = new Random();
+    	long currentTime1 = System.currentTimeMillis();
+		int randomValue1 = random1.nextInt(100);
+
+		String newFileName = Long.toString(currentTime1) + "_"+randomValue1+"_hwpToHtml.zip";
+		File zipfile = new File(path, newFileName);
+        // Create new file if it does not exist
+        // Then request the file from server
+        if(!zipfile.exists()){
+        	zipfile.createNewFile();
+        }
+        fos = new FileOutputStream(zipfile);
+        
+        String unzipPath="";
+		try {// Get content in bytes and write to a file
+            byte[] defaultBuffer = new byte[8192];
+            for(int counter=0; (counter = din.read(defaultBuffer, 0, defaultBuffer.length)) >= 0;) {
+                    fos.write(defaultBuffer, 0, counter);
+            }
+            fos.flush();
+            fos.close();
+            
+            unzipPath = util.unZip(path, newFileName, path);
+            zipfile.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("imgPath", "/webapp/static/hwpToHtml/"+newFileName.replace(".zip", "")+"/binData");
+		map.put("unzipPath", unzipPath);
+		return map;
     }
 
     public String recv() throws IOException {

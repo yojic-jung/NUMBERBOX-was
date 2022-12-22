@@ -31,8 +31,9 @@ public class MembersProfileDto {
      * 1 : 원장
      * 2 : 강사
      * 3 : 교사
-     * 4 : 학부모/학생
-     * 5 : 기타
+     * 4 : 학부모
+     * 5 : 학생
+     * 6 : 기타
      */
     public int profileType;
     @JsonIgnore

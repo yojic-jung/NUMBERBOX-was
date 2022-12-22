@@ -558,7 +558,7 @@ public class MembersService {
 		if(memProfile.getHwpDownCnt() >= 3) {
 			map.put("existMsg", true);
 			map.put("contentsNo", -1);
-			map.put("serverMsg", "일일 다운로드 허용 횟수 3회를 모두 사용하셨습니다.");
+			map.put("serverMsg", "일일 다운로드 및 업로드 허용 횟수 3회를 모두 사용하셨습니다.");
 			return map;
 		}
 		
