@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.iamport.IamportClient;
 import com.numberbox.members.dto.HwpJsonStrDto;
 import com.numberbox.members.dto.MembersDto;
@@ -307,4 +309,27 @@ public class MembersController {
         }
 	}
 	
+	
+	@GetMapping(value="/takeMembersStatistic")
+	public HashMap<String, Object> takeMembersStatistic(HttpServletRequest request) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		//날짜별 가입자 수 
+		List<CustomTenFieldDto> membesrCntBySignupDate = membersService.statisticMembersCntBySignupDate();
+		//프로필별 가입자수
+		List<CustomTenFieldDto> membesrCntByProfile = membersService.statisticMembersCntByProfileType();
+		//시간대별 가입자 수 
+		List<CustomTenFieldDto> membesrCntByHourPeriod = membersService.statisticMembersCntGrouBySignupDateHour();
+		//프로필에 따른 시간대별 가입자수
+		List<CustomTenFieldDto> membesrCntByProAndHourPeriod = membersService.statisticMembersByHourGrouByProfileType();
+		//나이대별 회원가입자 수
+		List<CustomTenFieldDto> membersCntByAge = membersService.statisticMembersByAge();
+		membersService.statisticMembersCntBySignupDate();
+		
+		map.put("membesrCntBySignupDate", membesrCntBySignupDate);
+		map.put("membesrCntByProfile", membesrCntByProfile);
+		map.put("membesrCntByHourPeriod", membesrCntByHourPeriod);
+		map.put("membesrCntByProAndHourPeriod", membesrCntByProAndHourPeriod);
+		map.put("membersCntByAge", membersCntByAge);
+		return map;
+	}
 }

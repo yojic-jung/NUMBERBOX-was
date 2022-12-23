@@ -392,5 +392,11 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@GetMapping("/mathContentsStatistic")
+	public HashMap<String, Object> mathContentsStatistic() {
+		HashMap<String, Object> map = mathContentsInfoService.mathContentsStatistic();
+		return map;
+	}
+	
 	
 }

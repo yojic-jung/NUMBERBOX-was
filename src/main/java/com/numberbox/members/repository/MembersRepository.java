@@ -10,9 +10,54 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.members.entity.Members;
 
 public interface MembersRepository extends JpaRepository <Members, UUID> {
+	
+	//시간대별 가입자수
+	@Query(value = "SELECT " + 
+			"new com.numberbox.common.util.CustomTenFieldDto(count(CASE WHEN HOUR(m.signupDate)<3 THEN 1 END) AS nbCol1, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<6 and HOUR(m.signupDate)>=3 THEN 1 END) AS nbCol2, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<9 and HOUR(m.signupDate)>=6 THEN 1 END) AS nbCol3, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<12 and HOUR(m.signupDate)>=9 THEN 1 END) AS nbCol4, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<15 and HOUR(m.signupDate)>=12 THEN 1 END) AS nbCol5, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<18 and HOUR(m.signupDate)>=15 THEN 1 END) AS nbCol6, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<21 and HOUR(m.signupDate)>=18 THEN 1 END) AS nbCol7, " + 
+			"count(CASE WHEN HOUR(m.signupDate)<24 and HOUR(m.signupDate)>=21 THEN 1 END) AS nbCol8,  " +
+			"0 as nbCol9, 0 as nbCol10) "+
+			"FROM Members as m ", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticMembersCntGrouBySignupDateHour();
+	
+	public int countBySignupDateAfter(LocalDateTime now);
+	
+	//프로필에 따른 시간대별 가입자수
+	@Query(value = "SELECT " + 
+			"new com.numberbox.common.util.CustomTenFieldDto("+
+			"(CASE WHEN B.profileType=0 THEN '미등록' "+
+			"WHEN B.profileType=1 THEN '원장' "+
+			"WHEN B.profileType=2 THEN '강사' "+
+			"WHEN B.profileType=3 THEN '교사' "+
+			"WHEN B.profileType=4 THEN '학부모' "+
+			"WHEN B.profileType=5 THEN '학생' "+
+			"WHEN B.profileType=6 THEN '기타' END)"+
+			" as nbCol1, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<3 THEN 1 END) AS nbCol2, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<6 and HOUR(A.signupDate)>=3 THEN 1 END) AS nbCol3, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<9 and HOUR(A.signupDate)>=6 THEN 1 END) AS nbCol4, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<12 and HOUR(A.signupDate)>=9 THEN 1 END) AS nbCol5, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<15 and HOUR(A.signupDate)>=12 THEN 1 END) AS nbCol6, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<18 and HOUR(A.signupDate)>=15 THEN 1 END) AS nbCol7, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<21 and HOUR(A.signupDate)>=18 THEN 1 END) AS nbCol8, " + 
+			"count(CASE WHEN HOUR(A.signupDate)<24 and HOUR(A.signupDate)>=21 THEN 1 END) AS nbCol9, " + 
+			"0 as nbCol10) " +
+			"FROM  " + 
+			"Members as A, " + 
+			"MembersProfile as B " + 
+			"where A.userUniqId=B.userUniqId " + 
+			"group by B.profileType " + 
+			"order by B.profileType ", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticMembersByHourGrouByProfileType();
 
 	public boolean existsByEmail(String email);
 	

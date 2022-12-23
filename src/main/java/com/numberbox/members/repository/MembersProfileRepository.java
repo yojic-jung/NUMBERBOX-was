@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.numberbox.members.entity.MembersProfile;
 
 public interface MembersProfileRepository extends JpaRepository <MembersProfile, Long> {
+	
+	public int countByProfileType(int profileType);
 
 	public MembersProfile findByUserUniqId(UUID id);
 	
@@ -43,4 +45,22 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE MembersProfile m set m.profileType =:profileType where m.userUniqId=:uuid", nativeQuery = false)
 	public int registerProfileType(@Param("uuid") UUID uuid, @Param("profileType") int profileType);
+
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다(mysql에서는 안돌아감, mariaDB에서는 돌아감)
+	@Query(value = "UPDATE MembersProfile m "
+			+ "SET m.profileType=6 where m.userUniqId IN "
+			+ "(SELECT A.userUniqId FROM MembersProfile A INNER JOIN MembersPrivate B on A.userUniqId=B.userUniqId "
+			+ "WHERE  SUBSTRING(B.birth, 1, 2)=:birthYear and A.profileType=5)", nativeQuery = false)
+	public int updateTeenagersProfileTypeToEtc(@Param("birthYear") String birthYear);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다(mysql에서는 안돌아감, mariaDB에서는 돌아감)
+	@Query(value = "UPDATE MembersProfile m "
+			+ "SET m.profileType=5 where m.userUniqId IN "
+			+ "(SELECT A.userUniqId FROM MembersProfile A INNER JOIN MembersPrivate B on A.userUniqId=B.userUniqId "
+			+ "WHERE  SUBSTRING(B.birth, 1, 2)>:birthYear and SUBSTRING(B.birth, 1, 2)<=:nowYear)", nativeQuery = false)
+	public int updateTeenagersProfileTypeToStudent(@Param("birthYear") String birthYear, @Param("nowYear") String nowYear);
+	
+	
 }

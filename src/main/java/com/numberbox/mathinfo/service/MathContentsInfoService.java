@@ -2,6 +2,7 @@ package com.numberbox.mathinfo.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.mathinfo.domain.MathConLikeDomain;
 import com.numberbox.mathinfo.domain.MathConRepoDomain;
 import com.numberbox.mathinfo.domain.MathTypeDomain;
@@ -1024,6 +1026,31 @@ public class MathContentsInfoService {
 		return map;
 	}
 	
-	
+	public HashMap<String, Object> mathContentsStatistic(){
+		HashMap<String, Object> map = new HashMap<>();
+		List<CustomTenFieldDto> list = mathContentsRepository.mathContentsStatistic();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "나이", "문제 수", null, null, null, null, null, null, null);
+		
+		LocalDate now = LocalDate.now();
+		String fullYearStr = Integer.toString(now.getYear());
+		int year = Integer.parseInt(fullYearStr.substring(2));
+		List<CustomTenFieldDto> newList = new ArrayList<>();
+		for(CustomTenFieldDto dto: list){
+			int memberBirthYear = Integer.parseInt(dto.getNbCol2().toString());
+			
+			int memberAge = 0;
+			if(memberBirthYear>year) {
+				memberBirthYear=memberBirthYear+1900;
+			}else {
+				memberBirthYear=memberBirthYear+2000;
+			}
+			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear;
+			dto.setNbCol2(memberAge);
+			newList.add(dto);
+		}
+		newList.add(0, customHeaderDto);
+		map.put("memberMathContentsCnt", newList);
+		return map;
+	}
 	
 }

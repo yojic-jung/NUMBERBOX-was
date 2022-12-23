@@ -42,4 +42,19 @@ public class JobScheduler {
 		schedulerService.deleteOldFile();
 	}
 	
+	
+	//매년 1월 2일
+	@Scheduled(cron = "00 00 00 02 01 *") 
+	public void teenagersProfileReset() throws IOException {
+		schedulerService.teenagersProfileToEtc();
+	}
+	
+	// 03시 00분 00초
+	@Scheduled(cron = "00 00 03 * * *")
+    public void teenagersProfileToStudent() {
+		//사용자 일일 hwp 다운 카운트 초기화
+		schedulerService.teenagersProfileToStudent();
+    }
+		
+	
 }
