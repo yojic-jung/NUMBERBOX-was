@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.mathinfo.dto.ContentsCnt;
 import com.numberbox.mathinfo.dto.ContentsListModel;
 import com.numberbox.mathinfo.entity.MathContents;
@@ -157,5 +158,25 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	@Query(value = "select count(contentsNo) from MathContents where contentsClassify=0 and svcPosbStts=1 and not (quesLevel BETWEEN :startLv and :endLv) and CONCAT(unitUniqNo, ',', typeNo) in (:unitUniqNoAndTypeNoList) group by unitUniqNo, typeNo", nativeQuery = false)
 	public List<String> countNotQuesLevelAndQuesLevelAndUnitUniqNoTypeNoIn(@Param("startLv")int startLv, @Param("endLv")int endLv, @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+	
+	
+	
+	//시간대별 가입자수
+	@Query(value = "select " + 
+			"new com.numberbox.common.util.CustomTenFieldDto( " + 
+			"(CASE WHEN C.profileType=0 THEN '미등록'" + 
+			"WHEN C.profileType=1 THEN '원장'" + 
+			"WHEN C.profileType=2 THEN '강사'" + 
+			"WHEN C.profileType=3 THEN '교시'" + 
+			"WHEN C.profileType=4 THEN '학무보'" + 
+			"WHEN C.profileType=5 THEN '학생'" + 
+			"WHEN C.profileType=6 THEN '기타' END) as nbCol1, " + 
+			"SUBSTRING(D.birth, 1, 2) as nbCol2, count(A.contentsNo) as nbCol3,"+
+			"0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10)" + 
+			" from MathContents as A, Members as B , MembersProfile as C, MembersPrivate as D" + 
+			" where A.userUniqId=B.userUniqId and A.userUniqId=B.userUniqId  and A.userUniqId=C.userUniqId  and A.userUniqId=D.userUniqId " + 
+			" and B.signupDate>'2022-11-01'" + 
+			" group by B.email", nativeQuery = false)
+	public List<CustomTenFieldDto> mathContentsStatistic();
 	
 }

@@ -2,6 +2,7 @@ package com.numberbox.scheduler.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -233,4 +234,22 @@ public class SchedulerService {
 		    }
 		}
 	}
+	
+	//20세 되는 학생, 기타로 프로필타입 변경 
+	public void teenagersProfileToEtc() {
+		int nowYear = LocalDate.now().getYear();
+		int birthYear = nowYear-19;
+		String birthYearStr = Integer.toString(birthYear).substring(2, 4);
+		membersProfileRepository.updateTeenagersProfileTypeToEtc(birthYearStr);
+	}
+	
+	//미성년자는 디폴트로 학생으로 프로필타입 지정 
+	public void teenagersProfileToStudent() {
+		int nowYear = LocalDate.now().getYear();
+		int birthYear = nowYear-19;
+		String birthYearStr = Integer.toString(birthYear).substring(2, 4);
+		String nowYearStr = Integer.toString(nowYear).substring(2, 4);
+		membersProfileRepository.updateTeenagersProfileTypeToStudent(birthYearStr, nowYearStr);
+	}
+	
 }

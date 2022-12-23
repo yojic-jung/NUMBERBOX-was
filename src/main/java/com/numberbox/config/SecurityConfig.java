@@ -146,6 +146,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/convert/removeConvertContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/errHwpConvertContents").hasAnyRole("MANAGER", "ADMIN")
                 
+                .antMatchers(HttpMethod.GET, "/mathInfo/mathContentsStatistic").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathDocs/mathDocsUsageStatistic").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/takeMembersStatistic").hasAnyRole("ADMIN")
+                
                 .antMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("ADMIN")

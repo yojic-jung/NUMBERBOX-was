@@ -76,4 +76,11 @@ public class MathDocsController {
 		return map;
 	}
 	
+	@GetMapping("/mathDocsUsageStatistic")
+	public HashMap<String, Object> mathDocsUsageStatistic() {
+		HashMap<String, Object> map = mathDocsSevice.mathDocsUsageStatistic();
+		return map;
+	}
+	
+	
 }

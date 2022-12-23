@@ -1,5 +1,7 @@
 package com.numberbox.mathdocs.service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
 import com.numberbox.mathdocs.dto.MathDocsUsageDto;
 import com.numberbox.mathdocs.entity.MathDocsPaper;
@@ -402,6 +405,32 @@ public class MathDocsSevice {
 		
 		map.put("mathContentsList", mathContentsDtoList);
 		map.put("mathDocsPaper", mathDocsPaperDto);
+		return map;
+	}
+	
+	public HashMap<String, Object> mathDocsUsageStatistic(){
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		LocalDateTime ofDateTime = LocalDateTime.of(2022, 01, 01, 00, 00, 00);
+		//전체 학습지 사용횟수
+		int totalCnt = mathDocsUsageRepository.countBySysCreateDateAfter(ofDateTime);
+		//지난 한달 사용횟수
+		int monthAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN));
+		//지난 일주일 사용횟수
+		int weekAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN));
+		//어제 사용횟수
+		int yesterDayCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusDays(1).with(LocalTime.MIN));
+		//오늘 사용횟수
+		int todayCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().with(LocalTime.MIN));
+		
+		yesterDayCnt= todayCnt-yesterDayCnt;
+		
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "지난 한달", "지난 일주일","어제","오늘", null, null, null,null, null);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(totalCnt, monthAgoCnt, weekAgoCnt, yesterDayCnt, todayCnt, null, null, null,null, null);
+		List<CustomTenFieldDto> list = new ArrayList<>();
+		list.add(customHeaderDto);
+		list.add(customBodyDto);
+		
+		map.put("mathDocsUsageStatistic", list);
 		return map;
 	}
 }

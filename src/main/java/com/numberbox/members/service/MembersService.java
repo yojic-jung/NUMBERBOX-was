@@ -2,7 +2,9 @@ package com.numberbox.members.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
@@ -603,6 +606,112 @@ public class MembersService {
 			map.put("isSuccess", false);
 		}
 		return map;
+	}
+	
+	
+	
+	//프로필별 가입자 수 
+	public List<CustomTenFieldDto> statisticMembersCntByProfileType(){
+		List<CustomTenFieldDto> list = new ArrayList<>();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미등록", "원장", "강사", "교사", "학부모", "학생", "기타", null, null, null);
+		int cnt0 = membersProfileRepository.countByProfileType(0);
+		int cnt1 = membersProfileRepository.countByProfileType(1);
+		int cnt2 = membersProfileRepository.countByProfileType(2);
+		int cnt3 = membersProfileRepository.countByProfileType(3);
+		int cnt4 = membersProfileRepository.countByProfileType(4);
+		int cnt5 = membersProfileRepository.countByProfileType(5);
+		int cnt6 = membersProfileRepository.countByProfileType(6);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(cnt0, cnt1, cnt2, cnt3, cnt4, cnt5, cnt6, null, null, null);
+		list.add(customHeaderDto);
+		list.add(customBodyDto);
+		return list;
+	}
+	
+	//시간대별 가입자 수 
+	public List<CustomTenFieldDto> statisticMembersCntGrouBySignupDateHour(){
+		List<CustomTenFieldDto> list = membersRepository.statisticMembersCntGrouBySignupDateHour();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("00시 ~ 03시", "03시 ~ 06시", "06시 ~ 09시","09시 ~ 12시","12시 ~ 15시", "15시 ~ 18시", "18시 ~ 21시", "21시 ~ 24시",null, null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
+	//날짜별 가입자 수
+	public List<CustomTenFieldDto> statisticMembersCntBySignupDate(){
+		//전체
+		int totalCnt = membersRepository.countBySignupDateAfter(LocalDateTime.of(2022, 4, 1, 0, 0, 0));
+		//지난 한달 가입자수
+		int lastOneMonthCnt = membersRepository.countBySignupDateAfter(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN));
+		//지난 일주일 가입자수
+		int lastOneWeekCnt = membersRepository.countBySignupDateAfter(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN));
+		//어제 가입자수
+		int yesterDayCnt = membersRepository.countBySignupDateAfter(LocalDateTime.now().minusDays(1).with(LocalTime.MIN));
+		//오늘 가입자수
+		int todayCnt = membersRepository.countBySignupDateAfter(LocalDateTime.now().with(LocalTime.MIN));
+		
+		yesterDayCnt= todayCnt-yesterDayCnt;
+		
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "지난 한달", "지난 일주일","어제","오늘", null, null, null,null, null);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(totalCnt, lastOneMonthCnt, lastOneWeekCnt, yesterDayCnt, todayCnt, null, null, null,null, null);
+		List<CustomTenFieldDto> list = new ArrayList<>();
+		list.add(customHeaderDto);
+		list.add(customBodyDto);
+		return list;
+	}
+	
+	
+	
+	//프로필에 따른 시간대별 가입자수
+	public List<CustomTenFieldDto> statisticMembersByHourGrouByProfileType(){
+		List<CustomTenFieldDto> list = membersRepository.statisticMembersByHourGrouByProfileType();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "00시 ~ 03시", "03시 ~ 06시", "06시 ~ 09시","09시 ~ 12시","12시 ~ 15시", "15시 ~ 18시", "18시 ~ 21시", "21시 ~ 24시",null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
+	//나이대별 회원가입자 수
+	public List<CustomTenFieldDto> statisticMembersByAge(){
+		List<CustomTenFieldDto> list = membersPrivateRepository.statisticMembersByAge();
+		LocalDate now = LocalDate.now();
+		String fullYearStr = Integer.toString(now.getYear());
+		int year = Integer.parseInt(fullYearStr.substring(2));
+		int teenAgersCnt = 0;
+		int twoZeroMembersCnt = 0;
+		int threeZeroMembersCnt = 0;
+		int fourZeroMembersCnt = 0;
+		int fiveZeroMembersCnt = 0;
+		int overSixZeroMembersCnt = 0;
+		for(CustomTenFieldDto yearCntList: list) {
+			int memberBirthYear = Integer.parseInt(yearCntList.getNbCol1().toString());
+			int memberBirthCnt = Integer.parseInt(yearCntList.getNbCol2().toString());
+			
+			int memberAge = 0;
+			if(memberBirthYear>year) {
+				memberBirthYear=memberBirthYear+1900;
+			}else {
+				memberBirthYear=memberBirthYear+2000;
+			}
+			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear;
+			if(memberAge<20) {
+				teenAgersCnt += memberBirthCnt;
+			}else if(memberAge<30) {
+				twoZeroMembersCnt += memberBirthCnt;
+			}else if(memberAge<40) {
+				threeZeroMembersCnt += memberBirthCnt;
+			}else if(memberAge<50) {
+				fourZeroMembersCnt += memberBirthCnt;
+			}else if(memberAge<60) {
+				fiveZeroMembersCnt += memberBirthCnt;
+			}else if(memberAge>=60) {
+				overSixZeroMembersCnt  += memberBirthCnt;
+			}
+		}
+		
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미성년자", "20대", "30대", "40대","50대","60대 이상", null, null, null, null);
+		CustomTenFieldDto customBodyrDto = new CustomTenFieldDto(teenAgersCnt, twoZeroMembersCnt, threeZeroMembersCnt, fourZeroMembersCnt, fiveZeroMembersCnt, overSixZeroMembersCnt, null, null, null, null);
+		List<CustomTenFieldDto> newList = new ArrayList<>();
+		newList.add(customHeaderDto);
+		newList.add(customBodyrDto);
+		return newList;
 	}
 	
 }
