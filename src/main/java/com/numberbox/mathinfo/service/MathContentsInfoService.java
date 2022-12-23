@@ -1044,7 +1044,7 @@ public class MathContentsInfoService {
 			}else {
 				memberBirthYear=memberBirthYear+2000;
 			}
-			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear;
+			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear+1;
 			dto.setNbCol2(memberAge);
 			newList.add(dto);
 		}

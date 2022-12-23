@@ -422,7 +422,7 @@ public class MathDocsSevice {
 		//오늘 사용횟수
 		int todayCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().with(LocalTime.MIN));
 		
-		yesterDayCnt= todayCnt-yesterDayCnt;
+		yesterDayCnt= yesterDayCnt-todayCnt;
 		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "지난 한달", "지난 일주일","어제","오늘", null, null, null,null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(totalCnt, monthAgoCnt, weekAgoCnt, yesterDayCnt, todayCnt, null, null, null,null, null);

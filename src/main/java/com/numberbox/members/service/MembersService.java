@@ -648,7 +648,7 @@ public class MembersService {
 		//오늘 가입자수
 		int todayCnt = membersRepository.countBySignupDateAfter(LocalDateTime.now().with(LocalTime.MIN));
 		
-		yesterDayCnt= todayCnt-yesterDayCnt;
+		yesterDayCnt= yesterDayCnt-todayCnt;
 		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "지난 한달", "지난 일주일","어제","오늘", null, null, null,null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(totalCnt, lastOneMonthCnt, lastOneWeekCnt, yesterDayCnt, todayCnt, null, null, null,null, null);
@@ -690,7 +690,7 @@ public class MembersService {
 			}else {
 				memberBirthYear=memberBirthYear+2000;
 			}
-			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear;
+			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear+1;
 			if(memberAge<20) {
 				teenAgersCnt += memberBirthCnt;
 			}else if(memberAge<30) {
