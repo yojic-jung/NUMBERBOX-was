@@ -455,7 +455,7 @@ public class MathDocsSevice {
 	
 	public List<CustomTenFieldDto> mathDocsUsageStatisticByProfileAndDay(){
 		List<CustomTenFieldDto> list = mathDocsUsageRepository.statisticMathDocsUsageByProfileDayOfWeek();
-		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("월요일","화요일", "수요일", "목요일", "금요일","토요일","일요일",null, null, null);
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "월요일","화요일", "수요일", "목요일", "금요일","토요일","일요일",null, null);
 		list.add(0, customHeaderDto);
 		return list;
 	}
