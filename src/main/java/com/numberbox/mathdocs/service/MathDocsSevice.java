@@ -1,6 +1,7 @@
 package com.numberbox.mathdocs.service;
 
 import java.time.LocalDateTime;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,8 @@ import com.numberbox.mathinfo.dto.MathTypeInfoDto;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.entity.Members;
+import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
@@ -47,7 +50,8 @@ public class MathDocsSevice {
 	MathDocsPaperRepository mathDocsPaperRepository;
 	@Autowired
 	MathDocsUsageRepository mathDocsUsageRepository;
-	
+	@Autowired
+	private MembersRoleRepository membersRoleRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -408,29 +412,60 @@ public class MathDocsSevice {
 		return map;
 	}
 	
-	public HashMap<String, Object> mathDocsUsageStatistic(){
-		HashMap<String, Object> map = new HashMap<String, Object>();
+	public List<CustomTenFieldDto> mathDocsUsageStatistic(){
+		List<String> roleNameList = new ArrayList<>();
+		roleNameList.add("ADMIN");
+		roleNameList.add("MANAGER");
+		List<MembersRole> membersRoleList = membersRoleRepository.findByRoleNameIn(roleNameList);
+		List<UUID> uuidList = new ArrayList<>();
+		for(MembersRole membersRole : membersRoleList) {
+			UUID uuid = membersRole.getUserUniqId();
+			uuidList.add(uuid);
+		}
+		
 		LocalDateTime ofDateTime = LocalDateTime.of(2022, 01, 01, 00, 00, 00);
 		//전체 학습지 사용횟수
-		int totalCnt = mathDocsUsageRepository.countBySysCreateDateAfter(ofDateTime);
-		//지난 한달 사용횟수
-		int monthAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN));
-		//지난 일주일 사용횟수
-		int weekAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN));
+		int totalCnt = mathDocsUsageRepository.countBySysCreateDateAfterAndUserUniqIdNotIn(ofDateTime, uuidList);
+		//최근 한달 사용횟수
+		int monthAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), uuidList);
+		//최근 일주일 사용횟수
+		int weekAgoCnt = mathDocsUsageRepository.countBySysCreateDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), uuidList);
 		//어제 사용횟수
-		int yesterDayCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().minusDays(1).with(LocalTime.MIN));
+		int yesterDayCnt = mathDocsUsageRepository.countBySysCreateDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), uuidList);
 		//오늘 사용횟수
-		int todayCnt = mathDocsUsageRepository.countBySysCreateDateAfter(LocalDateTime.now().with(LocalTime.MIN));
+		int todayCnt = mathDocsUsageRepository.countBySysCreateDateAfterAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), uuidList);
 		
 		yesterDayCnt= yesterDayCnt-todayCnt;
 		
-		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "지난 한달", "지난 일주일","어제","오늘", null, null, null,null, null);
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("전체", "최근 한달", "최근 일주일", "어제", "오늘", null, null, null,null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(totalCnt, monthAgoCnt, weekAgoCnt, yesterDayCnt, todayCnt, null, null, null,null, null);
 		List<CustomTenFieldDto> list = new ArrayList<>();
 		list.add(customHeaderDto);
 		list.add(customBodyDto);
 		
-		map.put("mathDocsUsageStatistic", list);
-		return map;
+		return list;
 	}
+	
+	public List<CustomTenFieldDto> mathDocsUsageStatisticByProfile(){
+		List<CustomTenFieldDto> list = mathDocsUsageRepository.statisticMathDocsUsageByProfile();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미등록", "원장", "강사", "교사","학부모","학생", "기타", null, null,null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
+	public List<CustomTenFieldDto> mathDocsUsageStatisticByProfileAndDay(){
+		List<CustomTenFieldDto> list = mathDocsUsageRepository.statisticMathDocsUsageByProfileDayOfWeek();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("월요일","화요일", "수요일", "목요일", "금요일","토요일","일요일",null, null, null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
+	public List<CustomTenFieldDto> mathDocsUsageStatisticByDayOfWeek(){
+		List<CustomTenFieldDto> list = mathDocsUsageRepository.statisticMathDocsUsageByDayOfWeek();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("월요일","화요일", "수요일", "목요일", "금요일","토요일","일요일", null, null, null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
+	
 }

@@ -13,7 +13,7 @@ import com.numberbox.members.entity.MembersProfile;
 
 public interface MembersProfileRepository extends JpaRepository <MembersProfile, Long> {
 	
-	public int countByProfileType(int profileType);
+	public int countByProfileTypeAndUserUniqIdNotIn(int profileType, List<UUID> userUniqId);
 
 	public MembersProfile findByUserUniqId(UUID id);
 	

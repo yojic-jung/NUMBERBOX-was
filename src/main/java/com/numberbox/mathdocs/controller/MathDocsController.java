@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
 import com.numberbox.mathdocs.dto.MathDocsUsageDto;
 import com.numberbox.mathdocs.service.MathDocsSevice;
@@ -78,7 +79,16 @@ public class MathDocsController {
 	
 	@GetMapping("/mathDocsUsageStatistic")
 	public HashMap<String, Object> mathDocsUsageStatistic() {
-		HashMap<String, Object> map = mathDocsSevice.mathDocsUsageStatistic();
+		HashMap<String, Object> map = new HashMap<>();
+		List<CustomTenFieldDto> list = mathDocsSevice.mathDocsUsageStatistic();
+		List<CustomTenFieldDto> list2 = mathDocsSevice.mathDocsUsageStatisticByProfile();
+		List<CustomTenFieldDto> list3 = mathDocsSevice.mathDocsUsageStatisticByProfileAndDay();
+		List<CustomTenFieldDto> list4 = mathDocsSevice.mathDocsUsageStatisticByDayOfWeek();
+		
+		map.put("docsUsage", list);
+		map.put("docsUsageByProfile", list2);
+		map.put("docsUsageByProfileAndDay", list3);
+		map.put("docsUsageByDay", list4);
 		return map;
 	}
 	

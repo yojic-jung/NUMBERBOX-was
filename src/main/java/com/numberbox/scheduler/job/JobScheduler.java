@@ -49,7 +49,7 @@ public class JobScheduler {
 		schedulerService.teenagersProfileToEtc();
 	}
 	
-	// 03시 00분 00초
+	//매일 03시 00분 00초
 	@Scheduled(cron = "00 00 03 * * *")
     public void teenagersProfileToStudent() {
 		//사용자 일일 hwp 다운 카운트 초기화
