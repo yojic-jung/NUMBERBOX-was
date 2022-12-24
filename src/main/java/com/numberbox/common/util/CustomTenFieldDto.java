@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomTenFieldDto {
-	
 
 	public Object nbCol1;
 	public Object nbCol2;

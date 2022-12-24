@@ -21,7 +21,7 @@ public interface MembersPrivateRepository extends JpaRepository <MembersPrivate,
 			"0 AS nbCol6,"+ 
 			"0 AS nbCol7, " + 
 			"0 AS nbCol8, 0 as nbCol9, 0 as nbCol10) " +
-			"FROM MembersPrivate mp Group by SUBSTRING(mp.birth, 1, 2)" , nativeQuery = false)
+			"FROM MembersPrivate mp where mp.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')  Group by SUBSTRING(mp.birth, 1, 2)" , nativeQuery = false)
 	public List<CustomTenFieldDto> statisticMembersByAge();
 	
 	public boolean existsByPhoneNumber(String phoneNumber);

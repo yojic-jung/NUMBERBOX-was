@@ -313,6 +313,9 @@ public class MembersController {
 	@GetMapping(value="/takeMembersStatistic")
 	public HashMap<String, Object> takeMembersStatistic(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		//가입자 정보 조회
+		List<CustomTenFieldDto> membersInfo = membersService.lastSignupUserLimit();
+		
 		//날짜별 가입자 수 
 		List<CustomTenFieldDto> membesrCntBySignupDate = membersService.statisticMembersCntBySignupDate();
 		//프로필별 가입자수
@@ -323,13 +326,19 @@ public class MembersController {
 		List<CustomTenFieldDto> membesrCntByProAndHourPeriod = membersService.statisticMembersByHourGrouByProfileType();
 		//나이대별 회원가입자 수
 		List<CustomTenFieldDto> membersCntByAge = membersService.statisticMembersByAge();
-		membersService.statisticMembersCntBySignupDate();
+		//일일 접속자 통계
+		List<CustomTenFieldDto> dailyLoginUserCnt = membersService.statisticMembersCntByLoginDate();
+		//월별 가입자 재로그인 비율
+		List<CustomTenFieldDto> reLoginRatioPerMonth =membersService.reLoginRatioPerMonth();
 		
+		map.put("membersInfo", membersInfo);
 		map.put("membesrCntBySignupDate", membesrCntBySignupDate);
 		map.put("membesrCntByProfile", membesrCntByProfile);
 		map.put("membesrCntByHourPeriod", membesrCntByHourPeriod);
 		map.put("membesrCntByProAndHourPeriod", membesrCntByProAndHourPeriod);
 		map.put("membersCntByAge", membersCntByAge);
+		map.put("dailyLoginUserCnt", dailyLoginUserCnt);
+		map.put("reLoginRatioPerMonth", reLoginRatioPerMonth);
 		return map;
 	}
 }

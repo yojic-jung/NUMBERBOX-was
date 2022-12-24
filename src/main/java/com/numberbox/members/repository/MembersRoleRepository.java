@@ -25,4 +25,6 @@ public interface MembersRoleRepository extends JpaRepository <MembersRole, Long>
 	
 	public List<MembersRole> findByUserUniqId(UUID uuid);
 	
+	public List<MembersRole> findByRoleNameIn(List<String> roleNameList);
+	
 }

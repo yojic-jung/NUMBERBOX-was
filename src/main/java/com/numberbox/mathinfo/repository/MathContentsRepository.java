@@ -175,7 +175,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 			"0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10)" + 
 			" from MathContents as A, Members as B , MembersProfile as C, MembersPrivate as D" + 
 			" where A.userUniqId=B.userUniqId and A.userUniqId=B.userUniqId  and A.userUniqId=C.userUniqId  and A.userUniqId=D.userUniqId " + 
-			" and B.signupDate>'2022-11-01'" + 
+			" and A.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')" + 
 			" group by B.email", nativeQuery = false)
 	public List<CustomTenFieldDto> mathContentsStatistic();
 	
