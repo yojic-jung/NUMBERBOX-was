@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.numberbox.common.service.ImgFileService;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
@@ -34,6 +35,8 @@ public class MathInfoController {
 	MathContentsInfoService mathContentsInfoService;
 	@Autowired
 	MathResourceService mathResourceService;
+	@Autowired
+	ImgFileService imgFileService;
 	
 	@GetMapping("/unitInfo")
 	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
@@ -75,6 +78,8 @@ public class MathInfoController {
 		String accessToken = (String)request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken, false);
+		imgFileService.registerImgFileInfo(10, (int)map.get("contentsNo"),  mathContentsDto.getImgTagSrc());
+		imgFileService.removeTmpImgFileInfo(mathContentsDto.getImgTagSrc());
 		if(isUpdtMode) {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
@@ -96,6 +101,9 @@ public class MathInfoController {
 		String accessToken = (String)request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken, true);
+		
+		imgFileService.registerImgFileInfo(10, (int)map.get("contentsNo"),  mathContentsDto.getImgTagSrc());
+		
 		if(isUpdtMode) {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
@@ -318,6 +326,9 @@ public class MathInfoController {
 	public HashMap<String, Object> myContentsDel(@RequestParam int contentsno, HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> successObj = mathContentsInfoService.myContentsDel(contentsno, path);
+		if((boolean)successObj.get("isDeleted")) {
+			imgFileService.removeImgFileInfo(10, contentsno);
+		}
 		return successObj;
 	}
 	

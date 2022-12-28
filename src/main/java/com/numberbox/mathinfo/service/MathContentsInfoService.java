@@ -817,6 +817,8 @@ public class MathContentsInfoService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		MathContents mathContents = mathContentsRepository.findByContentsNo(contentsNo);
 		UUID contentsUuid = mathContents.getUserUniqId();
+		
+		map.put("isDeleted", false);		//이미지 파일 정보 db에서 삭제 가능 구분 여부
 		if(!contentsUuid.equals(userUniqId)) {		// 컨텐츠에 등록되어있는 uuid와 사용자 uuid 같은 경우에만 삭제가능
 			map.put("existMsg", true);
 			map.put("serverMsg", "자신의 문제가 아닌 경우 삭제 할 수 없습니다.");
@@ -840,6 +842,7 @@ public class MathContentsInfoService {
 			}
 			
 			if(mathContents.getTransConCnt()==0) {	//변형문제 없는 제작문제는 바로 삭제 가능(문법테이블 행도 삭제 가능)
+				map.put("isDeleted", true);
 				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
 				mathContentsLicRepository.deleteByContentsNo(contentsNo); //라이선스 정보 삭제
@@ -847,12 +850,14 @@ public class MathContentsInfoService {
 				mathContentsGramRepository.deleteByContentsNo(contentsNo);
 				map.put("existMsg", false);
 			}else{	//변형문제가 존재하는 제작문제는 contents_classify 3으로 변경(문법테이블 행 삭제 불가)
+				map.put("isDeleted", true);	//변형문제 contents_classify 3으로 변경되면 다른 사용자에게 안 보이므로  이미지 파일 목록 DB에서 삭제
 				mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
 				mathConRepoInfoRepository.deleteByMathConRepoDomainContentsNo(contentsNo); //저장소 정보 삭제
 				mathContentsRepository.updateContentsClassify(contentsNo, 3);
 				map.put("existMsg", false);
 			}
 		}else if(mathContents.getContentsClassify() == 2) {	//변형문제는 삭제 가능(문법테이블 행도 삭제 가능)
+			map.put("isDeleted", true);
 			int transConCnt = mathContentsRepository.countByOrgContentsNo(mathContents.getOrgContentsNo());
 			//원본문제 TransConCnt -1 하기
 			mathConLikeInfoRepository.deleteByMathConLikeDomainContentsNo(contentsNo); //좋아요 정보 삭제
