@@ -1,14 +1,18 @@
 package com.numberbox.convert.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.numberbox.aws.s3.service.AwsS3Service;
 import com.numberbox.convert.dto.HwpConvertContentsDto;
 import com.numberbox.convert.entity.HwpConvertContents;
 import com.numberbox.convert.repository.HwpConvertContentsRepository;
@@ -20,6 +24,8 @@ import com.numberbox.security.util.StaticSecurityUtil;
 @Service
 public class ConvertService {
 
+	@Autowired
+    private AwsS3Service awsS3Service;
 	@Autowired
 	HwpConvertContentsRepository hwpConvertContentsRepository;
 	@Autowired
@@ -97,13 +103,13 @@ public class ConvertService {
 		}
 		
 		hwpConvertContentsDto.setUserUniqId(members.getUserUniqId());
-		hwpConvertContentsRepository.save(hwpConvertContentsDto.toEntity());
+		HwpConvertContents hwpConvert = hwpConvertContentsRepository.save(hwpConvertContentsDto.toEntity());
 		
 		if(isFirst) {
 			MembersProfile membersProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
 			membersProfileRepository.changeHwpDownCnt(members.getUserUniqId(), membersProfile.getHwpDownCnt()+1);
 		}
-		
+		map.put("convertNo", hwpConvert.getConvertNo());
 		map.put("isSuccess", true);
 		return map;
 	}
@@ -121,4 +127,25 @@ public class ConvertService {
 		}
 		return map;
 	}
+	
+	//파일 S3 서버로 전달
+	public String moveToS3Server(String orgFilePath) throws IOException {
+		Random random1 = new Random();
+    	long currentTime1 = System.currentTimeMillis();
+		int randomValue1 = random1.nextInt(100);
+        
+		//hwpToHtml 이미지 파일  S3서버 imgFileDir로 이동
+		File hwpToHtmlDir = new File(orgFilePath);
+		File hwpToHtmlDirImgList[] = hwpToHtmlDir.listFiles();
+		String s3FileUrl = "";
+		if(hwpToHtmlDirImgList != null) {
+			for(int i = 0; i < hwpToHtmlDirImgList.length; i++) {
+				s3FileUrl = awsS3Service.uploadToS3SeverSingleFile(11, hwpToHtmlDirImgList[i], currentTime1+"_"+randomValue1+"_"+hwpToHtmlDirImgList[i].getName());
+				s3FileUrl = s3FileUrl.replace(hwpToHtmlDirImgList[i].getName(), "");
+			}
+		}
+		return s3FileUrl;
+	}
+	
+	
 }

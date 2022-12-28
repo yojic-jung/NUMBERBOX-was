@@ -1,6 +1,7 @@
 package com.numberbox.convert.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,6 +29,8 @@ public class HwpConvertContentsDto {
 	  String convertContents;
 	  
 	  String imgPath;
+	  
+	  List<String> imgFileTagList;
 	  
 	  boolean errStts;
 	  

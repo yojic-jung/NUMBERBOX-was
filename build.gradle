@@ -45,6 +45,10 @@ dependencies {
 	
 	implementation group: 'org.qlrm', name: 'qlrm', version: '3.0.4'
 
+	//aws-s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'

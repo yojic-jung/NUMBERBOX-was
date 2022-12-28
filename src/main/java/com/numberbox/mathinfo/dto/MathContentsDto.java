@@ -1,6 +1,7 @@
 package com.numberbox.mathinfo.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -74,6 +75,8 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int entLicStts;
 	int entLicPrice;
 	int shareStts;
+	
+	List<String> imgTagSrc;
 	
 	LocalDateTime sysCreateDate;
 	LocalDateTime sysUpdateDate;

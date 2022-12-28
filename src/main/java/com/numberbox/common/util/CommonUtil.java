@@ -158,12 +158,9 @@ public class CommonUtil {
         return map;
 	}
 	
-	public File convertMultipartFileToFile(MultipartFile mfile) throws IOException {
-		File file = new File(mfile.getOriginalFilename());
-		file.createNewFile();
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.write(mfile.getBytes());
-		fos.close();
+	public File convertMultipartFileToFile(MultipartFile mfile, String path) throws IOException {
+		File file = new File(path, mfile.getOriginalFilename());
+		mfile.transferTo(file);
 		return file;
 	}
 	

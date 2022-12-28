@@ -59,7 +59,7 @@ public class ClientConnect {
     	
     	//MultipartFile to File
     	CommonUtil util = new CommonUtil();
-    	File file = util.convertMultipartFileToFile(multipartFile);
+    	File file = util.convertMultipartFileToFile(multipartFile, path+"hwpToHtml/");
 		
     	//데이터 크기 작성(4바이트 할당)
 		byte[] data = new byte[(int)file.length()];
@@ -99,6 +99,8 @@ public class ClientConnect {
 			dos.write(buffer,0,length);
 			dos.flush();
 		}
+		fin.close();
+		file.delete();
 		
 		//파일 받기
 		Random random1 = new Random();
@@ -106,7 +108,7 @@ public class ClientConnect {
 		int randomValue1 = random1.nextInt(100);
 
 		String newFileName = Long.toString(currentTime1) + "_"+randomValue1+"_hwpToHtml.zip";
-		File zipfile = new File(path, newFileName);
+		File zipfile = new File(path+"hwpToHtml/", newFileName);
         // Create new file if it does not exist
         // Then request the file from server
         if(!zipfile.exists()){
@@ -123,13 +125,13 @@ public class ClientConnect {
             fos.flush();
             fos.close();
             
-            unzipPath = util.unZip(path, newFileName, path);
+            unzipPath = util.unZip(path+"hwpToHtml/", newFileName, path+"hwpToHtml/");
             zipfile.delete();
         } catch (IOException e) {
             e.printStackTrace();
         }
+		
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("imgPath", "/webapp/static/hwpToHtml/"+newFileName.replace(".zip", "")+"/binData");
 		map.put("unzipPath", unzipPath);
 		return map;
     }

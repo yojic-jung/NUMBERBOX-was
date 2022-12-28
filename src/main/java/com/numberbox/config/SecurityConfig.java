@@ -156,6 +156,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
                 
                 
+                .antMatchers(HttpMethod.POST, "/common/imgUpload").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/common/download").permitAll()
                 
                 .antMatchers("/mathInfo/**").permitAll()
