@@ -32,7 +32,7 @@ public interface MembersRepository extends JpaRepository <Members, UUID> {
 			"FROM  " + 
 			"Members as A, MembersProfile as B, MembersPrivate as C  " + 
 			"where " + 
-			"A.userUniqId=B.userUniqId and A.userUniqId = C.userUniqId order by A.signupDate desc", nativeQuery = false)
+			"A.userUniqId=B.userUniqId and A.userUniqId = C.userUniqId and A.humanStatus != 3 order by A.signupDate desc", nativeQuery = false)
 	public List<CustomTenFieldDto> lastSignupUserLimit(Pageable page);
 	
 	
