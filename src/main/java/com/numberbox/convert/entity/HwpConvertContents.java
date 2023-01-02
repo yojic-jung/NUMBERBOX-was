@@ -36,6 +36,7 @@ public class HwpConvertContents {
 	  @Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
 	  UUID userUniqId;
 	  
+	  @Column(updatable=false)
 	  boolean converted;
 	  
 	  String convertFileName;

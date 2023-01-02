@@ -141,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/serviceCenter/takeMyErrReport").hasAnyRole("USER")
                 
                 .antMatchers(HttpMethod.POST, "/convert/convertHwpToWeb").hasAnyRole("USER")
+                .antMatchers(HttpMethod.POST, "/convert/changeConverted").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/myHwpConvertContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/saveMyHwpContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/removeConvertContents").hasAnyRole("USER")

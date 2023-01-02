@@ -128,6 +128,19 @@ public class ConvertService {
 		return map;
 	}
 	
+	@Transactional
+	public HashMap<String, Object> changeConverted(Long convertNo, boolean converted) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		int isSuccess = hwpConvertContentsRepository.changeConverted(members.getUserUniqId(), convertNo, converted);
+		if(isSuccess != 0) {
+			map.put("isSuccess", true);
+		}else {
+			map.put("isSuccess", false);
+		}
+		return map;
+	}
+	
 	//파일 S3 서버로 전달
 	public String moveToS3Server(String orgFilePath) throws IOException {
 		Random random1 = new Random();

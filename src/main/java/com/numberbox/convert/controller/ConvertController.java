@@ -77,6 +77,9 @@ public class ConvertController {
 	@PostMapping("/saveMyHwpContents")
 	public HashMap<String, Object> saveMyHwpContents(HwpConvertContentsDto hwpConvertContentsDto, HttpServletRequest request) {
 		HashMap<String, Object> map = convertService.registerConvertContents(hwpConvertContentsDto, false);
+		if(hwpConvertContentsDto.isConverted()) {
+			convertService.changeConverted(hwpConvertContentsDto.getConvertNo(), true);
+		}
 		List<HwpConvertContentsDto> contentsList = convertService.takeConvertContents();
 		imgFileService.registerImgFileInfo(11, hwpConvertContentsDto.getConvertNo().intValue(), hwpConvertContentsDto.getImgFileTagList());
 		imgFileService.removeTmpImgFileInfo(hwpConvertContentsDto.getImgFileTagList());
@@ -90,6 +93,18 @@ public class ConvertController {
 		HashMap<String, Object> map = convertService.changeErrStts(convertNo);
 		List<HwpConvertContentsDto> list = convertService.takeConvertContents();
 		map.put("myList", list);
+		return map;
+	}
+	
+	@GetMapping("/changeConverted")
+	public HashMap<String, Object> changeConverted(HttpServletRequest request) {
+		String convertNo = (String)request.getParameter("convertNo");
+		String converted = (String)request.getParameter("converted");
+		boolean isConverted = true;
+		if(converted.equals("false")){
+			isConverted = false;
+		}
+		HashMap<String, Object> map = convertService.changeConverted(Long.parseLong(convertNo), isConverted);
 		return map;
 	}
 	

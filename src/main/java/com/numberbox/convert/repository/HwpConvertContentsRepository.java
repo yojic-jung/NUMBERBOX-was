@@ -28,5 +28,9 @@ public interface HwpConvertContentsRepository extends JpaRepository<HwpConvertCo
 	@Query(value = "UPDATE HwpConvertContents hwpCon set hwpCon.errStts =:errStts where hwpCon.userUniqId =:uuid and hwpCon.convertNo=:convertNo", nativeQuery = false)
 	public int changeErrStts(@Param("uuid") UUID uuid, @Param("convertNo") long convertNo, @Param("errStts") boolean errStts);
 
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE HwpConvertContents hwpCon set hwpCon.converted =:converted where hwpCon.userUniqId =:uuid and hwpCon.convertNo=:convertNo", nativeQuery = false)
+	public int changeConverted(@Param("uuid") UUID uuid, @Param("convertNo") long convertNo, @Param("converted") boolean converted);
 
 }
