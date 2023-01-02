@@ -145,6 +145,7 @@ public class MathContentsInfoService {
 		List<FormulKeyDto> mainList = new ArrayList<>();
 		List<FormulKeyDto> highList = new ArrayList<>();
 		List<FormulKeyDto> etcList = new ArrayList<>();
+		List<FormulKeyDto> etcList2 = new ArrayList<>();
 		for(FormulKey formulKey : formulKeyList) {
 			FormulKeyDto formulKeyDto = modelMapper.map(formulKey, FormulKeyDto.class);
 			String classification = formulKeyDto.getClassification();
@@ -156,12 +157,15 @@ public class MathContentsInfoService {
 			}else if(classification.equals("etc")) {
 				etcList.add(formulKeyDto);
 				
+			}else if(classification.equals("etc2")) {
+				etcList2.add(formulKeyDto);
+				
 			}
 		}
 		map.put("shortCutKey", mainList);
 		map.put("shortCutKeyHigh1", highList);
 		map.put("shortCutKeyEtc", etcList);
-		
+		map.put("shortCutKeyEtc2", etcList2);
 		return map;
 	}
 	
