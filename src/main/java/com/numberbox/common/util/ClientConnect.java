@@ -100,7 +100,7 @@ public class ClientConnect {
 			dos.flush();
 		}
 		fin.close();
-		file.delete();
+		//file.delete();
 		
 		//파일 받기
 		Random random1 = new Random();
