@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.common.service.ImgFileService;
 import com.numberbox.common.util.ClientConnect;
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.convert.dto.HwpConvertContentsDto;
 import com.numberbox.convert.dto.HwpToWebDto;
 import com.numberbox.convert.service.ConvertService;
@@ -151,6 +152,14 @@ public class ConvertController {
 		map2.put("s3FileUrl", s3FileUrl);
 		map2.put("contentsList", contentsList);
 		return map2;
+	}
+	
+	@GetMapping("/fileConvertStatistic")
+	public HashMap<String, Object> fileConvertStatistic(HttpServletRequest request) {
+		HashMap<String, Object> map = new HashMap<>();
+		List<CustomTenFieldDto> list = convertService.takeConvertContentsStatistic();
+		map.put("fileConvertStatistic", list);
+		return map;
 	}
 	
 }

@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.aws.s3.service.AwsS3Service;
+import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.convert.dto.HwpConvertContentsDto;
+import com.numberbox.convert.dto.HwpConvertContentsStatisticDto;
 import com.numberbox.convert.entity.HwpConvertContents;
 import com.numberbox.convert.repository.HwpConvertContentsRepository;
+import com.numberbox.convert.repository.HwpConvertContentsStatisticRepository;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.repository.MembersProfileRepository;
@@ -28,6 +31,8 @@ public class ConvertService {
     private AwsS3Service awsS3Service;
 	@Autowired
 	HwpConvertContentsRepository hwpConvertContentsRepository;
+	@Autowired
+	HwpConvertContentsStatisticRepository hwpConvertContentsStatisticRepository;
 	@Autowired
 	private MembersProfileRepository membersProfileRepository;
 	
@@ -69,6 +74,13 @@ public class ConvertService {
 		return contentsList;
 	}
 	
+	public List<CustomTenFieldDto> takeConvertContentsStatistic() {
+		List<CustomTenFieldDto> list = hwpConvertContentsStatisticRepository.statisticConvertContentsByProfile();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미등록", "원장", "강사", "교사","학부모","학생", "기타", null, null,null);
+		list.add(0, customHeaderDto);
+		return list;
+	}
+	
 	public HwpConvertContentsDto takeErrConvertContents(String convertNo) {
 		HwpConvertContents convertContents = hwpConvertContentsRepository.findByConvertNo(Long.parseLong(convertNo));
 		HwpConvertContentsDto hwpConvertContentsDto = modelMapper.map(convertContents, HwpConvertContentsDto.class);
@@ -104,6 +116,11 @@ public class ConvertService {
 		
 		hwpConvertContentsDto.setUserUniqId(members.getUserUniqId());
 		HwpConvertContents hwpConvert = hwpConvertContentsRepository.save(hwpConvertContentsDto.toEntity());
+		HwpConvertContentsStatisticDto statisticDto = new HwpConvertContentsStatisticDto();
+		statisticDto.setConvertFileName(hwpConvertContentsDto.getConvertFileName());
+		statisticDto.setConvertNo(hwpConvertContentsDto.getConvertNo());
+		statisticDto.setUserUniqId(hwpConvertContentsDto.getUserUniqId());
+		hwpConvertContentsStatisticRepository.save(statisticDto.toEntity());
 		
 		if(isFirst) {
 			MembersProfile membersProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
