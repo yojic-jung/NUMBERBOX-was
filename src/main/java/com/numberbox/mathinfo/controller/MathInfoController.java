@@ -410,4 +410,25 @@ public class MathInfoController {
 	}
 	
 	
+	@GetMapping("/takeIpsiYear")
+	public HashMap<String, Object> takeIpsiYearMonth() {
+		HashMap<String, Object> map = mathContentsInfoService.takeIpsiYear();
+		return map;
+	}
+	
+	@GetMapping("/takeIpsiMonth")
+	public HashMap<String, Object> takeIpsiMonth(HttpServletRequest request) {
+		int impYear = Integer.parseInt(request.getParameter("impYear"));
+		HashMap<String, Object> map = mathContentsInfoService.takeIpsiMonth(impYear);
+		return map;
+	}
+	
+	@GetMapping("/takeIpsiContentsByYear")
+	public HashMap<String, Object> takeIpsiContentsByYear(HttpServletRequest request) {
+		int impYear = Integer.parseInt(request.getParameter("impYear"));
+		int impMonth = Integer.parseInt(request.getParameter("impMonth"));
+		HashMap<String, Object> map = mathContentsInfoService.findByMathContentsIpsiImpYear(impYear, impMonth);
+		return map;
+	}
+	
 }

@@ -179,4 +179,10 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 			" group by B.email", nativeQuery = false)
 	public List<CustomTenFieldDto> mathContentsStatistic();
 	
+	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
+	public List<MathContents> findByMathContentsIpsiImpYear(int impYear);
+	 
+	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
+	public List<MathContents> findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(int impYear, int impMonth);
+	
 }

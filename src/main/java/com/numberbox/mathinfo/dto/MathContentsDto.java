@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathContentsComp;
+import com.numberbox.mathinfo.entity.MathContentsIpsi;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
 
@@ -76,6 +77,15 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int entLicPrice;
 	int shareStts;
 	
+	// ipsi 테이블 필드값
+	int mathContentsIpsiSeqNo;
+	int manageIns;
+	int impYear;
+	int impMonth;
+	int paperType;
+	int oddQuesNum;
+	int evenQuesNum;
+	
 	List<String> imgTagSrc;
 	
 	LocalDateTime sysCreateDate;
@@ -102,4 +112,10 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 		return MathContentsLicense.builder().contentsNo(contentsNo).onlineLicStts(onlineLicStts).perLicStts(perLicStts).perLicPrice(perLicPrice)
 				.entLicStts(entLicStts).entLicPrice(entLicPrice).shareStts(shareStts).build();
 	}
+	
+	public MathContentsIpsi toIpsiEntity() {
+		return MathContentsIpsi.builder().seqNo(mathContentsIpsiSeqNo).contentsNo(contentsNo).manageIns(manageIns).impYear(impYear).impMonth(impMonth)
+				.paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
+	}
+	
 }

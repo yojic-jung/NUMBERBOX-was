@@ -140,4 +140,7 @@ public class MathContents {
 	//실제 일대일이지만 일대일에서 연관관계의 주인이 외래키를 갖지만 종 테이블이 null일때 참조 불가하므로 oneToMany 종으로 설계
 	@OneToMany(mappedBy="mathContents", fetch = FetchType.LAZY)		
 	List<MathContentsLicense> mathContentsLicense;
+	
+	@OneToMany(mappedBy="mathContents", fetch = FetchType.LAZY)
+	List<MathContentsIpsi> mathContentsIpsi;
 }
