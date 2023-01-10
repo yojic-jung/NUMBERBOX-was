@@ -30,6 +30,7 @@ import com.numberbox.mathinfo.dto.MathContentsCompDto;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
+import com.numberbox.mathinfo.dto.MathContentsIpsiDto;
 import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathTypeInfoDto;
@@ -41,6 +42,7 @@ import com.numberbox.mathinfo.entity.MathConLikeInfo;
 import com.numberbox.mathinfo.entity.MathConRepoInfo;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathContentsComp;
+import com.numberbox.mathinfo.entity.MathContentsIpsi;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
 import com.numberbox.mathinfo.entity.MathUnitInfo;
@@ -49,6 +51,7 @@ import com.numberbox.mathinfo.repository.MathConLikeInfoRepository;
 import com.numberbox.mathinfo.repository.MathConRepoInfoRepository;
 import com.numberbox.mathinfo.repository.MathContentsCompRepository;
 import com.numberbox.mathinfo.repository.MathContentsGramRepository;
+import com.numberbox.mathinfo.repository.MathContentsIpsiRepository;
 import com.numberbox.mathinfo.repository.MathContentsLicenseRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
@@ -77,6 +80,8 @@ public class MathContentsInfoService {
 	MathContentsRepository mathContentsRepository;
 	@Autowired
 	MathContentsCompRepository mathContentsCompRepository;
+	@Autowired
+	MathContentsIpsiRepository mathContentsIpsiRepository;
 	@Autowired
 	MathContentsLicenseRepository mathContentsLicRepository;
 	@Autowired
@@ -300,6 +305,14 @@ public class MathContentsInfoService {
 						mathContentsDto.setMathContentsCompSeqNo(mathContentsDto.getMathContentsCompSeqNo());
 					}
 					mathContentsCompRepository.save(mathContentsDto.toCompEntity());
+				}else if(mathContentsDto.getContentsClassify()==4) {
+					mathContentsDto.setContentsNo(contents.getContentsNo());
+					System.out.println("요직");
+					System.out.println(mathContentsDto.getMathContentsIpsiSeqNo());
+					if(mathContentsDto.getMathContentsIpsiSeqNo() != 0) {
+						mathContentsDto.setMathContentsIpsiSeqNo(mathContentsDto.getMathContentsIpsiSeqNo());
+					}
+					mathContentsIpsiRepository.save(mathContentsDto.toIpsiEntity());
 				}
 			}
 		}
@@ -550,6 +563,14 @@ public class MathContentsInfoService {
 				licenseList.add(mathContentsLic);
 			}
 			mathContentsModel.setMathContentsLicense(licenseList);
+		}else if(mathContents.getContentsClassify() == 4){	//변형문제의 경우 원본 문제 라이선스 정보 보야줘야함
+			List<MathContentsIpsiDto> ipsiDtoList = new ArrayList<>();
+			for(MathContentsIpsi ipsi : mathContents.getMathContentsIpsi()) {
+				MathContentsIpsiDto ipsiDto = modelMapper.map(ipsi, MathContentsIpsiDto.class);
+				ipsiDtoList.add(ipsiDto);
+			}
+			mathContentsModel =  modelMapper.map(mathContentsDto, MathContentsModel.class);
+			mathContentsModel.setMathContentsIpsi(ipsiDtoList);
 		}
 		
 		//변형문제 복사 금지
@@ -1061,5 +1082,53 @@ public class MathContentsInfoService {
 		map.put("memberMathContentsCnt", newList);
 		return map;
 	}
+	
+	@Transactional
+	public HashMap<String, Object> takeIpsiYear(){
+		List<Integer> list = mathContentsIpsiRepository.takeImpYearDistinct();
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		map.put("impYearList", list);
+		return map;
+	}
+
+	@Transactional
+	public HashMap<String, Object> takeIpsiMonth(int impYear){
+		List<Integer> list = mathContentsIpsiRepository.takeImpYearDistinctByImpYear(impYear);
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		map.put("impMonthList", list);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> findByMathContentsIpsiImpYear(int impYear, int impMonth){
+		List<MathContents> list;
+		if(impMonth == 0) {
+			list = mathContentsRepository.findByMathContentsIpsiImpYear(impYear);
+		}else {
+			list = mathContentsRepository.findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(impYear, impMonth);
+		}
+		
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		for(MathContents mathContents : list) {
+			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
+			List<MathContentsIpsiDto> mathContentsIpsiDtoList = new ArrayList<>();
+			for(MathContentsIpsi mathContentsIpsi : mathContents.getMathContentsIpsi()) {
+				mathContentsIpsiDtoList.add(modelMapper.map(mathContentsIpsi, MathContentsIpsiDto.class));
+			}
+			
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			mathContentsModel.setMathContentsIpsi(mathContentsIpsiDtoList);
+			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
+			dtoList.add(mathContentsModel);
+		}
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		map.put("mathContentsList", dtoList);
+		return map;
+	}
+	
 	
 }

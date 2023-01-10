@@ -63,6 +63,7 @@ public class MathContentsModel {
 	MembersProfileDto membersProfile;
 	MathUnitInfoDto mathUnitInfo;
 	MathTypeInfoDto mathTypeInfo;
+	List<MathContentsIpsiDto> mathContentsIpsi;
 	List<MathContentsCompDto> mathContentsComp;
 	List<MathContentsLicenseDto> mathContentsLicense;
 }
