@@ -118,8 +118,9 @@ public class ConvertService {
 		HwpConvertContents hwpConvert = hwpConvertContentsRepository.save(hwpConvertContentsDto.toEntity());
 		HwpConvertContentsStatisticDto statisticDto = new HwpConvertContentsStatisticDto();
 		statisticDto.setConvertFileName(hwpConvertContentsDto.getConvertFileName());
-		statisticDto.setConvertNo(hwpConvertContentsDto.getConvertNo());
+		statisticDto.setConvertNo(hwpConvert.getConvertNo());
 		statisticDto.setUserUniqId(hwpConvertContentsDto.getUserUniqId());
+		hwpConvertContentsStatisticRepository.deleteByConvertNo(hwpConvertContentsDto.getConvertNo());
 		hwpConvertContentsStatisticRepository.save(statisticDto.toEntity());
 		
 		if(isFirst) {

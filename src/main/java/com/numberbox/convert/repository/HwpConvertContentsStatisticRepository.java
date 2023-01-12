@@ -27,4 +27,6 @@ public interface HwpConvertContentsStatisticRepository extends JpaRepository<Hwp
 				"WHERE A.userUniqId=B.userUniqId "+
 				"and A.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')", nativeQuery = false)
 		public List<CustomTenFieldDto> statisticConvertContentsByProfile();
+		
+		public int deleteByConvertNo(Long convertNo);
 }
