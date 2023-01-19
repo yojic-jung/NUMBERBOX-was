@@ -3,6 +3,7 @@ package com.numberbox.members.dto;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.members.entity.MembersRole;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.Setter;
 public class MembersRoleDto {
 	
 	private long seqNo;
+	@JsonIgnore
 	private UUID userUniqId;
 	private boolean enabled;
     private String roleName;

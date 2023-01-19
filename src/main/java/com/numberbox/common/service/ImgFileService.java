@@ -15,6 +15,7 @@ import com.numberbox.common.dto.TmpImgFileInfoDto;
 import com.numberbox.common.entity.ImgFileInfo;
 import com.numberbox.common.repository.ImgFileInfoRepo;
 import com.numberbox.common.repository.TmpImgFileInfoRepo;
+import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.members.entity.Members;
 import com.numberbox.security.util.StaticSecurityUtil;
 
@@ -70,6 +71,48 @@ public class ImgFileService {
 		}
 		
 		
+	}
+	
+	@Transactional
+	public void registerImgFileInfoMulti(int actionId, List<MathContentsDto> contentsDtoList) {
+		for(MathContentsDto contentsDto : contentsDtoList) {
+			if(contentsDto.getImgTagSrc() != null && contentsDto.getImgTagSrc().size()!=0) {
+				List<ImgFileInfo> imgPathList = new ArrayList<>();
+				for(String imgTag : contentsDto.getImgTagSrc()) {
+					if(imgTag.indexOf(bucketUrl)<0) {
+						continue;
+					}
+					
+					ImgFileInfoDto imgDto = new ImgFileInfoDto();
+					imgDto.setActionId(actionId);
+					imgDto.setContentsNo(contentsDto.getContentsNo());
+					
+					String imgPathStr = imgTag.replace(bucketUrl, "");
+					int firstSlashIdx = imgPathStr.indexOf("/");
+					int lastSlashIdx = imgPathStr.lastIndexOf("/");
+					
+					String imgFileName = imgPathStr.substring(lastSlashIdx+1);
+					
+					try {
+						//imgPathCode, imgPath, imgFileName 모두 기존 url에서 뽑아오기(url에서 뽑지 않고 연월 구해서 재셋팅하면 실제 저장된 s3 연월 폴더와 db에 저장된 폴더 경로 및 imgPathCode가 불일치 될 수 있음)
+						imgDto.setImgPathCode(Integer.parseInt(imgPathStr.substring(firstSlashIdx+1, lastSlashIdx)));
+						imgDto.setImgPath(imgPathStr.substring(0, lastSlashIdx));
+						imgDto.setImgFileName(imgFileName);
+						imgPathList.add(imgDto.toEntity());
+					}catch(Exception e) {
+						continue;
+					}
+				}
+				
+				//actionId가 10(문제 만들기), 11(hwpToHtml 파일변환)의 경우 contentsNo에 해당하는 이미지 파일 기존 것 삭제 후 재 추가
+				if(actionId == 10 || actionId == 11) {
+					imgFileInfoRepo.deleteByActionIdAndContentsNo(actionId, contentsDto.getContentsNo());
+				}
+				imgFileInfoRepo.saveAll(imgPathList);
+			}else {
+				imgFileInfoRepo.deleteByActionIdAndContentsNo(actionId, contentsDto.getContentsNo());
+			}
+		}
 	}
 	
 

@@ -19,6 +19,7 @@ import com.numberbox.common.service.ImgFileService;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
+import com.numberbox.mathinfo.dto.MathContentsListDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.dto.MathTypeInfoListDto;
@@ -108,6 +109,18 @@ public class MathInfoController {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
 		}
+		return map;
+	}
+	
+	@PostMapping("/registerContentsMulti")
+	public HashMap<String, Object> registerContentsMulti(@ModelAttribute MathContentsListDto contentsList, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+		String accessToken = (String)request.getHeader("access-token");
+		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathContentsInfoService.registerContentsMulti(contentsList, path, accessToken, true);
+		
+		List<MathContentsDto> contentsDtoList = (List<MathContentsDto>)map.get("successDtoList");
+		mathContentsInfoService.registerContentsGramMulti(contentsDtoList);
+		imgFileService.registerImgFileInfoMulti(10, contentsDtoList );
 		return map;
 	}
 	

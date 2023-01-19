@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +32,7 @@ public class MathDocsPaper {
 	@Column(length = 700, nullable = false)
 	String contentsNoList;
 	
+	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
 	UUID userUniqId;
 	

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.numberbox.common.entity.TmpImgFileInfo;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.Setter;
 public class TmpImgFileInfoDto {
 	  Long seqNo;
 	  
+	  @JsonIgnore
 	  UUID userUniqId;
 	  
 	 

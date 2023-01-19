@@ -111,6 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/mathInfo/putInMyRepo").hasAnyRole("USER")
                 
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerContents").hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/mathInfo/registerContentsMulti").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/mathInfo/makeContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.POST, "/mathInfo/registerContentsGrammer").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathInfo/conSvcSttsChng").hasAnyRole("ADMIN")

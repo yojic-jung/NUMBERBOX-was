@@ -32,6 +32,7 @@ import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
 import com.numberbox.mathinfo.dto.MathContentsIpsiDto;
 import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
+import com.numberbox.mathinfo.dto.MathContentsListDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathTypeInfoDto;
 import com.numberbox.mathinfo.dto.MathTypeInfoModel;
@@ -42,6 +43,7 @@ import com.numberbox.mathinfo.entity.MathConLikeInfo;
 import com.numberbox.mathinfo.entity.MathConRepoInfo;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathContentsComp;
+import com.numberbox.mathinfo.entity.MathContentsGrammer;
 import com.numberbox.mathinfo.entity.MathContentsIpsi;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
@@ -307,8 +309,6 @@ public class MathContentsInfoService {
 					mathContentsCompRepository.save(mathContentsDto.toCompEntity());
 				}else if(mathContentsDto.getContentsClassify()==4) {
 					mathContentsDto.setContentsNo(contents.getContentsNo());
-					System.out.println("요직");
-					System.out.println(mathContentsDto.getMathContentsIpsiSeqNo());
 					if(mathContentsDto.getMathContentsIpsiSeqNo() != 0) {
 						mathContentsDto.setMathContentsIpsiSeqNo(mathContentsDto.getMathContentsIpsiSeqNo());
 					}
@@ -323,8 +323,101 @@ public class MathContentsInfoService {
 	
 	
 	@Transactional
+	public HashMap<String, Object> registerContentsMulti(MathContentsListDto mathContentsDtoList, String path, String accessToken, boolean isManager) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		List<MembersRole> roleList =  members.getRole();
+		//사용자 출시에서 권한 분리 필요
+		
+		//삭제한 유형에 등록하면 에러 날 수 있음
+		//관리자가 유형 삭제 하더라도 사용자가 홈페이지 새로고침 안하면 삭제한 유형 그대로 보일 수 있음
+		List<String> unitAndTypeNoList = new ArrayList<>();;
+		for(MathContentsDto mathContentsDto : mathContentsDtoList.getMathContents()) {
+			unitAndTypeNoList.add(mathContentsDto.getUnitUniqNo()+","+mathContentsDto.getTypeNo());
+		}
+		List<MathTypeInfo> mathTypelist = mathTypeRepository.findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNoIn(unitAndTypeNoList);
+		if(mathContentsDtoList.getMathContents().size() != mathTypelist.size()) {
+			int i=1;
+			for(MathContentsDto mathContentsDto : mathContentsDtoList.getMathContents()) {
+				MathTypeInfo mathTypeChk = mathTypeRepository.findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(Integer.toString(mathContentsDto.getUnitUniqNo()), Integer.toString(mathContentsDto.getTypeNo()));
+				if(mathTypeChk == null) {
+					String ordinalNum = "";
+					if(i==1) {
+						ordinalNum = i+"st";
+					}else if(i==2) {
+						ordinalNum = i+"nd";
+					}else if(i==3) {
+						ordinalNum = i+"rd";
+					}else {
+						ordinalNum = i+"th";
+					}
+					map.put("saveSuccess", false);
+					map.put("existMsg", true);
+					map.put("serverMsg", ordinalNum+"에 등록하신 문제의 유형은 삭제 되었습니다. 새로운 유형에 등록 후 새로고침하여 주시기 바랍니다.");
+					return map;
+				}
+				i++;
+			}
+			
+		}
+		
+		
+		List<MathContentsDto> successDtoList = new ArrayList<>();
+		for(MathContentsDto mathContentsDto : mathContentsDtoList.getMathContents()) {
+			//수정 모드인 경우 자기 자신 문제만 수정 가능
+			mathContentsDto.setUserUniqId(userUniqId);
+			//넘버링크 문제는 svcPosbStts=0
+			//사용자 제작 및 변형 문제는 svcPosbStts=1
+			if(isManager) {
+				mathContentsDto.setSvcPosbStts(0);
+			}else{
+				mathContentsDto.setSvcPosbStts(1);
+			} 
+			//객관식 정답 없는 경우 주관식문제로 설정(정답 입력 이후 주관식 및 객관식 분류, 문제만 입력했을땐 주관식으로 우선 등록, 객관식 주관식 둘다 있을시 객관식으로 적용)
+			if(mathContentsDto.getChoiceAnswer()==null) {
+				mathContentsDto.setMultiChoiceType("E");
+			}else{
+				mathContentsDto.setMultiChoiceType("M");
+			}
+
+			//정답 존재유무 상태코드 설정, 0은 미존재, 1은 존재
+			if((mathContentsDto.getAnswer()!=null && !mathContentsDto.getAnswer().isEmpty()) || mathContentsDto.getChoiceAnswer()!=null) {
+				mathContentsDto.setAnsExistStts(1);
+			}else {
+				mathContentsDto.setAnsExistStts(0);
+			}
+			MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
+			mathContentsDto.setContentsNo(contents.getContentsNo());
+			if(contents.getContentsClassify() == 4) {
+				mathContentsIpsiRepository.save(mathContentsDto.toIpsiEntity());
+			}
+			successDtoList.add(mathContentsDto);
+		}
+		map.put("successDtoList", successDtoList);
+		map.put("saveSuccess", true);
+		return map;
+	}
+	
+	
+	
+	@Transactional
 	public void registerContentsGram(MathContentsGrammerDto mathContentsGrammerDto){
 		mathContentsGramRepository.save(mathContentsGrammerDto.toEntity());
+	}
+	
+	@Transactional
+	public void registerContentsGramMulti(List<MathContentsDto> contentsDtoList){
+		List<MathContentsGrammer> grammerList = new  ArrayList<>();
+		for(MathContentsDto contentsDto : contentsDtoList) {
+			MathContentsGrammerDto grammerDto = new MathContentsGrammerDto();
+			grammerDto.setContentsNo(contentsDto.getContentsNo());
+			grammerDto.setContentsGram(contentsDto.getContentsGram());
+			grammerList.add(grammerDto.toEntity());
+		}
+		
+		mathContentsGramRepository.saveAll(grammerList);
+		
 	}
 	
 	@Transactional
