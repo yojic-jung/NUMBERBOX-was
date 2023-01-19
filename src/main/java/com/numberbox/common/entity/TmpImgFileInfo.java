@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class TmpImgFileInfo {
 	  @GeneratedValue(strategy=GenerationType.IDENTITY)
 	  Long seqNo;
 	  
+	  @JsonIgnore
 	  UUID userUniqId;
 	  
 	 

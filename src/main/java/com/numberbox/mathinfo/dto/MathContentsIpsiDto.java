@@ -24,6 +24,7 @@ public class MathContentsIpsiDto implements Serializable{
 	int manageIns;
 	int impYear;
 	int impMonth;
+	int wrongRatio;
 	int paperType;
 	int oddQuesNum;
 	int evenQuesNum;
@@ -35,6 +36,6 @@ public class MathContentsIpsiDto implements Serializable{
 	
 	public MathContentsIpsi toEntity() {
 		return MathContentsIpsi.builder().seqNo(seqNo).contentsNo(contentsNo).manageIns(manageIns).impYear(impYear).impMonth(impMonth)
-				.paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
+				.wrongRatio(wrongRatio).paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
 	}
 }

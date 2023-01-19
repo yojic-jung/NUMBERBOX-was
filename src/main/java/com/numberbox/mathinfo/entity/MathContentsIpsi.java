@@ -45,6 +45,8 @@ public class MathContentsIpsi {
 	@Column(length = 2, nullable = false)
 	int impMonth;
 	
+	@Column(length = 2, nullable = false)
+	int wrongRatio;
 	/*
 	 * 가/나형 구분 : 	1 (통합)
 	 * 				2 (가)

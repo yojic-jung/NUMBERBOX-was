@@ -16,6 +16,10 @@ public interface MathTypeRepository extends JpaRepository <MathTypeInfo, MathTyp
 	
 	public MathTypeInfo findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(String uniqNo, String typeNo);
 	
+	@Query(value = "select typeInfo FROM MathTypeInfo typeInfo where CONCAT(typeInfo.mathTypeDomain.unitUniqNo, ',', typeInfo.mathTypeDomain.typeNo) in (:unitUniqNoAndTypeNoList)", nativeQuery = false)
+	public List<MathTypeInfo> findByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNoIn( @Param("unitUniqNoAndTypeNoList") List<String> unitUniqNoAndTypeNoList);
+	
+	
 	public List<MathTypeInfo> findByMathTypeDomainUnitUniqNoInOrderByMathTypeDomainUnitUniqNoAscTypeOrderAsc(List<String> unitUniqNoList);
 	
 	public int deleteByMathTypeDomainUnitUniqNoAndMathTypeDomainTypeNo(String unitUniqNo, String typeNo);

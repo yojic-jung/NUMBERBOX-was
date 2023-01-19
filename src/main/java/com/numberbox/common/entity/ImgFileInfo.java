@@ -12,7 +12,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.uuid.Generators;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +28,6 @@ import lombok.NoArgsConstructor;
 public class ImgFileInfo {
 	  @Id
 	  @Column(columnDefinition = "BINARY(16)")
-	  @JsonIgnore
 	  UUID seqUuid;
 	  
 	  @PrePersist

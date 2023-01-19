@@ -54,6 +54,8 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	String answer;
 	String choiceAnswer;
 	
+
+	 
 	int quesLevel;
 	int ansExistStts;
 	int svcPosbStts;
@@ -61,6 +63,9 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int orgContentsNo;
 	int transConCnt;
 	
+	//문법 필드
+	String contentsGram;
+	 
 	// comp 테이블 필드값
 	int mathContentsCompSeqNo;
 	String orgSrcRef;
@@ -82,6 +87,7 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int manageIns;
 	int impYear;
 	int impMonth;
+	int wrongRatio;
 	int paperType;
 	int oddQuesNum;
 	int evenQuesNum;
@@ -115,7 +121,18 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	
 	public MathContentsIpsi toIpsiEntity() {
 		return MathContentsIpsi.builder().seqNo(mathContentsIpsiSeqNo).contentsNo(contentsNo).manageIns(manageIns).impYear(impYear).impMonth(impMonth)
-				.paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
+				.wrongRatio(wrongRatio).paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
 	}
 	
+	 @Override
+    public String toString() {
+        return "MathContentsDto [contentsNo=" + contentsNo + ", unitUniqNo=" + unitUniqNo + ", typeNo=" + typeNo + ", contents=" + contents
+        		+ "\n, contents=" + contents  + ", solution=" + solution  + ", firNo=" + firNo  + ", secNo=" + secNo 
+        		+ "\n, thrNo=" + thrNo + ", fourNo=" + fourNo  + ", fifNo=" + fifNo  + ", multiChoiceType=" + multiChoiceType  + ", answer=" + answer 
+        		+ "\n, choiceAnswer=" + choiceAnswer + ", quesLevel=" + quesLevel  + ", ansExistStts=" + ansExistStts  + ", svcPosbStts=" + svcPosbStts  + ", contentsClassify=" + contentsClassify 
+        		+ "\n, orgContentsNo=" + orgContentsNo + ", transConCnt=" + transConCnt  + ", manageIns=" + manageIns  + ", impYear=" + impYear  + ", impMonth=" + impMonth 
+        		+ "\n, wrongRatio=" + wrongRatio + ", paperType=" + paperType  + ", oddQuesNum=" + oddQuesNum  + ", evenQuesNum=" + evenQuesNum 
+        		+"]";
+    }
+	 
 }
