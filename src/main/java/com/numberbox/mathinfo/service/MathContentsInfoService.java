@@ -688,6 +688,7 @@ public class MathContentsInfoService {
 			List<Integer> classifyList = new ArrayList<>();
 			classifyList.add(0);
 			classifyList.add(3);
+			classifyList.add(4);
 			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(userUniqId, classifyList);
 		}else {					// userNo가 있으면 userNo로 상대방 프로필 조회
 			MembersProfile profile= membersProfileRepository.findByUserNo(userNo);
@@ -1206,6 +1207,7 @@ public class MathContentsInfoService {
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {
 			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			MathUnitInfoDto mathUnitInfoDto = modelMapper.map(mathContents.getMathUnitInfo(), MathUnitInfoDto.class);
 			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
 			List<MathContentsIpsiDto> mathContentsIpsiDtoList = new ArrayList<>();
 			for(MathContentsIpsi mathContentsIpsi : mathContents.getMathContentsIpsi()) {
@@ -1213,6 +1215,7 @@ public class MathContentsInfoService {
 			}
 			
 			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			mathContentsModel.setMathUnitInfo(mathUnitInfoDto);
 			mathContentsModel.setMathContentsIpsi(mathContentsIpsiDtoList);
 			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
 			dtoList.add(mathContentsModel);
