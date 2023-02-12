@@ -95,6 +95,9 @@ public class MathContents {
 	int quesLevel;
 	@Column(length =1, nullable = false)
 	int ansExistStts;
+	@Column(length =1, nullable = false, updatable=false)
+	int svcPosbStts;
+	
 	/*
 	 * 0 : 넘버링크 제작
 	 * 1 : 사용자 제작,
@@ -102,8 +105,6 @@ public class MathContents {
 	 * 3 : 변형문제 존재하는 문제 사용자가 삭제한 경우, 또는 탈퇴한 회원의 문제 
 	 * 4 : 수능문제
 	 */
-	@Column(length =1, nullable = false, updatable=false)
-	int svcPosbStts;
 	@Column(length =1, nullable = false, updatable=false)
 	int contentsClassify;
 	@Column(length =11, nullable = false, updatable=false)

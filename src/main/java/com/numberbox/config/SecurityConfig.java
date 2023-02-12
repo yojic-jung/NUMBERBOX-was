@@ -133,6 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 
                 
                 .antMatchers(HttpMethod.GET, "/mathDocs/mathDocs").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET, "/mathDocs/mathDocsIpsi").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathDocs/myMathDocs").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathDocs/delMyMathDocs").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/mathDocs/similarContents").hasAnyRole("USER")

@@ -444,4 +444,11 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@GetMapping("/takeIpsiContentsByContentsNo")
+	public HashMap<String, Object> takeIpsiContentsByContentsNo(HttpServletRequest request) {
+		int contentsNo = Integer.parseInt(request.getParameter("contentsNo"));
+		HashMap<String, Object> map = mathContentsInfoService.takeMathContentsIpsiByContentsNo(contentsNo);
+		return map;
+	}
+	
 }

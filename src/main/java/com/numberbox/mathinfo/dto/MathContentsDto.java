@@ -12,6 +12,7 @@ import com.numberbox.mathinfo.entity.MathContentsComp;
 import com.numberbox.mathinfo.entity.MathContentsIpsi;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
+import com.numberbox.mathinfo.entity.MathUnitInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -97,6 +98,7 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	LocalDateTime sysCreateDate;
 	LocalDateTime sysUpdateDate;
 	
+	MathUnitInfoDto mathUnitInfo;
 	MathTypeInfo mathTypeInfo;
 	
 	public MathContents toEntity() {

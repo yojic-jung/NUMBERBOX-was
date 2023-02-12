@@ -1,7 +1,6 @@
 package com.numberbox.mathdocs.service;
 
 import java.time.LocalDateTime;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +15,8 @@ import javax.persistence.Query;
 import org.modelmapper.ModelMapper;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -285,9 +286,54 @@ public class MathDocsSevice {
 	}
 	
 	
+	public List<MathContentsDto> takeMathIpsiContents(String unitUniqNoAndTypeNo, String quesLevel, int contentCnt,
+			int wrongRatioMin, int wrongRatioMax, int ipsiYearMin, int ipsiYearMax, String ipsiMonth){
+		
+		List<MathTypeDomain> mathTypeDomainList = new ArrayList<>();
+		String[] unitUniqNoAndTypeNoArr = unitUniqNoAndTypeNo.split("-");
+		for(String unitUniqNoAndTypeNoVal : unitUniqNoAndTypeNoArr) {
+			String[] unitNoAndTypeNo = unitUniqNoAndTypeNoVal.split(",");
+			MathTypeDomain mathTypeDomain = new MathTypeDomain();
+			mathTypeDomain.setUnitUniqNo(unitNoAndTypeNo[0]);
+			mathTypeDomain.setTypeNo(unitNoAndTypeNo[1]);
+			mathTypeDomainList.add(mathTypeDomain);
+		}
+		
+		
+		List<Integer> quesLevelList = new ArrayList<>();
+		String[] quesLevelArr = quesLevel.split(",");
+		
+		for(String quesLevelStr : quesLevelArr) {
+			quesLevelList.add(Integer.parseInt(quesLevelStr));
+		}
+		
+		List<Integer> ipsiMonthList = new ArrayList<>();
+		String[] ipsiMonthArr = ipsiMonth.split(",");
+		for(String ipsiMonthStr : ipsiMonthArr) {
+			ipsiMonthList.add(Integer.parseInt(ipsiMonthStr));
+		}
+		
+		Pageable limit = PageRequest.of(0,contentCnt);
+		List<MathContents> list = mathContentsRepository.findByMathTypeInfoMathTypeDomainInAndQuesLevelInAndMathContentsIpsiWrongRatioBetweenAndMathContentsIpsiImpYearBetweenAndMathContentsIpsiImpMonthIn(
+				mathTypeDomainList, quesLevelList, wrongRatioMin, wrongRatioMax, ipsiYearMin, ipsiYearMax, ipsiMonthList, limit);
+
+		List<MathContentsDto> dtoList = new ArrayList<>();
+		for(MathContents mathContents: list) {
+			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
+			mathContentsDto.setImpYear(mathContents.getMathContentsIpsi().get(0).getImpYear());
+			mathContentsDto.setImpMonth(mathContents.getMathContentsIpsi().get(0).getImpMonth());
+			mathContentsDto.setOddQuesNum(mathContents.getMathContentsIpsi().get(0).getOddQuesNum());
+			mathContentsDto.setWrongRatio(mathContents.getMathContentsIpsi().get(0).getWrongRatio());
+			mathContentsDto.setPaperType(mathContents.getMathContentsIpsi().get(0).getPaperType());
+			dtoList.add(mathContentsDto);
+		}
+		
+		return dtoList;
+	}
 	
-	public List<MathContentsDto> takeSimilarContents(int unitUniqNo, int typeNo){
-		List<MathContents> similarConList = mathContentsRepository.findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(unitUniqNo, typeNo, 0, 1);
+	
+	public List<MathContentsDto> takeSimilarContents(int unitUniqNo, int typeNo, int contentsClassify){
+		List<MathContents> similarConList = mathContentsRepository.findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(unitUniqNo, typeNo, contentsClassify, 1);
 		List<MathContentsDto> mathContentsDtoList = new ArrayList<>();
 		for(MathContents mathContents: similarConList) {
 			MathContentsDto mathContentsDto = modelMapper.map(mathContents, MathContentsDto.class);
@@ -397,6 +443,13 @@ public class MathDocsSevice {
 			mathContentsDto.setOrgContentsNo(0);
 			mathContentsDto.setOrgSrcPage(0);
 			mathContentsDto.setOrgSrcRef(null);
+			if(mathContents.getMathContentsIpsi().size() > 0) {
+				mathContentsDto.setImpYear(mathContents.getMathContentsIpsi().get(0).getImpYear());
+				mathContentsDto.setImpMonth(mathContents.getMathContentsIpsi().get(0).getImpMonth());
+				mathContentsDto.setOddQuesNum(mathContents.getMathContentsIpsi().get(0).getOddQuesNum());
+				mathContentsDto.setWrongRatio(mathContents.getMathContentsIpsi().get(0).getWrongRatio());
+				mathContentsDto.setPaperType(mathContents.getMathContentsIpsi().get(0).getPaperType());
+			}
 			mathContentsDtoList.set(contentsOrderMap.get(mathContents.getContentsNo()), mathContentsDto);
 		}
 		

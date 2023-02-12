@@ -35,11 +35,29 @@ public class MathDocsController {
 		return map;
 	}
 	
+	@GetMapping("/mathDocsIpsi")
+	public HashMap<String, Object> ipsiContentsInfo(HttpServletRequest request) {
+		String unitUniqNoAndTypeNo = (String)request.getParameter("unitUniqNoAndTypeNoList");
+		String quesLevel = (String)request.getParameter("quesLevel");
+		int conCnt = Integer.parseInt(request.getParameter("conCnt"));
+		int wrongRatioMin = Integer.parseInt(request.getParameter("wrongRatioMin"));
+		int wrongRatioMax = Integer.parseInt(request.getParameter("wrongRatioMax"));
+		int ipsiYearMin = Integer.parseInt(request.getParameter("ipsiYearMin"));
+		int ipsiYearMax = Integer.parseInt(request.getParameter("ipsiYearMax"));
+		String ipsiMonth = (String)request.getParameter("ipsiMonth");
+		List<MathContentsDto> list = mathDocsSevice.takeMathIpsiContents(unitUniqNoAndTypeNo, quesLevel, conCnt, wrongRatioMin, wrongRatioMax, ipsiYearMin, ipsiYearMax, ipsiMonth);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mathContentsList", list);
+		return map;
+	}
+	
 	@GetMapping("/similarContents")
 	public HashMap<String, Object> similarContents(HttpServletRequest request) {
 		int unitUniqNo = Integer.parseInt(request.getParameter("unitUniqNo").trim());
 		int typeNo = Integer.parseInt(request.getParameter("typeNo").trim());
-		List<MathContentsDto> list = mathDocsSevice.takeSimilarContents(unitUniqNo, typeNo);
+		int contentsClassify = Integer.parseInt(request.getParameter("contentsClassify").trim());
+		
+		List<MathContentsDto> list = mathDocsSevice.takeSimilarContents(unitUniqNo, typeNo, contentsClassify);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathSimilarConList", list);
 		return map;
