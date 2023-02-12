@@ -3,6 +3,7 @@ package com.numberbox.mathinfo.repository;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.common.util.CustomTenFieldDto;
+import com.numberbox.mathinfo.domain.MathTypeDomain;
 import com.numberbox.mathinfo.dto.ContentsCnt;
 import com.numberbox.mathinfo.dto.ContentsListModel;
 import com.numberbox.mathinfo.entity.MathContents;
@@ -30,7 +32,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
 	public List<MathContents> findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, int contentsClassify);
 	
-	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
+	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo", "mathUnitInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
 	public List<MathContents> findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(int unitUniqNo, int typeNo, int contentsClassify, int svcPosbStts);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
@@ -87,6 +89,24 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" order by a.sysCreateDate desc", nativeQuery = false)
 	public List<ContentsListModel> findByContentsNoCustom(@Param("contentsNo")int contentsNo);
     
+    @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
+    		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
+    		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
+    		", a.choiceAnswer, a.quesLevel, a.ansExistStts, a.svcPosbStts, a.contentsClassify, a.orgContentsNo"+
+    		", a.transConCnt, a.sysCreateDate, a.sysUpdateDate"+
+    		", b.onlineLicStts, b.perLicStts, b.perLicPrice, b.entLicStts, b.entLicPrice, b.shareStts"+
+    		", c.userNo, c.nickname, c.profileImgName, c.profileImgPath"+
+    		", d.subject, d.firUnit, d.secUnit, d.thrUnit)"+
+    		" from MathContents a INNER JOIN MembersProfile c on a.userUniqId = c.userUniqId" +
+    		" INNER JOIN MathUnitInfo d on a.unitUniqNo = d.unitUniqNo" + 
+    		" LEFT JOIN MathContentsLicense b on a.contentsNo = b.contentsNo" + 
+    		" where" + 
+    		" a.svcPosbStts=1 " + 
+    		" and a.contentsClassify =1" + 
+    		" and a.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')" + 
+    		" order by a.sysCreateDate desc", nativeQuery = false)
+	public List<ContentsListModel> findAllUserContentsCustom();
+    
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"+
     		"(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
     		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
@@ -104,7 +124,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" order by a.sysCreateDate desc", nativeQuery = false)
 	public List<ContentsListModel> findByContentsNoInCustom(@Param("contentsNoList")List<Integer> contentsNoList);
     
-    @EntityGraph(attributePaths = {"mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
+    @EntityGraph(attributePaths = {"mathUnitInfo", "mathTypeInfo", "mathContentsIpsi"})		//n+1 문제 해결
     public List<MathContents> findByContentsNoInAndSvcPosbSttsAndContentsClassifyNot(List<Integer> contentsNoList, int svcPosbStts, int contentsClassify);
     
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo", "membersProfile"})		//n+1 문제 해결, 사용자 문제검색(유사문제 조회 안함)
@@ -161,7 +181,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	
 	
-	//시간대별 가입자수
+	//사용자 문제 제작 수 통계
 	@Query(value = "select " + 
 			"new com.numberbox.common.util.CustomTenFieldDto( " + 
 			"(CASE WHEN C.profileType=0 THEN '미등록'" + 
@@ -184,5 +204,9 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	 
 	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
 	public List<MathContents> findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(int impYear, int impMonth);
+
+	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
+	public List<MathContents> findByMathTypeInfoMathTypeDomainInAndQuesLevelInAndMathContentsIpsiWrongRatioBetweenAndMathContentsIpsiImpYearBetweenAndMathContentsIpsiImpMonthIn(
+			List<MathTypeDomain> mathTypeDomain, List<Integer> quesLevel, int startWrongRatio, int endWrongRatio, int startImpYear, int endImpYear, List<Integer> impMonth, Pageable pageable);
 	
 }

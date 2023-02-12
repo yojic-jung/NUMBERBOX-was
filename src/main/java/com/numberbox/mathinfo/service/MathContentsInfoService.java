@@ -430,7 +430,12 @@ public class MathContentsInfoService {
 		//	(mathContentsDto.getUnitUniqNo(), 1, 0, mathContentsDto.getUnitUniqNo(), 1, 1, 1);
 		List<ContentsListModel> list;
 		if(contentsNo != null) {	// 문제 번호 검색하는 경우
-			list = mathContentsRepository.findByContentsNoCustom(Integer.parseInt(contentsNo));
+			if(contentsNo.equals("allUserContents")) {	//일반 사용자 모든 문제 검색
+				list = mathContentsRepository.findAllUserContentsCustom();
+			}else{		//문제 번호로 검색
+				list = mathContentsRepository.findByContentsNoCustom(Integer.parseInt(contentsNo));
+			}
+			
 		}else {						// 단원으로 검색하는 경우
 			list = mathContentsRepository.findByUnitUniqNo(mathContentsDto.getUnitUniqNo());
 		}
@@ -1203,6 +1208,34 @@ public class MathContentsInfoService {
 		}else {
 			list = mathContentsRepository.findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(impYear, impMonth);
 		}
+		
+		List<MathContentsModel> dtoList= new ArrayList<>();
+		for(MathContents mathContents : list) {
+			MathContentsDto mathContentsDtoInner = modelMapper.map(mathContents, MathContentsDto.class);
+			MathUnitInfoDto mathUnitInfoDto = modelMapper.map(mathContents.getMathUnitInfo(), MathUnitInfoDto.class);
+			MathTypeInfoDto mathTypeInfoDto = modelMapper.map(mathContents.getMathTypeInfo(), MathTypeInfoDto.class);
+			List<MathContentsIpsiDto> mathContentsIpsiDtoList = new ArrayList<>();
+			for(MathContentsIpsi mathContentsIpsi : mathContents.getMathContentsIpsi()) {
+				mathContentsIpsiDtoList.add(modelMapper.map(mathContentsIpsi, MathContentsIpsiDto.class));
+			}
+			
+			MathContentsModel mathContentsModel = modelMapper.map(mathContentsDtoInner, MathContentsModel.class);
+			mathContentsModel.setMathUnitInfo(mathUnitInfoDto);
+			mathContentsModel.setMathContentsIpsi(mathContentsIpsiDtoList);
+			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
+			dtoList.add(mathContentsModel);
+		}
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("isSuccess", true);
+		map.put("mathContentsList", dtoList);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> takeMathContentsIpsiByContentsNo(int contentsNo){
+		List<Integer> contentsNoList = new ArrayList<>();
+		contentsNoList.add(contentsNo);
+		List<MathContents> list = mathContentsRepository.findByContentsNoInAndSvcPosbSttsAndContentsClassifyNot(contentsNoList, 1, 0);
 		
 		List<MathContentsModel> dtoList= new ArrayList<>();
 		for(MathContents mathContents : list) {
