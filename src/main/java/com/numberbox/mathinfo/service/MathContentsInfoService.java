@@ -31,6 +31,7 @@ import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
 import com.numberbox.mathinfo.dto.MathContentsIpsiDto;
+import com.numberbox.mathinfo.dto.MathContentsIpsiListDto;
 import com.numberbox.mathinfo.dto.MathContentsLicenseDto;
 import com.numberbox.mathinfo.dto.MathContentsListDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
@@ -311,6 +312,8 @@ public class MathContentsInfoService {
 					mathContentsDto.setContentsNo(contents.getContentsNo());
 					if(mathContentsDto.getMathContentsIpsiSeqNo() != 0) {
 						mathContentsDto.setMathContentsIpsiSeqNo(mathContentsDto.getMathContentsIpsiSeqNo());
+						//입시 정보 시행연월은 모두 같게 등록
+						mathContentsIpsiRepository.updateImpYearAndImpMonthByContentsNo(mathContentsDto.getImpYear(), mathContentsDto.getImpMonth(), mathContentsDto.getContentsNo());
 					}
 					mathContentsIpsiRepository.save(mathContentsDto.toIpsiEntity());
 				}
@@ -907,11 +910,47 @@ public class MathContentsInfoService {
 		List<MathContentsComp> compList = mathContentsCompRepository.saveAll(list);
 		List<MathContentsCompDto> compDtoList = new ArrayList<>();
 		for(MathContentsComp comp : compList) {
-			MathContentsCompDto CompModel = modelMapper.map(comp, MathContentsCompDto.class);
-			compDtoList.add(CompModel);
+			MathContentsCompDto compModel = modelMapper.map(comp, MathContentsCompDto.class);
+			compDtoList.add(compModel);
 		}
 		map.put("isSuccess", true);
 		map.put("successObj", compDtoList);
+		return map;
+	}
+	
+	public HashMap<String, Object> registerIpsiContents(MathContentsIpsiListDto ipsiContentsList) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<MathContentsIpsi> list = new ArrayList<>();
+		for(MathContentsIpsiDto ipsiContentsDto :ipsiContentsList.getMathContentsIpsi()) {
+			list.add(ipsiContentsDto.toEntity());
+		}
+		List<MathContentsIpsi> ipsiList = mathContentsIpsiRepository.saveAll(list);
+		List<MathContentsIpsiDto> ipsiDtoList = new ArrayList<>();
+		for(MathContentsIpsi ipsiCon : ipsiList) {
+			MathContentsIpsiDto ipsiDto = modelMapper.map(ipsiCon, MathContentsIpsiDto.class);
+			ipsiDtoList.add(ipsiDto);
+		}
+		map.put("isSuccess", true);
+		map.put("successObj", ipsiDtoList);
+		return map;
+	}
+	
+	@Transactional
+	public HashMap<String, Object> delIpsiContents(int seqNo, int contentsNo) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(mathContentsIpsiRepository.exsistOverOneByContentsNo(contentsNo)) {
+			mathContentsIpsiRepository.deleteById(seqNo);
+			List<MathContentsIpsi> ipsiList = mathContentsIpsiRepository.findByContentsNo(contentsNo);
+			List<MathContentsIpsiDto> ipsiDtoList = new ArrayList<>();
+			for(MathContentsIpsi comp : ipsiList) {
+				MathContentsIpsiDto CompModel = modelMapper.map(comp, MathContentsIpsiDto.class);
+				ipsiDtoList.add(CompModel);
+			}
+			map.put("successObj", ipsiDtoList);
+			map.put("isSuccess", true);
+		}else {
+			map.put("isSuccess", false);
+		}
 		return map;
 	}
 	
@@ -923,8 +962,8 @@ public class MathContentsInfoService {
 			List<MathContentsComp> compList = mathContentsCompRepository.findByContentsNo(contentsNo);
 			List<MathContentsCompDto> compDtoList = new ArrayList<>();
 			for(MathContentsComp comp : compList) {
-				MathContentsCompDto CompModel = modelMapper.map(comp, MathContentsCompDto.class);
-				compDtoList.add(CompModel);
+				MathContentsCompDto compModel = modelMapper.map(comp, MathContentsCompDto.class);
+				compDtoList.add(compModel);
 			}
 			map.put("successObj", compDtoList);
 			map.put("isSuccess", true);
