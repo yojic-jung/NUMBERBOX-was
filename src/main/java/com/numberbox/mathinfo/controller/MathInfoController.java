@@ -19,6 +19,7 @@ import com.numberbox.common.service.ImgFileService;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
+import com.numberbox.mathinfo.dto.MathContentsIpsiListDto;
 import com.numberbox.mathinfo.dto.MathContentsListDto;
 import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
@@ -329,9 +330,21 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@PostMapping("/registerIpsiContents")
+	public HashMap<String, Object> registerIpsiContents(MathContentsIpsiListDto ipsiContentsList, HttpServletRequest request) throws IllegalStateException, IOException {
+		HashMap<String, Object> map = mathContentsInfoService.registerIpsiContents(ipsiContentsList);
+		return map;
+	}
+	
 	@GetMapping("/delCompContents")
 	public HashMap<String, Object> delCompContents(@RequestParam int seqNo, @RequestParam int contentsNo) {
 		HashMap<String, Object> successObj = mathContentsInfoService.delCompContents(seqNo, contentsNo);
+		return successObj;
+	}
+	
+	@GetMapping("/delIpsiContents")
+	public HashMap<String, Object> delIpsiContents(@RequestParam int seqNo, @RequestParam int contentsNo) {
+		HashMap<String, Object> successObj = mathContentsInfoService.delIpsiContents(seqNo, contentsNo);
 		return successObj;
 	}
 	
