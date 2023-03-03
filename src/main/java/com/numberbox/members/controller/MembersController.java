@@ -195,7 +195,7 @@ public class MembersController {
 	@GetMapping(value="/certifications/{imp_uid}")
 	public Object certifications(@PathVariable String imp_uid, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		IamportClient iam = new IamportClient("2626730431329357", "jm37bnUp381Ov6hQjE8fXJZry3Tj53NopRwAeq0hz1548nVr14HYNGqmKjGPntdMlJnzanRKpXOykK0m");
+		IamportClient iam = new IamportClient("2626730431329357", "BrBdnwc95qlxfiE2VHGi1DgQ47IHjwWiob1IrRM4hXipf6yooKNuH4qGMkQfD8VncpnyENTvYPqadLtG");
 		IamportResponse<Certification> cer = iam.certificationByImpUid(imp_uid);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyMMdd");
@@ -213,7 +213,7 @@ public class MembersController {
 	@GetMapping(value="/takeMerchantUid")
 	public Object takeMerchantUid() {
 		HashMap<String, String> map = new HashMap<>();
-		map.put("merchantUid", "ORD20180131-0000011");
+		map.put("merchantUid", "store-7cde0e91-3134-41e2-916a-2d567f4ee4eb");
 		map.put("merchantIdCode", "imp48047014");
 		
 		return map;
