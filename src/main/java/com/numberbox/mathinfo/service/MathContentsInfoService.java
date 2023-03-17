@@ -13,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,8 @@ import com.numberbox.security.util.StaticSecurityUtil;
 @Service
 public class MathContentsInfoService {
 	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	 
 	@PersistenceContext
     EntityManager entityManager;
 
@@ -330,8 +334,6 @@ public class MathContentsInfoService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
-		List<MembersRole> roleList =  members.getRole();
-		//사용자 출시에서 권한 분리 필요
 		
 		//삭제한 유형에 등록하면 에러 날 수 있음
 		//관리자가 유형 삭제 하더라도 사용자가 홈페이지 새로고침 안하면 삭제한 유형 그대로 보일 수 있음
@@ -371,12 +373,12 @@ public class MathContentsInfoService {
 			//수정 모드인 경우 자기 자신 문제만 수정 가능
 			mathContentsDto.setUserUniqId(userUniqId);
 			//넘버링크 문제는 svcPosbStts=0
-			//사용자 제작 및 변형 문제는 svcPosbStts=1
-			if(isManager) {
+			//수능 및 일반 사용자 제작 문제는 svcPosbStts=1
+			if(mathContentsDto.getContentsClassify() == 0) {
 				mathContentsDto.setSvcPosbStts(0);
 			}else{
 				mathContentsDto.setSvcPosbStts(1);
-			} 
+			}
 			//객관식 정답 없는 경우 주관식문제로 설정(정답 입력 이후 주관식 및 객관식 분류, 문제만 입력했을땐 주관식으로 우선 등록, 객관식 주관식 둘다 있을시 객관식으로 적용)
 			if(mathContentsDto.getChoiceAnswer()==null) {
 				mathContentsDto.setMultiChoiceType("E");
@@ -392,7 +394,9 @@ public class MathContentsInfoService {
 			}
 			MathContents contents = mathContentsRepository.save(mathContentsDto.toEntity());
 			mathContentsDto.setContentsNo(contents.getContentsNo());
-			if(contents.getContentsClassify() == 4) {
+			if(contents.getContentsClassify() == 1) {
+				mathContentsLicRepository.save(mathContentsDto.toLicenseEntity());
+			}else if(contents.getContentsClassify() == 4) {
 				mathContentsIpsiRepository.save(mathContentsDto.toIpsiEntity());
 			}
 			successDtoList.add(mathContentsDto);
