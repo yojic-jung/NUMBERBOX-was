@@ -71,9 +71,13 @@ public class JwtUtil {
 			  String browserInfo = request.getHeader("user-agent").toLowerCase();
 			  
 		      AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
-			  logInfoDto.setUserUniqId(userUniqId);
-			  AccessLogInfo logInfo = logInfoDto.toEntity();
-			  accessLogInfoRepository.save(logInfo);
+		      if(logInfoDto!= null) {
+		    	  logInfoDto.setUserUniqId(userUniqId);
+				  AccessLogInfo logInfo = logInfoDto.toEntity();
+				  accessLogInfoRepository.save(logInfo);
+		      }else {
+		    	  logger.warn("예외 발생 : 접속 로그 정보 null");
+		      }
 	      }catch(Exception e) {
 	    	  logger.warn("예외 발생 : 접속 로그 에러");
 	      }
@@ -93,14 +97,22 @@ public class JwtUtil {
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", roleList);
 	      
-		  String clientIp = request.getRemoteAddr();
-		  String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
-		  String browserInfo = request.getHeader("user-agent").toLowerCase();
-		 
-		  AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
-		  logInfoDto.setUserUniqId(userUniqId);
-		  AccessLogInfo logInfo = logInfoDto.toEntity();
-		  accessLogInfoRepository.save(logInfo);
+	      try {
+	    	  String clientIp = request.getRemoteAddr();
+			  String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
+			  String browserInfo = request.getHeader("user-agent").toLowerCase();
+			  
+		      AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
+		      if(logInfoDto!= null) {
+		    	  logInfoDto.setUserUniqId(userUniqId);
+				  AccessLogInfo logInfo = logInfoDto.toEntity();
+				  accessLogInfoRepository.save(logInfo);
+		      }else {
+		    	  logger.warn("예외 발생 : 접속 로그 정보 null");
+		      }
+	      }catch(Exception e) {
+	    	  logger.warn("예외 발생 : 접속 로그 에러");
+	      }
 		  
 	      //액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
 	      membersRepository.initLastLoginDate(userUniqId);
