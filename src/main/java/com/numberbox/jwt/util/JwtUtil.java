@@ -1,7 +1,6 @@
 package com.numberbox.jwt.util;
 
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +8,8 @@ import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +19,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
+import com.numberbox.members.dto.AccessLogInfoDto;
+import com.numberbox.members.entity.AccessLogInfo;
 import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.AccessLogInfoRepository;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.service.CustomSecurityUsersService;
 
@@ -39,6 +43,11 @@ public class JwtUtil {
 	  private CustomSecurityUsersService customUsersService;
 	  @Autowired
 	  private MembersRepository membersRepository;
+	  @Autowired
+	  private AccessLogInfoRepository accessLogInfoRepository;
+	  
+	  
+	  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	  
 	  @Value("${numberbox.jwtSecretKey}")
 	  private String secretKey;
@@ -46,7 +55,7 @@ public class JwtUtil {
 	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
 	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
 	
-	  public String createAccessToken(String email, UUID userUniqId, List<MembersRole> roleList) {
+	  public String createAccessToken(HttpServletRequest request, String email, UUID userUniqId, List<MembersRole> roleList) {
 		  List<String> strRoleList = new ArrayList<>();
 		  for(MembersRole role : roleList) {
 			  strRoleList.add(role.getRoleName());
@@ -55,6 +64,21 @@ public class JwtUtil {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
+	      
+	      try {
+	    	  String clientIp = request.getRemoteAddr();
+			  String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
+			  String browserInfo = request.getHeader("user-agent").toLowerCase();
+			  
+		      AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
+			  logInfoDto.setUserUniqId(userUniqId);
+			  AccessLogInfo logInfo = logInfoDto.toEntity();
+			  accessLogInfoRepository.save(logInfo);
+	      }catch(Exception e) {
+	    	  logger.warn("예외 발생 : 접속 로그 에러");
+	      }
+	     
+		  
 	      Date now = new Date();
 	      return Jwts.builder()
 	          .setClaims(claims)
@@ -64,11 +88,20 @@ public class JwtUtil {
 	          .compact();
 	  }
 	  
-	  public String createAccessTokenRoleStr(String email, UUID userUniqId, List<String> roleList) {
+	  public String createAccessTokenRoleStr(HttpServletRequest request, String email, UUID userUniqId, List<String> roleList) {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", roleList);
 	      
+		  String clientIp = request.getRemoteAddr();
+		  String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
+		  String browserInfo = request.getHeader("user-agent").toLowerCase();
+		 
+		  AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
+		  logInfoDto.setUserUniqId(userUniqId);
+		  AccessLogInfo logInfo = logInfoDto.toEntity();
+		  accessLogInfoRepository.save(logInfo);
+		  
 	      //액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
 	      membersRepository.initLastLoginDate(userUniqId);
 	      Date now = new Date();
@@ -152,5 +185,67 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+    
+    public AccessLogInfoDto covertIpOsBrowserInfo(String clientIp, String osInfo, String browserInfo) {
+    	  boolean isNullHeadInfo = false;
+		  if(clientIp == null) {
+			  logger.warn("client header informations are null");
+			  isNullHeadInfo = true;
+		  }
+		  if(browserInfo == null) {
+			  logger.warn("client header informations are null");
+			  isNullHeadInfo = true;
+		  }
+		  if(osInfo == null) {
+			  logger.warn("client header informations are null");
+			  isNullHeadInfo = true;
+		  }
+		  
+		  if(!isNullHeadInfo) {
+			  browserInfo = browserInfo.toLowerCase();
+			  osInfo = osInfo.toLowerCase().replaceAll("\"", "");
+			  if(osInfo.equals("windows")) {
+				  if(browserInfo.contains("opr")){
+					  browserInfo = "opr";
+		          }else if(browserInfo.contains("edg")){
+		        	  browserInfo = "edg";
+		          }else if(browserInfo.contains("whale")){
+		        	  browserInfo = "whale";
+		          }else if(browserInfo.contains("firefox")){
+		        	  browserInfo = "firefox";
+		          }else if(browserInfo.contains("chrome")){
+		        	  browserInfo = "chrome";
+		          }else{
+		        	  browserInfo = "etc";
+		          }
+			  }else if(osInfo.equals("mac")) {
+				  if(browserInfo.contains("opr")){
+					  browserInfo = "opr";
+		          }else if(browserInfo.contains("edg")){
+		        	  browserInfo = "edg";
+		          }else if(browserInfo.contains("whale")){
+		        	  browserInfo = "whale";
+		          }else if(browserInfo.contains("firefox")){
+		        	  browserInfo = "firefox";
+		          }else if(!(browserInfo.contains("chrome")) && browserInfo.contains("safari")){
+		        	  browserInfo = "safari";
+		          }else if(browserInfo.contains("chrome") && browserInfo.contains("safari")){
+		        	  browserInfo = "chrome";
+		          }else{
+		        	  browserInfo = "etc";
+		          }
+			  }else {
+				  osInfo = "etc";
+				  browserInfo = "etc";
+			  }
+			  AccessLogInfoDto logInfoDto = new AccessLogInfoDto();
+			  logInfoDto.setClientIp(clientIp);
+			  logInfoDto.setBrowserInfo(browserInfo);
+			  logInfoDto.setOsInfo(osInfo);
+			  return logInfoDto;
+		  }else {
+			  return null;
+		  }
     }
 }

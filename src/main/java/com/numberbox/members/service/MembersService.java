@@ -46,6 +46,7 @@ import com.numberbox.members.entity.MembersFollowInfo;
 import com.numberbox.members.entity.MembersPrivate;
 import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
+import com.numberbox.members.repository.AccessLogInfoRepository;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.repository.MembersPrivateRepository;
 import com.numberbox.members.repository.MembersProfileRepository;
@@ -78,6 +79,8 @@ public class MembersService {
 	private MembersFollowInfoRepository membersFollowInfoRepository;
 	@Autowired
 	private MathContentsRepository mathContentsRepository;
+	@Autowired
+	private AccessLogInfoRepository accessLogInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -85,7 +88,7 @@ public class MembersService {
 	
 	
 	@Transactional
-	public HashMap<String, String> signUp(MembersDto membersDto) {
+	public HashMap<String, String> signUp(HttpServletRequest request, MembersDto membersDto) {
 		HashMap<String, String> map = new HashMap<>();
 		boolean existsEmail = membersRepository.existsByEmail(membersDto.getEmail());
 		if(existsEmail) {
@@ -132,7 +135,7 @@ public class MembersService {
 		}
 		List<MembersRole> list = new ArrayList<>();
 		list.add(membersRole);
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), list);
+        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), list);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         
         map.put("isSuccess", "success");
@@ -220,7 +223,7 @@ public class MembersService {
 		}
 		
 		
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), roleList);
+        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), roleList);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         
         //매니저 권한 임시 구현
@@ -746,15 +749,13 @@ public class MembersService {
 			uuidList.add(uuid);
 		}
 		//최근 한달 접속자
-		int lastOneMonthCnt = membersRepository.countByLastLoginDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), uuidList);
+		int lastOneMonthCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), uuidList);
 		//최근 일주일 접속자
-		int lastOneWeekCnt = membersRepository.countByLastLoginDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), uuidList);
+		int lastOneWeekCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), uuidList);
 		//어제 접속자
-		int yesterDayCnt = membersRepository.countByLastLoginDateAfterAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), uuidList);
+		int yesterDayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), LocalDateTime.now().minusDays(1).with(LocalTime.MAX), uuidList);
 		//오늘 접속자
-		int todayCnt = membersRepository.countByLastLoginDateAfterAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), uuidList);
-		
-		yesterDayCnt= yesterDayCnt-todayCnt;
+		int todayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), uuidList);
 		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("최근 한달", "최근 일주일","어제","오늘", null, null, null,null, null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(lastOneMonthCnt, lastOneWeekCnt, yesterDayCnt, todayCnt, null, null, null,null, null, null);

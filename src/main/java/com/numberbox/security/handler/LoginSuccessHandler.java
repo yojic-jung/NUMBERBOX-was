@@ -69,7 +69,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
      	   response.setHeader("role", "USER");
         }
         
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), members.getRole());
+        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), members.getRole());
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         String loginState = (String)request.getParameter("loginState");
         response.setHeader("access-token", accessToken);

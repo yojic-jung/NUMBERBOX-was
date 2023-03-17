@@ -103,9 +103,9 @@ public class MembersController {
 	}
 	
 	@PostMapping("/signup")
-	public HashMap<String, Object> signup(MembersDto members, HttpServletResponse response) {
+	public HashMap<String, Object> signup(HttpServletRequest request, MembersDto members, HttpServletResponse response) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		HashMap<String, String> returnMap = membersService.signUp(members);
+		HashMap<String, String> returnMap = membersService.signUp(request, members);
 		String isSuccess = returnMap.get("isSuccess");
 		if(isSuccess.equals("success")) {
 			Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));

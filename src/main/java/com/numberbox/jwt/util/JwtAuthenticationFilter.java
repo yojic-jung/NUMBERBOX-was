@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                     	   response.setHeader("role", "USER");
                        }
                         
-                        String newAccessToken = jwtUtil.createAccessTokenRoleStr(email, userUniqId, roleList);
+                        String newAccessToken = jwtUtil.createAccessTokenRoleStr(request, email, userUniqId, roleList);
                         response.setHeader("access-token", newAccessToken);
                         Authentication authentication = jwtUtil.getAuthentication(newAccessToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
