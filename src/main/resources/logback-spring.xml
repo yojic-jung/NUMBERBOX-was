@@ -40,6 +40,24 @@
         </rollingPolicy>
     </appender>
     
+    <appender name="ROLLING_JWT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 파일 경로 -->
+        <file>${LOG_PATH}/jwt/logback.log</file>
+        <!-- 출력패턴 -->
+        <encoder>
+            <pattern>%-5level %d{HH:mm:ss.SSS} [%thread %F:%L] %method - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- .gz,.zip 등을 넣으면 자동으로 일자별 로그파일 압축 -->
+             <fileNamePattern>\logs\jwt\logback.%d{yyyy-MM-dd}_%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 파일당 최고 용량 10MB -->
+                <maxFileSize>${LOG_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 일자별 로그파일 최대 보관주기(일단위) 만약 해당 설정일 이상된 파일은 자동으로 제거-->
+           <maxHistory>${LOG_STORE_DATE}</maxHistory>
+        </rollingPolicy>
+    </appender>
     
     <appender name="ROLLING_AWS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 파일 경로 -->
@@ -175,7 +193,10 @@
         </rollingPolicy>
     </appender>
     
-	 <logger name="com.numberbox.aws" level="INFO">
+    <logger name="com.numberbox.jwt" level="INFO">
+        <appender-ref ref="ROLLING_JWT_FILE" />
+    </logger>
+	<logger name="com.numberbox.aws" level="INFO">
         <appender-ref ref="ROLLING_AWS_FILE" />
     </logger>
 	<logger name="com.numberbox.common" level="INFO">

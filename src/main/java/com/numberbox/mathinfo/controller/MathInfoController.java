@@ -2,7 +2,6 @@ package com.numberbox.mathinfo.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.numberbox.common.service.ImgFileService;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
@@ -45,12 +42,8 @@ public class MathInfoController {
 	@Autowired
 	ImgFileService imgFileService;
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	@GetMapping("/unitInfo")
 	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
-		logger.info("remoteAddr : {}, remoteHost : {}", request.getRemoteAddr(), request.getRemoteHost());
-		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String onlyExistUnit = (String) request.getParameter("onlyExistUnit");
 		map.put("mathSubjectInfo", mathContentsInfoService.takeMathSubjectInfo(onlyExistUnit));
