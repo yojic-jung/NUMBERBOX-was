@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
 
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
@@ -55,6 +57,7 @@ public class JwtUtil {
 	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
 	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
 	
+	  @Transactional(propagation = Propagation.NOT_SUPPORTED)
 	  public String createAccessToken(HttpServletRequest request, String email, UUID userUniqId, List<MembersRole> roleList) {
 		  List<String> strRoleList = new ArrayList<>();
 		  for(MembersRole role : roleList) {
@@ -92,6 +95,7 @@ public class JwtUtil {
 	          .compact();
 	  }
 	  
+	  @Transactional(propagation = Propagation.NOT_SUPPORTED)
 	  public String createAccessTokenRoleStr(HttpServletRequest request, String email, UUID userUniqId, List<String> roleList) {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
