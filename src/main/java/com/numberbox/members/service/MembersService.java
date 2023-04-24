@@ -749,13 +749,13 @@ public class MembersService {
 			uuidList.add(uuid);
 		}
 		//최근 한달 접속자
-		int lastOneMonthCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), uuidList);
+		int lastOneMonthCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
 		//최근 일주일 접속자
-		int lastOneWeekCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), uuidList);
+		int lastOneWeekCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
 		//어제 접속자
 		int yesterDayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), LocalDateTime.now().minusDays(1).with(LocalTime.MAX), uuidList);
 		//오늘 접속자
-		int todayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), uuidList);
+		int todayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
 		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("최근 한달", "최근 일주일","어제","오늘", null, null, null,null, null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(lastOneMonthCnt, lastOneWeekCnt, yesterDayCnt, todayCnt, null, null, null,null, null, null);
