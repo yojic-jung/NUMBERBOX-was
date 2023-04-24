@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.common.service.ImgFileService;
+import com.numberbox.common.util.MathProblemAnalyzer;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
@@ -74,6 +73,13 @@ public class MathInfoController {
 	@GetMapping("/takeShortCutKey")
 	public HashMap<String, Object> takeShortCutKey() {
 		return mathContentsInfoService.takeShortCutKey();
+	}
+	
+	@PostMapping("/mathUnitAnalysis")
+	public HashMap<String, Object> mathAnalysis(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto) throws IOException {
+		HashMap<String, Object> map = mathContentsInfoService.takeMathUnitListByKeyword(mathContentsGrammerDto.getContentsGram());
+        //s3에 저장
+		return map;
 	}
 	
 	@PostMapping("/makeContents")

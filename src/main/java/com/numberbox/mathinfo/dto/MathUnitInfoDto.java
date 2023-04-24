@@ -9,8 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathUnitInfoDto {
+public class MathUnitInfoDto implements Comparable<MathUnitInfoDto> {
 	
+	@Override
+    public int compareTo(MathUnitInfoDto muiDto) {
+        return this.unitUniqNo-muiDto.getUnitUniqNo();
+    }
 	public int unitUniqNo;
 	public String subject;
 	public String firUnit;

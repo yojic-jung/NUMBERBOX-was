@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.numberbox.mathinfo.dto.MathUnitInfoGroup;
 import com.numberbox.mathinfo.entity.MathUnitInfo;
@@ -61,6 +62,11 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 	
 	public MathUnitInfo findByUnitUniqNo(int unitUniqNo);
 	
+	public List<MathUnitInfo> findByUnitUniqNoIn(List<Integer> unitUniqNoList);
+	
 	public List<MathUnitInfo> findBySubject(String subject);
+	
+	@Query(value = "SELECT mui.* FROM math_unit_info mui WHERE (mui.fir_unit REGEXP :keyword) or (mui.sec_unit REGEXP :keyword) or (mui.thr_unit REGEXP :keyword)", nativeQuery = true)
+	public List<MathUnitInfo> findByFirUnitRegexpOrSecUnitRegexpOrThrUnitRegexp(@Param("keyword") String keyword);
 	
 }
