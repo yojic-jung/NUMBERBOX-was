@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -16,10 +17,13 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.common.util.CustomTenFieldDto;
+import com.numberbox.common.util.DeduplicationUtils;
+import com.numberbox.common.util.MathProblemAnalyzer;
 import com.numberbox.mathinfo.domain.MathConLikeDomain;
 import com.numberbox.mathinfo.domain.MathConRepoDomain;
 import com.numberbox.mathinfo.domain.MathTypeDomain;
@@ -60,6 +64,7 @@ import com.numberbox.mathinfo.repository.MathContentsIpsiRepository;
 import com.numberbox.mathinfo.repository.MathContentsLicenseRepository;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathTypeRepository;
+import com.numberbox.mathinfo.repository.MathUnitKeywordRepository;
 import com.numberbox.mathinfo.repository.MathUnitRepository;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.entity.Members;
@@ -69,9 +74,19 @@ import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.repository.MembersProfileRepository;
 import com.numberbox.security.util.StaticSecurityUtil;
 
+import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
+import kr.co.shineware.nlp.komoran.core.Komoran;
+import kr.co.shineware.nlp.komoran.model.KomoranResult;
 @Service
 public class MathContentsInfoService {
 	
+	 @Value("${numberbox.openaiForbiddenWord}")
+	 private String openaiForbiddenWord;
+	 
+	 @Autowired
+	 MathProblemAnalyzer mathProblemAnalyzer;
+		
+	 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	 
 	@PersistenceContext
@@ -101,6 +116,8 @@ public class MathContentsInfoService {
 	MathConRepoInfoRepository mathConRepoInfoRepository;
 	@Autowired
 	MembersFollowInfoRepository membersFollowInfoRepository;
+	@Autowired
+	MathUnitKeywordRepository mathUnitKeywordRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -149,6 +166,54 @@ public class MathContentsInfoService {
 		}
 		
 		return mathTypeRepository.findByMathTypeDomainUnitUniqNoInOrderByMathTypeDomainUnitUniqNoAscTypeOrderAsc(unitUniqNoList);
+	}
+	public static final Komoran instance = new Komoran(DEFAULT_MODEL.FULL);
+	 
+	public HashMap<String, Object> takeMathUnitListByKeyword(String contentsGrammer) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String question = "한국 수학 교육과정에서 {" + contentsGrammer + "}와 가장 관련된 단원명은 무엇인가요?";
+		String answerStr = mathProblemAnalyzer.questionToChatGtp(question, 0.2, 100, 1, 0.0, 0.0);
+		
+        KomoranResult analyzeResultList = instance.analyze(answerStr);
+        
+        String[] openaiForbiddenWordArr =openaiForbiddenWord.split(",");
+        
+	    String keywordList = "";
+	    for(String str : analyzeResultList.getNouns()) {
+	    	boolean isKeywordEqual = false;
+	    	for(String forbiddenWord : openaiForbiddenWordArr) {
+	    		if(str.equals(forbiddenWord)) {
+	    			isKeywordEqual = true;
+	    		}
+	    	}
+	    	if(!isKeywordEqual && str.length() != 1) {
+	    		keywordList += str+"|";
+	    	}
+	    }
+	    
+	    
+	    List<MathUnitInfoDto> unitInfoDtoList = new ArrayList<>();
+	    if(keywordList.length()>1) {
+	    	keywordList=keywordList.substring(0, keywordList.length() - 1);
+	    	List<MathUnitInfo> unitList = mathUnitRepository.findByFirUnitRegexpOrSecUnitRegexpOrThrUnitRegexp(keywordList);
+	 	    List<Integer> unitUniqNoList = mathUnitKeywordRepository.findByKeywordRegexp(keywordList);
+	 	    List<MathUnitInfo> unitList2 =  mathUnitRepository.findByUnitUniqNoIn(unitUniqNoList);
+	 	  
+	 	    for(MathUnitInfo unitInfo : unitList) {
+	 	    	MathUnitInfoDto unitInfoDto = modelMapper.map(unitInfo, MathUnitInfoDto.class);
+	 	    	unitInfoDtoList.add(unitInfoDto);
+	 		}
+	 	    for(MathUnitInfo unitInfo : unitList2) {
+	 	    	MathUnitInfoDto unitInfoDto = modelMapper.map(unitInfo, MathUnitInfoDto.class);
+	 	    	unitInfoDtoList.add(unitInfoDto);
+	 		}
+	 	    Collections.sort(unitInfoDtoList);
+	 	   
+	    }
+	    List<MathUnitInfoDto> deduplicationList = DeduplicationUtils.deduplication(unitInfoDtoList, MathUnitInfoDto::getUnitUniqNo);
+	    map.put("unitList", deduplicationList);
+		return map;
 	}
 	
 	public HashMap<String, Object> takeShortCutKey(){
