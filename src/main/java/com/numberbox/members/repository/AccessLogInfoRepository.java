@@ -12,10 +12,7 @@ import com.numberbox.members.entity.AccessLogInfo;
 
 public interface AccessLogInfoRepository extends JpaRepository <AccessLogInfo, Integer> {
 	
-	@Query(value ="SELECT COUNT(DISTINCT logInfo.userUniqId) FROM AccessLogInfo logInfo WHERE loginTime>= :minLoginTime and loginTime<= :maxLoginTime and userUniqId not in (:managerList)", nativeQuery = false)
+	@Query(value ="SELECT COUNT(DISTINCT user_uniq_id, date_format(login_time, '%Y-%m-%d')) FROM access_log_info WHERE login_time>= :minLoginTime and login_time<= :maxLoginTime and user_uniq_id not in (:managerList)", nativeQuery = true)
 	public int countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(@Param("minLoginTime") LocalDateTime minLoginTime, @Param("maxLoginTime") LocalDateTime maxLoginTime, @Param("managerList") List<UUID> managerList);
-	
-	@Query(value ="SELECT COUNT(DISTINCT logInfo.userUniqId) FROM AccessLogInfo logInfo WHERE loginTime> :loginTime and userUniqId not in (:managerList)", nativeQuery = false)
-	public int countDistinctUserUniqIdByLoginTimeAfterAndUserUniqIdNotIn(@Param("loginTime") LocalDateTime loginTime, @Param("managerList") List<UUID> managerList);
 	
 }
