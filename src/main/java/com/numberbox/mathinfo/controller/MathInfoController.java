@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.common.service.ImgFileService;
-import com.numberbox.common.util.MathProblemAnalyzer;
 import com.numberbox.mathinfo.dto.MathContentsCompListDto;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.mathinfo.dto.MathContentsGrammerDto;
@@ -78,6 +77,13 @@ public class MathInfoController {
 	@PostMapping("/mathUnitAnalysis")
 	public HashMap<String, Object> mathAnalysis(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto) throws IOException {
 		HashMap<String, Object> map = mathContentsInfoService.takeMathUnitListByKeyword(mathContentsGrammerDto.getContentsGram());
+        //s3에 저장
+		return map;
+	}
+	
+	@PostMapping("/mathAiCompContents")
+	public HashMap<String, Object> mathAiCompContents(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto) throws IOException {
+		HashMap<String, Object> map = mathContentsInfoService.takemathAiCompContents(mathContentsGrammerDto.getContentsGram());
         //s3에 저장
 		return map;
 	}

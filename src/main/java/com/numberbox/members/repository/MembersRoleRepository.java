@@ -15,12 +15,12 @@ public interface MembersRoleRepository extends JpaRepository <MembersRole, Long>
 
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members_role m set m.enabled = false where m.user_uniq_id = :userUniqId", nativeQuery = true)
+	@Query(value = "UPDATE MembersRole m set m.enabled = false where m.userUniqId = :userUniqId", nativeQuery = false)
 	public int disableEnabled(@Param("userUniqId")UUID userUniqId);
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members_role m set m.enabled = true where m.user_uniq_id = :userUniqId", nativeQuery = true)
+	@Query(value = "UPDATE MembersRole m set m.enabled = true where m.userUniqId = :userUniqId", nativeQuery = false)
 	public int ableEnabled(@Param("userUniqId")UUID userUniqId);
 	
 	public List<MembersRole> findByUserUniqId(UUID uuid);

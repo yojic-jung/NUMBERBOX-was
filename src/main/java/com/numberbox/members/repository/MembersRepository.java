@@ -107,27 +107,30 @@ public interface MembersRepository extends JpaRepository <Members, UUID> {
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members m set m.password =:password where m.user_uniq_id = :userUniqId", nativeQuery = true)
-	public int changePassword(@Param("userUniqId")UUID userUniqId, @Param("password")String password);
+	@Query(value = "UPDATE Members m set m.failCount = :failCnt where m.userUniqId = :userUniqId", nativeQuery = false)
+	public int increaseFailCount(@Param("userUniqId")UUID userUniqId, @Param("failCnt") int failCnt);
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members m set m.fail_count = m.fail_count+1 where m.user_uniq_id = :userUniqId", nativeQuery = true)
-	public int increaseFailCount(@Param("userUniqId")UUID userUniqId);
+	@Query(value = "UPDATE Members m set m.lastLoginDate= :now, m.failCount = 0 where m.userUniqId = :userUniqId", nativeQuery = false)
+	public int initLastLoginDate(@Param("userUniqId")UUID userUniqId, @Param("now")LocalDateTime now);
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members m set last_login_date=now() ,m.fail_count = 0 where m.user_uniq_id = :userUniqId", nativeQuery = true)
-	public int initLastLoginDate(@Param("userUniqId")UUID userUniqId);
-	
-	@Transactional
-	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members m set m.human_status = 0 where m.user_uniq_id = :userUniqId", nativeQuery = true)
+	@Query(value = "UPDATE Members m set m.humanStatus = 0 where m.userUniqId = :userUniqId", nativeQuery = false)
 	public int initHumanStatus(@Param("userUniqId")UUID userUniqId);
 	
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE members m set m.last_fail_time = now() where m.user_uniq_id = :userUniqId", nativeQuery = true)
-	public int initLastFailTime(@Param("userUniqId")UUID userUniqId);
+	@Query(value = "UPDATE Members m set m.lastFailTime =:now where m.userUniqId = :userUniqId", nativeQuery = false)
+	public int initLastFailTime(@Param("userUniqId")UUID userUniqId, @Param("now")LocalDateTime now);
+	
+	@Query(value ="SELECT new com.numberbox.common.util.CustomTenFieldDto("
+			+ " CONCAT(YEAR(m.signupDate), '년 ', MONTH(m.signupDate), '월') as nbCol1, count(*) as nbCol2,"
+			+ " 0 as nbCol3, 0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10) "
+			+ " FROM Members as m where m.signupDate>='2022-11-01' and "
+			+ " m.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')"
+			+ " GROUP BY YEAR(m.signupDate), MONTH(m.signupDate) order by m.signupDate ASC", nativeQuery = false)
+	public List<CustomTenFieldDto> countMembersGroupBySysCreateDateMonth();
 }

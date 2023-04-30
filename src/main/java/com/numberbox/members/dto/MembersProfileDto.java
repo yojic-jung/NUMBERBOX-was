@@ -2,6 +2,8 @@ package com.numberbox.members.dto;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,6 +40,11 @@ public class MembersProfileDto {
     public int profileType;
     @JsonIgnore
     public int hwpDownCnt;
+    @JsonIgnore
+    public int unitMappingCnt;
+    @JsonIgnore
+    public int aiContentsCnt;
+	
     
     public MembersProfile toEntity() {
 		return MembersProfile.builder().userNo(userNo).userUniqId(userUniqId).nickname(nickname)

@@ -204,7 +204,7 @@ public class SchedulerService {
 	
 	@Transactional
 	public void initHwpDownCnt() {
-		membersProfileRepository.initHwpDownCnt();
+		membersProfileRepository.initMemberProfileCnt();
 	}
 	
 	
