@@ -187,7 +187,7 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 			"(CASE WHEN C.profileType=0 THEN '미등록'" + 
 			"WHEN C.profileType=1 THEN '원장'" + 
 			"WHEN C.profileType=2 THEN '강사'" + 
-			"WHEN C.profileType=3 THEN '교시'" + 
+			"WHEN C.profileType=3 THEN '교사'" + 
 			"WHEN C.profileType=4 THEN '학무보'" + 
 			"WHEN C.profileType=5 THEN '학생'" + 
 			"WHEN C.profileType=6 THEN '기타' END) as nbCol1, " + 
@@ -208,5 +208,68 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
 	public List<MathContents> findByMathTypeInfoMathTypeDomainInAndQuesLevelInAndMathContentsIpsiWrongRatioBetweenAndMathContentsIpsiImpYearBetweenAndMathContentsIpsiImpMonthIn(
 			List<MathTypeDomain> mathTypeDomain, List<Integer> quesLevel, int startWrongRatio, int endWrongRatio, int startImpYear, int endImpYear, List<Integer> impMonth, Pageable pageable);
+	
+	@Query(value ="SELECT new com.numberbox.common.util.CustomTenFieldDto("
+			+ " CONCAT(YEAR(mc.sysCreateDate), '년 ', MONTH(mc.sysCreateDate), '월') as nbCol1, count(*) as nbCol2,"
+			+ " 0 as nbCol3, 0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10) "
+			+ " FROM MathContents as mc"
+			+ " where (mc.contentsClassify=1 or mc.contentsClassify=2) and mc.sysCreateDate >= '2022-11-01'"
+			+ " and mc.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER') "
+			+ " GROUP BY YEAR(mc.sysCreateDate), MONTH(mc.sysCreateDate) ORDER BY mc.sysCreateDate ASC", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticMathContentsUsageGroupBySysCreateDateMonth();
+
+	@Query(value ="SELECT new com.numberbox.common.util.CustomTenFieldDto(" + 
+			" COUNT(CASE WHEN B.profileType=0 THEN 1 END) as nbCol1," + 
+			" COUNT(CASE WHEN B.profileType=1 THEN 1 END) as nbCol2," + 
+			" COUNT(CASE WHEN B.profileType=2 THEN 1 END) as nbCol3," + 
+			" COUNT(CASE WHEN B.profileType=3 THEN 1 END) as nbCol4," + 
+			" COUNT(CASE WHEN B.profileType=4 THEN 1 END) as nbCol5," + 
+			" COUNT(CASE WHEN B.profileType=5 THEN 1 END) as nbCol6," + 
+			" COUNT(CASE WHEN B.profileType=6 THEN 1 END) as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10)"+
+			" FROM" + 
+			" MathContents as A," + 
+			" MembersProfile as B   " + 
+			" WHERE A.userUniqId=B.userUniqId " + 
+			" and A.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')"+
+			" and (A.contentsClassify=1 or A.contentsClassify=2)", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticContentsUsageByProfile();
+
+	@Query(value = "SELECT " + 
+			" new com.numberbox.common.util.CustomTenFieldDto("+
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=0 THEN '월요일' END) as nbCol1, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=1 THEN '화요일' END) as nbCol2, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=2 THEN '수요일' END) as nbCol3, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=3 THEN '목요일' END) as nbCol4, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=4 THEN '금요일' END) as nbCol5, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=5 THEN '토요일' END) as nbCol6, " + 
+			" COUNT(CASE WHEN WEEKDAY(sysCreateDate)=6 THEN '일요일' END) as nbCol7, " + 
+			" 0 as nbCol8, 0 as nbCol9, 0 as nbCol10) "+
+			" FROM MathContents "+
+			" where userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')"+
+			" and (contentsClassify=1 or contentsClassify=2)", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticMathContentsUsageByDayOfWeek();
+			
+	//공개/비공개 문제수
+	@Query(value = 
+			" SELECT " + 
+			" new com.numberbox.common.util.CustomTenFieldDto("+
+			" CASE" + 
+			"	WHEN a.contentsClassify=0 and a.svcPosbStts=0 THEN '미출시(자체)'" + 
+			"	WHEN a.contentsClassify=0 and a.svcPosbStts=2 THEN '검수완료(자체)'" + 
+			"	WHEN a.contentsClassify=0 and a.svcPosbStts=3 THEN '오류(자체)'" + 
+			"	WHEN a.contentsClassify=0 and a.svcPosbStts=1 THEN '출시(자체)'" + 
+			"   WHEN a.contentsClassify=1 and b.shareStts=0 THEN '사용자 공개'" + 
+			"   WHEN a.contentsClassify=1 and b.shareStts=1 THEN '사용자 비공개'" + 
+			"   WHEN a.contentsClassify=2 THEN '변형'" + 
+			"   WHEN a.contentsClassify=4 THEN '수능 및 모의고사'" + 
+			"   ELSE '기타'" + 
+			" END as nbCol1" + 
+			", COUNT(*) as nbCo2, 0 as nbCol3, 0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10)" + 
+			" FROM MathContents a LEFT OUTER JOIN MathContentsLicense b on a.contentsNo=b.contentsNo" + 
+			" where (a.userUniqId, a.contentsClassify) not in (SELECT mr.userUniqId, 1 FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')" + 
+			" group by a.contentsClassify, b.shareStts, a.svcPosbStts" + 
+			" order by a.contentsClassify", nativeQuery = false)
+	public List<CustomTenFieldDto> statisticMathContentsUsageByClassifySvcPosbSttsShareStts();
+	
 	
 }

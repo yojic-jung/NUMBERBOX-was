@@ -1,6 +1,7 @@
 package com.numberbox.security.handler;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,7 +47,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         Members members = user.getMembers();
         
-        membersRepository.initLastLoginDate(members.getUserUniqId());
+        membersRepository.initLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
         membersRepository.initHumanStatus(members.getUserUniqId());
         
         //매니저 권한 임시 구현

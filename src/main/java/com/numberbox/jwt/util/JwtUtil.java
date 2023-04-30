@@ -1,5 +1,6 @@
 package com.numberbox.jwt.util;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -119,7 +120,7 @@ public class JwtUtil {
 	      }
 		  
 	      //액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
-	      membersRepository.initLastLoginDate(userUniqId);
+	      membersRepository.initLastLoginDate(userUniqId, LocalDateTime.now());
 	      Date now = new Date();
 	      return Jwts.builder()
 		          .setClaims(claims)

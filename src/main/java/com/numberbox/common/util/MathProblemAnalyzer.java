@@ -29,7 +29,7 @@ public class MathProblemAnalyzer {
 	 
 	 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	 
-	 public String questionToChatGtp(String question, double temperature, int max_tokens, int top_p, double frequency_penalty, double presence_penalty) {
+	 public String questionToChatGtp(String question, double temperature, int max_tokens, double top_p, double frequency_penalty, double presence_penalty) {
 	    	  
 				try {
 					OkHttpClient client = new OkHttpClient().newBuilder().build();

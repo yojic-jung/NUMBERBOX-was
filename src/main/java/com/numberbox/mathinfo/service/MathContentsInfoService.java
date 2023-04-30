@@ -168,12 +168,50 @@ public class MathContentsInfoService {
 		return mathTypeRepository.findByMathTypeDomainUnitUniqNoInOrderByMathTypeDomainUnitUniqNoAscTypeOrderAsc(unitUniqNoList);
 	}
 	public static final Komoran instance = new Komoran(DEFAULT_MODEL.FULL);
-	 
-	public HashMap<String, Object> takeMathUnitListByKeyword(String contentsGrammer) throws IOException{
+	
+	
+	public HashMap<String, Object> takemathAiCompContents(String contentsGrammer) throws IOException{
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile mp = membersProfileRepository.findByUserUniqId(userUniqId);
+		if(mp.getAiContentsCnt() > 3) {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("saveSuccess", false);
+			map.put("existMsg", true);
+			map.put("serverMsg", "AI 유사 문제 제작 일일 사용 허용량 3회를 초과하였습니다.");
+			return map;
+		}
+		
+		membersProfileRepository.changeAiContentsCnt(userUniqId, mp.getAiContentsCnt()+1);
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		String question = "한국 수학 교육과정에서 {" + contentsGrammer + "}와 가장 관련된 단원명은 무엇인가요?";
-		String answerStr = mathProblemAnalyzer.questionToChatGtp(question, 0.2, 100, 1, 0.0, 0.0);
+		String question = "한국의 수학 중등 3학년의 제곱근과 실수단원에서 \"sqrt{x}이하의 자연수의 개수 또는 자연수 구하기\"와 관련된 난이도 상 문제를 5개 만들어줘";
+		String answerStr = mathProblemAnalyzer.questionToChatGtp(question, 0.9, 1000, 0.8, 0.3, 0.0);
+        
+	    map.put("answerStr", answerStr);
+		return map;
+	}
+	
+	public HashMap<String, Object> takeMathUnitListByKeyword(String contentsGrammer) throws IOException{
+		Members members = StaticSecurityUtil.getMembers();
+		UUID userUniqId = members.getUserUniqId();
+		MembersProfile mp = membersProfileRepository.findByUserUniqId(userUniqId);
+		if(mp.getUnitMappingCnt() > 100) {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("saveSuccess", false);
+			map.put("existMsg", true);
+			map.put("serverMsg", "AI 단원 매핑 일일 사용 허용량은 100회를 모두 사용하셨습니다.");
+			return map;
+		}
+		
+		membersProfileRepository.changeUnitMappingCnt(userUniqId, mp.getUnitMappingCnt()+1);
+		
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		String question = "한국 수학 교육과정에서 {" + contentsGrammer + "}와 가장 관련된 단원명은 무엇인가요? 단원명만 간결하게 말해주세요.";
+		String answerStr = mathProblemAnalyzer.questionToChatGtp(question, 0.8, 60, 1, 0.0, 0.0);
 		
         KomoranResult analyzeResultList = instance.analyze(answerStr);
         
@@ -1264,6 +1302,7 @@ public class MathContentsInfoService {
 	}
 	
 	public HashMap<String, Object> mathContentsStatistic(){
+		
 		HashMap<String, Object> map = new HashMap<>();
 		List<CustomTenFieldDto> list = mathContentsRepository.mathContentsStatistic();
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "나이", "문제 수", null, null, null, null, null, null, null);
@@ -1286,7 +1325,37 @@ public class MathContentsInfoService {
 			newList.add(dto);
 		}
 		newList.add(0, customHeaderDto);
+		
+		List<CustomTenFieldDto> list2 = mathContentsRepository.statisticMathContentsUsageGroupBySysCreateDateMonth();
+		CustomTenFieldDto customHeaderDto2 = new CustomTenFieldDto(list2.get(0).getNbCol1(), list2.get(1).getNbCol1(), 
+				list2.get(2).getNbCol1(), list2.get(3).getNbCol1(), list2.get(4).getNbCol1(), list2.get(5).getNbCol1(), 
+				list2.size()>6 ? list2.get(6).getNbCol1() : null, list2.size()>7 ? list2.get(7).getNbCol1() : null,
+				list2.size()>8 ? list2.get(8).getNbCol1() : null, list2.size()>9 ? list2.get(9).getNbCol1() : null);
+		CustomTenFieldDto customBodyDto2 = new CustomTenFieldDto(list2.get(0).getNbCol2(), list2.get(1).getNbCol2(), 
+				list2.get(2).getNbCol2(), list2.get(3).getNbCol2(), list2.get(4).getNbCol2(), list2.get(5).getNbCol2(), 
+				list2.size()>6 ? list2.get(6).getNbCol2() : null, list2.size()>7 ? list2.get(7).getNbCol2() : null,
+				list2.size()>8 ? list2.get(8).getNbCol2() : null, list2.size()>9 ? list2.get(9).getNbCol2() : null);
+		List<CustomTenFieldDto> newList2 = new ArrayList<>();
+		newList2.add(0, customBodyDto2);
+		newList2.add(0, customHeaderDto2);
+		
+		List<CustomTenFieldDto> list3 = mathContentsRepository.statisticContentsUsageByProfile();
+		CustomTenFieldDto customHeaderDto3 = new CustomTenFieldDto("미등록", "원장", "강사", "교사","학부모","학생", "기타", null, null,null);
+		list3.add(0, customHeaderDto3);
+		
+		List<CustomTenFieldDto> list4 = mathContentsRepository.statisticMathContentsUsageByDayOfWeek();
+		CustomTenFieldDto customHeaderDto4 = new CustomTenFieldDto("월요일", "화요일", "수요일", "목요일","금요일","토요일", "일요일", null, null,null);
+		list4.add(0, customHeaderDto4);
+		
+		List<CustomTenFieldDto> list5 = mathContentsRepository.statisticMathContentsUsageByClassifySvcPosbSttsShareStts();
+		CustomTenFieldDto customHeaderDto5 = new CustomTenFieldDto("문제구분", "문제수", null, null,null,null, null, null, null,null);
+		list5.add(0, customHeaderDto5);
+		
 		map.put("memberMathContentsCnt", newList);
+		map.put("mathContentsCntByMonthly", newList2);
+		map.put("mathContentsCntByProfile", list3);
+		map.put("mathContentsCntByWeekday", list4);
+		map.put("mathContentsCntByShareStts", list5);
 		return map;
 	}
 	

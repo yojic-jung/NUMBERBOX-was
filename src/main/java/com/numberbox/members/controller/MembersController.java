@@ -186,12 +186,6 @@ public class MembersController {
 		return map;
 	}
 	
-	@GetMapping("/tmpPasswordChange")
-	public String tmpPasswordChange() {
-		membersService.tmpPasswordChange();
-		return "";
-	}
-	
 	@GetMapping(value="/certifications/{imp_uid}")
 	public Object certifications(@PathVariable String imp_uid, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -317,27 +311,33 @@ public class MembersController {
 		List<CustomTenFieldDto> membersInfo = membersService.lastSignupUserLimit();
 		
 		//날짜별 가입자 수 
-		List<CustomTenFieldDto> membesrCntBySignupDate = membersService.statisticMembersCntBySignupDate();
+		List<CustomTenFieldDto> membersCntBySignupDate = membersService.statisticMembersCntBySignupDate();
 		//프로필별 가입자수
-		List<CustomTenFieldDto> membesrCntByProfile = membersService.statisticMembersCntByProfileType();
+		List<CustomTenFieldDto> membersCntByProfile = membersService.statisticMembersCntByProfileType();
 		//시간대별 가입자 수 
-		List<CustomTenFieldDto> membesrCntByHourPeriod = membersService.statisticMembersCntGrouBySignupDateHour();
+		List<CustomTenFieldDto> membersCntByHourPeriod = membersService.statisticMembersCntGrouBySignupDateHour();
 		//프로필에 따른 시간대별 가입자수
-		List<CustomTenFieldDto> membesrCntByProAndHourPeriod = membersService.statisticMembersByHourGrouByProfileType();
+		List<CustomTenFieldDto> membersCntByProAndHourPeriod = membersService.statisticMembersByHourGrouByProfileType();
 		//나이대별 회원가입자 수
 		List<CustomTenFieldDto> membersCntByAge = membersService.statisticMembersByAge();
 		//일일 접속자 통계
 		List<CustomTenFieldDto> dailyLoginUserCnt = membersService.statisticMembersCntByLoginDate();
+		//월별 접속자 통계
+		List<CustomTenFieldDto> monthlyLoginUserCnt = membersService.statisticMembersCntByMonthly();
+		//월별 가입자 재로그인 비율
+		List<CustomTenFieldDto> monthlyMembersCnt =membersService.monthlyMembersCnt();
 		//월별 가입자 재로그인 비율
 		List<CustomTenFieldDto> reLoginRatioPerMonth =membersService.reLoginRatioPerMonth();
 		
 		map.put("membersInfo", membersInfo);
-		map.put("membesrCntBySignupDate", membesrCntBySignupDate);
-		map.put("membesrCntByProfile", membesrCntByProfile);
-		map.put("membesrCntByHourPeriod", membesrCntByHourPeriod);
-		map.put("membesrCntByProAndHourPeriod", membesrCntByProAndHourPeriod);
+		map.put("membesrCntBySignupDate", membersCntBySignupDate);
+		map.put("membesrCntByProfile", membersCntByProfile);
+		map.put("membesrCntByHourPeriod", membersCntByHourPeriod);
+		map.put("membesrCntByProAndHourPeriod", membersCntByProAndHourPeriod);
 		map.put("membersCntByAge", membersCntByAge);
+		map.put("monthlyMembersCnt", monthlyMembersCnt);
 		map.put("dailyLoginUserCnt", dailyLoginUserCnt);
+		map.put("monthlyLoginUserCnt", monthlyLoginUserCnt);
 		map.put("reLoginRatioPerMonth", reLoginRatioPerMonth);
 		return map;
 	}

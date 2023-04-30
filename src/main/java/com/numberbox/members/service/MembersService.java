@@ -16,9 +16,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -174,7 +176,7 @@ public class MembersService {
 			}
 			
 			//로그인 시간 및 휴먼상태 초기화
-			membersRepository.initLastLoginDate(members.getUserUniqId());
+			membersRepository.initLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
 	        membersRepository.initHumanStatus(members.getUserUniqId());
 			map.put("isSuccess", "loginSuccess");
 		}else {
@@ -416,11 +418,6 @@ public class MembersService {
 		return map;
 	}
 
-	public void tmpPasswordChange() {
-		Members members = membersRepository.findByEmail("wogus@naver.com");
-		membersRepository.changePassword(members.getUserUniqId(), bCryptPasswordEncoder.encode("snack12!"));
-	}
-	
     
 	public HashMap<String, Object> findEmail(MembersDto memberDto){
 		HashMap<String, Object> map = new HashMap<>();
@@ -736,26 +733,71 @@ public class MembersService {
 		return newList;
 	}
 	
+	//월별 가입자 접속자 통계
+	public List<CustomTenFieldDto> monthlyMembersCnt(){
+		//월별 가입자
+		List<CustomTenFieldDto> list = membersRepository.countMembersGroupBySysCreateDateMonth();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto(list.get(0).getNbCol1(), list.get(1).getNbCol1(), 
+				list.get(2).getNbCol1(), list.get(3).getNbCol1(), list.get(4).getNbCol1(), list.get(5).getNbCol1(), 
+				list.size()>6 ? list.get(6).getNbCol1() : null, list.size()>7 ? list.get(7).getNbCol1() : null,
+				list.size()>8 ? list.get(8).getNbCol1() : null, list.size()>9 ? list.get(9).getNbCol1() : null);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(list.get(0).getNbCol2(), list.get(1).getNbCol2(), 
+				list.get(2).getNbCol2(), list.get(3).getNbCol2(), list.get(4).getNbCol2(), list.get(5).getNbCol2(), 
+				list.size()>6 ? list.get(6).getNbCol2() : null, list.size()>7 ? list.get(7).getNbCol2() : null,
+				list.size()>8 ? list.get(8).getNbCol2() : null, list.size()>9 ? list.get(9).getNbCol2() : null);
+		List<CustomTenFieldDto> list2 = new ArrayList<>();
+		list2.add(0, customBodyDto);
+		list2.add(0, customHeaderDto);
+		return list2;
+	}
+	
+	//일일 접속자 통계
+	public List<CustomTenFieldDto> statisticMembersCntByMonthly(){
+		
+		StringBuffer queryString = new StringBuffer(); 
+		queryString.append("SELECT DATE_FORMAT(A.login_time,'%Y년 %m월') as nbCol1, count(*) as nbCol2,");
+		queryString.append(" 0 as nbCol3,0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10" ); 
+		queryString.append(" FROM ");
+		queryString.append(" (SELECT " );
+		queryString.append(" user_uniq_id, DATE_FORMAT(login_time,'%Y-%m-%d') as login_time" );
+		queryString.append(" FROM access_log_info");
+		queryString.append(" GROUP BY DATE_FORMAT(login_time,'%Y-%m-%d'), user_uniq_id) as A");
+		queryString.append(" where A.login_time>='2023-04-01'" );
+		queryString.append(" and A.user_uniq_id not in (SELECT mr.user_uniq_id FROM members_role mr where mr.role_name='ADMIN' or mr.role_name='MANAGER')" );
+		queryString.append(" GROUP BY DATE_FORMAT(A.login_time,'%Y-%m')" );
+		queryString.append(" ORDER BY DATE_FORMAT(A.login_time,'%Y-%m') desc");
+		Query query  = (Query) entityManager.createNativeQuery(queryString.toString());
+		JpaResultMapper result = new JpaResultMapper();
+		List<CustomTenFieldDto> list = result.list(query, CustomTenFieldDto.class);
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto(
+				list.size()!=0 ? list.get(0).getNbCol1() : null, list.size()>1 ? list.get(1).getNbCol1() : null, 
+				list.size()>2 ? list.get(2).getNbCol1() : null, list.size()>3 ? list.get(3).getNbCol1() : null,
+				list.size()>4 ? list.get(4).getNbCol1() : null, list.size()>5 ? list.get(5).getNbCol1() : null, 
+				list.size()>6 ? list.get(6).getNbCol1() : null, list.size()>7 ? list.get(7).getNbCol1() : null,
+				list.size()>8 ? list.get(8).getNbCol1() : null, list.size()>9 ? list.get(9).getNbCol1() : null);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(
+				list.size()!=0 ? list.get(0).getNbCol2() : null, list.size()>1 ? list.get(1).getNbCol2() : null, 
+				list.size()>2 ? list.get(2).getNbCol2() : null, list.size()>3 ? list.get(3).getNbCol2() : null,
+				list.size()>4 ? list.get(4).getNbCol2() : null, list.size()>5 ? list.get(5).getNbCol2() : null, 
+				list.size()>6 ? list.get(6).getNbCol2() : null, list.size()>7 ? list.get(7).getNbCol2() : null,
+				list.size()>8 ? list.get(8).getNbCol2() : null, list.size()>9 ? list.get(9).getNbCol2() : null);
+		List<CustomTenFieldDto> list2 = new ArrayList<>();
+		list2.add(0, customBodyDto);
+		list2.add(0, customHeaderDto);
+		return list2;
+	}
+	
 	
 	//일일 접속자 통계
 	public List<CustomTenFieldDto> statisticMembersCntByLoginDate(){
-		List<String> roleNameList = new ArrayList<>();
-		roleNameList.add("ADMIN");
-		roleNameList.add("MANAGER");
-		List<MembersRole> membersRoleList = membersRoleRepository.findByRoleNameIn(roleNameList);
-		List<UUID> uuidList = new ArrayList<>();
-		for(MembersRole membersRole : membersRoleList) {
-			UUID uuid = membersRole.getUserUniqId();
-			uuidList.add(uuid);
-		}
 		//최근 한달 접속자
-		int lastOneMonthCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
+		int lastOneMonthCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusMonths(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX));
 		//최근 일주일 접속자
-		int lastOneWeekCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
+		int lastOneWeekCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusWeeks(1).with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX));
 		//어제 접속자
-		int yesterDayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), LocalDateTime.now().minusDays(1).with(LocalTime.MAX), uuidList);
+		int yesterDayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().minusDays(1).with(LocalTime.MIN), LocalDateTime.now().minusDays(1).with(LocalTime.MAX));
 		//오늘 접속자
-		int todayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX), uuidList);
+		int todayCnt = accessLogInfoRepository.countDistinctUserUniqIdByLoginTimeBetweenAndUserUniqIdNotIn(LocalDateTime.now().with(LocalTime.MIN), LocalDateTime.now().with(LocalTime.MAX));
 		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("최근 한달", "최근 일주일","어제","오늘", null, null, null,null, null, null);
 		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(lastOneMonthCnt, lastOneWeekCnt, yesterDayCnt, todayCnt, null, null, null,null, null, null);
@@ -789,7 +831,7 @@ public class MembersService {
 		List<CustomTenFieldDto> list = new ArrayList<>();
 		while(compareDate.plusMonths(1).isBefore(currentDate)) {
 			if(compareDate.plusMonths(1).isAfter(productDate)) {	//출시 이후에 날짜에 대하여 통계
-		        String compareDateStr = compareDate.format(DateTimeFormatter.ofPattern("yyyy년-MM월"));
+		        String compareDateStr = compareDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
 				Long reLoginRatio = membersRepository.reLoginRatioPerMonth(compareDate.plusMonths(1), compareDate, uuidList);
 				idx++;
 				switch(idx) {

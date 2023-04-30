@@ -38,8 +38,18 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
-	@Query(value = "UPDATE MembersProfile m set m.hwpDownCnt =0", nativeQuery = false)
-	public int initHwpDownCnt();
+	@Query(value = "UPDATE MembersProfile m set m.unitMappingCnt =:unitMappingCnt where m.userUniqId =:uuid", nativeQuery = false)
+	public int changeUnitMappingCnt(@Param("uuid") UUID uuid, @Param("unitMappingCnt") int unitMappingCnt);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MembersProfile m set m.aiContentsCnt =:aiContentsCnt where m.userUniqId =:uuid", nativeQuery = false)
+	public int changeAiContentsCnt(@Param("uuid") UUID uuid, @Param("aiContentsCnt") int aiContentsCnt);
+	
+	@Transactional
+	@Modifying // select 문이 아님을 나타낸다
+	@Query(value = "UPDATE MembersProfile m set m.hwpDownCnt =0, m.unitMappingCnt =0, m.aiContentsCnt =0", nativeQuery = false)
+	public int initMemberProfileCnt();
 	
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다

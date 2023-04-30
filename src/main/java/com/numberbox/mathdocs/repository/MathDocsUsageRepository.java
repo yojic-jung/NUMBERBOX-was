@@ -74,5 +74,13 @@ public interface MathDocsUsageRepository  extends JpaRepository <MathDocsUsage, 
 			"and A.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER')"+
 			"GROUP BY B.profileType", nativeQuery = false)
 	public List<CustomTenFieldDto> statisticMathDocsUsageByProfileDayOfWeek();
-		
+	
+	@Query(value ="SELECT new com.numberbox.common.util.CustomTenFieldDto("
+			+ " CONCAT(YEAR(mdu.sysCreateDate), '년 ', MONTH(mdu.sysCreateDate), '월') as nbCol1, count(*) as nbCol2,"
+			+ " 0 as nbCol3, 0 as nbCol4, 0 as nbCol5, 0 as nbCol6, 0 as nbCol7, 0 as nbCol8, 0 as nbCol9, 0 as nbCol10) "
+			+ " FROM MathDocsUsage as mdu"
+			+ " where mdu.userUniqId not in (SELECT mr.userUniqId FROM MembersRole mr where mr.roleName='ADMIN' or mr.roleName='MANAGER') "
+			+ " Group by YEAR(mdu.sysCreateDate), MONTH(mdu.sysCreateDate) order by mdu.sysCreateDate ASC", nativeQuery = false)
+	public List<CustomTenFieldDto> countMathDocsUsageGroupBySysCreateDateMonth();
+
 }	

@@ -520,5 +520,20 @@ public class MathDocsSevice {
 		return list;
 	}
 	
+	public List<CustomTenFieldDto> countMathDocsUsageGroupBySysCreateDateMonth(){
+		List<CustomTenFieldDto> list = mathDocsUsageRepository.countMathDocsUsageGroupBySysCreateDateMonth();
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto(list.get(0).getNbCol1(), list.get(1).getNbCol1(), 
+				list.get(2).getNbCol1(), list.get(3).getNbCol1(), list.get(4).getNbCol1(), list.get(5).getNbCol1(), 
+				list.size()>6 ? list.get(6).getNbCol1() : null, list.size()>7 ? list.get(7).getNbCol1() : null,
+				list.size()>8 ? list.get(8).getNbCol1() : null, list.size()>9 ? list.get(9).getNbCol1() : null);
+		CustomTenFieldDto customBodyDto = new CustomTenFieldDto(list.get(0).getNbCol2(), list.get(1).getNbCol2(), 
+				list.get(2).getNbCol2(), list.get(3).getNbCol2(), list.get(4).getNbCol2(), list.get(5).getNbCol2(), 
+				list.size()>6 ? list.get(6).getNbCol2() : null, list.size()>7 ? list.get(7).getNbCol2() : null,
+				list.size()>8 ? list.get(8).getNbCol2() : null, list.size()>9 ? list.get(9).getNbCol2() : null);
+		List<CustomTenFieldDto> list2 = new ArrayList<>();
+		list2.add(0, customBodyDto);
+		list2.add(0, customHeaderDto);
+		return list2;
+	}
 	
 }

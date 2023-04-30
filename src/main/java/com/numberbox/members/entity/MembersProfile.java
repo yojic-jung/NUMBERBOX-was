@@ -51,4 +51,10 @@ public class MembersProfile implements Serializable {	//조인시 pk로 조인 �
 	
 	@Column(length = 1, nullable = false, insertable=false, updatable=false)
 	public int hwpDownCnt;
+	
+	@Column(length = 1, nullable = false, insertable=false, updatable=false)
+	public int unitMappingCnt;
+	
+	@Column(length = 1, nullable = false, insertable=false, updatable=false)
+	public int aiContentsCnt;
 }

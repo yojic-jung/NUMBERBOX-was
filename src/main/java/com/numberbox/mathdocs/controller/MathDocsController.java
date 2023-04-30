@@ -102,11 +102,13 @@ public class MathDocsController {
 		List<CustomTenFieldDto> list2 = mathDocsSevice.mathDocsUsageStatisticByProfile();
 		List<CustomTenFieldDto> list3 = mathDocsSevice.mathDocsUsageStatisticByProfileAndDay();
 		List<CustomTenFieldDto> list4 = mathDocsSevice.mathDocsUsageStatisticByDayOfWeek();
+		List<CustomTenFieldDto> list5 = mathDocsSevice.countMathDocsUsageGroupBySysCreateDateMonth();
 		
 		map.put("docsUsage", list);
 		map.put("docsUsageByProfile", list2);
 		map.put("docsUsageByProfileAndDay", list3);
 		map.put("docsUsageByDay", list4);
+		map.put("docsUsageByMonth", list5);
 		return map;
 	}
 	
