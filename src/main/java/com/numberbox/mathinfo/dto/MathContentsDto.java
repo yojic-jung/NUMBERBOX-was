@@ -12,7 +12,6 @@ import com.numberbox.mathinfo.entity.MathContentsComp;
 import com.numberbox.mathinfo.entity.MathContentsIpsi;
 import com.numberbox.mathinfo.entity.MathContentsLicense;
 import com.numberbox.mathinfo.entity.MathTypeInfo;
-import com.numberbox.mathinfo.entity.MathUnitInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +31,9 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	
 	int contentsNo;
 	int unitUniqNo;
+	
+	String unitUniqNoStr;
+	
 	int typeNo;
 	@JsonIgnore
 	UUID userUniqId;
@@ -83,6 +85,10 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int entLicPrice;
 	int shareStts;
 	
+	//과목, 중단원 검색 필드
+	String subject;
+	String secUnit;
+	
 	// ipsi 테이블 필드값
 	int mathContentsIpsiSeqNo;
 	int manageIns;
@@ -92,6 +98,9 @@ public class MathContentsDto implements Comparable<MathContentsDto>{
 	int paperType;
 	int oddQuesNum;
 	int evenQuesNum;
+	
+	int curPageNum;
+	int pageVolume;
 	
 	List<String> imgTagSrc;
 	

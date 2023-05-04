@@ -18,6 +18,8 @@ import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,9 +60,9 @@ public class MathResourceService {
 	}
 	
 	@Transactional
-	public List<MathResourceDto> takeResource(int mainCateNo, String path) {
-		List<MathResource> resourceList = mathResourceRepository.findDistinctByMathResourceCateMainCateNo(mainCateNo);
-		Collections.sort(resourceList, (a, b) -> b.getDownCnt() - a.getDownCnt());
+	public HashMap<String, Object> takeResource(int mainCateNo, String path, int curPageNum, int pageVolume) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Page<MathResource> resourceList = mathResourceRepository.findDistinctByMathResourceCateMainCateNo(mainCateNo, PageRequest.of(curPageNum, pageVolume));
 		List<MathResourceDto> mathResourceDtoList = new ArrayList<>();
 		for(MathResource resource : resourceList) {
 			MathResourceDto resourceDto = modelMapper.map(resource, MathResourceDto.class);
@@ -76,8 +78,10 @@ public class MathResourceService {
 			
 			mathResourceDtoList.add(resourceDto);
 		}
-		
-		return mathResourceDtoList;
+		Collections.sort(mathResourceDtoList, (a, b) -> b.getDownCnt() - a.getDownCnt());
+		map.put("resourceList", mathResourceDtoList);
+		map.put("totalPageCnt", resourceList.getTotalPages());
+		return map;
 	}
 	
 	@Transactional
@@ -101,10 +105,12 @@ public class MathResourceService {
 	}
 	
 	@Transactional
-	public List<MathResourceDto> takeMyResource() throws FileNotFoundException, IOException {
+	public HashMap<String, Object> takeMyResource(int curPageNum, int pageVolume) throws FileNotFoundException, IOException {
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
-		List<MathResource> resourceList = mathResourceRepository.findByUserUniqIdOrderBySysCreateDateDesc(userUniqId);
+		Page<MathResource> resourceList = mathResourceRepository.findByUserUniqIdOrderBySysCreateDateDesc(userUniqId, PageRequest.of(curPageNum, pageVolume));
+		map.put("totalPageCnt", resourceList.getTotalPages());
 		List<MathResourceDto> mathResourceDtoList = new ArrayList<>();
 		for(MathResource resource : resourceList) {
 			MathResourceDto resourceDto = modelMapper.map(resource, MathResourceDto.class);
@@ -118,8 +124,8 @@ public class MathResourceService {
 			resourceDto.setMathResourceCate(mathResourceCateDtoList);
 			mathResourceDtoList.add(resourceDto);
 		}
-		
-		return mathResourceDtoList;
+		map.put("myResourceList", mathResourceDtoList);
+		return map;
 	}
 	
 	@Transactional

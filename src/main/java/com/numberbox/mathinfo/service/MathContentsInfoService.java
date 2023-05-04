@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,6 +151,15 @@ public class MathContentsInfoService {
 			return mathUnitRepository.selectThrUnitInfo();
 		}
 	}
+	
+	public List<MathUnitInfo> takeUnitInfoList(String col, String value){
+		if(col.equals("subject")) {
+			return mathUnitRepository.findBySubject(value);
+		}else {
+			return mathUnitRepository.findBySecUnit(value);
+		}
+	}
+	
 	
 	public List<MathTypeInfo> takeMathTypeInfo(String unitUniqNo){
 		return mathTypeRepository.findByUnitUniqNoOrderByTypeOrderAsc(unitUniqNo);
@@ -540,14 +551,27 @@ public class MathContentsInfoService {
 		//	(mathContentsDto.getUnitUniqNo(), 1, 0, mathContentsDto.getUnitUniqNo(), 1, 1, 1);
 		List<ContentsListModel> list;
 		if(contentsNo != null) {	// 문제 번호 검색하는 경우
-			if(contentsNo.equals("allUserContents")) {	//일반 사용자 모든 문제 검색
-				list = mathContentsRepository.findAllUserContentsCustom();
-			}else{		//문제 번호로 검색
-				list = mathContentsRepository.findByContentsNoCustom(Integer.parseInt(contentsNo));
-			}
-			
+			//문제 번호로 검색
+			list = mathContentsRepository.findByContentsNoCustom(Integer.parseInt(contentsNo));
 		}else {						// 단원으로 검색하는 경우
-			list = mathContentsRepository.findByUnitUniqNo(mathContentsDto.getUnitUniqNo());
+			List<Integer> uniqNoList = new ArrayList<>();
+			if(mathContentsDto.getUnitUniqNoStr() != null) {
+				String [] unitUniqNoArr = mathContentsDto.getUnitUniqNoStr().split("-");
+				int strtUnitUniqNo = Integer.parseInt(unitUniqNoArr[0]);
+				int endUnitUniqNo = Integer.parseInt(unitUniqNoArr[1]);
+				List<MathUnitInfo> unitInfoList = mathUnitRepository.findByUnitUniqNoBetween(strtUnitUniqNo, endUnitUniqNo);
+				for(MathUnitInfo mathUnitInfo : unitInfoList) {
+					uniqNoList.add(mathUnitInfo.getUnitUniqNo());
+				}
+			}else {
+				uniqNoList.add(mathContentsDto.getUnitUniqNo());
+			}
+			Page<ContentsListModel> contentsPage = mathContentsRepository.findByUnitUniqNoIn(uniqNoList, PageRequest.of(mathContentsDto.getCurPageNum(), mathContentsDto.getPageVolume()));
+			list = new ArrayList<>();
+			for(ContentsListModel model : contentsPage) {
+				list.add(model);
+			}
+			map.put("totalPageCnt", contentsPage.getTotalPages());
 		}
 		
 		
@@ -599,7 +623,8 @@ public class MathContentsInfoService {
 	
 	
 	@Transactional
-	public List<MathContentsModel> takeWorkContentsList(MathContentsDto mathContentsDto, String contentsNo) {
+	public HashMap<String, Object> takeWorkContentsList(MathContentsDto mathContentsDto, String contentsNo) {
+		HashMap<String, Object> map = new HashMap<>();
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
@@ -614,11 +639,17 @@ public class MathContentsInfoService {
 			MathContents mathContents =  mathContentsRepository.findByContentsNo(Integer.parseInt(contentsNo));
 			list.add(mathContents);
 		}else {
+			Page<MathContents> pageList;
 			if(isAdmin) {
-				list =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0);
+				pageList =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0, PageRequest.of(mathContentsDto.getCurPageNum(), mathContentsDto.getPageVolume()));
 			}else {
-				list =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0);
+				pageList =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0, PageRequest.of(mathContentsDto.getCurPageNum(), mathContentsDto.getPageVolume()));
 			}
+			for(MathContents mathContents : pageList) {
+				list.add(mathContents);
+			}
+			map.put("totalContentsCnt", pageList.getTotalElements());
+			map.put("totalPageCnt", pageList.getTotalPages());
 		}
 		
 		
@@ -636,7 +667,9 @@ public class MathContentsInfoService {
 			mathContentsModel.setMathTypeInfo(mathTypeInfoDto);
 			dtoList.add(mathContentsModel);
 		}
-		return dtoList;
+		
+		map.put("mathContents", dtoList);
+		return map;
 	}
 	
 	
@@ -794,22 +827,24 @@ public class MathContentsInfoService {
 	}
 	
 	@Transactional
-	public HashMap<String, Object> takeMyContentsList(int userNo){	//나의 제작 문제 또는 다른 사용자의 제작문제 보기(프로필)
+	public HashMap<String, Object> takeMyContentsList(int userNo, int curPageNum, int pageVolume){	//나의 제작 문제 또는 다른 사용자의 제작문제 보기(프로필)
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
-		List<MathContents> list;
+		Page<MathContents> list;
 		if(userNo==0) {		// userNo가 0인 경우 자기 자신 문제 조회
 			List<Integer> classifyList = new ArrayList<>();
 			classifyList.add(0);
 			classifyList.add(3);
 			classifyList.add(4);
-			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(userUniqId, classifyList);
+			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(userUniqId, classifyList, PageRequest.of(curPageNum, pageVolume) );
 		}else {					// userNo가 있으면 userNo로 상대방 프로필 조회
 			MembersProfile profile= membersProfileRepository.findByUserNo(userNo);
 			list = mathContentsRepository.findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc
-					(profile.getUserUniqId(), 2, profile.getUserUniqId(), 1, 1);
+					(profile.getUserUniqId(), 2, profile.getUserUniqId(), 1, 1,  PageRequest.of(curPageNum, pageVolume));
 		}
+		
+		map.put("totalPageCnt", list.getTotalPages());
 		
 		List<Integer> contentsNoList = new ArrayList<>();
 		List<MathContentsModel> dtoList= new ArrayList<>();
@@ -865,11 +900,14 @@ public class MathContentsInfoService {
 	
 	
 	@Transactional
-	public HashMap<String, Object> takeMyRepo(){
+	public HashMap<String, Object> takeMyRepo(int curPageNum, int pageVolume){
 		HashMap<String, Object> map = new HashMap<>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
-		List<MathConRepoInfo> repoList = mathConRepoInfoRepository.findByMathConRepoDomainUserUniqId(userUniqId);
+		Page<MathConRepoInfo> repoList = mathConRepoInfoRepository.findByMathConRepoDomainUserUniqId(userUniqId, PageRequest.of(curPageNum, pageVolume));
+		
+		map.put("totalPageCnt", repoList.getTotalPages());
+		
 		List<Integer> contentsNoList = new ArrayList<>();
 		for(MathConRepoInfo mathConRepo : repoList) {
 			contentsNoList.add(mathConRepo.getMathConRepoDomain().getContentsNo());
@@ -1378,12 +1416,12 @@ public class MathContentsInfoService {
 	}
 	
 	@Transactional
-	public HashMap<String, Object> findByMathContentsIpsiImpYear(int impYear, int impMonth){
-		List<MathContents> list;
+	public HashMap<String, Object> findByMathContentsIpsiImpYear(int impYear, int impMonth, int curPageNum, int pageVolume){
+		Page<MathContents> list;
 		if(impMonth == 0) {
-			list = mathContentsRepository.findByMathContentsIpsiImpYear(impYear);
+			list = mathContentsRepository.findByMathContentsIpsiImpYear(impYear, PageRequest.of(curPageNum, pageVolume));
 		}else {
-			list = mathContentsRepository.findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(impYear, impMonth);
+			list = mathContentsRepository.findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(impYear, impMonth, PageRequest.of(curPageNum, pageVolume));
 		}
 		
 		List<MathContentsModel> dtoList= new ArrayList<>();
@@ -1403,6 +1441,8 @@ public class MathContentsInfoService {
 			dtoList.add(mathContentsModel);
 		}
 		HashMap<String, Object> map = new HashMap<>();
+		map.put("totalContentsCnt", list.getTotalElements());
+		map.put("totalPageCnt", list.getTotalPages());
 		map.put("isSuccess", true);
 		map.put("mathContentsList", dtoList);
 		return map;

@@ -765,7 +765,7 @@ public class MembersService {
 		queryString.append(" where A.login_time>='2023-04-01'" );
 		queryString.append(" and A.user_uniq_id not in (SELECT mr.user_uniq_id FROM members_role mr where mr.role_name='ADMIN' or mr.role_name='MANAGER')" );
 		queryString.append(" GROUP BY DATE_FORMAT(A.login_time,'%Y-%m')" );
-		queryString.append(" ORDER BY DATE_FORMAT(A.login_time,'%Y-%m') desc");
+		queryString.append(" ORDER BY DATE_FORMAT(A.login_time,'%Y-%m') ASC");
 		Query query  = (Query) entityManager.createNativeQuery(queryString.toString());
 		JpaResultMapper result = new JpaResultMapper();
 		List<CustomTenFieldDto> list = result.list(query, CustomTenFieldDto.class);

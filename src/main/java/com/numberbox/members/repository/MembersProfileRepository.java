@@ -57,7 +57,7 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	public int registerProfileType(@Param("uuid") UUID uuid, @Param("profileType") int profileType);
 
 	@Transactional
-	@Modifying // select 문이 아님을 나타낸다(mysql에서는 안돌아감, mariaDB에서는 돌아감)
+	@Modifying // select 문이 아님을 나타낸다(로컬 mysql에서는 안돌아감, 서버 mariaDB에서는 돌아감)
 	@Query(value = "UPDATE MembersProfile m "
 			+ "SET m.profileType=6 where m.userUniqId IN "
 			+ "(SELECT A.userUniqId FROM MembersProfile A INNER JOIN MembersPrivate B on A.userUniqId=B.userUniqId "
@@ -65,7 +65,7 @@ public interface MembersProfileRepository extends JpaRepository <MembersProfile,
 	public int updateTeenagersProfileTypeToEtc(@Param("birthYear") String birthYear);
 	
 	@Transactional
-	@Modifying // select 문이 아님을 나타낸다(mysql에서는 안돌아감, mariaDB에서는 돌아감)
+	@Modifying // select 문이 아님을 나타낸다(로컬 mysql에서는 안돌아감, 서버 mariaDB에서는 돌아감)
 	@Query(value = "UPDATE MembersProfile m "
 			+ "SET m.profileType=5 where m.userUniqId IN "
 			+ "(SELECT A.userUniqId FROM MembersProfile A INNER JOIN MembersPrivate B on A.userUniqId=B.userUniqId "

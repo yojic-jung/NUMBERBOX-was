@@ -252,4 +252,10 @@ public class SchedulerService {
 		membersProfileRepository.updateTeenagersProfileTypeToStudent(birthYearStr, nowYearStr);
 	}
 	
+	//사용자 제작문제로 만든 학습지 삭제
+	@Transactional
+	public void mathDocsDel() {
+		mathDocsPaperRepository.deleteByDocsErrSttsAndSysCreateDateLessThan(3, LocalDateTime.now().minusDays(1));
+	}
+	
 }

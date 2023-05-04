@@ -3,6 +3,7 @@ package com.numberbox.mathinfo.repository;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,20 +31,20 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	public int contentsMoveFromTo(@Param("fromUnitUniqNo")int fromUnitUniqNo, @Param("fromTypeNo")int fromTypeNo, @Param("toUnitUniqNo")int toUnitUniqNo, @Param("toTypeNo")int toTypeNo);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
-	public List<MathContents> findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, int contentsClassify);
+	public Page<MathContents> findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, int contentsClassify, Pageable page);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo", "mathUnitInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
 	public List<MathContents> findByUnitUniqNoAndAndTypeNoAndContentsClassifyAndSvcPosbSttsOrderBySysCreateDateDesc(int unitUniqNo, int typeNo, int contentsClassify, int svcPosbStts);
 	
 	@EntityGraph(attributePaths = {"mathContentsComp", "mathTypeInfo"})		//n+1 문제 해결, 작업내역(라이선스 조회 안함)
-	public List<MathContents> findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, UUID userUniqId, int contentsClassify);
+	public Page<MathContents> findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(int unitUniqNo, UUID userUniqId, int contentsClassify, Pageable page);
 	
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo", "mathUnitInfo"})		//n+1 문제 해결, 사용자 나의 제작문제(유사문제 조회 안함)
-	public List<MathContents> findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(UUID userUniqId, List<Integer> contentsClassify);
+	public Page<MathContents> findByUserUniqIdAndContentsClassifyNotInOrderBySysCreateDateDesc(UUID userUniqId, List<Integer> contentsClassify, Pageable page);
 	
 	@EntityGraph(attributePaths = {"mathContentsLicense", "mathTypeInfo", "mathUnitInfo"})		//n+1 문제 해결, 사용자 나의 제작문제(유사문제 조회 안함)
-	public List<MathContents> findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc(
-			UUID userUniqId, int contentsClassify, UUID userUniqId2, int contentsClassify2, int shareStts);
+	public Page<MathContents> findByUserUniqIdAndContentsClassifyOrUserUniqIdAndContentsClassifyAndMathContentsLicenseShareSttsOrderBySysCreateDateDesc(
+			UUID userUniqId, int contentsClassify, UUID userUniqId2, int contentsClassify2, int shareStts, Pageable page);
 	
 	@Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsCnt"
     		+ "(a.unitUniqNo, a.typeNo, count(*) as cnt)"+
@@ -55,6 +56,8 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	
 	public long countByUnitUniqNoAndTypeNo(int unitUniqNo, int typeNo);
 	
+    
+    
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
     		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
     		", a.firNo, a.secNo, a.thrNo, a.fourNo, a.fifNo, a.multiChoiceType, a.answer"+
@@ -68,9 +71,9 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
     		" LEFT JOIN MathContentsLicense b on a.contentsNo = b.contentsNo" + 
     		" where" + 
     		" a.svcPosbStts=1 " + 
-    		" and ( (a.contentsClassify=0) or (a.contentsClassify =1  and b.shareStts=1) ) and a.unitUniqNo=:unitUniqNo" + 
+    		" and ( (a.contentsClassify=0) or (a.contentsClassify =1  and b.shareStts=1) ) and a.unitUniqNo in (:unitUniqNo)" + 
     		" order by ques_level desc", nativeQuery = false)
-	public List<ContentsListModel> findByUnitUniqNo(@Param("unitUniqNo")int unitUniqNo);
+	public Page<ContentsListModel> findByUnitUniqNoIn(@Param("unitUniqNo") List<Integer> unitUniqNo, Pageable pageable);
     
     @Query(value = "select DISTINCT new com.numberbox.mathinfo.dto.ContentsListModel"
     		+ "(a.contentsNo, a.unitUniqNo, a.typeNo, a.contents, a.contentsImg, a.solution, a.solutionImg, a.imgPath, a.solutionImgPath"+
@@ -200,10 +203,10 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 	public List<CustomTenFieldDto> mathContentsStatistic();
 	
 	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
-	public List<MathContents> findByMathContentsIpsiImpYear(int impYear);
+	public Page<MathContents> findByMathContentsIpsiImpYear(int impYear, Pageable page);
 	 
 	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
-	public List<MathContents> findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(int impYear, int impMonth);
+	public Page<MathContents> findByMathContentsIpsiImpYearAndMathContentsIpsiImpMonth(int impYear, int impMonth, Pageable page);
 
 	@EntityGraph(attributePaths = {"mathContentsIpsi", "mathUnitInfo", "mathTypeInfo"})		//n+1 문제 해결
 	public List<MathContents> findByMathTypeInfoMathTypeDomainInAndQuesLevelInAndMathContentsIpsiWrongRatioBetweenAndMathContentsIpsiImpYearBetweenAndMathContentsIpsiImpMonthIn(

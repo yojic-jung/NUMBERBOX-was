@@ -64,7 +64,11 @@ public interface MathUnitRepository extends JpaRepository <MathUnitInfo, Integer
 	
 	public List<MathUnitInfo> findByUnitUniqNoIn(List<Integer> unitUniqNoList);
 	
+	public List<MathUnitInfo> findByUnitUniqNoBetween(int strtUnitUniqNo, int endUnitUniqNo);
+	
 	public List<MathUnitInfo> findBySubject(String subject);
+	
+	public List<MathUnitInfo> findBySecUnit(String secUnit);
 	
 	@Query(value = "SELECT mui.* FROM math_unit_info mui WHERE (mui.fir_unit REGEXP :keyword) or (mui.sec_unit REGEXP :keyword) or (mui.thr_unit REGEXP :keyword)", nativeQuery = true)
 	public List<MathUnitInfo> findByFirUnitRegexpOrSecUnitRegexpOrThrUnitRegexp(@Param("keyword") String keyword);

@@ -55,6 +55,13 @@ public class JobScheduler {
 		//사용자 일일 hwp 다운 카운트 초기화
 		schedulerService.teenagersProfileToStudent();
     }
+	
+	// 04시 00분 00초
+	@Scheduled(cron = "00 00 04 * * *")
+    public void mathDocsDel() {
+		//임시 비밀번호 매일 새벽 06시에 새로운 비밀번호로 셋팅
+		schedulerService.mathDocsDel();
+    }
 		
 	
 }
