@@ -77,7 +77,7 @@ public class MathDocsController {
 	
 	@GetMapping("/myMathDocs")
 	public HashMap<String, Object> myMathDocs(HttpServletRequest request) {
-		HashMap<String, Object> map = mathDocsSevice.myMathDocs();
+		HashMap<String, Object> map = mathDocsSevice.myMathDocs(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
 	

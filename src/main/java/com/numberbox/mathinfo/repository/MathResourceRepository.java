@@ -3,6 +3,8 @@ package com.numberbox.mathinfo.repository;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,10 +21,10 @@ public interface MathResourceRepository extends JpaRepository <MathResource, Int
 	public List<MathResource> findByMainCateNo(@Param("mainCateNo") int mainCateNo);
 	
 	@EntityGraph(attributePaths = {"mathResourceCate"})		//n+1 문제 해결
-	public List<MathResource> findDistinctByMathResourceCateMainCateNo(int mainCateNo);
+	public Page<MathResource> findDistinctByMathResourceCateMainCateNo(int mainCateNo, Pageable page);
 	
 	@EntityGraph(attributePaths = {"mathResourceCate"})		//n+1 문제 해결
-	public List<MathResource> findByUserUniqIdOrderBySysCreateDateDesc(UUID userUniqId);
+	public Page<MathResource> findByUserUniqIdOrderBySysCreateDateDesc(UUID userUniqId, Pageable page);
 	
 	public MathResource findByResourceNo(int resourceNo);
 	

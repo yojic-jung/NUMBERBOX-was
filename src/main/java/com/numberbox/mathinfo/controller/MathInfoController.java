@@ -69,6 +69,15 @@ public class MathInfoController {
 		return map;
 	}
 	
+	@GetMapping("/takeUnitInfoList")
+	public HashMap<String, Object> takeUnitInfoList(HttpServletRequest request) {
+		String col = (String) request.getParameter("col");
+		String value = (String) request.getParameter("value");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList(col, value));
+		return map;
+	}
+	
 	@GetMapping("/takeShortCutKey")
 	public HashMap<String, Object> takeShortCutKey() {
 		return mathContentsInfoService.takeShortCutKey();
@@ -157,20 +166,17 @@ public class MathInfoController {
 	
 	@PostMapping("/takeWorkContentsList")
 	public HashMap<String, Object> takeWorkContentsList(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = mathContentsInfoService.takeWorkContentsList(mathContentsDto, null);
 		map.put("isSearched", true);
-		List<MathContentsModel> list = mathContentsInfoService.takeWorkContentsList(mathContentsDto, null);
-		map.put("mathContents", list);
+		
 		return map;
 	}
 	
 	@GetMapping("/takeWorkContentsListByContentsNo")
 	public HashMap<String, Object> takeWorkContentsListByContentsNo(HttpServletRequest request) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
 		String contentsNo = (String)request.getParameter("contentsno");
+		HashMap<String, Object> map = mathContentsInfoService.takeWorkContentsList(null, contentsNo);
 		map.put("isSearched", true);
-		List<MathContentsModel> list = mathContentsInfoService.takeWorkContentsList(null, contentsNo);
-		map.put("mathContents", list);
 		return map;
 	}
 	
@@ -197,19 +203,19 @@ public class MathInfoController {
 	
 	@GetMapping("/takeMyContentsList")
 	public HashMap<String, Object> takeMyContentsList(HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(0);
+		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(0, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
 	
 	@GetMapping("/takeUserContentsList")
 	public HashMap<String, Object> takeUserContentsList(@RequestParam int userNo, HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(userNo);
+		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(userNo, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
 	
 	@GetMapping("/takeMyRepo")
 	public HashMap<String, Object> takeMyRepo(HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyRepo();
+		HashMap<String, Object> map = mathContentsInfoService.takeMyRepo(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
 	
@@ -295,10 +301,8 @@ public class MathInfoController {
 	
 	@GetMapping("/takeResource")
 	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo, HttpServletRequest request) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		List<MathResourceDto> resourceMenuList = mathResourceService.takeResource(mainCateNo, path);
-		map.put("resourceList", resourceMenuList);
+		HashMap<String, Object> map = mathResourceService.takeResource(mainCateNo, path, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
 	
@@ -313,10 +317,8 @@ public class MathInfoController {
 	
 	@GetMapping("/takeMyResource")
 	public HashMap<String, Object> takeMyResource(HttpServletRequest request) throws FileNotFoundException, IOException {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		List<MathResourceDto> myResource = mathResourceService.takeMyResource();
+		HashMap<String, Object> map = mathResourceService.takeMyResource(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
 		List<MathResourceMenu> resourceMenuList = mathResourceService.takeResourceMenu();
-		map.put("myResourceList", myResource);
 		map.put("resourceMenuList", resourceMenuList);
 		return map;
 	}
@@ -467,7 +469,9 @@ public class MathInfoController {
 	public HashMap<String, Object> takeIpsiContentsByYear(HttpServletRequest request) {
 		int impYear = Integer.parseInt(request.getParameter("impYear"));
 		int impMonth = Integer.parseInt(request.getParameter("impMonth"));
-		HashMap<String, Object> map = mathContentsInfoService.findByMathContentsIpsiImpYear(impYear, impMonth);
+		int curPageNum = Integer.parseInt(request.getParameter("curPageNum"));
+		int pageVolume = Integer.parseInt(request.getParameter("pageVolume"));
+		HashMap<String, Object> map = mathContentsInfoService.findByMathContentsIpsiImpYear(impYear, impMonth, curPageNum, pageVolume);
 		return map;
 	}
 	

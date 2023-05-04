@@ -324,7 +324,7 @@ public class MembersController {
 		List<CustomTenFieldDto> dailyLoginUserCnt = membersService.statisticMembersCntByLoginDate();
 		//월별 접속자 통계
 		List<CustomTenFieldDto> monthlyLoginUserCnt = membersService.statisticMembersCntByMonthly();
-		//월별 가입자 재로그인 비율
+		//월별 가입자
 		List<CustomTenFieldDto> monthlyMembersCnt =membersService.monthlyMembersCnt();
 		//월별 가입자 재로그인 비율
 		List<CustomTenFieldDto> reLoginRatioPerMonth =membersService.reLoginRatioPerMonth();

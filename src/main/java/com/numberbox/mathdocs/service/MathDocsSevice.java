@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import org.modelmapper.ModelMapper;
 import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -367,17 +368,21 @@ public class MathDocsSevice {
 		return map;
 	}
 	
-	public HashMap<String, Object> myMathDocs(){
+	public HashMap<String, Object> myMathDocs(int curPageNum, int pageVolume){
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
-		List<MathDocsPaper> myDocsList = mathDocsPaperRepository.findByUserUniqIdAndDocsErrSttsNotOrderBySysCreateDateDesc(userUniqId, 2);
+		List<Integer> errSttsList = new ArrayList<>();
+		errSttsList.add(2);
+		errSttsList.add(3);
+		Page<MathDocsPaper> myDocsList = mathDocsPaperRepository.findByUserUniqIdAndDocsErrSttsNotInOrderBySysCreateDateDesc(userUniqId, errSttsList,  PageRequest.of(curPageNum, pageVolume));
 		List<MathDocsPaperDto> myDocsDtoList = new ArrayList<>();
 		for(MathDocsPaper myDocs : myDocsList) {
 			MathDocsPaperDto myDocsDto = modelMapper.map(myDocs, MathDocsPaperDto.class);
 			myDocsDtoList.add(myDocsDto);
 		}
 		map.put("isSuccess", true);
+		map.put("totalPageCnt", myDocsList.getTotalPages());
 		map.put("myDocsList", myDocsDtoList);
 		return map;
 	}
