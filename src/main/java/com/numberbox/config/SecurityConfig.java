@@ -74,6 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()
                 .antMatchers(HttpMethod.GET, "/certifications/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/findEmail").permitAll()
+                .antMatchers(HttpMethod.GET, "/findPassword").permitAll()
+                .antMatchers(HttpMethod.GET, "/createEmailIdCode").permitAll()
                 
                 .antMatchers(HttpMethod.GET, "/myContentsCheckForHwpDown").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/registerMemberProfile").hasAnyRole("USER")
