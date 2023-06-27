@@ -26,6 +26,8 @@ public class MembersDto {
     private LocalDateTime lastFailTime;
     
     
+    private String emailIdCode;
+    
     private String userName;
     private String phoneNumber;
     private String birth;

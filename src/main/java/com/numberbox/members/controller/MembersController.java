@@ -304,6 +304,13 @@ public class MembersController {
 	}
 	
 	
+	@GetMapping(value="/createEmailIdCode")
+	public HashMap<String, Object> createEmailIdCode(HttpServletRequest request){
+		String email = (String)request.getParameter("email");
+		HashMap<String, Object> map = membersService.createEmailIdCode(email);
+		return map;
+	}
+	
 	@GetMapping(value="/takeMembersStatistic")
 	public HashMap<String, Object> takeMembersStatistic(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();

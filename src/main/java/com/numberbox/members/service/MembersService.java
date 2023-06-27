@@ -2,6 +2,7 @@ package com.numberbox.members.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -35,6 +36,7 @@ import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.jwt.service.ExpiredRefreshTokenService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
+import com.numberbox.members.dto.EmailIdCodeDto;
 import com.numberbox.members.dto.FollowUsersDto;
 import com.numberbox.members.dto.HwpJsonStrDto;
 import com.numberbox.members.dto.MembersDto;
@@ -43,12 +45,14 @@ import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.dto.PasswordModel;
+import com.numberbox.members.entity.EmailIdCode;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersFollowInfo;
 import com.numberbox.members.entity.MembersPrivate;
 import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.AccessLogInfoRepository;
+import com.numberbox.members.repository.EmailIdCodeRepository;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.repository.MembersPrivateRepository;
 import com.numberbox.members.repository.MembersProfileRepository;
@@ -63,6 +67,8 @@ public class MembersService {
 	private String customsocketip;
 	@PersistenceContext
     EntityManager entityManager;
+	@Autowired 
+	private CommonUtil commonUtil;
 	@Autowired 
 	private JwtUtil jwtUtil;
 	@Autowired 
@@ -83,6 +89,8 @@ public class MembersService {
 	private MathContentsRepository mathContentsRepository;
 	@Autowired
 	private AccessLogInfoRepository accessLogInfoRepository;
+	@Autowired
+	private EmailIdCodeRepository emailIdCodeRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -92,16 +100,33 @@ public class MembersService {
 	@Transactional
 	public HashMap<String, String> signUp(HttpServletRequest request, MembersDto membersDto) {
 		HashMap<String, String> map = new HashMap<>();
+		//이메일 인증코드 확인
+		EmailIdCode emailIdCode = emailIdCodeRepository.findByEmail(membersDto.getEmail());
+		Duration duration= Duration.between(emailIdCode.getSysCreateTime(), LocalDateTime.now());
+		if(duration.getSeconds() > 180){
+			map.put("isSuccess", "emailIdCodeExpired");
+			return map;
+		}
+		boolean isEmailIdentified = bCryptPasswordEncoder.matches(membersDto.getEmailIdCode(), emailIdCode.getIdCode());
+		if(!isEmailIdentified) {
+			map.put("isSuccess", "emailIdCodeMissMatch");
+			return map;
+		}
+		
+		emailIdCodeRepository.deleteByEmail(membersDto.getEmail());
+		
 		boolean existsEmail = membersRepository.existsByEmail(membersDto.getEmail());
 		if(existsEmail) {
 			map.put("isSuccess", "existsEmail");
 			return map;
 		}
+		/*
 		boolean existsPhone = membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
 		if(existsPhone) {
 			map.put("isSuccess", "existsPhone");
 			return map;
 		}
+		*/
 		
 		membersDto.setPassword(bCryptPasswordEncoder.encode(membersDto.getPassword()) );
 		membersDto.setHumanStatus(0);
@@ -127,15 +152,14 @@ public class MembersService {
 		membersRoleDto.setRoleName("USER");
 		MembersRole membersRole = membersRoleRepository.save(membersRoleDto.toEntity());
 		
-		if(membersDto.getUserName() != null) {
-			MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
-			mebersPrivateDto.setUserUniqId(userUniqId);
-			mebersPrivateDto.setUserName(membersDto.getUserName());
-			mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
-			mebersPrivateDto.setBirth(membersDto.getBirth());
-			membersPrivateRepository.save(mebersPrivateDto.toEntity());
-		}
-		List<MembersRole> list = new ArrayList<>();
+		MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
+		mebersPrivateDto.setUserUniqId(userUniqId);
+		mebersPrivateDto.setUserName(membersDto.getUserName());
+		mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
+		mebersPrivateDto.setBirth(membersDto.getBirth());
+		membersPrivateRepository.save(mebersPrivateDto.toEntity());
+
+			List<MembersRole> list = new ArrayList<>();
 		list.add(membersRole);
         String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), list);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
@@ -442,7 +466,12 @@ public class MembersService {
 			membersDto.setPassword(bCryptPasswordEncoder.encode(randPasswrod));
 			membersDto.setTmpPassword(true);
 			membersRepository.save(membersDto.toEntity());
-			CommonUtil.mailSender(request, email, randPasswrod);
+			
+			String contents ="<div style='width:500px;height:600px; font-family:\"Malgun Gothic\";background: rgb(226, 224, 224);padding:30px 100px;'><div style='width:350px; margin:150px auto;line-height:180%; padding:20px;background:white;'><div style='color:#3e6599;font-size:25px;'>비밀번호 안내</div><br/><div style='font-size:15px;'>안녕하세요. 회원님의 요청으로 발급해드리는 <br/>임시 비밀번호는 <span style='font-weight:bold;'>"+
+					randPasswrod+
+					"</span> 입니다.</div><br/><div style='font-weight:bold;background:rgb(236, 250, 106);font-size:13px; padding:10px;word-break:keep-all;'>임시 비밀번호는 오전 06시까지 유효하니 로그인 후<br/>임시 비밀번호를 변경하여 주시기 바랍니다.</div><br/><div style='text-align:center;'><br/><a href='https://nsoohak.com/login' style='text-decoration:none'><span style='text-decoration:none;font-size:18px;border:none; border-radius:14px; padding:10px; background:#3e6599; color:white;cursor:pointer;font-weight:bold'>N명의수학 로그인하기</span></a></div></div></div>";
+							
+			commonUtil.sendMail(email, "[N명의수학] 비밀번호 안내", contents);
 		}else {
 			map.put("isExist", false);
 		}
@@ -611,7 +640,34 @@ public class MembersService {
 		return map;
 	}
 	
-	
+	@Transactional
+	public HashMap<String, Object> createEmailIdCode(String email){
+		HashMap<String, Object> map = new HashMap<>();
+		Random rand = new Random();
+		String idCode = "";
+		for(int i=0; i<6;i++) idCode+=(rand.nextInt(8)+1);
+		EmailIdCodeDto emailIdCodeDto = new EmailIdCodeDto();
+		emailIdCodeDto.setEmail(email);
+		emailIdCodeDto.setIdCode(bCryptPasswordEncoder.encode(idCode));
+		
+		EmailIdCode emailIdCode= emailIdCodeRepository.save(emailIdCodeDto.toEntity());
+		boolean isSuccess = entityManager.contains(emailIdCode);
+		map.put("isSuccess", isSuccess);
+		if(isSuccess) {
+			//메일 전송
+			String contents= "<div>안녕하세요. N명의수학입니다.<br/> 요청하신 회원가입 이메일 인증코드는 아래와 같습니다.</div> <div style='margin:\"10px 0\"font-family:\"Malgun Gothic\";font-size:\"20px\"; '>"
+			+idCode+"</div>위 인증코드는 3분간 유효합니다.";
+			try {
+				commonUtil.sendMail(email, "[N명의수학] 이메일 인증코드 안내", contents);
+			} catch (MessagingException e) {
+				map.put("isSuccess", false);
+				map.put("failReason", "이메일 전송 실패");
+				return map;
+			}
+			
+		}else map.put("failReason", "DB 저장 실패");
+		return map;
+		}
 	
 	//프로필별 가입자 수 
 	public List<CustomTenFieldDto> statisticMembersCntByProfileType(){

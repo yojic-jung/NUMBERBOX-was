@@ -11,12 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -32,14 +28,25 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
 public class CommonUtil {
+	
+	@Value("${numberbox.emailAddress}")
+	private String emailAddress;
+	
+	@Value("${numberbox.emailPassword}")
+	private String emailPassword;
 	
 	private static String[] randomStr = {"~", "!", "@", "#", "%", "^", "&", "*", "-", "_", "=", "+", "?", ";", ":", ",", "."};
 
@@ -172,7 +179,6 @@ public class CommonUtil {
 	 */
 	public String unZip(String zipPath, String zipFileName, String zipUnzipPath) {
 
-		// 파일 정상적으로 압축이 해제가 되어는가.
 		boolean isChk = false;
 
 		// 해제할 홀더 위치를 재조정
@@ -297,43 +303,15 @@ public class CommonUtil {
 
 	}
 	
-	
-	public static void mailSender(HttpServletRequest request, String email, String userPassword) throws AddressException, MessagingException {
+	public void sendMail(String recipient, String title, String contents) throws AddressException, MessagingException {
 		// 네이버일 경우 smtp.naver.com 을 입력합니다.
 		// Google일 경우 smtp.gmail.com 을 입력합니다. 
 		String host = "smtp.gmail.com"; 
-		final String username = "coksabubusiness"; 
 		//네이버 아이디를 입력해주세요. @naver.com은 입력하지 마시구요. 
-		final String password = "ylarbbclqvhuekmp"; 
 		//네이버 이메일 비밀번호를 입력해주세요. 
 		int port=465; //포트번호 // 메일 내용 
-		String recipient = email; 
 		//받는 사람의 메일주소를 입력해주세요. 
-		String subject = "[N명의수학] 비밀번호 안내"; 
 		
-        LocalTime now = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH");
-        String formatedNow = now.format(formatter);
-        Calendar cal = Calendar.getInstance();
-    	String format = "yyyy-MM-dd";
-    	SimpleDateFormat sdf = new SimpleDateFormat(format);
-    	String dateMsg = "";
-        if(Integer.parseInt(formatedNow) < 6) {
-        	//오늘날짜 6시까지
-        	String date = sdf.format(cal.getTime());
-        	dateMsg = date+" 오전 06시까지 유효합니다.";
-        }else {
-        	//내일 날짜 6시까지
-        	cal.add(cal.DATE, +1); //날짜를 하루 더한다.
-        	String date = sdf.format(cal.getTime());
-        	dateMsg = date+" 오전 06시까지 유효합니다.";
-        }
-		
-		//메일 제목 입력해주세요. 
-		String body ="<div style='width:500px;height:600px; font-family:\"Malgun Gothic\";background: rgb(226, 224, 224);padding:30px 100px;'><div style='width:350px; margin:150px auto;line-height:180%; padding:20px;background:white;'><div style='color:#3e6599;font-size:25px;'>비밀번호 안내</div><br/><div style='font-size:15px;'>안녕하세요. 회원님의 요청으로 발급해드리는 <br/>임시 비밀번호는 <span style='font-weight:bold;'>"+
-		userPassword+
-		"</span> 입니다.</div><br/><div style='font-weight:bold;background:rgb(236, 250, 106);font-size:13px; padding:10px;word-break:keep-all;'>임시 비밀번호는 오전 06시까지 유효하니 로그인 후<br/>임시 비밀번호를 변경하여 주시기 바랍니다.</div><br/><div style='text-align:center;'><br/><a href='https://nsoohak.com/login' style='text-decoration:none'><span style='text-decoration:none;font-size:18px;border:none; border-radius:14px; padding:10px; background:#3e6599; color:white;cursor:pointer;font-weight:bold'>N명의수학 로그인하기</span></a></div></div></div>";
-				
 		//메일 내용 입력해주세요. 
 		Properties props = System.getProperties(); 
 		// 정보를 담기 위한 객체 생성 // SMTP 서버 정보 설정
@@ -342,66 +320,23 @@ public class CommonUtil {
 		props.put("mail.smtp.auth", "true"); 
 		props.put("mail.smtp.ssl.enable", "true"); 
 		props.put("mail.smtp.ssl.trust", host); 
-		//Session 생성 
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			String un=username; String pw=password; 
-			protected javax.mail.PasswordAuthentication getPasswordAuthentication() { return new javax.mail.PasswordAuthentication(un, pw); } 
-		}); 
-		session.setDebug(true); 
-		//for debug 
-		Message mimeMessage = new MimeMessage(session); 
-		//MimeMessage 생성 
-		mimeMessage.setFrom(new InternetAddress("coksabubusiness@gmail.com")); 
-		//발신자 셋팅 , 보내는 사람의 이메일주소를 한번 더 입력합니다. 이때는 이메일 풀 주소를 다 작성해주세요. 
-		mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient)); 
-		//수신자셋팅 //.TO 외에 .CC(참조) .BCC(숨은참조) 도 있음 
-		mimeMessage.setSubject(subject); 
-		//제목셋팅 
-		mimeMessage.setContent(body, "text/html; charset=utf-8");
-		//내용셋팅 
-		Transport.send(mimeMessage); 
-		//javax.mail.Transport.send() 이용 }
-	}
-
-	public static void mailSenderCustom(String email, String title, String contents) throws AddressException, MessagingException {
-		// 네이버일 경우 smtp.naver.com 을 입력합니다.
-		// Google일 경우 smtp.gmail.com 을 입력합니다. 
-		String host = "smtp.gmail.com"; 
-		final String username = "coksabubusiness"; 
-		//네이버 아이디를 입력해주세요. @naver.com은 입력하지 마시구요. 
-		final String password = "ylarbbclqvhuekmp"; 
-		//네이버 이메일 비밀번호를 입력해주세요. 
-		int port=465; //포트번호 // 메일 내용 
-		String recipient = email; 
-		//받는 사람의 메일주소를 입력해주세요. 
-		String subject = title; 
 		
-		//메일 제목 입력해주세요. 
-		String body =contents;
-		//메일 내용 입력해주세요. 
-		Properties props = System.getProperties(); 
-		// 정보를 담기 위한 객체 생성 // SMTP 서버 정보 설정
-		props.put("mail.smtp.host", host);
-		props.put("mail.smtp.port", port); 
-		props.put("mail.smtp.auth", "true"); 
-		props.put("mail.smtp.ssl.enable", "true"); 
-		props.put("mail.smtp.ssl.trust", host); 
 		//Session 생성 
 		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-			String un=username; String pw=password; 
+			String un=emailAddress.split("@")[0]; String pw=emailPassword; 
 			protected javax.mail.PasswordAuthentication getPasswordAuthentication() { return new javax.mail.PasswordAuthentication(un, pw); } 
 		}); 
 		session.setDebug(true); 
 		//for debug 
 		Message mimeMessage = new MimeMessage(session); 
 		//MimeMessage 생성 
-		mimeMessage.setFrom(new InternetAddress("coksabubusiness@gmail.com")); 
+		mimeMessage.setFrom(new InternetAddress(emailAddress)); 
 		//발신자 셋팅 , 보내는 사람의 이메일주소를 한번 더 입력합니다. 이때는 이메일 풀 주소를 다 작성해주세요. 
 		mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient)); 
 		//수신자셋팅 //.TO 외에 .CC(참조) .BCC(숨은참조) 도 있음 
-		mimeMessage.setSubject(subject); 
+		mimeMessage.setSubject(title); 
 		//제목셋팅 
-		mimeMessage.setContent(body, "text/html; charset=utf-8");
+		mimeMessage.setContent(contents, "text/html; charset=utf-8");
 		//내용셋팅 
 		Transport.send(mimeMessage); 
 		//javax.mail.Transport.send() 이용 }

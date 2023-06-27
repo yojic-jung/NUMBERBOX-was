@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,8 @@ public class MathProblemAnalyzer {
 	
 	 @Value("${numberbox.openaiSecretKey}")
 	 private String apiKey;
+	 @Autowired 
+	private CommonUtil commonUtil;
 	 
 	 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	 
@@ -61,7 +64,7 @@ public class MathProblemAnalyzer {
 				}catch (JSONException e) {
 					logger.warn("openAi 사용량 초과 오류 발생");
 					try {
-						CommonUtil.mailSenderCustom("dywlr74@naver.com", "[N명의 수학] openAi 사용량 초과 오류 발생", "[N명의 수학] openAi 사용량 초과 오류 발생");
+						commonUtil.sendMail("dywlr74@naver.com", "[N명의 수학] openAi 사용량 초과 오류 발생", "[N명의 수학] openAi 사용량 초과 오류 발생");
 					}catch(AddressException except) {
 						logger.warn("openAi 사용량 초과 오류 발생");
 					}catch(MessagingException except) {
