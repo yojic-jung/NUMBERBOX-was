@@ -141,7 +141,9 @@ public class MathInfoController {
 		String accessToken = (String)request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = mathContentsInfoService.registerContentsMulti(contentsList, path, accessToken, true);
-		
+		if(map.get("accessDeny")!=null) {
+			return map;
+		}
 		List<MathContentsDto> contentsDtoList = (List<MathContentsDto>)map.get("successDtoList");
 		mathContentsInfoService.registerContentsGramMulti(contentsDtoList);
 		imgFileService.registerImgFileInfoMulti(10, contentsDtoList );

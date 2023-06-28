@@ -154,15 +154,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/convert/saveMyHwpContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/removeConvertContents").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/convert/errHwpConvertContents").hasAnyRole("MANAGER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/convert/fileConvertStatistic").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/convert/fileConvertStatistic").hasAnyRole("TOP_TESTER","ADMIN")
                 
-                .antMatchers(HttpMethod.GET, "/mathInfo/mathContentsStatistic").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/mathDocs/mathDocsUsageStatistic").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/takeMembersStatistic").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathInfo/mathContentsStatistic").hasAnyRole("TOP_TESTER","ADMIN")
+                .antMatchers(HttpMethod.GET, "/mathDocs/mathDocsUsageStatistic").hasAnyRole("TOP_TESTER","ADMIN")
+                .antMatchers(HttpMethod.GET, "/takeMembersStatistic").hasAnyRole("TOP_TESTER", "ADMIN")
                 
-                .antMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount").hasAnyRole("TOP_TESTER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("TOP_TESTER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("TOP_TESTER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
                 
                 
