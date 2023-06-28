@@ -755,7 +755,12 @@ public class MembersService {
 		int fourZeroMembersCnt = 0;
 		int fiveZeroMembersCnt = 0;
 		int overSixZeroMembersCnt = 0;
+		int notAuthorizedCnt=0;
 		for(CustomTenFieldDto yearCntList: list) {
+			if(yearCntList.getNbCol1()==null) {
+				notAuthorizedCnt++;
+				continue;
+			}
 			int memberBirthYear = Integer.parseInt(yearCntList.getNbCol1().toString());
 			int memberBirthCnt = Integer.parseInt(yearCntList.getNbCol2().toString());
 			
@@ -781,8 +786,8 @@ public class MembersService {
 			}
 		}
 		
-		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미성년자", "20대", "30대", "40대","50대","60대 이상", null, null, null, null);
-		CustomTenFieldDto customBodyrDto = new CustomTenFieldDto(teenAgersCnt, twoZeroMembersCnt, threeZeroMembersCnt, fourZeroMembersCnt, fiveZeroMembersCnt, overSixZeroMembersCnt, null, null, null, null);
+		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미성년자", "20대", "30대", "40대","50대","60대 이상", "미인증", null, null, null);
+		CustomTenFieldDto customBodyrDto = new CustomTenFieldDto(teenAgersCnt, twoZeroMembersCnt, threeZeroMembersCnt, fourZeroMembersCnt, fiveZeroMembersCnt, overSixZeroMembersCnt, notAuthorizedCnt, null, null, null);
 		List<CustomTenFieldDto> newList = new ArrayList<>();
 		newList.add(customHeaderDto);
 		newList.add(customBodyrDto);
@@ -950,17 +955,22 @@ public class MembersService {
 		for(CustomTenFieldDto customDto : list) {
 			CustomTenFieldDto newCustomDto = new CustomTenFieldDto();
 			newCustomDto.setNbCol1(customDto.getNbCol1());
-			String birthYearStr = ((String)customDto.getNbCol2()).substring(0, 2);
-			int birthYear = Integer.parseInt(birthYearStr);
-			int currentYear = LocalDateTime.now().getYear();
-			int currentYearLastTwoChar = Integer.parseInt(Integer.toString(currentYear).substring(2, 4));
-			if(birthYear<=currentYearLastTwoChar) {
-				birthYear += 2000;
+			if(customDto.getNbCol2() == null) {
+				newCustomDto.setNbCol2("미인증");
 			}else {
-				birthYear += 1900;
+				String birthYearStr = ((String)customDto.getNbCol2()).substring(0, 2);
+				int birthYear = Integer.parseInt(birthYearStr);
+				int currentYear = LocalDateTime.now().getYear();
+				int currentYearLastTwoChar = Integer.parseInt(Integer.toString(currentYear).substring(2, 4));
+				if(birthYear<=currentYearLastTwoChar) {
+					birthYear += 2000;
+				}else {
+					birthYear += 1900;
+				}
+				int age = currentYear- birthYear+1;
+				newCustomDto.setNbCol2(age);
 			}
-			int age = currentYear- birthYear+1;
-			newCustomDto.setNbCol2(age);
+			
 			newCustomDto.setNbCol3(customDto.getNbCol3());
 			
 			String loginDate = ((LocalDateTime)customDto.getNbCol4()).format(DateTimeFormatter.ofPattern("yyyy년-MM월-dd일 HH시:mm분"));
