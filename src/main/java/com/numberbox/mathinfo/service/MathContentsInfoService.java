@@ -448,6 +448,13 @@ public class MathContentsInfoService {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		Members members = StaticSecurityUtil.getMembers();
 		UUID userUniqId = members.getUserUniqId();
+		List<MembersRole> roleList = members.getRole();
+		boolean isTopTester = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("TOP_TESTER")) {
+				isTopTester = true;
+			}
+		}
 		
 		//삭제한 유형에 등록하면 에러 날 수 있음
 		//관리자가 유형 삭제 하더라도 사용자가 홈페이지 새로고침 안하면 삭제한 유형 그대로 보일 수 있음
@@ -511,6 +518,12 @@ public class MathContentsInfoService {
 			if(contents.getContentsClassify() == 1) {
 				mathContentsLicRepository.save(mathContentsDto.toLicenseEntity());
 			}else if(contents.getContentsClassify() == 4) {
+				if(isTopTester) {
+					map.put("existMsg", true);
+					map.put("serverMsg", "해당 요청에 접근 권한이 없습니다.");
+					map.put("accessDeny", true);
+					return map;
+				}
 				mathContentsIpsiRepository.save(mathContentsDto.toIpsiEntity());
 			}
 			successDtoList.add(mathContentsDto);
@@ -628,9 +641,12 @@ public class MathContentsInfoService {
 		Members members = StaticSecurityUtil.getMembers();
 		List<MembersRole> roleList = members.getRole();
 		boolean isAdmin = false;
+		boolean isTopTester = false;
 		for(MembersRole role : roleList) {
 			if(role.getRoleName().equals("ADMIN")) {
 				isAdmin = true;
+			}else if(role.getRoleName().equals("TOP_TESTER")) {
+				isTopTester = true;
 			}
 		}
 		
@@ -640,7 +656,7 @@ public class MathContentsInfoService {
 			list.add(mathContents);
 		}else {
 			Page<MathContents> pageList;
-			if(isAdmin) {
+			if(isAdmin || isTopTester) {
 				pageList =  mathContentsRepository.findByUnitUniqNoAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), 0, PageRequest.of(mathContentsDto.getCurPageNum(), mathContentsDto.getPageVolume()));
 			}else {
 				pageList =  mathContentsRepository.findByUnitUniqNoAndUserUniqIdAndContentsClassifyOrderBySysCreateDateDesc(mathContentsDto.getUnitUniqNo(), members.getUserUniqId(), 0, PageRequest.of(mathContentsDto.getCurPageNum(), mathContentsDto.getPageVolume()));
@@ -1350,16 +1366,22 @@ public class MathContentsInfoService {
 		int year = Integer.parseInt(fullYearStr.substring(2));
 		List<CustomTenFieldDto> newList = new ArrayList<>();
 		for(CustomTenFieldDto dto: list){
-			int memberBirthYear = Integer.parseInt(dto.getNbCol2().toString());
-			
-			int memberAge = 0;
-			if(memberBirthYear>year) {
-				memberBirthYear=memberBirthYear+1900;
+			if(dto.getNbCol2() == null) {
+				dto.setNbCol2("미인증");
 			}else {
-				memberBirthYear=memberBirthYear+2000;
+				int memberBirthYear = Integer.parseInt(dto.getNbCol2().toString());
+				
+				int memberAge = 0;
+				if(memberBirthYear>year) {
+					memberBirthYear=memberBirthYear+1900;
+				}else {
+					memberBirthYear=memberBirthYear+2000;
+				}
+				memberAge = Integer.parseInt(fullYearStr)-memberBirthYear+1;
+				dto.setNbCol2(memberAge);
 			}
-			memberAge = Integer.parseInt(fullYearStr)-memberBirthYear+1;
-			dto.setNbCol2(memberAge);
+			
+			
 			newList.add(dto);
 		}
 		newList.add(0, customHeaderDto);

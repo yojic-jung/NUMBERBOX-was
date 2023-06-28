@@ -52,18 +52,25 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         //매니저 권한 임시 구현
         boolean isManager = false;
+        boolean isTopTester = false;
         boolean isAdmin = false;
         for(MembersRole role : members.getRole()) {
         	if(role.getRoleName().equals("MANAGER")) {
         		isManager=true;
         	}
+        	else if(role.getRoleName().equals("TOP_TESTER")) {
+        		isTopTester=true;
+        	}
         	else if(role.getRoleName().equals("ADMIN")) {
         		isAdmin=true;
         	}
+        	
         }
         
         if(isAdmin) {
         	response.setHeader("role", "ADMIN");
+        }else if(!isAdmin && isTopTester) {
+        	response.setHeader("role", "TOP_TESTER");
         }else if(!isAdmin && isManager) {
         	response.setHeader("role", "MANAGER");
         }else {
