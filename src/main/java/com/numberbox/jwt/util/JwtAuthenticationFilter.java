@@ -63,10 +63,13 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                         
                         //매니저 권한 임시 구현
                         boolean isManager = false;
+                        boolean isTopTester = false;
                         boolean isAdmin = false;
                         for(String role : roleList) {
                         	if(role.equals("MANAGER")) {
                         		isManager=true;
+                        	}else if(role.equals("TOP_TESTER")) {
+                        		isTopTester=true;
                         	}
                         	else if(role.equals("ADMIN")) {
                         		isAdmin=true;
@@ -75,6 +78,8 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                         
                         if(isAdmin) {
                        	 	response.setHeader("role", "ADMIN");
+                       }else if(!isAdmin && isTopTester) {
+                     		response.setHeader("role", "TOP_TESTER");
                        }else if(!isAdmin && isManager) {
                        		response.setHeader("role", "MANAGER");
                        }else {
