@@ -586,14 +586,19 @@ public class MembersService {
 	
 	public HashMap<String, Object> myContentsCheckForHwpDown(String contentsNo) {
 		Members members = StaticSecurityUtil.getMembers();
+		List<MembersRole> roleList =  members.getRole();
+		boolean isTopTester = false;
+		for(MembersRole role : roleList) {
+			if(role.getRoleName().equals("TOP_TESTER")) isTopTester=true;		//관리자는 넘버링크 문제 모두 수정가능
+		}
 		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
 		
 		HashMap<String, Object> map = new HashMap<>();
 		//이미 3회 이상 다운 받은 경우 다운 불가
-		if(memProfile.getHwpDownCnt() >= 3) {
+		if(!isTopTester && memProfile.getHwpDownCnt() >= 3) {
 			map.put("existMsg", true);
 			map.put("contentsNo", -1);
-			map.put("serverMsg", "일일 다운로드 및 업로드 허용 횟수 3회를 모두 사용하셨습니다.");
+			map.put("serverMsg", "일일 한글 파일 다운로드 및 업로드 허용 횟수 3회를 모두 사용하셨습니다.");
 			return map;
 		}
 		
