@@ -25,6 +25,7 @@ import com.numberbox.mathinfo.dto.MathContentsModel;
 import com.numberbox.mathinfo.dto.MathResourceDto;
 import com.numberbox.mathinfo.dto.MathTypeInfoListDto;
 import com.numberbox.mathinfo.dto.MathTypeInfoModel;
+import com.numberbox.mathinfo.dto.MathUnitInfoDto;
 import com.numberbox.mathinfo.entity.MathResourceMenu;
 import com.numberbox.mathinfo.service.MathContentsInfoService;
 import com.numberbox.mathinfo.service.MathResourceService;
@@ -71,10 +72,16 @@ public class MathInfoController {
 	
 	@GetMapping("/takeUnitInfoList")
 	public HashMap<String, Object> takeUnitInfoList(HttpServletRequest request) {
-		String col = (String) request.getParameter("col");
 		String value = (String) request.getParameter("value");
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList(col, value));
+		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList( value));
+		return map;
+	}
+	
+	@PostMapping("/takeUnitInfoList")
+	public HashMap<String, Object> takeUnitInfoList(MathUnitInfoDto unitInfoDto) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList(unitInfoDto));
 		return map;
 	}
 	
