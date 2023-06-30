@@ -763,7 +763,7 @@ public class MembersService {
 		int notAuthorizedCnt=0;
 		for(CustomTenFieldDto yearCntList: list) {
 			if(yearCntList.getNbCol1()==null) {
-				notAuthorizedCnt++;
+				notAuthorizedCnt=Integer.parseInt(yearCntList.getNbCol2().toString());
 				continue;
 			}
 			int memberBirthYear = Integer.parseInt(yearCntList.getNbCol1().toString());
@@ -790,7 +790,6 @@ public class MembersService {
 				overSixZeroMembersCnt  += memberBirthCnt;
 			}
 		}
-		
 		CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("미성년자", "20대", "30대", "40대","50대","60대 이상", "미인증", null, null, null);
 		CustomTenFieldDto customBodyrDto = new CustomTenFieldDto(teenAgersCnt, twoZeroMembersCnt, threeZeroMembersCnt, fourZeroMembersCnt, fiveZeroMembersCnt, overSixZeroMembersCnt, notAuthorizedCnt, null, null, null);
 		List<CustomTenFieldDto> newList = new ArrayList<>();

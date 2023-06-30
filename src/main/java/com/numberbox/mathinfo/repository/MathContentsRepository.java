@@ -261,8 +261,8 @@ public interface MathContentsRepository extends JpaRepository <MathContents, Int
 			"	WHEN a.contentsClassify=0 and a.svcPosbStts=2 THEN '검수완료(자체)'" + 
 			"	WHEN a.contentsClassify=0 and a.svcPosbStts=3 THEN '오류(자체)'" + 
 			"	WHEN a.contentsClassify=0 and a.svcPosbStts=1 THEN '출시(자체)'" + 
-			"   WHEN a.contentsClassify=1 and b.shareStts=0 THEN '사용자 공개'" + 
-			"   WHEN a.contentsClassify=1 and b.shareStts=1 THEN '사용자 비공개'" + 
+			"   WHEN a.contentsClassify=1 and b.shareStts=1 THEN '사용자 공개'" + 
+			"   WHEN a.contentsClassify=1 and b.shareStts=0 THEN '사용자 비공개'" + 
 			"   WHEN a.contentsClassify=2 THEN '변형'" + 
 			"   WHEN a.contentsClassify=4 THEN '수능 및 모의고사'" + 
 			"   ELSE '기타'" + 
