@@ -424,6 +424,12 @@ public class MathDocsSevice {
 	public HashMap<String, Object> mathDocsByMyMathDocsPage(int docsNo) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		MathDocsPaper mathDocsPaper = mathDocsPaperRepository.findByDocsNo(docsNo);
+		Members members = StaticSecurityUtil.getMembers();
+		if(!mathDocsPaper.getUserUniqId().equals(members.getUserUniqId())) {
+			map.put("existMsg", true);
+			map.put("serverMsg", "본인이 만든 학습지가 아닌 경우 접근이 불가합니다.");
+			return map;
+		}
 		MathDocsPaperDto mathDocsPaperDto = modelMapper.map(mathDocsPaper, MathDocsPaperDto.class);
 		
 		String contentsNoListStr = mathDocsPaper.getContentsNoList();
