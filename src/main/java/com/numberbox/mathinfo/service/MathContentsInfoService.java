@@ -152,12 +152,12 @@ public class MathContentsInfoService {
 		}
 	}
 	
-	public List<MathUnitInfo> takeUnitInfoList(String col, String value){
-		if(col.equals("subject")) {
-			return mathUnitRepository.findBySubject(value);
-		}else {
-			return mathUnitRepository.findBySecUnit(value);
-		}
+	public List<MathUnitInfo> takeUnitInfoList(String value){
+		return mathUnitRepository.findBySecUnit(value);
+	}
+	
+	public List<MathUnitInfo> takeUnitInfoList(MathUnitInfoDto unitInfoDto){
+		return mathUnitRepository.findBySubject(unitInfoDto.getSubject());
 	}
 	
 	
