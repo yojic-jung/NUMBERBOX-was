@@ -45,7 +45,7 @@ java -jar -Dspring.profiles.active=prod -Ddb_username=[DB아이디] -Ddb_passwd=
 <img src="https://img.shields.io/badge/mariadb-1F305F?style=for-the-badge&logo=mariadb&logoColor=white">
 
 
-<br/><br/>
+<br/>
 
 ## 라이브러리
 * spring-boot-starter-security
