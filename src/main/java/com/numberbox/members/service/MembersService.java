@@ -206,11 +206,13 @@ public class MembersService {
 		}else {
 			//로그인 API로  회원가입하는 경우
 			//휴대폰 인증 체크
+			/*
 			boolean existsPhone = membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
 			if(existsPhone) {
 				map.put("isSuccess", "existsPhone");
 				return map;
 			}
+			*/
 			
 			membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()) );
 			membersDto.setHumanStatus(0);
@@ -239,12 +241,13 @@ public class MembersService {
 			if(membersDto.getUserName() != null) {
 				MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
 				mebersPrivateDto.setUserUniqId(userUniqId);
+				/*
 				mebersPrivateDto.setUserName(membersDto.getUserName());
 				mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
 				mebersPrivateDto.setBirth(membersDto.getBirth());
+				*/
 				membersPrivateRepository.save(mebersPrivateDto.toEntity());
 			}
-			
 			 map.put("isSuccess", "signUpSuccess");
 		}
 		
