@@ -204,19 +204,17 @@ public class MembersService {
 	        membersRepository.initHumanStatus(members.getUserUniqId());
 			map.put("isSuccess", "loginSuccess");
 		}else {
+			map.put("isSuccess", "EndService");
+			return map;
+			/*
 			//로그인 API로  회원가입하는 경우
 			//휴대폰 인증 체크
-			/*
 			boolean existsPhone = membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
 			if(existsPhone) {
 				map.put("isSuccess", "existsPhone");
 				return map;
 			}
-			*/
 			map.put("isSuccess", "EndService");
-		}
-		return map;
-			/*
 			membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()) );
 			membersDto.setHumanStatus(0);
 			membersDto.setFailCount(0);
@@ -250,6 +248,7 @@ public class MembersService {
 				membersPrivateRepository.save(mebersPrivateDto.toEntity());
 			}
 			 map.put("isSuccess", "signUpSuccess");
+			 */
 		}
 		
 		
@@ -279,7 +278,7 @@ public class MembersService {
         map.put("accessToken", accessToken);
         map.put("refreshToken", refreshToken);
 		return map;
-		*/
+		
 	}
 	
 	@Transactional
