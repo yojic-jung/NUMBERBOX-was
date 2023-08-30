@@ -213,7 +213,10 @@ public class MembersService {
 				return map;
 			}
 			*/
-			
+			map.put("isSuccess", "EndService");
+		}
+		return map;
+			/*
 			membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()) );
 			membersDto.setHumanStatus(0);
 			membersDto.setFailCount(0);
@@ -241,11 +244,9 @@ public class MembersService {
 			if(membersDto.getUserName() != null) {
 				MembersPrivateDto mebersPrivateDto = new MembersPrivateDto();
 				mebersPrivateDto.setUserUniqId(userUniqId);
-				/*
-				mebersPrivateDto.setUserName(membersDto.getUserName());
-				mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
-				mebersPrivateDto.setBirth(membersDto.getBirth());
-				*/
+				//mebersPrivateDto.setUserName(membersDto.getUserName());
+				//mebersPrivateDto.setPhoneNumber(membersDto.getPhoneNumber());
+				//mebersPrivateDto.setBirth(membersDto.getBirth());
 				membersPrivateRepository.save(mebersPrivateDto.toEntity());
 			}
 			 map.put("isSuccess", "signUpSuccess");
@@ -278,6 +279,7 @@ public class MembersService {
         map.put("accessToken", accessToken);
         map.put("refreshToken", refreshToken);
 		return map;
+		*/
 	}
 	
 	@Transactional
