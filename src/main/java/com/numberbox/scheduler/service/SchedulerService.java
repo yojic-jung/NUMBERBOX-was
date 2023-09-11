@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.common.util.CommonUtil;
+import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
 import com.numberbox.mathinfo.entity.MathContents;
 import com.numberbox.mathinfo.entity.MathResource;
@@ -70,7 +71,8 @@ public class SchedulerService {
 	MathResourceCateRepository mathResourceCateRepository;
 	@Autowired
 	private MathResourceImgRepository mathResourceImgRepository;
-	
+	@Autowired
+	private RefreshTokenInfoService refreshTokenInfoService;
 	@Autowired
 	ModelMapper modelMapper;
 	@Autowired
@@ -256,6 +258,12 @@ public class SchedulerService {
 	@Transactional
 	public void mathDocsDel() {
 		mathDocsPaperRepository.deleteByDocsErrSttsAndSysCreateDateLessThan(3, LocalDateTime.now().minusDays(1));
+	}
+	
+	//DB에 만료되어 남아있는 리프레시 토큰 삭제(사용자가 장기 미접속하는 경우, 토큰 검증할일 없으므로 삭제될일도 없음. 배치로 삭제)
+	@Transactional
+	public void deleteByTokenCreateDateLessThan(int day) {
+		refreshTokenInfoService.deleteByTokenCreateDateLessThan(day);
 	}
 	
 }

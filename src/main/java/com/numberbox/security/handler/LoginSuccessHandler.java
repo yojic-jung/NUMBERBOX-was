@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.numberbox.jwt.service.ExpiredRefreshTokenService;
+import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
@@ -28,7 +28,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Autowired 
 	private JwtUtil jwtUtil;
 	@Autowired 
-	private ExpiredRefreshTokenService expiredRefreshTokenService;
+	private RefreshTokenInfoService refreshTokenService;
 	@Autowired
 	private MembersRepository membersRepository;
 	
@@ -39,10 +39,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
             user = (CustomSecurityUser)authentication.getPrincipal();
         }
-        String expiredToken = jwtUtil.resolveRefreshToken(request);
+        String remainedRefreshToken = jwtUtil.resolveRefreshToken(request);
         //로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰을 만료시킴(클라이언트단에 로그아웃시 refresh토큰 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
-        if (expiredToken != null && !expiredToken.isEmpty()) {
-            expiredRefreshTokenService.addExpiredToken(expiredToken);
+        if (remainedRefreshToken != null && !remainedRefreshToken.isEmpty()) {
+        	refreshTokenService.deleteByToken(remainedRefreshToken);
         }
         
         Members members = user.getMembers();
@@ -79,6 +79,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         
         String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), members.getRole());
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
+        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         String loginState = (String)request.getParameter("loginState");
         response.setHeader("access-token", accessToken);
         request.setAttribute("refreshToken", refreshToken);

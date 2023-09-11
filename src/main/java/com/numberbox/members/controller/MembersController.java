@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.iamport.IamportClient;
+import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.dto.HwpJsonStrDto;
 import com.numberbox.members.dto.MembersDto;
 import com.numberbox.members.dto.MembersProfileDto;
@@ -67,8 +68,10 @@ public class MembersController {
 		String loginState = (String)request.getAttribute("loginState");
 		Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
 		refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setSecure(true);
 		if(loginState !=null && loginState.equals("keep")) {
-        	refreshTokenCookie.setMaxAge(60*60*24*30);
+        	refreshTokenCookie.setMaxAge((int)JwtUtil.REFRESH_TOKEN_VALID_TIME/1000);
         }else {
         	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
         }
@@ -91,6 +94,10 @@ public class MembersController {
 		return map;
 	}
 	
+	@GetMapping("/delRefreshToken")
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
+		 membersService.delRefreshToken(request, response);
+	}
 	
 	@PostMapping("/loginFail")
 	public HashMap<String, Object> loginFailure(HttpServletRequest request, HttpServletResponse response) {
@@ -114,6 +121,8 @@ public class MembersController {
 			response.setHeader("access-token", returnMap.get("accessToken"));
 			refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
         	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
+        	refreshTokenCookie.setHttpOnly(true);
+        	refreshTokenCookie.setSecure(true);
 	        response.addCookie(refreshTokenCookie);
 		}
 		map.put("isSuccess", isSuccess);
@@ -131,11 +140,13 @@ public class MembersController {
 			response.setHeader("role", returnMap.get("role"));
 			String loginState = (String)request.getParameter("loginState");
 	        if(loginState !=null && loginState.equals("keep")) {
-	        	refreshTokenCookie.setMaxAge(60*60*24*30);		//30일
+	        	refreshTokenCookie.setMaxAge((int)JwtUtil.REFRESH_TOKEN_VALID_TIME/1000);		//30일
 	        }else {
 	        	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
 	        }
 	        refreshTokenCookie.setPath("/");		//context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
+	        refreshTokenCookie.setHttpOnly(true);
+			refreshTokenCookie.setSecure(true);
 	        response.addCookie(refreshTokenCookie);
 	        
 		}
