@@ -69,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/naverLogin").permitAll()
+                .antMatchers(HttpMethod.GET, "/delRefreshToken").hasAnyRole("USER")
                 .antMatchers(HttpMethod.GET, "/takeResource").permitAll()
                 .antMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()

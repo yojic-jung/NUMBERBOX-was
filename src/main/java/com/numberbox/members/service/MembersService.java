@@ -18,7 +18,9 @@ import javax.mail.internet.AddressException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
 import org.qlrm.mapper.JpaResultMapper;
@@ -29,11 +31,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;
-import com.numberbox.jwt.service.ExpiredRefreshTokenService;
+import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.dto.EmailIdCodeDto;
@@ -72,7 +75,7 @@ public class MembersService {
 	@Autowired 
 	private JwtUtil jwtUtil;
 	@Autowired 
-	private ExpiredRefreshTokenService expiredRefreshTokenService;
+	private RefreshTokenInfoService refreshTokenService;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired
@@ -163,7 +166,7 @@ public class MembersService {
 		list.add(membersRole);
         String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), list);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
-        
+        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         map.put("isSuccess", "success");
         map.put("accessToken", accessToken);
         map.put("refreshToken", refreshToken);
@@ -174,9 +177,9 @@ public class MembersService {
 	@Transactional
 	public HashMap<String, String> naverLogin(MembersDto membersDto, HttpServletRequest request) {
 		String expiredToken = jwtUtil.resolveRefreshToken(request);
-        //로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰을 만료시킴(클라이언트단에 로그아웃시 refresh토큰 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
+        //로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰 db에서 삭제(클라이언트단에 로그아웃시 refresh토큰 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
         if (expiredToken != null && !expiredToken.isEmpty()) {
-            expiredRefreshTokenService.addExpiredToken(expiredToken);
+        	refreshTokenService.deleteByToken(expiredToken);
         }
 	        
 		HashMap<String, String> map = new HashMap<>();
@@ -254,6 +257,7 @@ public class MembersService {
 		
         String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), roleList);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
+        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         
         //매니저 권한 임시 구현
         boolean isManager = false;
@@ -279,6 +283,12 @@ public class MembersService {
         map.put("refreshToken", refreshToken);
 		return map;
 		
+	}
+	
+	
+	@Transactional
+	public void delRefreshToken(HttpServletRequest request, HttpServletResponse response){
+		jwtUtil.delRefreshToken(request, response);
 	}
 	
 	@Transactional

@@ -34,6 +34,8 @@ public class JobScheduler {
     public void initHwpDownCnt() {
 		//사용자 일일 hwp 다운 카운트 초기화
 		schedulerService.initHwpDownCnt();
+		//만료된 리프레시 토큰 삭제
+		schedulerService.deleteByTokenCreateDateLessThan(31);
     }
 	
 	// 6시간 마다 실행

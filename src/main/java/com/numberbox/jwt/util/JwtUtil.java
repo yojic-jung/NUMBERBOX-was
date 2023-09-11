@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
 
-import com.numberbox.jwt.service.ExpiredRefreshTokenService;
+import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.dto.AccessLogInfoDto;
 import com.numberbox.members.entity.AccessLogInfo;
 import com.numberbox.members.entity.MembersRole;
@@ -41,7 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtUtil {
 
 	  @Autowired
-	  private ExpiredRefreshTokenService expiredRefreshTokenService;
+	  private RefreshTokenInfoService refreshTokenService;
 	  @Autowired
 	  private CustomSecurityUsersService customUsersService;
 	  @Autowired
@@ -55,8 +56,8 @@ public class JwtUtil {
 	  @Value("${numberbox.jwtSecretKey}")
 	  private String secretKey;
 	
-	  private final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
-	  private final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
+	  private static final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; //1시간
+	  public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
 	
 	  @Transactional(propagation = Propagation.NOT_SUPPORTED)
 	  public String createAccessToken(HttpServletRequest request, String email, UUID userUniqId, List<MembersRole> roleList) {
@@ -68,6 +69,8 @@ public class JwtUtil {
 	      Claims claims = Jwts.claims().setSubject(email);
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
+	      claims.put("email", email);
+	      claims.put("nsoohak.com", true);
 	      
 	      try {
 	    	  String clientIp = request.getRemoteAddr();
@@ -83,13 +86,16 @@ public class JwtUtil {
 		    	  logger.warn("예외 발생 : 접속 로그 정보 null");
 		      }
 	      }catch(Exception e) {
-	    	  logger.warn("예외 발생 : 접속 로그 에러");
+	    	  logger.warn("예외 발생 : 접속 로그 에러"+e);
 	      }
 	     
 		  
 	      Date now = new Date();
 	      return Jwts.builder()
 	          .setClaims(claims)
+	          .setIssuer("nsoohak")
+	          .setSubject("nsoohakAccessToken")
+	          .setAudience("user")
 	          .setIssuedAt(now)
 	          .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
 	          .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -98,9 +104,11 @@ public class JwtUtil {
 	  
 	  @Transactional(propagation = Propagation.NOT_SUPPORTED)
 	  public String createAccessTokenRoleStr(HttpServletRequest request, String email, UUID userUniqId, List<String> roleList) {
-	      Claims claims = Jwts.claims().setSubject(email);
+	      Claims claims = Jwts.claims();
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", roleList);
+	      claims.put("email", email);
+	      claims.put("nsoohak.com", true);
 	      
 	      try {
 	    	  String clientIp = request.getRemoteAddr();
@@ -124,6 +132,9 @@ public class JwtUtil {
 	      Date now = new Date();
 	      return Jwts.builder()
 		          .setClaims(claims)
+		          .setIssuer("nsoohak")
+		          .setSubject("nsoohakAccessToken")
+		          .setAudience("user")
 		          .setIssuedAt(now)
 		          .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
 		          .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -132,13 +143,17 @@ public class JwtUtil {
 	
 	  public String createRefreshToken(String email, UUID userUniqId) {
 	      Claims claims = Jwts.claims();
+	      claims.put("nsoohak.com", true);
 	      Date now = new Date();
 	      Date expiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME);
 	
 	      return Jwts.builder()
 	          .setClaims(claims)
-	          .setIssuedAt(now)
+	          .setIssuer("nsoohak")
+	          .setSubject("nsoohakRefreshToken")
+	          .setAudience("user")
 	          .setExpiration(expiration)
+	          .setIssuedAt(now)
 	          .signWith(SignatureAlgorithm.HS256, secretKey)
 	          .compact();
 	  }
@@ -150,7 +165,7 @@ public class JwtUtil {
 	  }
 	
 	  public String getUserEmail(String token) {
-	      return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+	      return (String)Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email");
 	  }
 	  
 	  public UUID getUserUniqId(String token) {
@@ -166,6 +181,7 @@ public class JwtUtil {
 	  //header에 저장한 access-token 반환
 	  public String resolveAccessToken(HttpServletRequest request) {
 	      String token = request.getHeader("access-token");
+	      if(token!=null && token.equals("null")) token = null;
 	      return token;
 	  }
 	
@@ -176,6 +192,28 @@ public class JwtUtil {
 	      return token;
 	  }
 	
+	 
+	
+	  public boolean validateRefreshTokenMatcheAccessTokenIssuer(String jwtToken, UUID userUniqId) {
+		  return refreshTokenService.isTokenMatched(jwtToken, userUniqId);
+	  }
+	  
+	  @Transactional
+	  public void delRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+		  String jwtToken = "";
+		  Cookie cookie = WebUtils.getCookie(request, "refresh-token");
+	      if (cookie != null) {
+	    	  jwtToken = cookie.getValue();
+	    	  cookie.setMaxAge(0);
+		      cookie.setHttpOnly(true);
+		      cookie.setPath("/");
+		      cookie.setSecure(true);
+		      cookie.setValue("");
+		      response.addCookie(cookie);		
+	      }
+		  refreshTokenService.deleteByToken(jwtToken);
+	  }
+	  
 	  public boolean validateToken(String jwtToken) {
 	      try {
 	          Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
@@ -184,21 +222,13 @@ public class JwtUtil {
 	          return false;
 	      }
 	  }
-	
-	  public boolean validateRefreshToken(String jwtToken) {
-	      if(expiredRefreshTokenService.isExpiredToken(jwtToken)) {
-	          return false;
-	      }
-	
-	      return validateToken(jwtToken);
-	  }
 	  
-    public boolean validateTokenExceptExpiration(String jwtToken) {
+	  public boolean validateTokenExceptExpiration(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            return true;
         } catch(ExpiredJwtException e) {
-            return false;
+            return true;
         } catch (Exception e) {
             return false;
         }
