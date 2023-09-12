@@ -71,7 +71,7 @@ public class MembersController {
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(true);
 		if(loginState !=null && loginState.equals("keep")) {
-        	refreshTokenCookie.setMaxAge((int)JwtUtil.REFRESH_TOKEN_VALID_TIME/1000);
+        	refreshTokenCookie.setMaxAge((int)(JwtUtil.REFRESH_TOKEN_VALID_TIME/1000));
         }else {
         	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
         }
@@ -140,7 +140,7 @@ public class MembersController {
 			response.setHeader("role", returnMap.get("role"));
 			String loginState = (String)request.getParameter("loginState");
 	        if(loginState !=null && loginState.equals("keep")) {
-	        	refreshTokenCookie.setMaxAge((int)JwtUtil.REFRESH_TOKEN_VALID_TIME/1000);		//30일
+	        	refreshTokenCookie.setMaxAge((int)(JwtUtil.REFRESH_TOKEN_VALID_TIME/1000));
 	        }else {
 	        	refreshTokenCookie.setMaxAge(60*60*6);			//6시간
 	        }
