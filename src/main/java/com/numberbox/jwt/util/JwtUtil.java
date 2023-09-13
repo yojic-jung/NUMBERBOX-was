@@ -66,7 +66,7 @@ public class JwtUtil {
 			  strRoleList.add(role.getRoleName());
 		  }
 		  
-	      Claims claims = Jwts.claims().setSubject(email);
+	      Claims claims = Jwts.claims();
 	      claims.put("userUniqId", userUniqId);
 	      claims.put("role", strRoleList);
 	      claims.put("email", email);
@@ -74,8 +74,15 @@ public class JwtUtil {
 	      
 	      try {
 	    	  String clientIp = request.getRemoteAddr();
-			  String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
-			  String browserInfo = request.getHeader("user-agent").toLowerCase();
+	    	  if(clientIp == null) logger.warn("예외 발생 : 접속 로그  clientIp null");
+	    	  
+			  String osInfo = request.getHeader("sec-ch-ua-platform");
+			  if(osInfo != null) osInfo=osInfo.toLowerCase().replaceAll("\"", "");
+			  else logger.warn("예외 발생 : 접속 로그  osInfo null");
+			  
+			  String browserInfo = request.getHeader("user-agent");
+			  if(browserInfo != null) browserInfo=browserInfo.toLowerCase().replaceAll("\"", "");
+			  else logger.warn("예외 발생 : 접속 로그  browserInfo null");
 			  
 		      AccessLogInfoDto logInfoDto = this.covertIpOsBrowserInfo(clientIp, osInfo, browserInfo);
 		      if(logInfoDto!= null) {

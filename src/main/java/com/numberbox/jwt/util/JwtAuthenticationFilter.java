@@ -75,7 +75,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
         		Authentication authentication = jwtUtil.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }else {							//accessToken 만료시 토큰 재생성
-            	String email = returnMap.get("sub").toString();
+            	String email = returnMap.get("email").toString();
             	List<String> roleList = (List<String>)returnMap.get("role");
                 
                 //매니저 권한 임시 구현
