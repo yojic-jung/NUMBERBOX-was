@@ -20,23 +20,22 @@ public class MathDocsUsageDto {
 
 	int docsNo;
 	String contentsNoList;
-	
+
 	@JsonIgnore
 	UUID userUniqId;
-	
+
 	String docsGrade;
 	String docsTitle;
 	String docsSubTitle;
 	String docsOwner;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
 	LocalDateTime sysCreateDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
 	LocalDateTime sysUpdateDate;
-	
+
 	public MathDocsUsage toEntity() {
-		return MathDocsUsage.builder().docsNo(docsNo).contentsNoList(contentsNoList).userUniqId(userUniqId).docsGrade(docsGrade)
-				.docsTitle(docsTitle).docsSubTitle(docsSubTitle).docsOwner(docsOwner)
-				.build();
+		return MathDocsUsage.builder().docsNo(docsNo).contentsNoList(contentsNoList).userUniqId(userUniqId)
+				.docsGrade(docsGrade).docsTitle(docsTitle).docsSubTitle(docsSubTitle).docsOwner(docsOwner).build();
 	}
 }

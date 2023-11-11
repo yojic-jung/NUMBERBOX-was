@@ -9,17 +9,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathContentsDtoForDocs implements Comparable<MathContentsDtoForDocs>{
-	
+public class MathContentsDtoForDocs implements Comparable<MathContentsDtoForDocs> {
+
 	@Override
-    public int compareTo(MathContentsDtoForDocs mathContents) {
-        return Integer.compare(getQuesLevel(), mathContents.getQuesLevel());
-    }
+	public int compareTo(MathContentsDtoForDocs mathContents) {
+		return Integer.compare(getQuesLevel(), mathContents.getQuesLevel());
+	}
 
 	Integer contentsNo;
 	Integer unitUniqNo;
 	Integer typeNo;
-	
+
 	String contents;
 	String contentsImg;
 	String imgPath;
@@ -31,18 +31,18 @@ public class MathContentsDtoForDocs implements Comparable<MathContentsDtoForDocs
 	String thrNo;
 	String fourNo;
 	String fifNo;
-	String multiChoiceType;		//전체 체크해서 바이트 체크
+	String multiChoiceType; // 전체 체크해서 바이트 체크
 	String answer;
 	String choiceAnswer;
-	
+
 	Integer quesLevel;
 	Integer ansExistStts;
 	Integer contentsClassify;
-	
+
 	String subject;
 	String firUnit;
 	String secUnit;
 	String thrUnit;
-	
+
 	String quesType;
 }

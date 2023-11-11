@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathContentsLicenseDto {
-	
+
 	int contentsNo;
 	int onlineLicStts;
 	int perLicStts;
@@ -22,12 +22,12 @@ public class MathContentsLicenseDto {
 	int entLicStts;
 	int entLicPrice;
 	int shareStts;
-	
+
 	LocalDateTime sysCreateDate;
 	LocalDateTime sysUpdateDate;
-	
+
 	public MathContentsLicense toEntity() {
-		return MathContentsLicense.builder().contentsNo(contentsNo).onlineLicStts(onlineLicStts).perLicStts(perLicStts).perLicPrice(perLicPrice)
-				.entLicStts(entLicStts).entLicPrice(entLicPrice).shareStts(shareStts).build();
+		return MathContentsLicense.builder().contentsNo(contentsNo).onlineLicStts(onlineLicStts).perLicStts(perLicStts)
+				.perLicPrice(perLicPrice).entLicStts(entLicStts).entLicPrice(entLicPrice).shareStts(shareStts).build();
 	}
 }

@@ -36,15 +36,15 @@ public class MathContentsLicense {
 	int entLicPrice;
 	@Column(length = 1, nullable = false)
 	int shareStts;
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
 	@Column
 	@UpdateTimestamp
 	LocalDateTime sysUpdateDate;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "contentsNo", referencedColumnName = "contentsNo", insertable=false, updatable=false)
+	@JoinColumn(name = "contentsNo", referencedColumnName = "contentsNo", insertable = false, updatable = false)
 	MathContents mathContents;
 }

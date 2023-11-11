@@ -9,22 +9,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-@Getter 
-@Setter 
-public class FollowUsersDomain  implements Serializable {
+@Getter
+@Setter
+public class FollowUsersDomain implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	long followingUserNo;
 	long followerUserNo;
-	
-	public FollowUsersDomain() {}
-	
+
+	public FollowUsersDomain() {
+	}
+
 	@Builder
-	public FollowUsersDomain(long followingUserNo, long followerUserNo) { 
+	public FollowUsersDomain(long followingUserNo, long followerUserNo) {
 		this.followingUserNo = followingUserNo;
-		this.followerUserNo = followerUserNo; 
+		this.followerUserNo = followerUserNo;
 	}
 }

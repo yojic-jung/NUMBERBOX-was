@@ -12,25 +12,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-@Getter 
-@Setter 
+@Getter
+@Setter
 public class MathConLikeDomain implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public int contentsNo;
-	
+
 	@JsonIgnore
 	public UUID userUniqId;
-	
-	public MathConLikeDomain() {}
-	
+
+	public MathConLikeDomain() {
+	}
+
 	@Builder
-	public MathConLikeDomain(int contentsNo, UUID userUniqId) { 
+	public MathConLikeDomain(int contentsNo, UUID userUniqId) {
 		this.contentsNo = contentsNo;
-		this.userUniqId = userUniqId; 
+		this.userUniqId = userUniqId;
 	}
 
 }

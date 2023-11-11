@@ -17,20 +17,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HwpConvertContentsStatisticDto {
-	  Long seqNo;
-	
-	  Long convertNo;
+	Long seqNo;
 
-	  @JsonIgnore
-	  UUID userUniqId;
-	  
-	  String convertFileName;
-	  
-	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
-	  LocalDateTime sysCreateDate;
-	  
-	  public HwpConvertContentsStatistic toEntity() {
-			return HwpConvertContentsStatistic.builder().convertNo(convertNo).userUniqId(userUniqId).convertFileName(convertFileName)
-					.build();
-		}
+	Long convertNo;
+
+	@JsonIgnore
+	UUID userUniqId;
+
+	String convertFileName;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+	LocalDateTime sysCreateDate;
+
+	public HwpConvertContentsStatistic toEntity() {
+		return HwpConvertContentsStatistic.builder().convertNo(convertNo).userUniqId(userUniqId)
+				.convertFileName(convertFileName).build();
+	}
 }

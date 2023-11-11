@@ -1,6 +1,5 @@
 package com.numberbox.members.dto;
 
-
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,15 +15,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MembersRoleDto {
-	
+
 	private long seqNo;
 	@JsonIgnore
 	private UUID userUniqId;
 	private boolean enabled;
-    private String roleName;
-    
-    public MembersRole toEntity() {
-		return MembersRole.builder().seqNo(seqNo).userUniqId(userUniqId).enabled(enabled).roleName(roleName)
-				.build();
+	private String roleName;
+
+	public MembersRole toEntity() {
+		return MembersRole.builder().seqNo(seqNo).userUniqId(userUniqId).enabled(enabled).roleName(roleName).build();
 	}
 }

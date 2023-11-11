@@ -10,8 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathTypeInfoModel {
-	
-	public String typeNo; 
+
+	public String typeNo;
 	public String unitUniqNo;
 	public String quesType;
 	public int typeOrder;

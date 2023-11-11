@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class MathUnitKeyword {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int id;
-	
+
 	@Column(nullable = false)
 	public int unitUniqNo;
-	
+
 	@Column(nullable = false)
 	public String keyword;
 

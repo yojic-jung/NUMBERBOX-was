@@ -16,10 +16,9 @@ import lombok.Setter;
 public class EmailIdCodeDto {
 	private String email;
 	private String idCode;
-    private LocalDateTime sysCreateTime;
-    
-    public EmailIdCode toEntity() {
-		return EmailIdCode.builder().email(email).idCode(idCode).sysCreateTime(sysCreateTime)
-				.build();
+	private LocalDateTime sysCreateTime;
+
+	public EmailIdCode toEntity() {
+		return EmailIdCode.builder().email(email).idCode(idCode).sysCreateTime(sysCreateTime).build();
 	}
 }

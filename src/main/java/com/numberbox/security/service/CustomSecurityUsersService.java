@@ -14,14 +14,14 @@ import com.numberbox.security.dto.CustomSecurityUser;
 @Service
 public class CustomSecurityUsersService implements UserDetailsService {
 
-    @Autowired
-    MembersRepository memberRepository;
-    
-    @Override
-    @Transactional
-    public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        Members members = memberRepository.findByEmail(email);
-        User user = new CustomSecurityUser(members);
-        return user;
-    }
+	@Autowired
+	MembersRepository memberRepository;
+
+	@Override
+	@Transactional
+	public User loadUserByUsername(String email) throws UsernameNotFoundException {
+		Members members = memberRepository.findByEmail(email);
+		User user = new CustomSecurityUser(members);
+		return user;
+	}
 }

@@ -12,14 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathResourceImgDto {
-	
+
 	public int slideImgNo;
 	public int resourceNo;
 	public String imgPath;
 	public String imgName;
-	
+
 	public MathResourceImg toEntity() {
-		return MathResourceImg.builder().resourceNo(resourceNo).imgPath(imgPath).imgName(imgName)
-										.build();
+		return MathResourceImg.builder().resourceNo(resourceNo).imgPath(imgPath).imgName(imgName).build();
 	}
 }

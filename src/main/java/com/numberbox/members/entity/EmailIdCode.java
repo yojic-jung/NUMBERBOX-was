@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 public class EmailIdCode {
 	@Id
 	private String email;
-	
+
 	private String idCode;
-	
+
 	@UpdateTimestamp
-    private LocalDateTime sysCreateTime;
+	private LocalDateTime sysCreateTime;
 }

@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathConLikeInfoDto {
-	
+
 	MathConLikeDomain mathConLikeDomain;
-	
+
 	public MathConLikeInfo toEntity() {
 		return MathConLikeInfo.builder().mathConLikeDomain(mathConLikeDomain).build();
 	}

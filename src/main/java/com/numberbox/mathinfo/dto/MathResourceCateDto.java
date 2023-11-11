@@ -12,15 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathResourceCateDto {
-	
+
 	public int resourceNo;
-	
+
 	public int mainCateNo;
-	
+
 	public int midCateNo;
-	
+
 	public MathResourceCate toEntity() {
-		return MathResourceCate.builder().resourceNo(resourceNo).mainCateNo(mainCateNo).midCateNo(midCateNo)
-										.build();
+		return MathResourceCate.builder().resourceNo(resourceNo).mainCateNo(mainCateNo).midCateNo(midCateNo).build();
 	}
 }

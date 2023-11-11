@@ -16,13 +16,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathContentsCompDto implements Serializable{
+public class MathContentsCompDto implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	int seqNo; 
+
+	int seqNo;
 	int contentsNo;
 	String orgSrcRef;
 	int orgSrcNo;
@@ -31,12 +31,13 @@ public class MathContentsCompDto implements Serializable{
 	String mathTypeClassify;
 	@JsonIgnore
 	UUID userUniqId;
-	
+
 	Date sysCreateDate;
 	Date sysUpdateDate;
-	
+
 	public MathContentsComp toEntity() {
-		return MathContentsComp.builder().seqNo(seqNo).contentsNo(contentsNo).orgSrcRef(orgSrcRef).orgSrcNo(orgSrcNo).orgSrcPage(orgSrcPage)
-				.copyrightYear(copyrightYear).mathTypeClassify(mathTypeClassify).userUniqId(userUniqId).build();
+		return MathContentsComp.builder().seqNo(seqNo).contentsNo(contentsNo).orgSrcRef(orgSrcRef).orgSrcNo(orgSrcNo)
+				.orgSrcPage(orgSrcPage).copyrightYear(copyrightYear).mathTypeClassify(mathTypeClassify)
+				.userUniqId(userUniqId).build();
 	}
 }

@@ -17,8 +17,7 @@ public class MathContentsGrammerDto {
 	public String contentsGram;
 
 	public MathContentsGrammer toEntity() {
-		return MathContentsGrammer.builder().contentsNo(contentsNo).contentsGram(contentsGram)
-										.build();
+		return MathContentsGrammer.builder().contentsNo(contentsNo).contentsGram(contentsGram).build();
 	}
-	
+
 }

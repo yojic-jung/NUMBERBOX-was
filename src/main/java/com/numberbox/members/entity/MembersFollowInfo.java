@@ -21,12 +21,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class MembersFollowInfo {
-	
-	@EmbeddedId 
+
+	@EmbeddedId
 	public FollowUsersDomain followUsers;
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	@CreationTimestamp
-    private LocalDateTime sysCreateDate;
-	
+	private LocalDateTime sysCreateDate;
+
 }

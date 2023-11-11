@@ -12,11 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentsListModel {
-	
+
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
-	
+
 	String contents;
 	String contentsImg;
 	String solution;
@@ -28,20 +28,20 @@ public class ContentsListModel {
 	String thrNo;
 	String fourNo;
 	String fifNo;
-	String multiChoiceType;		//전체 체크해서 바이트 체크
+	String multiChoiceType; // 전체 체크해서 바이트 체크
 	String answer;
 	String choiceAnswer;
-	
+
 	Integer quesLevel;
 	Integer ansExistStts;
 	Integer svcPosbStts;
 	Integer contentsClassify;
 	Integer orgContentsNo;
 	Integer transConCnt;
-	
+
 	LocalDateTime sysCreateDate;
 	LocalDateTime sysUpdateDate;
-	
+
 	// license 테이블 필드값
 	Integer onlineLicStts;
 	Integer perLicStts;
@@ -49,17 +49,17 @@ public class ContentsListModel {
 	Integer entLicStts;
 	Integer entLicPrice;
 	Integer shareStts;
-	
+
 	// membersProfile 테이블 필드값
 	private long userNo;
-    public String nickname;
-    public String profileImgName;
-    public String profileImgPath;
+	public String nickname;
+	public String profileImgName;
+	public String profileImgPath;
 
 	// mathUnitInfo 정보
 	String subject;
 	String firUnit;
 	String secUnit;
 	String thrUnit;
-	
+
 }

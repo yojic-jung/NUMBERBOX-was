@@ -23,8 +23,8 @@ import lombok.NoArgsConstructor;
 public class MathConRepoInfo {
 	@EmbeddedId
 	MathConRepoDomain mathConRepoDomain;
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
 }

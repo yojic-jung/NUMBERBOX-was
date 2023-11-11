@@ -20,9 +20,9 @@ public class AccessLogInfoDto {
 	private String browserInfo;
 	private String osInfo;
 	private String clientIp;
-    private LocalDateTime loginTime;
-    
-    public AccessLogInfo toEntity() {
+	private LocalDateTime loginTime;
+
+	public AccessLogInfo toEntity() {
 		return AccessLogInfo.builder().userUniqId(userUniqId).browserInfo(browserInfo).osInfo(osInfo).clientIp(clientIp)
 				.build();
 	}

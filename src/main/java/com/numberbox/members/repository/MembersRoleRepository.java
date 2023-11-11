@@ -11,20 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.numberbox.members.entity.MembersRole;
 
-public interface MembersRoleRepository extends JpaRepository <MembersRole, Long> {
+public interface MembersRoleRepository extends JpaRepository<MembersRole, Long> {
 
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE MembersRole m set m.enabled = false where m.userUniqId = :userUniqId", nativeQuery = false)
-	public int disableEnabled(@Param("userUniqId")UUID userUniqId);
-	
+	public int disableEnabled(@Param("userUniqId") UUID userUniqId);
+
 	@Transactional
 	@Modifying // select 문이 아님을 나타낸다
 	@Query(value = "UPDATE MembersRole m set m.enabled = true where m.userUniqId = :userUniqId", nativeQuery = false)
-	public int ableEnabled(@Param("userUniqId")UUID userUniqId);
-	
+	public int ableEnabled(@Param("userUniqId") UUID userUniqId);
+
 	public List<MembersRole> findByUserUniqId(UUID uuid);
-	
+
 	public List<MembersRole> findByRoleNameIn(List<String> roleNameList);
-	
+
 }

@@ -20,24 +20,24 @@ public class MathDocsPaperDto {
 
 	int docsNo;
 	String contentsNoList;
-	
+
 	@JsonIgnore
 	UUID userUniqId;
-	
+
 	String docsGrade;
 	String docsTitle;
 	String docsSubTitle;
 	String docsOwner;
 	int docsErrStts;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
 	LocalDateTime sysCreateDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd", timezone = "Asia/Seoul")
 	LocalDateTime sysUpdateDate;
-	
+
 	public MathDocsPaper toEntity() {
-		return MathDocsPaper.builder().docsNo(docsNo).contentsNoList(contentsNoList).userUniqId(userUniqId).docsGrade(docsGrade)
-				.docsTitle(docsTitle).docsSubTitle(docsSubTitle).docsOwner(docsOwner).docsErrStts(docsErrStts)
-				.build();
+		return MathDocsPaper.builder().docsNo(docsNo).contentsNoList(contentsNoList).userUniqId(userUniqId)
+				.docsGrade(docsGrade).docsTitle(docsTitle).docsSubTitle(docsSubTitle).docsOwner(docsOwner)
+				.docsErrStts(docsErrStts).build();
 	}
 }

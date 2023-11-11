@@ -14,5 +14,5 @@ public class ContentsCnt {
 	int unitUniqNo;
 	int typeNo;
 	long cnt;
-	
+
 }

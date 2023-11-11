@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PasswordModel {
 
-	 private String oldPassword;
-	 private String newPassword;
+	private String oldPassword;
+	private String newPassword;
 }
