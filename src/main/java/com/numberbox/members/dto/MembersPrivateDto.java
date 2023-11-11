@@ -17,12 +17,12 @@ import lombok.Setter;
 public class MembersPrivateDto {
 	@JsonIgnore
 	private UUID userUniqId;
-	
+
 	private String userName;
 	private String birth;
-    private String phoneNumber;
-   
-    public MembersPrivate toEntity() {
+	private String phoneNumber;
+
+	public MembersPrivate toEntity() {
 		return MembersPrivate.builder().userUniqId(userUniqId).userName(userName).birth(birth).phoneNumber(phoneNumber)
 				.build();
 	}

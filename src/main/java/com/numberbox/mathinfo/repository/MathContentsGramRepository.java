@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.numberbox.mathinfo.entity.MathContentsGrammer;
 
-public interface MathContentsGramRepository extends JpaRepository <MathContentsGrammer, Integer> {
-	
+public interface MathContentsGramRepository extends JpaRepository<MathContentsGrammer, Integer> {
+
 	public void deleteByContentsNo(int contentsNo);
-	
+
 }

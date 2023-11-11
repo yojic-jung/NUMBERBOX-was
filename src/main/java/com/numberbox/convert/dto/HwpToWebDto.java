@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HwpToWebDto {
-	
+
 	MultipartFile hwpFile;
 }

@@ -17,10 +17,9 @@ public class MembersFollowInfoDto {
 
 	long seqNo;
 	FollowUsersDto followUsersDto;
-    private LocalDateTime sysCreateDate;
-	
-    public MembersFollowInfo toEntity() {
-		return MembersFollowInfo.builder().followUsers(followUsersDto.toEntity()).sysCreateDate(sysCreateDate)
-				.build();
+	private LocalDateTime sysCreateDate;
+
+	public MembersFollowInfo toEntity() {
+		return MembersFollowInfo.builder().followUsers(followUsersDto.toEntity()).sysCreateDate(sysCreateDate).build();
 	}
 }

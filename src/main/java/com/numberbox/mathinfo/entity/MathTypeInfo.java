@@ -17,25 +17,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="math_type_info")
+@Table(name = "math_type_info")
 public class MathTypeInfo {
-	
-	@EmbeddedId 
+
+	@EmbeddedId
 	public MathTypeDomain mathTypeDomain;
 
-	
 	@Column(length = 1500, nullable = false)
 	public String quesType;
-	
+
 	@Column(length = 2, nullable = false)
 	public int typeOrder;
-	
+
 	/*
-	@Builder
-    public MathTypeInfo(int type_id, int unitUniqNo, String quesType) {
-        this.type_id = type_id;
-        this.unitUniqNo = unitUniqNo;
-        this.quesType = quesType;
-    }
-    */
+	 * @Builder public MathTypeInfo(int type_id, int unitUniqNo, String quesType) {
+	 * this.type_id = type_id; this.unitUniqNo = unitUniqNo; this.quesType =
+	 * quesType; }
+	 */
 }

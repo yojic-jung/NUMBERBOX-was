@@ -33,27 +33,26 @@ import com.numberbox.mathinfo.service.MathResourceService;
 @RestController
 @RequestMapping("/mathInfo")
 public class MathInfoController {
-	
+
 	@Autowired
 	MathContentsInfoService mathContentsInfoService;
 	@Autowired
 	MathResourceService mathResourceService;
 	@Autowired
 	ImgFileService imgFileService;
-	
+
 	@GetMapping("/unitInfo")
 	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		String onlyExistUnit = (String) request.getParameter("onlyExistUnit");
 		map.put("mathSubjectInfo", mathContentsInfoService.takeMathSubjectInfo(onlyExistUnit));
-		//map.put("mathFirUnitInfo", mathContentsInfoService.takeMathFirUnitInfo());
+		// map.put("mathFirUnitInfo", mathContentsInfoService.takeMathFirUnitInfo());
 		map.put("mathSecUnitInfo", mathContentsInfoService.takeMathSecUnitInfo(onlyExistUnit));
 		map.put("mathThrUnitInfo", mathContentsInfoService.takeMathThrUnitInfo(onlyExistUnit));
-		//map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfo());
+		// map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfo());
 		return map;
 	}
-	
-	
+
 	@GetMapping("/typeInfo")
 	public HashMap<String, Object> typeInfo(HttpServletRequest request) {
 		String unitUniqNo = (String) request.getParameter("unitUniqNo");
@@ -61,7 +60,7 @@ public class MathInfoController {
 		map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfo(unitUniqNo));
 		return map;
 	}
-	
+
 	@GetMapping("/typeInfoList")
 	public HashMap<String, Object> typeInfoList(HttpServletRequest request) {
 		String unitUniqNoList = (String) request.getParameter("unitUniqNoList");
@@ -69,166 +68,188 @@ public class MathInfoController {
 		map.put("mathTypeInfoList", mathContentsInfoService.takeMathTypeInfoList(unitUniqNoList));
 		return map;
 	}
-	
+
 	@GetMapping("/takeUnitInfoList")
 	public HashMap<String, Object> takeUnitInfoList(HttpServletRequest request) {
 		String value = (String) request.getParameter("value");
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList( value));
+		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList(value));
 		return map;
 	}
-	
+
 	@PostMapping("/takeUnitInfoList")
 	public HashMap<String, Object> takeUnitInfoList(MathUnitInfoDto unitInfoDto) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathUnitInfoList", mathContentsInfoService.takeUnitInfoList(unitInfoDto));
 		return map;
 	}
-	
+
 	@GetMapping("/takeShortCutKey")
 	public HashMap<String, Object> takeShortCutKey() {
 		return mathContentsInfoService.takeShortCutKey();
 	}
-	
+
 	@PostMapping("/mathUnitAnalysis")
-	public HashMap<String, Object> mathAnalysis(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto) throws IOException {
-		HashMap<String, Object> map = mathContentsInfoService.takeMathUnitListByKeyword(mathContentsGrammerDto.getContentsGram());
-        //s3에 저장
+	public HashMap<String, Object> mathAnalysis(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto)
+			throws IOException {
+		HashMap<String, Object> map = mathContentsInfoService
+				.takeMathUnitListByKeyword(mathContentsGrammerDto.getContentsGram());
+		// s3에 저장
 		return map;
 	}
-	
+
 	@PostMapping("/mathAiCompContents")
-	public HashMap<String, Object> mathAiCompContents(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto) throws IOException {
-		HashMap<String, Object> map = mathContentsInfoService.takemathAiCompContents(mathContentsGrammerDto.getContentsGram());
-        //s3에 저장
+	public HashMap<String, Object> mathAiCompContents(@ModelAttribute MathContentsGrammerDto mathContentsGrammerDto)
+			throws IOException {
+		HashMap<String, Object> map = mathContentsInfoService
+				.takemathAiCompContents(mathContentsGrammerDto.getContentsGram());
+		// s3에 저장
 		return map;
 	}
-	
+
 	@PostMapping("/makeContents")
-	public HashMap<String, Object> makeContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+	public HashMap<String, Object> makeContents(@ModelAttribute MathContentsDto mathContentsDto,
+			HttpServletRequest request)
+			throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
 		boolean isUpdtMode = mathContentsDto.getContentsNo() != 0;
-		String accessToken = (String)request.getHeader("access-token");
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken, false);
-		imgFileService.registerImgFileInfo(10, (int)map.get("contentsNo"),  mathContentsDto.getImgTagSrc());
+		String accessToken = (String) request.getHeader("access-token");
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken,
+				false);
+		imgFileService.registerImgFileInfo(10, (int) map.get("contentsNo"), mathContentsDto.getImgTagSrc());
 		imgFileService.removeTmpImgFileInfo(mathContentsDto.getImgTagSrc());
-		if(isUpdtMode) {
+		if (isUpdtMode) {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
 		}
 		return map;
 	}
-	
+
 	@PostMapping("/registerContentsGrammer")
-	public HashMap<String, Object> registerContentsGrammer(@ModelAttribute MathContentsGrammerDto mathContentsGramDto)  {
+	public HashMap<String, Object> registerContentsGrammer(@ModelAttribute MathContentsGrammerDto mathContentsGramDto) {
 		mathContentsInfoService.registerContentsGram(mathContentsGramDto);
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("saveSuccess", true);
 		return map;
 	}
-	
+
 	@PostMapping("/registerContents")
-	public HashMap<String, Object> registerContents(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+	public HashMap<String, Object> registerContents(@ModelAttribute MathContentsDto mathContentsDto,
+			HttpServletRequest request)
+			throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
 		boolean isUpdtMode = mathContentsDto.getContentsNo() != 0;
-		String accessToken = (String)request.getHeader("access-token");
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken, true);
-		
-		imgFileService.registerImgFileInfo(10, (int)map.get("contentsNo"),  mathContentsDto.getImgTagSrc());
-		
-		if(isUpdtMode) {
+		String accessToken = (String) request.getHeader("access-token");
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathContentsInfoService.registerContents(mathContentsDto, path, accessToken,
+				true);
+
+		imgFileService.registerImgFileInfo(10, (int) map.get("contentsNo"), mathContentsDto.getImgTagSrc());
+
+		if (isUpdtMode) {
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
 		}
 		return map;
 	}
-	
+
 	@PostMapping("/registerContentsMulti")
-	public HashMap<String, Object> registerContentsMulti(@ModelAttribute MathContentsListDto contentsList, HttpServletRequest request) throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
-		String accessToken = (String)request.getHeader("access-token");
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object> map = mathContentsInfoService.registerContentsMulti(contentsList, path, accessToken, true);
-		if(map.get("accessDeny")!=null) {
+	public HashMap<String, Object> registerContentsMulti(@ModelAttribute MathContentsListDto contentsList,
+			HttpServletRequest request)
+			throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
+		String accessToken = (String) request.getHeader("access-token");
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathContentsInfoService.registerContentsMulti(contentsList, path, accessToken,
+				true);
+		if (map.get("accessDeny") != null) {
 			return map;
 		}
-		List<MathContentsDto> contentsDtoList = (List<MathContentsDto>)map.get("successDtoList");
+		List<MathContentsDto> contentsDtoList = (List<MathContentsDto>) map.get("successDtoList");
 		mathContentsInfoService.registerContentsGramMulti(contentsDtoList);
-		imgFileService.registerImgFileInfoMulti(10, contentsDtoList );
+		imgFileService.registerImgFileInfoMulti(10, contentsDtoList);
 		return map;
 	}
-	
+
 	@PostMapping("/takeContentsList")
-	public HashMap<String, Object> takeContentsList(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
+	public HashMap<String, Object> takeContentsList(@ModelAttribute MathContentsDto mathContentsDto,
+			HttpServletRequest request) {
 		HashMap<String, Object> map = mathContentsInfoService.takeContentsList(mathContentsDto, null);
 		map.put("isSearched", true);
 		return map;
 	}
-	
-	
+
 	@GetMapping("/takeContentsListByContentsNo")
 	public HashMap<String, Object> takeContentsListByContentsNo(HttpServletRequest request) {
-		String contentsNo = (String)request.getParameter("contentsno");
-		HashMap<String, Object>	map = mathContentsInfoService.takeContentsList(null, contentsNo);
+		String contentsNo = (String) request.getParameter("contentsno");
+		HashMap<String, Object> map = mathContentsInfoService.takeContentsList(null, contentsNo);
 		map.put("isSearched", true);
 		return map;
 	}
-	
+
 	@PostMapping("/takeWorkContentsList")
-	public HashMap<String, Object> takeWorkContentsList(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) {
+	public HashMap<String, Object> takeWorkContentsList(@ModelAttribute MathContentsDto mathContentsDto,
+			HttpServletRequest request) {
 		HashMap<String, Object> map = mathContentsInfoService.takeWorkContentsList(mathContentsDto, null);
 		map.put("isSearched", true);
-		
+
 		return map;
 	}
-	
+
 	@GetMapping("/takeWorkContentsListByContentsNo")
 	public HashMap<String, Object> takeWorkContentsListByContentsNo(HttpServletRequest request) {
-		String contentsNo = (String)request.getParameter("contentsno");
+		String contentsNo = (String) request.getParameter("contentsno");
 		HashMap<String, Object> map = mathContentsInfoService.takeWorkContentsList(null, contentsNo);
 		map.put("isSearched", true);
 		return map;
 	}
-	
+
 	@GetMapping("/takeMyWorkContents")
 	public HashMap<String, Object> takeMyContents(HttpServletRequest request) {
-		String contentsNo = (String)request.getParameter("contentsno");
+		String contentsNo = (String) request.getParameter("contentsno");
 		HashMap<String, Object> map = mathContentsInfoService.takeMyWorkContents(Integer.parseInt(contentsNo));
-		//본인이 만든 문제인 경우
-		if(!(boolean)map.get("existMsg")) {
-			MathContentsModel mathContents = (MathContentsModel)map.get("myContents");
+		// 본인이 만든 문제인 경우
+		if (!(boolean) map.get("existMsg")) {
+			MathContentsModel mathContents = (MathContentsModel) map.get("myContents");
 			map.put("myUnitInfo", mathContentsInfoService.takeUnitInfoByUnitUniqNo(mathContents.getUnitUniqNo()));
-			map.put("myTypeInfo", mathContentsInfoService.takeMathTypeInfo(Integer.toString(mathContents.getUnitUniqNo())));
+			map.put("myTypeInfo",
+					mathContentsInfoService.takeMathTypeInfo(Integer.toString(mathContents.getUnitUniqNo())));
 		}
 		return map;
 	}
-	
+
 	@GetMapping("/takeContentsByContentsNo")
 	public HashMap<String, Object> takeWorkContentsForTrans(HttpServletRequest request) {
-		String contentsNo = (String)request.getParameter("contentsno");
+		String contentsNo = (String) request.getParameter("contentsno");
 		HashMap<String, Object> map = mathContentsInfoService.takeContentsByContentsNo(Integer.parseInt(contentsNo));
 		return map;
 	}
-	
-	
+
 	@GetMapping("/takeMyContentsList")
 	public HashMap<String, Object> takeMyContentsList(HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(0, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(0,
+				Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
-	
+
 	@GetMapping("/takeUserContentsList")
 	public HashMap<String, Object> takeUserContentsList(@RequestParam int userNo, HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(userNo, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+		HashMap<String, Object> map = mathContentsInfoService.takeMyContentsList(userNo,
+				Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
-	
+
 	@GetMapping("/takeMyRepo")
 	public HashMap<String, Object> takeMyRepo(HttpServletRequest request) {
-		HashMap<String, Object> map = mathContentsInfoService.takeMyRepo(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+		HashMap<String, Object> map = mathContentsInfoService.takeMyRepo(
+				Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
-	
-	
+
 	@GetMapping("/myUnitTypeInfo")
 	public HashMap<String, Object> myUnitTypeInfo(HttpServletRequest request) {
 		int unitUniqNo = Integer.parseInt(request.getParameter("unitUniqNo"));
@@ -237,7 +258,7 @@ public class MathInfoController {
 		map.put("myTypeInfo", mathContentsInfoService.takeMathTypeInfo(Integer.toString(unitUniqNo)));
 		return map;
 	}
-	
+
 	@GetMapping("/mathTypeInfo")
 	public HashMap<String, Object> myUnitTypeInfoOnlyOne(HttpServletRequest request) {
 		String unitUniqNo = request.getParameter("unitUniqNo");
@@ -246,41 +267,45 @@ public class MathInfoController {
 		map.put("mathTypeInfo", mathContentsInfoService.takeMathTypeInfoOnlyOne(unitUniqNo, typeNo));
 		return map;
 	}
-	
+
 	@PostMapping("/changeConOrSolImg")
-	public HashMap<String, Object> changeConOrSolImg(@ModelAttribute MathContentsDto mathContentsDto, HttpServletRequest request) throws IllegalStateException, IOException {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+	public HashMap<String, Object> changeConOrSolImg(@ModelAttribute MathContentsDto mathContentsDto,
+			HttpServletRequest request) throws IllegalStateException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		int updateCond = mathContentsInfoService.changeConOrSolImg(mathContentsDto, path);
-		if(updateCond == -1) {
+		if (updateCond == -1) {
 			map.put("existMsg", true);
 			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");
-		}else {
-			//모달창 전달 위해 수정된 객체 전달
+		} else {
+			// 모달창 전달 위해 수정된 객체 전달
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(mathContentsDto.getContentsNo());
 			map.put("mathContents", mathContents);
 		}
 		map.put("updateCond", updateCond);
 		return map;
 	}
-	
+
 	@PostMapping("/delConOrSolImg")
-	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol, HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+	public HashMap<String, Object> delConOrSolImg(@RequestParam int contentsNo, @RequestParam String conOrSol,
+			HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		int updateCond = mathContentsInfoService.delConOrSolImg(contentsNo, conOrSol, path);
-		if(updateCond == -1) {
+		if (updateCond == -1) {
 			map.put("existMsg", true);
 			map.put("serverMsg", "본인이 만든 문제에 등록된 이미지가 아닌 경우 이미지 수정이 불가능합니다.");
-		}else {
-			//모달창 전달 위해 수정된 객체 전달
+		} else {
+			// 모달창 전달 위해 수정된 객체 전달
 			MathContentsModel mathContents = mathContentsInfoService.takeMathContents(contentsNo);
 			map.put("mathContents", mathContents);
 		}
 		map.put("updateCond", updateCond);
 		return map;
 	}
-	
+
 	@GetMapping("/takeResourceMenu")
 	public HashMap<String, Object> takeResourceMenu() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -288,59 +313,70 @@ public class MathInfoController {
 		map.put("resourceMenuList", resourceMenuList);
 		return map;
 	}
-	
+
 	@PostMapping("/registerResource")
-	public HashMap<String, Object> registerResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object>  map = mathResourceService.registerResource(path, mathResourceDto);
+	public HashMap<String, Object> registerResource(MathResourceDto mathResourceDto, HttpServletRequest request)
+			throws IllegalStateException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathResourceService.registerResource(path, mathResourceDto);
 		return map;
 	}
-	
+
 	@PostMapping("/updateResource")
-	public HashMap<String, Object> updateResource(MathResourceDto mathResourceDto, HttpServletRequest request) throws IllegalStateException, IOException {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object>  map = mathResourceService.updateResource(path, mathResourceDto);
-		if((boolean)map.get("isSuccess") == true) {
-			HashMap<String, Object>  map2 = mathResourceService.takeNewMathResource(mathResourceDto.getResourceNo());
+	public HashMap<String, Object> updateResource(MathResourceDto mathResourceDto, HttpServletRequest request)
+			throws IllegalStateException, IOException {
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathResourceService.updateResource(path, mathResourceDto);
+		if ((boolean) map.get("isSuccess") == true) {
+			HashMap<String, Object> map2 = mathResourceService.takeNewMathResource(mathResourceDto.getResourceNo());
 			map.put("newMathResource", map2.get("newMathResource"));
 		}
-		
+
 		return map;
 	}
-	
+
 	@GetMapping("/takeResource")
 	public HashMap<String, Object> takeResource(@RequestParam int mainCateNo, HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
-		HashMap<String, Object> map = mathResourceService.takeResource(mainCateNo, path, Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
+		HashMap<String, Object> map = mathResourceService.takeResource(mainCateNo, path,
+				Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
-	
+
 	@GetMapping("/takeResourceByResourceNo")
 	public HashMap<String, Object> takeResourceByResourceNo(@RequestParam int resourceNo, HttpServletRequest request) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
 		List<MathResourceDto> resourceMenuList = mathResourceService.takeResourceByResourceNo(resourceNo, path);
 		map.put("resourceList", resourceMenuList);
 		return map;
 	}
-	
+
 	@GetMapping("/takeMyResource")
-	public HashMap<String, Object> takeMyResource(HttpServletRequest request) throws FileNotFoundException, IOException {
-		HashMap<String, Object> map = mathResourceService.takeMyResource(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+	public HashMap<String, Object> takeMyResource(HttpServletRequest request)
+			throws FileNotFoundException, IOException {
+		HashMap<String, Object> map = mathResourceService.takeMyResource(
+				Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		List<MathResourceMenu> resourceMenuList = mathResourceService.takeResourceMenu();
 		map.put("resourceMenuList", resourceMenuList);
 		return map;
 	}
-	
+
 	@GetMapping("/myResourceDel")
 	public HashMap<String, Object> myResourceDel(HttpServletRequest request) {
 		int resourceNo = Integer.parseInt(request.getParameter("resourceNo"));
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> map = mathResourceService.myResourceDel(resourceNo, path);
 		return map;
 	}
-	
-	
+
 	@GetMapping("/conSvcSttsChng")
 	public HashMap<String, Object> conSvcSttsChng(@RequestParam int contentsNo, @RequestParam int svcStts) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -348,53 +384,56 @@ public class MathInfoController {
 		map.put("isSuccess", isSuccess);
 		return map;
 	}
-	
+
 	@PostMapping("/registerCompContents")
-	public HashMap<String, Object> registerCompContents(MathContentsCompListDto compContentsList, HttpServletRequest request) throws IllegalStateException, IOException {
+	public HashMap<String, Object> registerCompContents(MathContentsCompListDto compContentsList,
+			HttpServletRequest request) throws IllegalStateException, IOException {
 		HashMap<String, Object> map = mathContentsInfoService.registerCompContents(compContentsList);
 		return map;
 	}
-	
+
 	@PostMapping("/registerIpsiContents")
-	public HashMap<String, Object> registerIpsiContents(MathContentsIpsiListDto ipsiContentsList, HttpServletRequest request) throws IllegalStateException, IOException {
+	public HashMap<String, Object> registerIpsiContents(MathContentsIpsiListDto ipsiContentsList,
+			HttpServletRequest request) throws IllegalStateException, IOException {
 		HashMap<String, Object> map = mathContentsInfoService.registerIpsiContents(ipsiContentsList);
 		return map;
 	}
-	
+
 	@GetMapping("/delCompContents")
 	public HashMap<String, Object> delCompContents(@RequestParam int seqNo, @RequestParam int contentsNo) {
 		HashMap<String, Object> successObj = mathContentsInfoService.delCompContents(seqNo, contentsNo);
 		return successObj;
 	}
-	
+
 	@GetMapping("/delIpsiContents")
 	public HashMap<String, Object> delIpsiContents(@RequestParam int seqNo, @RequestParam int contentsNo) {
 		HashMap<String, Object> successObj = mathContentsInfoService.delIpsiContents(seqNo, contentsNo);
 		return successObj;
 	}
-	
+
 	@GetMapping("/myContentsDel")
 	public HashMap<String, Object> myContentsDel(@RequestParam int contentsno, HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("/static");	//임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게 좋음(배포용 개발용 따로 관리 필요)
+		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
+																						// 좋음(배포용 개발용 따로 관리 필요)
 		HashMap<String, Object> successObj = mathContentsInfoService.myContentsDel(contentsno, path);
-		if((boolean)successObj.get("isDeleted")) {
+		if ((boolean) successObj.get("isDeleted")) {
 			imgFileService.removeImgFileInfo(10, contentsno);
 		}
 		return successObj;
 	}
-	
+
 	@GetMapping("/myRepoDel")
 	public HashMap<String, Object> myRepoDel(@RequestParam int contentsno) {
 		int isSuccess = mathContentsInfoService.myRepoDel(contentsno);
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(isSuccess==1) {
+		if (isSuccess == 1) {
 			map.put("isSuccess", true);
-		}else {
+		} else {
 			map.put("map.put(key, value);", false);
 		}
 		return map;
 	}
-	
+
 	@GetMapping("/likeContents")
 	public HashMap<String, Object> likeContents(@RequestParam int contentsno) {
 		HashMap<String, Object> successObj = new HashMap<>();
@@ -402,7 +441,7 @@ public class MathInfoController {
 		successObj.put("isSuccess", success);
 		return successObj;
 	}
-	
+
 	@GetMapping("/putInMyRepo")
 	public HashMap<String, Object> putInMyRepo(@RequestParam int contentsno) {
 		HashMap<String, Object> successObj = new HashMap<>();
@@ -410,85 +449,89 @@ public class MathInfoController {
 		successObj.put("isSuccess", success);
 		return successObj;
 	}
-	
+
 	@GetMapping("/takePPtSlideImge")
-	public HashMap<String, Object> takePPtSlideImge(HttpServletRequest request) throws FileNotFoundException, IOException {
+	public HashMap<String, Object> takePPtSlideImge(HttpServletRequest request)
+			throws FileNotFoundException, IOException {
 		int resourceNo = Integer.parseInt(request.getParameter("resourceNo"));
 		HashMap<String, Object> successObj = mathResourceService.takePPtSlideImge(resourceNo);
 		return successObj;
 	}
-	
+
 	@PostMapping("/changeQuesType")
 	public HashMap<String, Object> chngQuesType(MathTypeInfoModel mathTypeInfoModel) {
 		HashMap<String, Object> map = mathContentsInfoService.chngQuesType(mathTypeInfoModel);
 		return map;
 	}
-	
+
 	@GetMapping("/takeConCntByUnitUniqNo")
 	public HashMap<String, Object> takeConCntByUnitUniqNo(@RequestParam String unitUniqNo) {
 		HashMap<String, Object> map = mathContentsInfoService.takeConCntByUnitUniqNo(unitUniqNo);
 		return map;
 	}
-	
+
 	@GetMapping("/typeDel")
 	public HashMap<String, Object> typeDel(@RequestParam String unitUniqNo, @RequestParam String typeNo) {
 		HashMap<String, Object> map = mathContentsInfoService.typeDel(unitUniqNo, typeNo);
 		return map;
 	}
-	
+
 	@PostMapping("/mathTypeAdd")
 	public HashMap<String, Object> mathTypeAdd(MathTypeInfoModel mathTypeInfoModel) {
 		HashMap<String, Object> map = mathContentsInfoService.mathTypeAdd(mathTypeInfoModel);
 		return map;
 	}
-	
+
 	@GetMapping("/contentsMoveFromTo")
-	public HashMap<String, Object> contentsMoveFromTo(@RequestParam String fromUnitUniqNo, @RequestParam String fromTypeNo, @RequestParam String toUnitUniqNo, @RequestParam String toTypeNo) {
-		HashMap<String, Object> map = mathContentsInfoService.contentsMoveFromTo(fromUnitUniqNo, fromTypeNo, toUnitUniqNo, toTypeNo);
+	public HashMap<String, Object> contentsMoveFromTo(@RequestParam String fromUnitUniqNo,
+			@RequestParam String fromTypeNo, @RequestParam String toUnitUniqNo, @RequestParam String toTypeNo) {
+		HashMap<String, Object> map = mathContentsInfoService.contentsMoveFromTo(fromUnitUniqNo, fromTypeNo,
+				toUnitUniqNo, toTypeNo);
 		return map;
 	}
-	
+
 	@PostMapping("/mathTypeOrderChng")
 	public HashMap<String, Object> mathTypeOrderChng(MathTypeInfoListDto mathTypeInfoListDto) {
-		HashMap<String, Object> map = mathContentsInfoService.mathTypeOrderChng(mathTypeInfoListDto.getMathTypeInfoModel());
+		HashMap<String, Object> map = mathContentsInfoService
+				.mathTypeOrderChng(mathTypeInfoListDto.getMathTypeInfoModel());
 		return map;
 	}
-	
+
 	@GetMapping("/mathContentsStatistic")
 	public HashMap<String, Object> mathContentsStatistic() {
 		HashMap<String, Object> map = mathContentsInfoService.mathContentsStatistic();
 		return map;
 	}
-	
-	
+
 	@GetMapping("/takeIpsiYear")
 	public HashMap<String, Object> takeIpsiYearMonth() {
 		HashMap<String, Object> map = mathContentsInfoService.takeIpsiYear();
 		return map;
 	}
-	
+
 	@GetMapping("/takeIpsiMonth")
 	public HashMap<String, Object> takeIpsiMonth(HttpServletRequest request) {
 		int impYear = Integer.parseInt(request.getParameter("impYear"));
 		HashMap<String, Object> map = mathContentsInfoService.takeIpsiMonth(impYear);
 		return map;
 	}
-	
+
 	@GetMapping("/takeIpsiContentsByYear")
 	public HashMap<String, Object> takeIpsiContentsByYear(HttpServletRequest request) {
 		int impYear = Integer.parseInt(request.getParameter("impYear"));
 		int impMonth = Integer.parseInt(request.getParameter("impMonth"));
 		int curPageNum = Integer.parseInt(request.getParameter("curPageNum"));
 		int pageVolume = Integer.parseInt(request.getParameter("pageVolume"));
-		HashMap<String, Object> map = mathContentsInfoService.findByMathContentsIpsiImpYear(impYear, impMonth, curPageNum, pageVolume);
+		HashMap<String, Object> map = mathContentsInfoService.findByMathContentsIpsiImpYear(impYear, impMonth,
+				curPageNum, pageVolume);
 		return map;
 	}
-	
+
 	@GetMapping("/takeIpsiContentsByContentsNo")
 	public HashMap<String, Object> takeIpsiContentsByContentsNo(HttpServletRequest request) {
 		int contentsNo = Integer.parseInt(request.getParameter("contentsNo"));
 		HashMap<String, Object> map = mathContentsInfoService.takeMathContentsIpsiByContentsNo(contentsNo);
 		return map;
 	}
-	
+
 }

@@ -15,11 +15,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MathContentsIpsiDto implements Serializable{
-	
+public class MathContentsIpsiDto implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
-	int seqNo; 
+
+	int seqNo;
 	int contentsNo;
 	int manageIns;
 	int impYear;
@@ -28,14 +28,15 @@ public class MathContentsIpsiDto implements Serializable{
 	int paperType;
 	int oddQuesNum;
 	int evenQuesNum;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss", timezone = "Asia/Seoul")
 	Date sysCreateDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss", timezone = "Asia/Seoul")
 	Date sysUpdateDate;
-	
+
 	public MathContentsIpsi toEntity() {
-		return MathContentsIpsi.builder().seqNo(seqNo).contentsNo(contentsNo).manageIns(manageIns).impYear(impYear).impMonth(impMonth)
-				.wrongRatio(wrongRatio).paperType(paperType).oddQuesNum(oddQuesNum).evenQuesNum(evenQuesNum).build();
+		return MathContentsIpsi.builder().seqNo(seqNo).contentsNo(contentsNo).manageIns(manageIns).impYear(impYear)
+				.impMonth(impMonth).wrongRatio(wrongRatio).paperType(paperType).oddQuesNum(oddQuesNum)
+				.evenQuesNum(evenQuesNum).build();
 	}
 }

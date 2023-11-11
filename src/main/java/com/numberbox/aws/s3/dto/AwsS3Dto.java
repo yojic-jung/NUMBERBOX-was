@@ -14,5 +14,5 @@ import lombok.Setter;
 public class AwsS3Dto {
 	public String filePath;
 	public MultipartFile multipartFile;
-	
+
 }

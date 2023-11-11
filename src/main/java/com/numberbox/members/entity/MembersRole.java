@@ -24,14 +24,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "members_role")
 public class MembersRole {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long seqNo;
 
 	@JsonIgnore
-	@Column(columnDefinition = "BINARY(16)", updatable=false)
+	@Column(columnDefinition = "BINARY(16)", updatable = false)
 	private UUID userUniqId;
-	
-    private boolean enabled;
-    private String roleName;
+
+	private boolean enabled;
+	private String roleName;
 
 }

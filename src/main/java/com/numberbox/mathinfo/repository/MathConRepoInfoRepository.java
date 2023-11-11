@@ -9,18 +9,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.numberbox.mathinfo.entity.MathConRepoInfo;
 
-public interface MathConRepoInfoRepository extends JpaRepository <MathConRepoInfo, Integer> {
+public interface MathConRepoInfoRepository extends JpaRepository<MathConRepoInfo, Integer> {
 
-	public MathConRepoInfo findByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(int contentsNo, UUID userUniqId);
-	
-	public List<MathConRepoInfo> findByMathConRepoDomainContentsNoInAndMathConRepoDomainUserUniqId(List<Integer> contentsNo, UUID userUniqId);
-	
+	public MathConRepoInfo findByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(int contentsNo,
+			UUID userUniqId);
+
+	public List<MathConRepoInfo> findByMathConRepoDomainContentsNoInAndMathConRepoDomainUserUniqId(
+			List<Integer> contentsNo, UUID userUniqId);
+
 	public Page<MathConRepoInfo> findByMathConRepoDomainUserUniqId(UUID userUniqId, Pageable page);
-	
+
 	public int deleteByMathConRepoDomainContentsNoAndMathConRepoDomainUserUniqId(int contentsNo, UUID userUniqId);
-	
+
 	public int deleteByMathConRepoDomainContentsNo(int contentsNo);
-	
+
 	public int deleteByMathConRepoDomainUserUniqId(UUID userUniqId);
-	
+
 }

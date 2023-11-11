@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MathTypeInfoListDto {
-	
-	 private List<MathTypeInfoModel> mathTypeInfoModel;
+
+	private List<MathTypeInfoModel> mathTypeInfoModel;
 
 }

@@ -22,11 +22,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshTokenInfo {
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long id;
-	  private String token;
-	  private UUID userUniqId;
-	  @CreationTimestamp
-	  private LocalDateTime tokenCreateDate;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String token;
+	private UUID userUniqId;
+	@CreationTimestamp
+	private LocalDateTime tokenCreateDate;
 }

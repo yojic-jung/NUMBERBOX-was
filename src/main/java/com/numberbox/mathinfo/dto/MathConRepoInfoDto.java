@@ -16,11 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathConRepoInfoDto {
-	
+
 	public MathConRepoDomain mathConRepoDomain;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss", timezone = "Asia/Seoul")
 	LocalDateTime sysCreateDate;
-	
+
 	public MathConRepoInfo toEntity() {
 		return MathConRepoInfo.builder().mathConRepoDomain(mathConRepoDomain).build();
 	}

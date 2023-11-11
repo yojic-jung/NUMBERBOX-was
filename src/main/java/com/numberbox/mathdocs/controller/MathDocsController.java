@@ -23,10 +23,10 @@ public class MathDocsController {
 
 	@Autowired
 	MathDocsSevice mathDocsSevice;
-	
+
 	@GetMapping("/mathDocs")
 	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
-		String unitUniqNoAndTypeNo = (String)request.getParameter("unitUniqNoAndTypeNoList");
+		String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
 		int quesLevel = Integer.parseInt(request.getParameter("quesLevel"));
 		int conCnt = Integer.parseInt(request.getParameter("conCnt"));
 		List<MathContentsDto> list = mathDocsSevice.takeMathSubjectInfo(unitUniqNoAndTypeNo, quesLevel, conCnt);
@@ -34,67 +34,71 @@ public class MathDocsController {
 		map.put("mathContentsList", list);
 		return map;
 	}
-	
+
 	@GetMapping("/mathDocsIpsi")
 	public HashMap<String, Object> ipsiContentsInfo(HttpServletRequest request) {
-		String unitUniqNoAndTypeNo = (String)request.getParameter("unitUniqNoAndTypeNoList");
-		String quesLevel = (String)request.getParameter("quesLevel");
+		String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
+		String quesLevel = (String) request.getParameter("quesLevel");
 		int conCnt = Integer.parseInt(request.getParameter("conCnt"));
 		int wrongRatioMin = Integer.parseInt(request.getParameter("wrongRatioMin"));
 		int wrongRatioMax = Integer.parseInt(request.getParameter("wrongRatioMax"));
 		int ipsiYearMin = Integer.parseInt(request.getParameter("ipsiYearMin"));
 		int ipsiYearMax = Integer.parseInt(request.getParameter("ipsiYearMax"));
-		String ipsiMonth = (String)request.getParameter("ipsiMonth");
-		List<MathContentsDto> list = mathDocsSevice.takeMathIpsiContents(unitUniqNoAndTypeNo, quesLevel, conCnt, wrongRatioMin, wrongRatioMax, ipsiYearMin, ipsiYearMax, ipsiMonth);
+		String ipsiMonth = (String) request.getParameter("ipsiMonth");
+		List<MathContentsDto> list = mathDocsSevice.takeMathIpsiContents(unitUniqNoAndTypeNo, quesLevel, conCnt,
+				wrongRatioMin, wrongRatioMax, ipsiYearMin, ipsiYearMax, ipsiMonth);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathContentsList", list);
 		return map;
 	}
-	
+
 	@GetMapping("/similarContents")
 	public HashMap<String, Object> similarContents(HttpServletRequest request) {
 		int unitUniqNo = Integer.parseInt(request.getParameter("unitUniqNo").trim());
 		int typeNo = Integer.parseInt(request.getParameter("typeNo").trim());
 		int contentsClassify = Integer.parseInt(request.getParameter("contentsClassify").trim());
-		
+
 		List<MathContentsDto> list = mathDocsSevice.takeSimilarContents(unitUniqNo, typeNo, contentsClassify);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathSimilarConList", list);
 		return map;
 	}
-	
+
 	@PostMapping("/registerMathDocsPaper")
-	public HashMap<String, Object> registerMathDocsPaper(MathDocsPaperDto mathDocsPaperDto, HttpServletRequest request) {
+	public HashMap<String, Object> registerMathDocsPaper(MathDocsPaperDto mathDocsPaperDto,
+			HttpServletRequest request) {
 		HashMap<String, Object> map = mathDocsSevice.registerMathDocsPaper(mathDocsPaperDto);
 		return map;
 	}
-	
+
 	@PostMapping("/registerMathDocsUsage")
-	public HashMap<String, Object> registerMathDocsUsage(MathDocsUsageDto mathDocsUsageDto, HttpServletRequest request) {
+	public HashMap<String, Object> registerMathDocsUsage(MathDocsUsageDto mathDocsUsageDto,
+			HttpServletRequest request) {
 		HashMap<String, Object> map = mathDocsSevice.registerMathDocsUsage(mathDocsUsageDto);
 		return map;
 	}
-	
+
 	@GetMapping("/myMathDocs")
 	public HashMap<String, Object> myMathDocs(HttpServletRequest request) {
-		HashMap<String, Object> map = mathDocsSevice.myMathDocs(Integer.parseInt(request.getParameter("curPageNum")), Integer.parseInt(request.getParameter("pageVolume")));
+		HashMap<String, Object> map = mathDocsSevice.myMathDocs(Integer.parseInt(request.getParameter("curPageNum")),
+				Integer.parseInt(request.getParameter("pageVolume")));
 		return map;
 	}
-	
+
 	@GetMapping("/delMyMathDocs")
 	public HashMap<String, Object> delMyMathDocs(HttpServletRequest request) {
-		String docsNo = (String)request.getParameter("docsNo");
+		String docsNo = (String) request.getParameter("docsNo");
 		HashMap<String, Object> map = mathDocsSevice.delMyMathDocs(Integer.parseInt(docsNo));
 		return map;
 	}
-	
+
 	@GetMapping("/mathDocsByMyMathDocsPage")
 	public HashMap<String, Object> mathDocsByMyMathDocsPage(HttpServletRequest request) {
-		String docsNo = (String)request.getParameter("docsNo");
+		String docsNo = (String) request.getParameter("docsNo");
 		HashMap<String, Object> map = mathDocsSevice.mathDocsByMyMathDocsPage(Integer.parseInt(docsNo));
 		return map;
 	}
-	
+
 	@GetMapping("/mathDocsUsageStatistic")
 	public HashMap<String, Object> mathDocsUsageStatistic() {
 		HashMap<String, Object> map = new HashMap<>();
@@ -103,7 +107,7 @@ public class MathDocsController {
 		List<CustomTenFieldDto> list3 = mathDocsSevice.mathDocsUsageStatisticByProfileAndDay();
 		List<CustomTenFieldDto> list4 = mathDocsSevice.mathDocsUsageStatisticByDayOfWeek();
 		List<CustomTenFieldDto> list5 = mathDocsSevice.countMathDocsUsageGroupBySysCreateDateMonth();
-		
+
 		map.put("docsUsage", list);
 		map.put("docsUsageByProfile", list2);
 		map.put("docsUsageByProfileAndDay", list3);
@@ -111,6 +115,5 @@ public class MathDocsController {
 		map.put("docsUsageByMonth", list5);
 		return map;
 	}
-	
-	
+
 }

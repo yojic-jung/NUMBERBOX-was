@@ -28,38 +28,36 @@ import lombok.NoArgsConstructor;
 @Entity
 @DynamicUpdate
 public class HwpConvertContents {
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  Long convertNo;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	Long convertNo;
 
-	  @JsonIgnore
-	  @Column(columnDefinition = "BINARY(16)", nullable = false, updatable=false)
-	  UUID userUniqId;
-	  
-	  @Column(updatable=false)
-	  boolean converted;
-	  
-	  String convertFileName;
-	  String convertContents;
-	  
-	  @Column(updatable=false)
-	  String imgPath;
-	  
-	  /*
-	   * 변환 에러 구분 상태코드
-	   * 0 : 정상
-	   * 1 : 에러 존재
-	   */
-	  @Column(updatable=false)
-	  boolean errStts;
-	  
-	  @Column(updatable=false)
-	  @CreationTimestamp
-	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
-	  LocalDateTime sysCreateDate;
-	
-	  @Column
-	  @UpdateTimestamp
-	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
-	  LocalDateTime sysUpdateDate;
+	@JsonIgnore
+	@Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
+	UUID userUniqId;
+
+	@Column(updatable = false)
+	boolean converted;
+
+	String convertFileName;
+	String convertContents;
+
+	@Column(updatable = false)
+	String imgPath;
+
+	/*
+	 * 변환 에러 구분 상태코드 0 : 정상 1 : 에러 존재
+	 */
+	@Column(updatable = false)
+	boolean errStts;
+
+	@Column(updatable = false)
+	@CreationTimestamp
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+	LocalDateTime sysCreateDate;
+
+	@Column
+	@UpdateTimestamp
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+	LocalDateTime sysUpdateDate;
 }

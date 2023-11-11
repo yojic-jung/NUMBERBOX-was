@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class MathContentsGrammer {
-	
+
 	@Id
 	@Column(nullable = false)
 	public int contentsNo;
-	
+
 	@Column(length = 16000, nullable = false)
 	public String contentsGram;
 

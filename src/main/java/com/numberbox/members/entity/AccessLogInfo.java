@@ -23,17 +23,17 @@ import lombok.NoArgsConstructor;
 public class AccessLogInfo {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int logInfoNo;
-	
+
 	private UUID userUniqId;
-	
+
 	private String browserInfo;
-	
+
 	private String osInfo;
-	
+
 	private String clientIp;
-	
+
 	@CreationTimestamp
-    private LocalDateTime loginTime;
+	private LocalDateTime loginTime;
 }

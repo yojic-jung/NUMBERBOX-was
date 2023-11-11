@@ -25,7 +25,6 @@ import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 
-
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
@@ -33,48 +32,49 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 	private MembersRepository membersRepository;
 	@Autowired
 	private MembersRoleRepository membersRoleRepository;
-	
-	@Transactional(rollbackFor= {Exception.class})
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-		String userEmail = (String)request.getParameter("username");
+
+	@Transactional(rollbackFor = { Exception.class })
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException exception) throws IOException, ServletException {
+		String userEmail = (String) request.getParameter("username");
 		String customErrMsg = "";
-		if(exception instanceof BadCredentialsException) {
+		if (exception instanceof BadCredentialsException) {
 			Members members = membersRepository.findByEmail(userEmail);
 			UUID userUniqId = members.getUserUniqId();
-			if(members.getFailCount() == 4) {
+			if (members.getFailCount() == 4) {
 				membersRoleRepository.disableEnabled(userUniqId);
-				membersRepository.increaseFailCount(userUniqId, members.getFailCount()+1);
+				membersRepository.increaseFailCount(userUniqId, members.getFailCount() + 1);
 				membersRepository.initLastFailTime(userUniqId, LocalDateTime.now());
 				customErrMsg = "해당 계정이 잠금되었습니다.\n15분 후 다시 시도해주세요.";
-			}else {
+			} else {
 				membersRepository.initLastFailTime(userUniqId, LocalDateTime.now());
-				membersRepository.increaseFailCount(userUniqId, members.getFailCount()+1);
+				membersRepository.increaseFailCount(userUniqId, members.getFailCount() + 1);
 				customErrMsg = "이메일과 비밀번호를 다시 한번 입력해주시기 바랍니다.\n5회 이상 실패시 15분간 계정이 비활성화 됩니다.";
 			}
-        } else if(exception instanceof InternalAuthenticationServiceException) {
-        	//없는 계정인 경우
-        	customErrMsg = "이메일과 비밀번호를 다시 한번 입력해주시기 바랍니다.\n5회 이상 실패시 15분간 계정이 비활성화 됩니다.";
-        } else if(exception instanceof DisabledException) {
-        	Members members = membersRepository.findByEmail(userEmail);
+		} else if (exception instanceof InternalAuthenticationServiceException) {
+			// 없는 계정인 경우
+			customErrMsg = "이메일과 비밀번호를 다시 한번 입력해주시기 바랍니다.\n5회 이상 실패시 15분간 계정이 비활성화 됩니다.";
+		} else if (exception instanceof DisabledException) {
+			Members members = membersRepository.findByEmail(userEmail);
 			UUID userUniqId = members.getUserUniqId();
-        	LocalDateTime lastFailTime = members.getLastFailTime();
-        	lastFailTime = lastFailTime.plusMinutes(15);
-        	//15분 지나면 다시 enabled true로 바꾸고 다시 한번 로그인 하도록 구현
-        	//failCount=0로 변경 
-        	if(lastFailTime.isBefore(LocalDateTime.now())) {
-        		membersRoleRepository.ableEnabled(userUniqId);
+			LocalDateTime lastFailTime = members.getLastFailTime();
+			lastFailTime = lastFailTime.plusMinutes(15);
+			// 15분 지나면 다시 enabled true로 바꾸고 다시 한번 로그인 하도록 구현
+			// failCount=0로 변경
+			if (lastFailTime.isBefore(LocalDateTime.now())) {
+				membersRoleRepository.ableEnabled(userUniqId);
 				membersRepository.initLastLoginDate(userUniqId, LocalDateTime.now());
 				customErrMsg = "계정 잠금이 풀렸습니다.\n다시 로그인 시도해주세요.";
-        	}else {
-        		membersRepository.initLastFailTime(userUniqId, LocalDateTime.now());
-        		customErrMsg = "해당 계정이 잠금되었습니다.\n15분 후 다시 시도해주세요.";
-        	}
-        } else if(exception instanceof CredentialsExpiredException) {
-        	customErrMsg = "계정이 만료되었습니다.";
-        }
+			} else {
+				membersRepository.initLastFailTime(userUniqId, LocalDateTime.now());
+				customErrMsg = "해당 계정이 잠금되었습니다.\n15분 후 다시 시도해주세요.";
+			}
+		} else if (exception instanceof CredentialsExpiredException) {
+			customErrMsg = "계정이 만료되었습니다.";
+		}
 		request.setAttribute("customErrMsg", customErrMsg);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/loginFail");
-        dispatcher.forward(request, response);
-    }
+		dispatcher.forward(request, response);
+	}
 }

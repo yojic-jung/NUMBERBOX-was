@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MathContentsCompListDto {
-	
-	 private List<MathContentsCompDto> mathContentsComp;
+
+	private List<MathContentsCompDto> mathContentsComp;
 
 }

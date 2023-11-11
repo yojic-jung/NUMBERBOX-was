@@ -14,25 +14,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RefreshTokenInfoService {
 
-    private final RefreshTokenInfoRepository refreshTokenInfoRepository;
+	private final RefreshTokenInfoRepository refreshTokenInfoRepository;
 
-    public boolean isTokenMatched(String token, UUID userUniqId) {
-        return refreshTokenInfoRepository.existsByTokenAndUserUniqId(token, userUniqId);
-    }
-    
-    public void deleteByToken(String token) {
-        refreshTokenInfoRepository.deleteByToken(token);
-    }
-    
-    public void deleteByTokenCreateDateLessThan(int day) {
-        refreshTokenInfoRepository.deleteByTokenCreateDateLessThan(LocalDateTime.now().minusDays(day));
-    }
+	public boolean isTokenMatched(String token, UUID userUniqId) {
+		return refreshTokenInfoRepository.existsByTokenAndUserUniqId(token, userUniqId);
+	}
 
-    public RefreshTokenInfo addRefreshToken(String token, UUID userUniqId) {
-        RefreshTokenInfo saveToken = RefreshTokenInfo.builder()
-            .token(token)
-            .userUniqId(userUniqId)
-            .build();
-        return refreshTokenInfoRepository.save(saveToken);
-    }
+	public void deleteByToken(String token) {
+		refreshTokenInfoRepository.deleteByToken(token);
+	}
+
+	public void deleteByTokenCreateDateLessThan(int day) {
+		refreshTokenInfoRepository.deleteByTokenCreateDateLessThan(LocalDateTime.now().minusDays(day));
+	}
+
+	public RefreshTokenInfo addRefreshToken(String token, UUID userUniqId) {
+		RefreshTokenInfo saveToken = RefreshTokenInfo.builder().token(token).userUniqId(userUniqId).build();
+		return refreshTokenInfoRepository.save(saveToken);
+	}
 }

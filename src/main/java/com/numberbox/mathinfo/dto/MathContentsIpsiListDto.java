@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MathContentsIpsiListDto{
-	
+public class MathContentsIpsiListDto {
+
 	private List<MathContentsIpsiDto> mathContentsIpsi;
-	
+
 }

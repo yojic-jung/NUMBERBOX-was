@@ -18,30 +18,30 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HwpConvertContentsDto {
-	  Long convertNo;
+	Long convertNo;
 
-	  @JsonIgnore
-	  UUID userUniqId;
-	  
-	  boolean converted;
-	  
-	  String convertFileName;
-	  String convertContents;
-	  
-	  String imgPath;
-	  
-	  List<String> imgFileTagList;
-	  
-	  boolean errStts;
-	  
-	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
-	  LocalDateTime sysCreateDate;
-	  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
-	  LocalDateTime sysUpdateDate;
-	  
-	  public HwpConvertContents toEntity() {
-			return HwpConvertContents.builder().convertNo(convertNo).userUniqId(userUniqId).converted(converted)
-					.convertFileName(convertFileName).convertContents(convertContents).imgPath(imgPath).errStts(errStts)
-					.build();
-		}
+	@JsonIgnore
+	UUID userUniqId;
+
+	boolean converted;
+
+	String convertFileName;
+	String convertContents;
+
+	String imgPath;
+
+	List<String> imgFileTagList;
+
+	boolean errStts;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+	LocalDateTime sysCreateDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
+	LocalDateTime sysUpdateDate;
+
+	public HwpConvertContents toEntity() {
+		return HwpConvertContents.builder().convertNo(convertNo).userUniqId(userUniqId).converted(converted)
+				.convertFileName(convertFileName).convertContents(convertContents).imgPath(imgPath).errStts(errStts)
+				.build();
+	}
 }

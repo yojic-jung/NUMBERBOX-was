@@ -18,34 +18,34 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MathContentsModel {
-	
+
 	int contentsNo;
 	int unitUniqNo;
 	int typeNo;
 	@JsonIgnore
 	UUID userUniqId;
-	
+
 	String contents;
 	String contentsImg;
-	
+
 	String solution;
 	String solutionImg;
-	
+
 	String imgPath;
-	
+
 	String solutionImgPath;
-	
+
 	String firNo;
 	String secNo;
 	String thrNo;
 	String fourNo;
 	String fifNo;
-	
+
 	String multiChoiceType;
-	
+
 	String answer;
-	String choiceAnswer;					//전체 체크해서 바이트 체크
-	
+	String choiceAnswer; // 전체 체크해서 바이트 체크
+
 	String orgSrcRef;
 	int orgSrcNo;
 	int quesLevel;
@@ -54,12 +54,12 @@ public class MathContentsModel {
 	int contentsClassify;
 	int orgContentsNo;
 	int transConCnt;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss", timezone = "Asia/Seoul")
 	LocalDateTime sysCreateDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss", timezone = "Asia/Seoul")
 	LocalDateTime sysUpdateDate;
-	
+
 	MembersProfileDto membersProfile;
 	MathUnitInfoDto mathUnitInfo;
 	MathTypeInfoDto mathTypeInfo;

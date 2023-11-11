@@ -9,25 +9,25 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-@Getter 
-@Setter 
+@Getter
+@Setter
 public class MathTypeDomain implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	public String typeNo; 
-	
+
+	public String typeNo;
+
 	public String unitUniqNo;
-	
+
 	public MathTypeDomain() {
-		
+
 	}
-	
+
 	@Builder
-	public MathTypeDomain(String typeNo, String unitUniqNo) { 
+	public MathTypeDomain(String typeNo, String unitUniqNo) {
 		this.typeNo = typeNo;
-		this.unitUniqNo = unitUniqNo; 
+		this.unitUniqNo = unitUniqNo;
 	}
 }

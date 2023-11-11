@@ -26,7 +26,7 @@ public class MembersPrivate {
 	@JsonIgnore
 	private UUID userUniqId;
 
-    private String userName;
-    private String phoneNumber;
-    private String birth;
+	private String userName;
+	private String phoneNumber;
+	private String birth;
 }

@@ -29,9 +29,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class MathContentsComp {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	int seqNo; 
-	@Column(length = 11, nullable = false, updatable=false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	int seqNo;
+	@Column(length = 11, nullable = false, updatable = false)
 	int contentsNo;
 	@Column(length = 20, nullable = false)
 	String orgSrcRef;
@@ -43,21 +43,20 @@ public class MathContentsComp {
 	String copyrightYear;
 	@Column(length = 20, nullable = true)
 	String mathTypeClassify;
-	
+
 	@JsonIgnore
 	@Column(columnDefinition = "BINARY(16)")
 	UUID userUniqId;
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	@CreationTimestamp
 	LocalDateTime sysCreateDate;
 	@Column
 	@UpdateTimestamp
 	LocalDateTime sysUpdateDate;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contentsNo", insertable=false, updatable=false)
-    private MathContents mathContents;
-	
-	
+	@JoinColumn(name = "contentsNo", insertable = false, updatable = false)
+	private MathContents mathContents;
+
 }

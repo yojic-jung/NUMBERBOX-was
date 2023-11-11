@@ -30,71 +30,69 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IamportClient {
-	
+
 	public static final String API_URL = "https://api.iamport.kr";
-	
+
 	protected String api_key = null;
 	protected String api_secret = null;
 	protected Iamport iamport = null;
-	
+
 	public IamportClient(String api_key, String api_secret) {
 		this.api_key = api_key;
 		this.api_secret = api_secret;
 		this.iamport = this.create();
 	}
-	
+
 	public IamportResponse<AccessToken> getAuth() throws IamportResponseException, IOException {
-		Call<IamportResponse<AccessToken>> call = this.iamport.token( new AuthData(this.api_key, this.api_secret) );
+		Call<IamportResponse<AccessToken>> call = this.iamport.token(new AuthData(this.api_key, this.api_secret));
 		Response<IamportResponse<AccessToken>> response = call.execute();
-		
-		if ( !response.isSuccessful() )	throw new IamportResponseException( getExceptionMessage(response), new HttpException(response) );
+
+		if (!response.isSuccessful())
+			throw new IamportResponseException(getExceptionMessage(response), new HttpException(response));
 
 		return response.body();
 	}
-	
+
 	/* 본인인증 */
-	public IamportResponse<Certification> certificationByImpUid(String imp_uid) throws IamportResponseException, IOException {
+	public IamportResponse<Certification> certificationByImpUid(String imp_uid)
+			throws IamportResponseException, IOException {
 		AccessToken auth = getAuth().getResponse();
 		Call<IamportResponse<Certification>> call = this.iamport.certification_by_imp_uid(auth.getToken(), imp_uid);
-		
+
 		Response<IamportResponse<Certification>> response = call.execute();
-		if ( !response.isSuccessful() )	throw new IamportResponseException( getExceptionMessage(response), new HttpException(response) );
+		if (!response.isSuccessful())
+			throw new IamportResponseException(getExceptionMessage(response), new HttpException(response));
 
 		return response.body();
 	}
-	
+
 	protected Iamport create() {
-		OkHttpClient client = new OkHttpClient.Builder()
-				.readTimeout(30, TimeUnit.SECONDS)
-				.connectTimeout(10, TimeUnit.SECONDS)
-				.build();
-		
-		Retrofit retrofit = new Retrofit.Builder()
-								.baseUrl(API_URL)
-								.addConverterFactory(buildGsonConverter())
-								.client(client)
-								.build();
-		
+		OkHttpClient client = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
+				.connectTimeout(10, TimeUnit.SECONDS).build();
+
+		Retrofit retrofit = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(buildGsonConverter())
+				.client(client).build();
+
 		return retrofit.create(Iamport.class);
 	}
-	
+
 	protected GsonConverterFactory buildGsonConverter() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+		GsonBuilder gsonBuilder = new GsonBuilder();
 
-        // Adding custom deserializers
-        Object escrowInvoiceStrategy = new EscrowInvoiceEntrySerializer();
-        
-        gsonBuilder.registerTypeAdapter(ScheduleEntry.class, new ScheduleEntrySerializer());
-        gsonBuilder.registerTypeAdapter(Schedule.class, new ScheduleEntrySerializer());
-        gsonBuilder.registerTypeAdapter(PaymentBalanceEntry.class, new BalanceEntrySerializer());
-        gsonBuilder.registerTypeAdapter(EscrowLogisInvoiceData.class, escrowInvoiceStrategy);
-        gsonBuilder.registerTypeAdapter(EscrowLogisInvoice.class, escrowInvoiceStrategy);
-        
-        Gson myGson = gsonBuilder.create();
+		// Adding custom deserializers
+		Object escrowInvoiceStrategy = new EscrowInvoiceEntrySerializer();
 
-        return GsonConverterFactory.create(myGson);
-    }
-	
+		gsonBuilder.registerTypeAdapter(ScheduleEntry.class, new ScheduleEntrySerializer());
+		gsonBuilder.registerTypeAdapter(Schedule.class, new ScheduleEntrySerializer());
+		gsonBuilder.registerTypeAdapter(PaymentBalanceEntry.class, new BalanceEntrySerializer());
+		gsonBuilder.registerTypeAdapter(EscrowLogisInvoiceData.class, escrowInvoiceStrategy);
+		gsonBuilder.registerTypeAdapter(EscrowLogisInvoice.class, escrowInvoiceStrategy);
+
+		Gson myGson = gsonBuilder.create();
+
+		return GsonConverterFactory.create(myGson);
+	}
+
 	protected String getExceptionMessage(Response<?> response) {
 		String error = null;
 		try {
@@ -105,9 +103,10 @@ public class IamportClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		if ( error == null )	error = response.message();
-		
+
+		if (error == null)
+			error = response.message();
+
 		return error;
 	}
 }

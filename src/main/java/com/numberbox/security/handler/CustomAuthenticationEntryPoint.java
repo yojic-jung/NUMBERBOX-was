@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-	
+
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			org.springframework.security.core.AuthenticationException authException)
 			throws IOException, ServletException {
-		if(authException instanceof InternalAuthenticationServiceException) {
+		if (authException instanceof InternalAuthenticationServiceException) {
 		}
-		
+
 	}
 }
