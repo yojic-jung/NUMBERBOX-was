@@ -26,6 +26,11 @@ public class MathDocsController {
 
 	@GetMapping("/mathDocs")
 	public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
+		HashMap<String, Object> mapTmp = new HashMap<String, Object>();
+		mapTmp.put("existMsg", true);
+		mapTmp.put("serverMsg", "N명의수학 서비스는 폐업으로 인하여  종료 되었습니다.");
+		return mapTmp;
+		/*
 		String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
 		int quesLevel = Integer.parseInt(request.getParameter("quesLevel"));
 		int conCnt = Integer.parseInt(request.getParameter("conCnt"));
@@ -33,10 +38,16 @@ public class MathDocsController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathContentsList", list);
 		return map;
+		*/
 	}
 
 	@GetMapping("/mathDocsIpsi")
 	public HashMap<String, Object> ipsiContentsInfo(HttpServletRequest request) {
+		HashMap<String, Object> mapTmp = new HashMap<String, Object>();
+		mapTmp.put("existMsg", true);
+		mapTmp.put("serverMsg", "N명의수학 서비스는 폐업으로 인하여  종료 되었습니다.");
+		return mapTmp;
+		/*
 		String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
 		String quesLevel = (String) request.getParameter("quesLevel");
 		int conCnt = Integer.parseInt(request.getParameter("conCnt"));
@@ -50,6 +61,7 @@ public class MathDocsController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("mathContentsList", list);
 		return map;
+		*/
 	}
 
 	@GetMapping("/similarContents")
