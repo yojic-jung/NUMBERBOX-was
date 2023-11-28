@@ -111,11 +111,6 @@ public class MathInfoController {
 	public HashMap<String, Object> makeContents(@ModelAttribute MathContentsDto mathContentsDto,
 			HttpServletRequest request)
 			throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
-		HashMap<String, Object> mapTmp = new HashMap<String, Object>();
-		mapTmp.put("existMsg", true);
-		mapTmp.put("serverMsg", "N명의수학 서비스는 폐업으로 인하여  종료 되었습니다.");
-		return mapTmp;
-		/*
 		boolean isUpdtMode = mathContentsDto.getContentsNo() != 0;
 		String accessToken = (String) request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
@@ -129,7 +124,6 @@ public class MathInfoController {
 			map.put("mathContents", mathContents);
 		}
 		return map;
-		*/
 	}
 
 	@PostMapping("/registerContentsGrammer")
@@ -164,11 +158,6 @@ public class MathInfoController {
 	public HashMap<String, Object> registerContentsMulti(@ModelAttribute MathContentsListDto contentsList,
 			HttpServletRequest request)
 			throws IllegalArgumentException, IllegalAccessException, IllegalStateException, IOException {
-		HashMap<String, Object> mapTmp = new HashMap<String, Object>();
-		mapTmp.put("existMsg", true);
-		mapTmp.put("serverMsg", "N명의수학 서비스는 폐업으로 인하여  종료 되었습니다.");
-		return mapTmp;
-		/*
 		String accessToken = (String) request.getHeader("access-token");
 		String path = request.getSession().getServletContext().getRealPath("/static"); // 임시용, 배포 이후 프로젝트 바깥 경로로 설정하는게
 																						// 좋음(배포용 개발용 따로 관리 필요)
@@ -181,21 +170,14 @@ public class MathInfoController {
 		mathContentsInfoService.registerContentsGramMulti(contentsDtoList);
 		imgFileService.registerImgFileInfoMulti(10, contentsDtoList);
 		return map;
-		*/
 	}
 
 	@PostMapping("/takeContentsList")
 	public HashMap<String, Object> takeContentsList(@ModelAttribute MathContentsDto mathContentsDto,
 			HttpServletRequest request) {
-		HashMap<String, Object> mapTmp = new HashMap<String, Object>();
-		mapTmp.put("existMsg", true);
-		mapTmp.put("serverMsg", "N명의수학 서비스는 폐업으로 인하여  종료 되었습니다.");
-		return mapTmp;
-		/*
 		HashMap<String, Object> map = mathContentsInfoService.takeContentsList(mathContentsDto, null);
 		map.put("isSearched", true);
 		return map;
-		*/
 	}
 
 	@GetMapping("/takeContentsListByContentsNo")
