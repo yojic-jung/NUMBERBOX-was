@@ -75,4 +75,7 @@ public class Members {
 	private LocalDateTime signupDate;
 	@UpdateTimestamp
 	private LocalDateTime lastLoginDate;
+	
+	@OneToMany(mappedBy = "members", fetch = FetchType.EAGER)
+	List<MembersProfile> membersProfile;
 }
