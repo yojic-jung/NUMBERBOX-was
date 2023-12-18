@@ -5,12 +5,16 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.numberbox.mathinfo.entity.MathContents;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,4 +61,8 @@ public class MembersProfile implements Serializable { // 조인시 pk로 조인 
 
 	@Column(length = 1, nullable = false, insertable = false, updatable = false)
 	public int aiContentsCnt;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "userUniqId", insertable = false, updatable = false)
+	private Members members;
 }
