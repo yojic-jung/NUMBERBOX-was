@@ -76,6 +76,6 @@ public class Members {
 	@UpdateTimestamp
 	private LocalDateTime lastLoginDate;
 	
-	@OneToMany(mappedBy = "members", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "members", fetch = FetchType.LAZY)
 	List<MembersProfile> membersProfile;
 }

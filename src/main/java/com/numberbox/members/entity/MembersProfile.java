@@ -62,7 +62,7 @@ public class MembersProfile implements Serializable { // 조인시 pk로 조인 
 	@Column(length = 1, nullable = false, insertable = false, updatable = false)
 	public int aiContentsCnt;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userUniqId", insertable = false, updatable = false)
 	private Members members;
 }
