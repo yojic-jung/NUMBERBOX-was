@@ -34,6 +34,8 @@ public class ConvertService {
 	HwpConvertContentsRepository hwpConvertContentsRepository;
 	@Autowired
 	HwpConvertContentsStatisticRepository hwpConvertContentsStatisticRepository;
+	@Autowired
+	private MembersProfileRepository membersProfileRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -46,9 +48,8 @@ public class ConvertService {
 			if (role.getRoleName().equals("TOP_TESTER"))
 				isTopTester = true; // 관리자는 넘버링크 문제 모두 수정가능
 		}
-		List<MembersProfile> memProfileList = members.getMembersProfile();
-		MembersProfile memProfile = memProfileList.get(0);
-		
+		MembersProfile memProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
+
 		HashMap<String, Object> map = new HashMap<>();
 		// 이미 3회 이상 다운 받은 경우 다운 불가
 		if (!isTopTester && memProfile.getHwpDownCnt() >= 3) {
@@ -134,10 +135,8 @@ public class ConvertService {
 		hwpConvertContentsStatisticRepository.save(statisticDto.toEntity());
 
 		if (isFirst) {
-			List<MembersProfile> memProfileList = members.getMembersProfile();
-			MembersProfile memProfile = memProfileList.get(0);
-			// 이벤트 처리 필요
-			// membersProfileRepository.changeHwpDownCnt(members.getUserUniqId(), membersProfile.getHwpDownCnt() + 1);
+			MembersProfile membersProfile = membersProfileRepository.findByUserUniqId(members.getUserUniqId());
+			membersProfileRepository.changeHwpDownCnt(members.getUserUniqId(), membersProfile.getHwpDownCnt() + 1);
 		}
 		map.put("convertNo", hwpConvert.getConvertNo());
 		map.put("isSuccess", true);
