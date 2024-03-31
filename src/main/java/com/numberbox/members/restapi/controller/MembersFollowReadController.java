@@ -2,6 +2,7 @@ package com.numberbox.members.restapi.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,16 +14,14 @@ import com.numberbox.members.service.MembersService;
 
 public class MembersFollowReadController {
 
-	private MembersService membersService;
+    private final MembersService membersService;
 
-	public MembersFollowReadController(MembersService membersService) {
-		this.membersService = membersService;
-	}
+    public MembersFollowReadController(MembersService membersService) {
+        this.membersService = membersService;
+    }
 
-	@GetMapping("/followingUser")
-	public HashMap<String, Object> followingUser(@RequestParam int userNo, HttpServletRequest request,
-			HttpServletResponse response) throws IllegalStateException, IOException {
-		HashMap<String, Object> map = membersService.followingUser(userNo);
-		return map;
-	}
+    @GetMapping("/followingUser")
+    public Map<String, Object> followingUser(@RequestParam int userNo) throws IllegalStateException {
+        return membersService.followingUser(userNo);
+    }
 }

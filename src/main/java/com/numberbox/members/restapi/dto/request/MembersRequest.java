@@ -1,4 +1,4 @@
-package com.numberbox.members.dto;
+package com.numberbox.members.restapi.dto.request;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MembersDto {
+public class MembersRequest {
 	@JsonIgnore
 	private UUID userUniqId;
 	private String email;

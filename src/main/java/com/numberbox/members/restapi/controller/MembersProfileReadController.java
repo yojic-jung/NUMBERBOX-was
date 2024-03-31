@@ -10,31 +10,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.numberbox.members.dto.MembersDto;
+import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.service.MembersService;
 
 @RestController
 public class MembersProfileReadController {
 
-	private MembersService membersService;
+    private final MembersService membersService;
 
-	public MembersProfileReadController(MembersService membersService) {
-		this.membersService = membersService;
-	}
+    public MembersProfileReadController(MembersService membersService) {
+        this.membersService = membersService;
+    }
 
-	@GetMapping("/takeProfile")
-	public Map<String, Object> takeProfile(HttpServletRequest request, HttpServletResponse response) {
-		return membersService.takeProfile();
-	}
+    @GetMapping("/takeProfile")
+    public Map<String, Object> takeProfile(HttpServletRequest request, HttpServletResponse response) {
+        return membersService.takeProfile();
+    }
 
-	@GetMapping("/takeUserProfile")
-	public Map<String, Object> takeUserProfile(@RequestParam int userNo, HttpServletRequest request,
-			HttpServletResponse response) {
-		return membersService.takeUserProfile(userNo);
-	}
+    @GetMapping("/takeUserProfile")
+    public Map<String, Object> takeUserProfile(@RequestParam int userNo, HttpServletRequest request, HttpServletResponse response) {
+        return membersService.takeUserProfile(userNo);
+    }
 
-	@PostMapping(value = "/confirmPassword")
-	public Map<String, Object> confirmPassword(MembersDto memberDto) {
-		return membersService.confirmPassword(memberDto.getPassword());
-	}
+    @PostMapping(value = "/confirmPassword")
+    public Map<String, Object> confirmPassword(MembersRequest memberDto) {
+        return membersService.confirmPassword(memberDto.getPassword());
+    }
 }

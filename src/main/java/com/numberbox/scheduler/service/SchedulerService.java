@@ -29,7 +29,7 @@ import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.mathinfo.repository.MathResourceCateRepository;
 import com.numberbox.mathinfo.repository.MathResourceImgRepository;
 import com.numberbox.mathinfo.repository.MathResourceRepository;
-import com.numberbox.members.dto.MembersDto;
+import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersRoleDto;
 import com.numberbox.members.entity.Members;
@@ -90,10 +90,10 @@ public class SchedulerService {
 			List<Members> membersList = membersRepository.findTop10000ByTmpPassword(true);
 			List<Members> targetMembersList = new ArrayList<>();
 			for (Members members : membersList) {
-				MembersDto membersDto = modelMapper.map(members, MembersDto.class);
-				membersDto.setTmpPassword(false);
-				membersDto.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()));
-				targetMembersList.add(membersDto.toEntity());
+				MembersRequest membersRequest = modelMapper.map(members, MembersRequest.class);
+				membersRequest.setTmpPassword(false);
+				membersRequest.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()));
+				targetMembersList.add(membersRequest.toEntity());
 			}
 			membersRepository.saveAll(targetMembersList);
 		}
@@ -197,9 +197,9 @@ public class SchedulerService {
 			mathDocsPaperRepository.deleteByUserUniqId(members.getUserUniqId());
 
 			// 8. 최종 탈퇴 처리(human_status=3(탈퇴회원), enabled=false)
-			MembersDto membersDto = modelMapper.map(members, MembersDto.class);
-			membersDto.setHumanStatus(3);
-			membersRepository.save(membersDto.toEntity());
+			MembersRequest membersRequest = modelMapper.map(members, MembersRequest.class);
+			membersRequest.setHumanStatus(3);
+			membersRepository.save(membersRequest.toEntity());
 			for (MembersRole role : roleList) {
 				MembersRoleDto roleDto = modelMapper.map(role, MembersRoleDto.class);
 				roleDto.setEnabled(false);
