@@ -1,4 +1,4 @@
-package com.numberbox.members.dto;
+package com.numberbox.members.restapi.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordModel {
+public class HwpJsonStrRequest {
 
-	private String oldPassword;
-	private String newPassword;
+    String jsonString;
+
 }

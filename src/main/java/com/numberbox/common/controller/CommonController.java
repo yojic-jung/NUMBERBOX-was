@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +23,12 @@ import com.numberbox.common.service.ImgFileService;
 @RequestMapping("/common")
 public class CommonController {
 
-	@Autowired
-	AwsS3Service awsS3Service;
-	@Autowired
-	ImgFileService imgFileService;
+	private AwsS3Service awsS3Service;
+	private ImgFileService imgFileService;
 
 	@PostMapping("/imgUpload")
-	public HashMap<String, Object> imgUpload(ImgFileModel imgFileModel) throws IOException {
-		HashMap<String, Object> map = new HashMap<String, Object>();
+	public Map<String, Object> imgUpload(ImgFileModel imgFileModel) throws IOException {
+		Map<String, Object> map = new HashMap<>();
 		// s3에 저장
 		String s3ImgUrl = awsS3Service.uploadToS3SeverSingleFile(imgFileModel.getActionId(),
 				imgFileModel.getMultipartFile());

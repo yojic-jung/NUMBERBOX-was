@@ -43,7 +43,7 @@ public class Members {
 		UUID uuid = Generators.timeBasedGenerator().generate();
 		String[] uuidArr = uuid.toString().split("-");
 		String uuidStr = uuidArr[2] + uuidArr[1] + uuidArr[0] + uuidArr[3] + uuidArr[4];
-		StringBuffer sb = new StringBuffer(uuidStr);
+		StringBuilder sb = new StringBuilder(uuidStr);
 		sb.insert(8, "-");
 		sb.insert(13, "-");
 		sb.insert(18, "-");
@@ -75,7 +75,4 @@ public class Members {
 	private LocalDateTime signupDate;
 	@UpdateTimestamp
 	private LocalDateTime lastLoginDate;
-	
-	@OneToMany(mappedBy = "members", fetch = FetchType.EAGER)
-	List<MembersProfile> membersProfile;
 }
