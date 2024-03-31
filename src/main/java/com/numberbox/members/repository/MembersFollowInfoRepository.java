@@ -1,13 +1,13 @@
 package com.numberbox.members.repository;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.numberbox.members.domain.FollowUsersDomain;
 import com.numberbox.members.entity.MembersFollowInfo;
 
-public interface MembersFollowInfoRepository extends JpaRepository<MembersFollowInfo, UUID> {
+public interface MembersFollowInfoRepository extends JpaRepository<MembersFollowInfo, FollowUsersDomain> {
 
 	public MembersFollowInfo findByFollowUsersFollowingUserNoAndFollowUsersFollowerUserNo(long followingUserNo,
 			long followerUserNo);

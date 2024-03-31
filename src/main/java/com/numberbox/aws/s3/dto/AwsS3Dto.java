@@ -12,7 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AwsS3Dto {
-	public String filePath;
-	public MultipartFile multipartFile;
-
+	private String filePath;
+	private MultipartFile multipartFile;
 }

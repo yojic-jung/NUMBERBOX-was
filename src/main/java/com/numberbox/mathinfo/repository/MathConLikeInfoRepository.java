@@ -5,9 +5,10 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.numberbox.mathinfo.domain.MathConLikeDomain;
 import com.numberbox.mathinfo.entity.MathConLikeInfo;
 
-public interface MathConLikeInfoRepository extends JpaRepository<MathConLikeInfo, Integer> {
+public interface MathConLikeInfoRepository extends JpaRepository<MathConLikeInfo, MathConLikeDomain> {
 
 	public MathConLikeInfo findByMathConLikeDomainContentsNoAndMathConLikeDomainUserUniqId(int contentsNo,
 			UUID userUniqId);
