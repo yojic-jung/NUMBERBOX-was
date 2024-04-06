@@ -1,6 +1,5 @@
 package com.numberbox.mathdocs.controller;
 
-import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.mathdocs.dto.MathDocsPaperDto;
 import com.numberbox.mathdocs.dto.MathDocsUsageDto;
 import com.numberbox.mathdocs.service.MathDocsSevice;
@@ -21,17 +20,17 @@ public class MathDocsController {
 
     @Autowired
     MathDocsSevice mathDocsSevice;
-
-    @GetMapping("/mathDocs")
-    public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
-        String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
-        int quesLevel = Integer.parseInt(request.getParameter("quesLevel"));
-        int conCnt = Integer.parseInt(request.getParameter("conCnt"));
-        List<MathContentsDto> list = mathDocsSevice.takeMathSubjectInfo(unitUniqNoAndTypeNo, quesLevel, conCnt);
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("mathContentsList", list);
-        return map;
-    }
+// todo jpql 정상적이지 않음 수정 필요(java 17 migration 과정 중)
+//    @GetMapping("/mathDocs")
+//    public HashMap<String, Object> contentsInfo(HttpServletRequest request) {
+//        String unitUniqNoAndTypeNo = (String) request.getParameter("unitUniqNoAndTypeNoList");
+//        int quesLevel = Integer.parseInt(request.getParameter("quesLevel"));
+//        int conCnt = Integer.parseInt(request.getParameter("conCnt"));
+//        List<MathContentsDto> list = mathDocsSevice.takeMathSubjectInfo(unitUniqNoAndTypeNo, quesLevel, conCnt);
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//        map.put("mathContentsList", list);
+//        return map;
+//    }
 
     @GetMapping("/mathDocsIpsi")
     public HashMap<String, Object> ipsiContentsInfo(HttpServletRequest request) {
@@ -96,22 +95,22 @@ public class MathDocsController {
         HashMap<String, Object> map = mathDocsSevice.mathDocsByMyMathDocsPage(Integer.parseInt(docsNo));
         return map;
     }
-
-    @GetMapping("/mathDocsUsageStatistic")
-    public HashMap<String, Object> mathDocsUsageStatistic() {
-        HashMap<String, Object> map = new HashMap<>();
-        List<CustomTenFieldDto> list = mathDocsSevice.mathDocsUsageStatistic();
-        List<CustomTenFieldDto> list2 = mathDocsSevice.mathDocsUsageStatisticByProfile();
-        List<CustomTenFieldDto> list3 = mathDocsSevice.mathDocsUsageStatisticByProfileAndDay();
-        List<CustomTenFieldDto> list4 = mathDocsSevice.mathDocsUsageStatisticByDayOfWeek();
-        List<CustomTenFieldDto> list5 = mathDocsSevice.countMathDocsUsageGroupBySysCreateDateMonth();
-
-        map.put("docsUsage", list);
-        map.put("docsUsageByProfile", list2);
-        map.put("docsUsageByProfileAndDay", list3);
-        map.put("docsUsageByDay", list4);
-        map.put("docsUsageByMonth", list5);
-        return map;
-    }
+// todo jpql 정상적이지 않음 수정 필요(java 17 migration 과정 중)
+//    @GetMapping("/mathDocsUsageStatistic")
+//    public HashMap<String, Object> mathDocsUsageStatistic() {
+//        HashMap<String, Object> map = new HashMap<>();
+//        List<CustomTenFieldDto> list = mathDocsSevice.mathDocsUsageStatistic();
+//        List<CustomTenFieldDto> list2 = mathDocsSevice.mathDocsUsageStatisticByProfile();
+//        List<CustomTenFieldDto> list3 = mathDocsSevice.mathDocsUsageStatisticByProfileAndDay();
+//        List<CustomTenFieldDto> list4 = mathDocsSevice.mathDocsUsageStatisticByDayOfWeek();
+//        List<CustomTenFieldDto> list5 = mathDocsSevice.countMathDocsUsageGroupBySysCreateDateMonth();
+//
+//        map.put("docsUsage", list);
+//        map.put("docsUsageByProfile", list2);
+//        map.put("docsUsageByProfileAndDay", list3);
+//        map.put("docsUsageByDay", list4);
+//        map.put("docsUsageByMonth", list5);
+//        return map;
+//    }
 
 }

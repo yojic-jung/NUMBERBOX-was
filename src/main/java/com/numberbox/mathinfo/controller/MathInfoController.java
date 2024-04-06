@@ -480,12 +480,12 @@ public class MathInfoController {
                 .mathTypeOrderChng(mathTypeInfoListDto.getMathTypeInfoModel());
         return map;
     }
-
-    @GetMapping("/mathContentsStatistic")
-    public HashMap<String, Object> mathContentsStatistic() {
-        HashMap<String, Object> map = mathContentsInfoService.mathContentsStatistic();
-        return map;
-    }
+// todo jpql 정상적이지 않음 수정 필요(java 17 migration 과정 중)
+//    @GetMapping("/mathContentsStatistic")
+//    public HashMap<String, Object> mathContentsStatistic() {
+//        HashMap<String, Object> map = mathContentsInfoService.mathContentsStatistic();
+//        return map;
+//    }
 
     @GetMapping("/takeIpsiYear")
     public HashMap<String, Object> takeIpsiYearMonth() {

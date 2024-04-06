@@ -1,6 +1,5 @@
 package com.numberbox.mathinfo.service;
 
-import com.numberbox.common.util.CustomTenFieldDto;
 import com.numberbox.common.util.DeduplicationUtils;
 import com.numberbox.common.util.MathProblemAnalyzer;
 import com.numberbox.mathinfo.domain.MathConLikeDomain;
@@ -33,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -1310,70 +1308,70 @@ public class MathContentsInfoService {
         map.put("isSuccess", true);
         return map;
     }
-
-    public HashMap<String, Object> mathContentsStatistic() {
-
-        HashMap<String, Object> map = new HashMap<>();
-        List<CustomTenFieldDto> list = mathContentsRepository.mathContentsStatistic();
-        CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "나이", "문제 수", null, null, null, null, null, null, null);
-
-        LocalDate now = LocalDate.now();
-        String fullYearStr = Integer.toString(now.getYear());
-        int year = Integer.parseInt(fullYearStr.substring(2));
-        List<CustomTenFieldDto> newList = new ArrayList<>();
-        for (CustomTenFieldDto dto : list) {
-            if (dto.getNbCol2() == null) {
-                dto.setNbCol2("미인증");
-            } else {
-                int memberBirthYear = Integer.parseInt(dto.getNbCol2().toString());
-
-                int memberAge = 0;
-                if (memberBirthYear > year) {
-                    memberBirthYear = memberBirthYear + 1900;
-                } else {
-                    memberBirthYear = memberBirthYear + 2000;
-                }
-                memberAge = Integer.parseInt(fullYearStr) - memberBirthYear + 1;
-                dto.setNbCol2(memberAge);
-            }
-
-
-            newList.add(dto);
-        }
-        newList.add(0, customHeaderDto);
-
-        List<CustomTenFieldDto> list2 = mathContentsRepository.statisticMathContentsUsageGroupBySysCreateDateMonth();
-        CustomTenFieldDto customHeaderDto2 = new CustomTenFieldDto(list2.get(0).getNbCol1(), list2.get(1).getNbCol1(),
-                list2.get(2).getNbCol1(), list2.get(3).getNbCol1(), list2.get(4).getNbCol1(), list2.get(5).getNbCol1(),
-                list2.size() > 6 ? list2.get(6).getNbCol1() : null, list2.size() > 7 ? list2.get(7).getNbCol1() : null,
-                list2.size() > 8 ? list2.get(8).getNbCol1() : null, list2.size() > 9 ? list2.get(9).getNbCol1() : null);
-        CustomTenFieldDto customBodyDto2 = new CustomTenFieldDto(list2.get(0).getNbCol2(), list2.get(1).getNbCol2(),
-                list2.get(2).getNbCol2(), list2.get(3).getNbCol2(), list2.get(4).getNbCol2(), list2.get(5).getNbCol2(),
-                list2.size() > 6 ? list2.get(6).getNbCol2() : null, list2.size() > 7 ? list2.get(7).getNbCol2() : null,
-                list2.size() > 8 ? list2.get(8).getNbCol2() : null, list2.size() > 9 ? list2.get(9).getNbCol2() : null);
-        List<CustomTenFieldDto> newList2 = new ArrayList<>();
-        newList2.add(0, customBodyDto2);
-        newList2.add(0, customHeaderDto2);
-
-        List<CustomTenFieldDto> list3 = mathContentsRepository.statisticContentsUsageByProfile();
-        CustomTenFieldDto customHeaderDto3 = new CustomTenFieldDto("미등록", "원장", "강사", "교사", "학부모", "학생", "기타", null, null, null);
-        list3.add(0, customHeaderDto3);
-
-        List<CustomTenFieldDto> list4 = mathContentsRepository.statisticMathContentsUsageByDayOfWeek();
-        CustomTenFieldDto customHeaderDto4 = new CustomTenFieldDto("월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일", null, null, null);
-        list4.add(0, customHeaderDto4);
-
-        List<CustomTenFieldDto> list5 = mathContentsRepository.statisticMathContentsUsageByClassifySvcPosbSttsShareStts();
-        CustomTenFieldDto customHeaderDto5 = new CustomTenFieldDto("문제구분", "문제수", null, null, null, null, null, null, null, null);
-        list5.add(0, customHeaderDto5);
-
-        map.put("memberMathContentsCnt", newList);
-        map.put("mathContentsCntByMonthly", newList2);
-        map.put("mathContentsCntByProfile", list3);
-        map.put("mathContentsCntByWeekday", list4);
-        map.put("mathContentsCntByShareStts", list5);
-        return map;
-    }
+// todo jpql 정상적이지 않음 수정 필요(java 17 migration 과정 중)
+//    public HashMap<String, Object> mathContentsStatistic() {
+//
+//        HashMap<String, Object> map = new HashMap<>();
+//        List<CustomTenFieldDto> list = mathContentsRepository.mathContentsStatistic();
+//        CustomTenFieldDto customHeaderDto = new CustomTenFieldDto("프로필", "나이", "문제 수", null, null, null, null, null, null, null);
+//
+//        LocalDate now = LocalDate.now();
+//        String fullYearStr = Integer.toString(now.getYear());
+//        int year = Integer.parseInt(fullYearStr.substring(2));
+//        List<CustomTenFieldDto> newList = new ArrayList<>();
+//        for (CustomTenFieldDto dto : list) {
+//            if (dto.getNbCol2() == null) {
+//                dto.setNbCol2("미인증");
+//            } else {
+//                int memberBirthYear = Integer.parseInt(dto.getNbCol2().toString());
+//
+//                int memberAge = 0;
+//                if (memberBirthYear > year) {
+//                    memberBirthYear = memberBirthYear + 1900;
+//                } else {
+//                    memberBirthYear = memberBirthYear + 2000;
+//                }
+//                memberAge = Integer.parseInt(fullYearStr) - memberBirthYear + 1;
+//                dto.setNbCol2(memberAge);
+//            }
+//
+//
+//            newList.add(dto);
+//        }
+//        newList.add(0, customHeaderDto);
+//
+//        List<CustomTenFieldDto> list2 = mathContentsRepository.statisticMathContentsUsageGroupBySysCreateDateMonth();
+//        CustomTenFieldDto customHeaderDto2 = new CustomTenFieldDto(list2.get(0).getNbCol1(), list2.get(1).getNbCol1(),
+//                list2.get(2).getNbCol1(), list2.get(3).getNbCol1(), list2.get(4).getNbCol1(), list2.get(5).getNbCol1(),
+//                list2.size() > 6 ? list2.get(6).getNbCol1() : null, list2.size() > 7 ? list2.get(7).getNbCol1() : null,
+//                list2.size() > 8 ? list2.get(8).getNbCol1() : null, list2.size() > 9 ? list2.get(9).getNbCol1() : null);
+//        CustomTenFieldDto customBodyDto2 = new CustomTenFieldDto(list2.get(0).getNbCol2(), list2.get(1).getNbCol2(),
+//                list2.get(2).getNbCol2(), list2.get(3).getNbCol2(), list2.get(4).getNbCol2(), list2.get(5).getNbCol2(),
+//                list2.size() > 6 ? list2.get(6).getNbCol2() : null, list2.size() > 7 ? list2.get(7).getNbCol2() : null,
+//                list2.size() > 8 ? list2.get(8).getNbCol2() : null, list2.size() > 9 ? list2.get(9).getNbCol2() : null);
+//        List<CustomTenFieldDto> newList2 = new ArrayList<>();
+//        newList2.add(0, customBodyDto2);
+//        newList2.add(0, customHeaderDto2);
+//
+//        List<CustomTenFieldDto> list3 = mathContentsRepository.statisticContentsUsageByProfile();
+//        CustomTenFieldDto customHeaderDto3 = new CustomTenFieldDto("미등록", "원장", "강사", "교사", "학부모", "학생", "기타", null, null, null);
+//        list3.add(0, customHeaderDto3);
+//
+//        List<CustomTenFieldDto> list4 = mathContentsRepository.statisticMathContentsUsageByDayOfWeek();
+//        CustomTenFieldDto customHeaderDto4 = new CustomTenFieldDto("월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일", null, null, null);
+//        list4.add(0, customHeaderDto4);
+//
+//        List<CustomTenFieldDto> list5 = mathContentsRepository.statisticMathContentsUsageByClassifySvcPosbSttsShareStts();
+//        CustomTenFieldDto customHeaderDto5 = new CustomTenFieldDto("문제구분", "문제수", null, null, null, null, null, null, null, null);
+//        list5.add(0, customHeaderDto5);
+//
+//        map.put("memberMathContentsCnt", newList);
+//        map.put("mathContentsCntByMonthly", newList2);
+//        map.put("mathContentsCntByProfile", list3);
+//        map.put("mathContentsCntByWeekday", list4);
+//        map.put("mathContentsCntByShareStts", list5);
+//        return map;
+//    }
 
     @Transactional
     public HashMap<String, Object> takeIpsiYear() {
