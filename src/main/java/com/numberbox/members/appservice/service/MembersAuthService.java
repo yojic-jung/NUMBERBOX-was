@@ -2,6 +2,7 @@ package com.numberbox.members.appservice.service;
 
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.jwt.util.JwtUtil;
+import com.numberbox.members.appservice.usecase.MembersAuthUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
@@ -10,17 +11,17 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class MembersAuthService implements com.numberbox.members.appservice.usecase.MembersAuthUseCase {
+public class MembersAuthService implements MembersAuthUseCase {
     private final MembersRepository membersRepository;
     private final MembersRoleRepository membersRoleRepository;
     private final MembersPrivateRepository membersPrivateRepository;

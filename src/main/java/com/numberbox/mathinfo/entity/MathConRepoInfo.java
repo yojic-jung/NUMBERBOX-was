@@ -1,19 +1,16 @@
 package com.numberbox.mathinfo.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import com.numberbox.mathinfo.domain.MathConRepoDomain;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -21,10 +18,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class MathConRepoInfo {
-	@EmbeddedId
-	MathConRepoDomain mathConRepoDomain;
+    @EmbeddedId
+    MathConRepoDomain mathConRepoDomain;
 
-	@Column(updatable = false)
-	@CreationTimestamp
-	LocalDateTime sysCreateDate;
+    @Column(updatable = false)
+    @CreationTimestamp
+    LocalDateTime sysCreateDate;
 }

@@ -1,33 +1,32 @@
 package com.numberbox.mathinfo.domain;
 
-import java.io.Serializable;
-
-import javax.persistence.Embeddable;
-
+import jakarta.persistence.Embeddable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Embeddable
 @Getter
 @Setter
 public class MathTypeDomain implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	public String typeNo;
+    public String typeNo;
 
-	public String unitUniqNo;
+    public String unitUniqNo;
 
-	public MathTypeDomain() {
+    public MathTypeDomain() {
 
-	}
+    }
 
-	@Builder
-	public MathTypeDomain(String typeNo, String unitUniqNo) {
-		this.typeNo = typeNo;
-		this.unitUniqNo = unitUniqNo;
-	}
+    @Builder
+    public MathTypeDomain(String typeNo, String unitUniqNo) {
+        this.typeNo = typeNo;
+        this.unitUniqNo = unitUniqNo;
+    }
 }

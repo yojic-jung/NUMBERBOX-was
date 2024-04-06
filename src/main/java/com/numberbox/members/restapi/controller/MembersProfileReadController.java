@@ -1,17 +1,15 @@
 package com.numberbox.members.restapi.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.members.service.MembersService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.numberbox.members.restapi.dto.request.MembersRequest;
-import com.numberbox.members.service.MembersService;
+import java.util.Map;
 
 @RestController
 public class MembersProfileReadController {

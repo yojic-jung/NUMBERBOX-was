@@ -2,11 +2,11 @@ package com.numberbox.members.restapi.controller;
 
 import com.numberbox.members.restapi.dto.request.HwpJsonStrRequest;
 import com.numberbox.members.service.MembersService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
