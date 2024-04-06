@@ -1,16 +1,14 @@
 package com.numberbox.members.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-import org.hibernate.annotations.UpdateTimestamp;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -18,11 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class EmailIdCode {
-	@Id
-	private String email;
+    @Id
+    private String email;
 
-	private String idCode;
+    private String idCode;
 
-	@UpdateTimestamp
-	private LocalDateTime sysCreateTime;
+    @UpdateTimestamp
+    private LocalDateTime sysCreateTime;
 }

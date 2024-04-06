@@ -8,10 +8,10 @@ import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;

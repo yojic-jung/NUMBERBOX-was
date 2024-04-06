@@ -5,12 +5,12 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.service.MembersService;
 import com.numberbox.security.util.StaticSecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
