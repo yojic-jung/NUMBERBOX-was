@@ -27,4 +27,13 @@ public class MembersRole {
     private boolean enabled;
     private String roleName;
 
+    // todo tmp 세터
+    public void setUserUniqId(UUID uuid) {
+        this.userUniqId = uuid;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
 }

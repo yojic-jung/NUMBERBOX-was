@@ -1,89 +1,64 @@
 package com.numberbox.security.handler;
 
-import com.numberbox.jwt.service.RefreshTokenInfoService;
-import com.numberbox.jwt.util.JwtUtil;
-import com.numberbox.members.entity.Members;
-import com.numberbox.members.entity.MembersRole;
-import com.numberbox.members.repository.MembersRepository;
-import com.numberbox.security.dto.CustomSecurityUser;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
+import com.numberbox.security.dto.LoginSuccessEvent;
+import com.numberbox.security.provider.JwtUtil;
+import com.numberbox.security.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+/**
+ * Def. 로그인 인증 성공 후처리
+ */
+@Primary
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+    private final JwtUtil jwtUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private RefreshTokenInfoService refreshTokenService;
-    @Autowired
-    private MembersRepository membersRepository;
+    public LoginSuccessHandler(JwtUtil jwtUtil, ApplicationEventPublisher eventPublisher) {
+        this.jwtUtil = jwtUtil;
+        this.eventPublisher = eventPublisher;
+    }
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-        CustomSecurityUser user = null;
-        if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            user = (CustomSecurityUser) authentication.getPrincipal();
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication) {
+        String username = (String) authentication.getPrincipal();
+        UUID userId = (UUID) authentication.getDetails();
+
+        // todo 프론트단에서 권한 체크
+        List<String> roleList = new ArrayList<>();
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            roleList.add(authority.getAuthority());
         }
+
+        // todo jwtUtil 의존도 고민
+        // todo 사용자 로그 찍어야함??
+        // accessToken 및 refreshToken 발행
+        String accessToken = jwtUtil.createAccessToken(username, userId, roleList);
+        String refreshToken = jwtUtil.createRefreshToken(username, userId);
+
+        // 로그인 성공 이벤트 발행
         String remainedRefreshToken = jwtUtil.resolveRefreshToken(request);
-        // 로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰을 만료시킴(클라이언트단에 로그아웃시 refresh토큰
-        // 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
-        if (remainedRefreshToken != null && !remainedRefreshToken.isEmpty()) {
-            refreshTokenService.deleteByToken(remainedRefreshToken);
-        }
+        LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
+        eventPublisher.publishEvent(loginSuccessEvent);
 
-        Members members = user.getMembers();
-
-        membersRepository.initLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
-        membersRepository.initHumanStatus(members.getUserUniqId());
-
-        // 매니저 권한 임시 구현
-        boolean isManager = false;
-        boolean isTopTester = false;
-        boolean isAdmin = false;
-        for (MembersRole role : members.getRole()) {
-            if (role.getRoleName().equals("MANAGER")) {
-                isManager = true;
-            } else if (role.getRoleName().equals("TOP_TESTER")) {
-                isTopTester = true;
-            } else if (role.getRoleName().equals("ADMIN")) {
-                isAdmin = true;
-            }
-
-        }
-
-        if (isAdmin) {
-            response.setHeader("role", "ADMIN");
-        } else if (!isAdmin && isTopTester) {
-            response.setHeader("role", "TOP_TESTER");
-        } else if (!isAdmin && isManager) {
-            response.setHeader("role", "MANAGER");
-        } else {
-            response.setHeader("role", "USER");
-        }
-
-        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(),
-                members.getRole());
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
-        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
-        String loginState = (String) request.getParameter("loginState");
-        response.setHeader("access-token", accessToken);
-        request.setAttribute("refreshToken", refreshToken);
-        request.setAttribute("loginState", loginState);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/loginSuccess");
-        dispatcher.forward(request, response);
+        System.out.println("3333");
+        SecurityUtil.respondOkWithToken(request, response, accessToken,
+                refreshToken, roleList, "로그인 성공 하였습니다.");
     }
 }

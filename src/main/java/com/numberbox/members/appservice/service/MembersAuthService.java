@@ -1,7 +1,6 @@
 package com.numberbox.members.appservice.service;
 
 import com.numberbox.jwt.service.RefreshTokenInfoService;
-import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.appservice.usecase.MembersAuthUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;
@@ -11,6 +10,7 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -111,9 +111,9 @@ public class MembersAuthService implements MembersAuthUseCase {
         mebersPrivateDto.setBirth(membersRequest.getBirth());
         membersPrivateRepository.save(mebersPrivateDto.toEntity());
 
-        List<MembersRole> list = new ArrayList<>();
-        list.add(membersRole);
-        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), list);
+        List<String> role = new ArrayList<>();
+        role.add(membersRole.getRoleName());
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         map.put("isSuccess", "success");

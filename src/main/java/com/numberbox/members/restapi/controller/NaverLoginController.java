@@ -1,8 +1,8 @@
 package com.numberbox.members.restapi.controller;
 
-import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

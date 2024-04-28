@@ -1,0 +1,16 @@
+package com.numberbox.security.exception;
+
+/**
+ * Def. 리프레시 토큰 Null인 경우
+ */
+public class RefreshTokenNullException extends RuntimeException {
+    public static final String DEFAULT_MSG = "리프레시 토큰이 존재하지 않습니다.";
+
+    public RefreshTokenNullException() {
+        super(DEFAULT_MSG);
+    }
+
+    public RefreshTokenNullException(String msg) {
+        super(msg);
+    }
+}

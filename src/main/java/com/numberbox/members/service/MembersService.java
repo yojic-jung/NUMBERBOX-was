@@ -3,7 +3,6 @@ package com.numberbox.members.service;
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;
-import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.dto.*;
 import com.numberbox.members.entity.*;
@@ -11,12 +10,14 @@ import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.HwpJsonStrRequest;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.restapi.dto.request.PasswordRequest;
+import com.numberbox.security.provider.JwtUtil;
 import com.numberbox.security.util.StaticSecurityUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,25 +38,30 @@ public class MembersService {
     private String customsocketip;
     @PersistenceContext
     EntityManager entityManager;
+    @Autowired
     private CommonUtil commonUtil;
+    @Autowired
     private JwtUtil jwtUtil;
-
+    @Autowired
     private MembersRepository membersRepository;
-
+    @Autowired
     private MembersProfileRepository membersProfileRepository;
-
+    @Autowired
     private MembersRoleRepository membersRoleRepository;
-
+    @Autowired
     private MembersPrivateRepository membersPrivateRepository;
-
+    @Autowired
     private MembersFollowInfoRepository membersFollowInfoRepository;
-
+    @Autowired
     private MathContentsRepository mathContentsRepository;
-
+    @Autowired
     private AccessLogInfoRepository accessLogInfoRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
     private ModelMapper modelMapper;
+    @Autowired
     private EmailIdCodeRepository emailIdCodeRepository;
 
     @Transactional

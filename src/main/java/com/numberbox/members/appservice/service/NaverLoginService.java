@@ -1,13 +1,13 @@
 package com.numberbox.members.appservice.service;
 
 import com.numberbox.jwt.service.RefreshTokenInfoService;
-import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,15 +49,17 @@ public class NaverLoginService implements NaverLoginUseCase {
 
         HashMap<String, String> map = new HashMap<>();
         Members members = membersRepository.findByEmail(membersRequest.getEmail());
-        List<MembersRole> roleList = new ArrayList<>();
-        if (members != null) {
-            List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
-            roleList = membersRoleList;
+        List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
 
-            // 탈퇴회원인 경우 로그인 불가 처리
+        List<String> role = new ArrayList<>();
+        if (members != null) {
+
             boolean isDropAccount = false;
-            for (MembersRole role : roleList) {
-                if (!role.isEnabled()) {
+            for (MembersRole membersRole : membersRoleList) {
+                // 권한 추가
+                role.add(membersRole.getRoleName());
+                if (!membersRole.isEnabled()) {
+                    // 탈퇴회원인 경우 로그인 불가 처리
                     isDropAccount = true;
                 }
             }
@@ -108,17 +110,17 @@ public class NaverLoginService implements NaverLoginUseCase {
              */
         }
 
-        String accessToken = jwtUtil.createAccessToken(request, members.getEmail(), members.getUserUniqId(), roleList);
+        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
         String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
 
         // 매니저 권한 임시 구현
         boolean isManager = false;
         boolean isAdmin = false;
-        for (MembersRole role : roleList) {
-            if (role.getRoleName().equals("MANAGER")) {
+        for (MembersRole memberRole : membersRoleList) {
+            if (memberRole.getRoleName().equals("MANAGER")) {
                 isManager = true;
-            } else if (role.getRoleName().equals("ADMIN")) {
+            } else if (memberRole.getRoleName().equals("ADMIN")) {
                 isAdmin = true;
             }
         }

@@ -1,22 +1,18 @@
-package com.numberbox.config;
+package com.numberbox.security.config;
 
-import com.numberbox.jwt.util.JwtAuthenticationFilter;
-import com.numberbox.jwt.util.JwtUtil;
+import com.numberbox.security.filter.JwtRequestAuthFilter;
+import com.numberbox.security.filter.LoginRequestAuthFilter;
 import com.numberbox.security.handler.CustomAccessDeniedHandler;
-import com.numberbox.security.handler.CustomAuthenticationEntryPoint;
-import com.numberbox.security.handler.LoginFailureHandler;
-import com.numberbox.security.handler.LoginSuccessHandler;
-import com.numberbox.security.service.CustomSecurityUsersService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.numberbox.security.provider.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,32 +21,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    CustomSecurityUsersService customUsersService;
-
-    @Autowired
-    CustomAccessDeniedHandler customAccessDeniedHandler;
-    @Autowired
-    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    @Autowired
-    LoginSuccessHandler loginSuccessHandler;
-    @Autowired
-    LoginFailureHandler loginFailureHandler;
-    @Autowired
-    AuthenticationManagerBuilder auth;
-
-    @Autowired
-    DataSource datasource;
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -62,14 +35,23 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(
+            HttpSecurity http,
+            UserDetailsService userDetailsService,
+            JwtUtil jwtUtil,
+            CustomAccessDeniedHandler customAccessDeniedHandler,
+            LoginRequestAuthFilter loginRequestAuthFilter,
+            JwtRequestAuthFilter jwtRequestAuthFilter
+    ) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .userDetailsService(customUsersService)
+                .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/delRefreshToken").hasAnyRole("USER")
@@ -169,7 +151,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("TOP_TESTER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
 
-
                         .requestMatchers(HttpMethod.POST, "/common/imgUpload").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/common/download").permitAll()
 
@@ -177,19 +158,17 @@ public class SecurityConfig {
                         .requestMatchers("/author").hasAnyRole("user")
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/loginProcess")
-                        .successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailureHandler)
-                        .permitAll()
-                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(customAccessDeniedHandler)
+                .addFilterAt(
+                        loginRequestAuthFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class);
+//                .exceptionHandling(exception -> exception
+//                        .accessDeniedHandler(customAccessDeniedHandler)
+//                );
         return http.build();
     }
 
@@ -211,5 +190,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

@@ -65,4 +65,18 @@ public class Members {
     private LocalDateTime signupDate;
     @UpdateTimestamp
     private LocalDateTime lastLoginDate;
+
+    // todo tmp 세터
+    public void setUserUniqId(UUID uuid) {
+        this.userUniqId = uuid;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMemberRole(List<MembersRole> role) {
+        this.role = role;
+    }
+
 }

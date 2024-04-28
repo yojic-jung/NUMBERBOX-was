@@ -1,19 +1,17 @@
 package com.numberbox.members.restapi.controller;
 
-import com.numberbox.jwt.util.JwtUtil;
 import com.numberbox.members.service.MembersService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+// todo auth controller auth로 이동
+@Controller
 public class MembersAuthController {
 
     private final MembersService membersService;
@@ -37,48 +35,47 @@ public class MembersAuthController {
      * map.get("isLogin")); return returnMap; }
      */
 
-    @PostMapping("/loginSuccess")
-    public Map<String, Object> loginSuccess(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = (String) request.getAttribute("refreshToken");
-        String loginState = (String) request.getAttribute("loginState");
-        Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
-        refreshTokenCookie.setPath("/"); // context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        if (loginState != null && loginState.equals("keep")) {
-            refreshTokenCookie.setMaxAge((int) (JwtUtil.REFRESH_TOKEN_VALID_TIME / 1000));
-        } else {
-            refreshTokenCookie.setMaxAge(60 * 60 * 6); // 6시간
-        }
-
-        response.addCookie(refreshTokenCookie);
-
-        /*
-         * ResponseCookie cookie = ResponseCookie.from("refresh-token", refreshToken)
-         * .path("/") .sameSite("None") .httpOnly(true) .secure(true)
-         * .maxAge(60*60*24*30) .build();
-         *
-         * response.setHeader("Set-Cookie", cookie.toString());
-         */
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("isLogin", true);
-        return map;
-    }
+//    @GetMapping("/loginSuccess")
+//    public Map<String, Object> loginSuccess(HttpServletRequest request, HttpServletResponse response) {
+//        Cookie refreshTokenCookie = new Cookie("refresh-token", refreshToken);
+//        refreshTokenCookie.setPath("/"); // context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰 설정
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(true);
+//        if (loginState != null && loginState.equals("keep")) {
+//            refreshTokenCookie.setMaxAge((int) (JwtUtil.REFRESH_TOKEN_VALID_TIME / 1000));
+//        } else {
+//            refreshTokenCookie.setMaxAge(60 * 60 * 6); // 6시간
+//        }
+//
+//        response.addCookie(refreshTokenCookie);
+//
+//        /*
+//         * ResponseCookie cookie = ResponseCookie.from("refresh-token", refreshToken)
+//         * .path("/") .sameSite("None") .httpOnly(true) .secure(true)
+//         * .maxAge(60*60*24*30) .build();
+//         *
+//         * response.setHeader("Set-Cookie", cookie.toString());
+//         */
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("isLogin", true);
+//        System.out.println("loginSuccess");
+//        return map;
+//    }
 
     @GetMapping("/delRefreshToken")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         membersService.delRefreshToken(request, response);
     }
 
-    @PostMapping("/loginFail")
-    public Map<String, Object> loginFailure(HttpServletRequest request) {
-        String customErrMsg = (String) request.getAttribute("customErrMsg");
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("isSuccess", false);
-        map.put("customErrMsg", customErrMsg);
-        return map;
-    }
+//    @PostMapping("/loginFail")
+//    public Map<String, Object> loginFailure(HttpServletRequest request) {
+//        String customErrMsg = (String) request.getAttribute("customErrMsg");
+//
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("isSuccess", false);
+//        map.put("customErrMsg", customErrMsg);
+//        return map;
+//    }
 
     @RequestMapping("/accessDenied")
     public Map<String, Object> accessDenied() {

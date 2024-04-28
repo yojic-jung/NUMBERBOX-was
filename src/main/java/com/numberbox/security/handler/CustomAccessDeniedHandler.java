@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+// todo 모듈 밖으로 빠져야함 또는 제거??
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
