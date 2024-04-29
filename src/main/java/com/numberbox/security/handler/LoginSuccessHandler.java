@@ -57,7 +57,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
         eventPublisher.publishEvent(loginSuccessEvent);
 
-        System.out.println("3333");
         SecurityUtil.respondOkWithToken(request, response, accessToken,
                 refreshToken, roleList, "로그인 성공 하였습니다.");
     }

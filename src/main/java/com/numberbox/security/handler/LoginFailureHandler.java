@@ -1,9 +1,6 @@
 package com.numberbox.security.handler;
 
-import com.numberbox.security.exception.AuthInternalException;
-import com.numberbox.security.exception.DisabledUserException;
-import com.numberbox.security.exception.PasswordDisMatchException;
-import com.numberbox.security.exception.UserNotFoundException;
+import com.numberbox.security.exception.*;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,28 +23,30 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
+        // 시큐리티 의존성 없는 예외타입으로 전환하여 전달
         Exception errorException;
         if (exception instanceof UsernameNotFoundException) {
-            errorException = new UserNotFoundException("해당 계정이 없습니다.");
-
+            errorException = new UserNotFoundException();
         }
         // password 같은지 비교
         else if (exception instanceof BadCredentialsException) {
-            errorException = new PasswordDisMatchException("비밀번호가 일치하지 않습니다.");
+            errorException = new PasswordDisMatchException();
         }
         // 활성 계정 체크
         else if (exception instanceof DisabledException) {
-            errorException = new DisabledUserException("비활성 계정입니다.");
-        } else {
-            errorException = new AuthInternalException();
+            errorException = new DisabledUserException();
+        }
+        // 잘못된 형식으로 인증 요청
+        else if (exception instanceof BadInputRequestException) {
+            errorException = new BadAuthRequestException();
+        }
+        else {
+            errorException = new AuthInternalServerException();
         }
 
-        // todo 해결필요
-        System.out.println("failure");
-        request.setAttribute("numberbox.error.exception", errorException);
+        request.setAttribute("auth.error.exception", errorException);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/loginFail");
         dispatcher.forward(request, response);
-        System.out.println("failure1");
     }
 
 }

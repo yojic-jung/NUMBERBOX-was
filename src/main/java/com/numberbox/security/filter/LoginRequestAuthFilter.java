@@ -1,12 +1,18 @@
 package com.numberbox.security.filter;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.numberbox.security.dto.AuthRequest;
+import com.numberbox.security.exception.AuthInternalException;
+import com.numberbox.security.exception.BadInputRequestException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,6 +42,8 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public LoginRequestAuthFilter(AuthenticationManager authenticationManager,
                                   AuthenticationSuccessHandler authenticationSuccessHandler,
                                   AuthenticationFailureHandler authenticationFailureHandler) {
@@ -48,22 +56,37 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        System.out.println("LoginRequestAuthFilter");
-        // 사용자 요청 authentication(인증) 객체 추출
-        Authentication authRequest = obtainAuthenticationRequest(request);
+            throws AuthenticationException {
+        try {
+            // 사용자 요청 authentication(인증) 객체 추출
+            Authentication authRequest = obtainAuthenticationRequest(request);
 
-        // manager에게 인증 요청(Authentication(인증) 객체 반환하면 SecurityContext에 저장됨)
-        Authentication auth = authenticationManager.authenticate(authRequest);
-        return auth;
+            // manager에게 인증 요청(Authentication(인증) 객체 반환하면 SecurityContext에 저장됨)
+            Authentication auth = authenticationManager.authenticate(authRequest);
+            return auth;
+        } catch (AuthenticationException ex) {
+            ex.printStackTrace();
+            throw ex;
+        } catch(MismatchedInputException ex){
+            ex.printStackTrace();
+            throw new BadInputRequestException();
+        } catch(JsonParseException ex){
+            ex.printStackTrace();
+            throw new BadInputRequestException();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            logger.warn("시큐리티 인증 과정 중 예외 발생 : "+ ex);
+            // 실패 핸들러 타도록 Auth 예외로 전환
+            throw new AuthInternalException();
+        }
     }
 
-    private Authentication obtainAuthenticationRequest(HttpServletRequest request)
-            throws IOException {
+    private Authentication obtainAuthenticationRequest(HttpServletRequest request) throws IOException {
         // todo 프론트단 json 요청 테스트 필요
         AuthRequest authRequest = objectMapper.readValue(request.getInputStream(), AuthRequest.class);
         String principal = authRequest.username();
         String credentials = authRequest.password();
+        if(principal == null || credentials == null) throw new BadInputRequestException();
 
         // request에 username 저장(예외 처리에서 사용할 수 있도록)
         request.setAttribute("username", principal);
@@ -73,16 +96,13 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult) throws ServletException, IOException {
-        System.out.println("222");
-
+                                            Authentication authResult) throws IOException, ServletException  {
         authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                              AuthenticationException failed) throws ServletException, IOException {
+                                              AuthenticationException failed) throws IOException, ServletException  {
         authenticationFailureHandler.onAuthenticationFailure(request, response, failed);
     }
-
 }

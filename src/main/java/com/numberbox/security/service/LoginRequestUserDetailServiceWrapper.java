@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * Def. 모듈 사용자가 구현한 UserDetailsService 래퍼 객체
  */
 public class LoginRequestUserDetailServiceWrapper implements UserDetailsService {
-
     private final LoginRequestUserDetailService loginRequestUserService;
 
     public LoginRequestUserDetailServiceWrapper(LoginRequestUserDetailService loginRequestUserService) {
@@ -20,7 +19,8 @@ public class LoginRequestUserDetailServiceWrapper implements UserDetailsService 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthUserInfo authUserInfo = loginRequestUserService.loadUserByUsername(username);
-        return new AuthUserDetail(authUserInfo);
+        if(authUserInfo == null) return null;
+        else return new AuthUserDetail(authUserInfo);
     }
 }
 

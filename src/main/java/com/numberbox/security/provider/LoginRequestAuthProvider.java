@@ -44,23 +44,20 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
      * 사용자 요청 인증 정보와 서버에 저장된 사용자 인증 정보 비교하여 유효성 체크
      */
     private Authentication takeValidAuthentication(Authentication clientUserInfo, AuthUserDetail serverUserInfo) {
-        // 서버(DB)에서 가져온 사용자 정보
-        String username = serverUserInfo.getUsername();
+        // check1. 계정 존재 여부 체크
+        if (serverUserInfo == null) throw new UsernameNotFoundException("해당 계정이 없습니다.");
+
+        // check2. password 같은지 비교
         String password = serverUserInfo.getPassword();
-        Collection<? extends GrantedAuthority> authorities = serverUserInfo.getAuthorities();
-
-        // username 존재 유무 체크
-        if (username == null || !username.equals(clientUserInfo.getPrincipal()))
-            throw new UsernameNotFoundException("해당 계정이 없습니다.");
-
-        // password 같은지 비교
         if (!passwordEncoder.matches((String) clientUserInfo.getCredentials(), password))
             throw new BadCredentialsException("비밀번호가 일치 하지 않습니다.");
 
-        // 활성 계정 체크
+        // check3. 활성 계정 체크
         if (!serverUserInfo.isEnabled()) throw new DisabledException("비활성 계정입니다.");
 
-        // Authentication 반환 (authorities 주입하면 authenticated 속성 true 설정됨)
+        // Authentication 반환 (authorities 주입하면 authenticated 속성 자동으로 true 설정됨)
+        String username = serverUserInfo.getUsername();
+        Collection<? extends GrantedAuthority> authorities = serverUserInfo.getAuthorities();
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(username, password, authorities);
         token.setDetails(serverUserInfo.getUserId());

@@ -22,6 +22,8 @@ public class AuthUserInfoRepository implements LoginRequestUserDetailService {
     public AuthUserInfo loadUserByUsername(String username) {
         Members member = membersRepository.findByEmail(username);
 
+        if (member == null) return null;
+
         List<AuthUserRole> roles = new ArrayList<>();
         for (MembersRole role : member.getRole()) {
             roles.add(new AuthUserRole(role.getRoleName(), role.isEnabled()));
