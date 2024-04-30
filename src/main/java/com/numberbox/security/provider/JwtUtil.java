@@ -139,7 +139,7 @@ public class JwtUtil {
 //        }
 
         // 액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
-        membersRepository.initLastLoginDate(userUniqId, LocalDateTime.now());
+        membersRepository.initFailCntZeroAndLastLoginDate(userUniqId, LocalDateTime.now());
         Date now = new Date();
         return Jwts.builder().setClaims(claims).setIssuer("nsoohak").setSubject("nsoohakAccessToken")
                 .setAudience("user").setIssuedAt(now).setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))

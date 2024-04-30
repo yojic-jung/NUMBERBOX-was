@@ -33,7 +33,7 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // 서버(DB)에 저장된 사용자 인증 정보 추출
-        AuthUserDetail serverUserInfo =
+        final AuthUserDetail serverUserInfo =
                 (AuthUserDetail) userDetailsService.loadUserByUsername((String) authentication.getPrincipal());
 
         // 유효성 체크와 함께 인증정보 추출
@@ -45,27 +45,30 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
      */
     private Authentication takeValidAuthentication(Authentication clientUserInfo, AuthUserDetail serverUserInfo) {
         // check1. 계정 존재 여부 체크
-        if (serverUserInfo == null) throw new UsernameNotFoundException("해당 계정이 없습니다.");
+        if (serverUserInfo == null){
+            throw new UsernameNotFoundException("해당 계정이 없습니다.");
+        }
 
         // check2. password 같은지 비교
-        String password = serverUserInfo.getPassword();
-        if (!passwordEncoder.matches((String) clientUserInfo.getCredentials(), password))
+        final String password = serverUserInfo.getPassword();
+        if (!passwordEncoder.matches((String) clientUserInfo.getCredentials(), password)){
             throw new BadCredentialsException("비밀번호가 일치 하지 않습니다.");
+        }
 
         // check3. 활성 계정 체크
-        if (!serverUserInfo.isEnabled()) throw new DisabledException("비활성 계정입니다.");
+        if (!serverUserInfo.isEnabled()){
+            throw new DisabledException("비활성 계정입니다.");
+        }
 
         // Authentication 반환 (authorities 주입하면 authenticated 속성 자동으로 true 설정됨)
-        String username = serverUserInfo.getUsername();
-        Collection<? extends GrantedAuthority> authorities = serverUserInfo.getAuthorities();
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(username, password, authorities);
+                new UsernamePasswordAuthenticationToken(serverUserInfo.getUsername(), serverUserInfo.getAuthorities());
         token.setDetails(serverUserInfo.getUserId());
         return token;
     }
 
     /**
-     * 전달 받은 authentication객체가 UsernamePasswordAuthenticationToken 타입인 경우 provider가 활성화됨
+     * 전달 받은 authentication 객체가 UsernamePasswordAuthenticationToken 타입인 경우 provider가 활성화됨
      */
     @Override
     public boolean supports(Class<?> authentication) {

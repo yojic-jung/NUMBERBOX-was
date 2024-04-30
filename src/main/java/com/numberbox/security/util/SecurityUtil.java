@@ -73,6 +73,7 @@ public class SecurityUtil {
             printWriter.write(obj.writeValueAsString(map));
             printWriter.flush();
         } catch (IOException ex) {
+            //  todo 여기로 빠질시 응답 어떻게 나가는지 테스트 필요
             throw new AuthInternalException("IOException 발생");
         }
     }

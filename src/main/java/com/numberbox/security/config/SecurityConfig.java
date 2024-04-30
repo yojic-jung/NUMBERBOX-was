@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
 

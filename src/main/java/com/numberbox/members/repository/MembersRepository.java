@@ -85,13 +85,13 @@ public interface MembersRepository extends JpaRepository<Members, UUID> {
 
     @Transactional
     @Modifying // select 문이 아님을 나타낸다
-    @Query(value = "UPDATE Members m set m.failCount = :failCnt where m.userUniqId = :userUniqId", nativeQuery = false)
-    public int increaseFailCount(@Param("userUniqId") UUID userUniqId, @Param("failCnt") int failCnt);
+    @Query(value = "UPDATE Members m set m.failCount = :failCnt, m.lastFailTime =:now where m.userUniqId = :userUniqId")
+    public int initFailCountAndLastFailTime(@Param("userUniqId") UUID userUniqId, @Param("failCnt") int failCnt, @Param("now") LocalDateTime now);
 
     @Transactional
     @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Members m set m.lastLoginDate= :now, m.failCount = 0 where m.userUniqId = :userUniqId", nativeQuery = false)
-    public int initLastLoginDate(@Param("userUniqId") UUID userUniqId, @Param("now") LocalDateTime now);
+    public int initFailCntZeroAndLastLoginDate(@Param("userUniqId") UUID userUniqId, @Param("now") LocalDateTime now);
 
     @Transactional
     @Modifying // select 문이 아님을 나타낸다
@@ -102,6 +102,7 @@ public interface MembersRepository extends JpaRepository<Members, UUID> {
     @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Members m set m.lastFailTime =:now where m.userUniqId = :userUniqId", nativeQuery = false)
     public int initLastFailTime(@Param("userUniqId") UUID userUniqId, @Param("now") LocalDateTime now);
+
 // todo jpql 정상적이지 않음 수정 필요(java 17 migration 과정 중)
 //    @Query(value = "SELECT new com.numberbox.common.util.CustomTenFieldDto("
 //            + " CONCAT(YEAR(m.signupDate), '년 ', MONTH(m.signupDate), '월') as nbCol1, count(*) as nbCol2,"

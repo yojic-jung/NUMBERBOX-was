@@ -70,7 +70,7 @@ public class NaverLoginService implements NaverLoginUseCase {
             }
 
             // 로그인 시간 및 휴먼상태 초기화
-            membersRepository.initLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
+            membersRepository.initFailCntZeroAndLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
             membersRepository.initHumanStatus(members.getUserUniqId());
             map.put("isSuccess", "loginSuccess");
         } else {
