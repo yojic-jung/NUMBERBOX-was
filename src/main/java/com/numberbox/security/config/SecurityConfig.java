@@ -2,8 +2,6 @@ package com.numberbox.security.config;
 
 import com.numberbox.security.filter.JwtRequestAuthFilter;
 import com.numberbox.security.filter.LoginRequestAuthFilter;
-import com.numberbox.security.handler.CustomAccessDeniedHandler;
-import com.numberbox.security.provider.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,8 +37,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(
             HttpSecurity http,
             UserDetailsService userDetailsService,
-            JwtUtil jwtUtil,
-            CustomAccessDeniedHandler customAccessDeniedHandler,
+            AuthenticationEntryPoint authenticationEntryPoint,
             LoginRequestAuthFilter loginRequestAuthFilter,
             JwtRequestAuthFilter jwtRequestAuthFilter
     ) throws Exception {
@@ -52,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
@@ -166,10 +165,11 @@ public class SecurityConfig {
                         loginRequestAuthFilter,
                         UsernamePasswordAuthenticationFilter.class
                 )
-                .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class);
-//                .exceptionHandling(exception -> exception
-//                        .accessDeniedHandler(customAccessDeniedHandler)
-//                );
+                .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class)
+                .exceptionHandling(
+                        customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint)
+                )
+        ;
         return http.build();
     }
 

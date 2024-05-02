@@ -7,8 +7,11 @@ import com.numberbox.security.handler.JwtAuthFailureHandler;
 import com.numberbox.security.provider.JwtRequestAuthProvider;
 import com.numberbox.security.provider.JwtUtil;
 import com.numberbox.security.provider.LoginRequestAuthProvider;
+import com.numberbox.security.service.JwtRequestUserDetailService;
+import com.numberbox.security.service.JwtRequestUserDetailServiceWrapper;
 import com.numberbox.security.service.LoginRequestUserDetailService;
 import com.numberbox.security.service.LoginRequestUserDetailServiceWrapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,20 +28,27 @@ import java.util.List;
 @Configuration
 public class SecurityBeanConfig {
     @Bean
-    public UserDetailsService userDetailsService(LoginRequestUserDetailService loginRequestUserService) {
+    @Qualifier("login")
+    public UserDetailsService loginRequestUserService(LoginRequestUserDetailService loginRequestUserService) {
         return new LoginRequestUserDetailServiceWrapper(loginRequestUserService);
+    }
+
+    @Bean
+    @Qualifier("jwt")
+    public UserDetailsService jwtRequestUserDetailService(JwtRequestUserDetailService jwtRequestUserDetailService) {
+        return new JwtRequestUserDetailServiceWrapper(jwtRequestUserDetailService);
     }
 
 
     @Bean
-    public LoginRequestAuthProvider loginRequestAuthProvider(UserDetailsService userDetailsService,
+    public LoginRequestAuthProvider loginRequestAuthProvider(@Qualifier("login") UserDetailsService userDetailsService,
                                                              PasswordEncoder passwordEncoder) {
         return new LoginRequestAuthProvider(userDetailsService, passwordEncoder);
     }
 
     @Bean
-    public JwtRequestAuthProvider jwtRequestAuthProvider(JwtUtil JwtUtil, ObjectMapper objectMapper) {
-        return new JwtRequestAuthProvider(JwtUtil, objectMapper);
+    public JwtRequestAuthProvider jwtRequestAuthProvider(@Qualifier("jwt") UserDetailsService userDetailsService, JwtUtil JwtUtil, ObjectMapper objectMapper) {
+        return new JwtRequestAuthProvider(userDetailsService, JwtUtil, objectMapper);
     }
 
     @Bean

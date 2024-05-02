@@ -100,6 +100,19 @@ public interface MembersRepository extends JpaRepository<Members, UUID> {
 
     @Transactional
     @Modifying // select 문이 아님을 나타낸다
+    @Query(value = "UPDATE Members m " +
+            "set m.lastLoginDate= :lastLoginDate," +
+            " m.failCount = :failCnt, " +
+            "m.humanStatus = :humanStatus " +
+            "where m.userUniqId = :userUniqId")
+    int updateByUserUniqId(@Param("userUniqId") UUID userUniqId,
+                           @Param("lastLoginDate") LocalDateTime lastLoginDate,
+                           @Param("failCnt") int failCnt,
+                           @Param("humanStatus") int humanStatus) ;
+
+
+    @Transactional
+    @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Members m set m.lastFailTime =:now where m.userUniqId = :userUniqId", nativeQuery = false)
     public int initLastFailTime(@Param("userUniqId") UUID userUniqId, @Param("now") LocalDateTime now);
 

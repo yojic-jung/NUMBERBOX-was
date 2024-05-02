@@ -114,7 +114,7 @@ public class MembersAuthService implements MembersAuthUseCase {
         List<String> role = new ArrayList<>();
         role.add(membersRole.getRoleName());
         String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
+        String refreshToken = jwtUtil.createRefreshToken();
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         map.put("isSuccess", "success");
         map.put("accessToken", accessToken);

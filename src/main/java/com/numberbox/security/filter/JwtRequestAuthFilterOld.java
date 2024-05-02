@@ -19,7 +19,7 @@
 //import java.util.List;
 //import java.util.UUID;
 //
-//public class JwtRequestAuthFilter extends OncePerRequestFilter {
+//public class JwtRequestAuthFilterOld extends OncePerRequestFilter {
 //
 //    private final JwtUtil jwtUtil;
 //
@@ -39,8 +39,8 @@
 //        String accessToken = jwtUtil.resolveAccessToken(request);
 //        String refreshToken = jwtUtil.resolveRefreshToken(request);
 //        // access(만료여부 상관없이) & refresh 토큰 유효성만 검증
-//        boolean isAccessTokenValid = accessToken != null && jwtUtil.validateTokenExceptExpiration(accessToken);
-//        boolean isRefreshTokenValid = refreshToken != null && jwtUtil.validateToken(refreshToken);
+//        boolean isAccessTokenValid = accessToken != null && jwtUtil.throwExceptionIfInvalidToken(accessToken);
+//        boolean isRefreshTokenValid = refreshToken != null && jwtUtil.throwExceptionIfInvalidToken(refreshToken);
 //        // 하나라도 유효하지 않으면 토큰 사용불가
 //        if (!isAccessTokenValid || !isRefreshTokenValid) {
 //            if (accessToken != null) { // 클라이언트 환경에서 accessToken으로 로그인 관리하므로 액세스토큰 유무 확인(로그인 되어있는 상태에서 토큰 만료시에만 로그인
@@ -53,7 +53,7 @@
 //        }
 //
 //        // 만료여부까지 파악
-//        isAccessTokenValid = jwtUtil.validateToken(accessToken);
+//        isAccessTokenValid = jwtUtil.throwExceptionIfInvalidToken(accessToken);
 //
 //        try {
 //            String[] check = accessToken.split("\\.");

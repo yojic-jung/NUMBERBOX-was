@@ -57,6 +57,7 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+
         try {
             // 사용자 요청 authentication(인증) 객체 추출
             final Authentication authRequest = obtainAuthenticationRequest(request);

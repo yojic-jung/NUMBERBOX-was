@@ -2,8 +2,9 @@ package com.numberbox.security.provider;
 
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.dto.AccessLogInfoDto;
-import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.security.dto.AuthUserInfo;
+import com.numberbox.security.exception.JwtInvalidException;
+import com.numberbox.security.exception.TokenExpirationException;
 import com.numberbox.security.service.LoginRequestUserDetailService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
@@ -23,7 +24,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,24 +32,27 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
-
-    // todo 두군데서 사용하고 있ㅇ므
+    // todo 두군데서 사용하고 있음
     private static final String ROLE_PREFIX = "ROLE_";
     @Autowired
     private RefreshTokenInfoService refreshTokenService;
     @Autowired
     private LoginRequestUserDetailService loginRequestUserService;
-    @Autowired
-    private MembersRepository membersRepository;
+//    @Autowired
+//    private MembersRepository membersRepository;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Value("${numberbox.jwtSecretKey}")
-    private String secretKey;
-
+    
+    private static String secretKey;
     // todo 사용자 설정 상수로 빼기
     private static final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; // 1시간
-    public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달
+    public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달 (로그인 유지 요청한 경우)
+    public static final long REFRESH_TOKEN_VALID_TIME_DEFAULT = 1000L * 60 * 60 * 6; // 6시간
+
+    @Value("${numberbox.jwtSecretKey}")
+    public void setSecretKey(String secretKey){
+        this.secretKey = secretKey;
+    }
 
     public String resolveAccessToken(HttpServletRequest request) {
         String token = request.getHeader("access-token");
@@ -66,10 +69,7 @@ public class JwtUtil {
         return token;
     }
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public String createAccessToken(String email, UUID userUniqId,
-                                    List<String> roleList) {
-
+    public String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
         claims.put("userUniqId", userUniqId);
@@ -107,9 +107,16 @@ public class JwtUtil {
 //        }
 
         Date now = new Date();
-        return Jwts.builder().setClaims(claims).setIssuer("nsoohak").setSubject("nsoohakAccessToken")
-                .setAudience("user").setIssuedAt(now).setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+        Date expiration = new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuer("nsoohak")
+                .setSubject("nsoohakAccessToken")
+                .setAudience("user")
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -139,24 +146,30 @@ public class JwtUtil {
 //        }
 
         // 액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
-        membersRepository.initFailCntZeroAndLastLoginDate(userUniqId, LocalDateTime.now());
+//        membersRepository.initFailCntZeroAndLastLoginDate(userUniqId, LocalDateTime.now());
         Date now = new Date();
         return Jwts.builder().setClaims(claims).setIssuer("nsoohak").setSubject("nsoohakAccessToken")
                 .setAudience("user").setIssuedAt(now).setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME))
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 
-    public String createRefreshToken(String email, UUID userUniqId) {
+    public String createRefreshToken() {
         Claims claims = Jwts.claims();
         claims.put("nsoohak.com", true);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME);
-
-        return Jwts.builder().setClaims(claims).setIssuer("nsoohak").setSubject("nsoohakRefreshToken")
-                .setAudience("user").setExpiration(expiration).setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+        Date expiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME_DEFAULT);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuer("nsoohak")
+                .setSubject("nsoohakRefreshToken")
+                .setAudience("user")
+                .setExpiration(expiration)
+                .setIssuedAt(now)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
+    // todo userDetailService
     public Authentication createAuthenticationByToken(String token) {
         String email = getUserEmail(token);
         AuthUserInfo user = loginRequestUserService.loadUserByUsername(email);
@@ -173,8 +186,11 @@ public class JwtUtil {
     }
 
     public UUID getUserUniqId(String token) {
-        return (UUID) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userUniqId",
-                UUID.class);
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userUniqId", UUID.class);
     }
 
 
@@ -198,30 +214,30 @@ public class JwtUtil {
         refreshTokenService.deleteByToken(jwtToken);
     }
 
-    public boolean validateToken(String jwtToken) {
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    /**
+     * 토큰 유효성 검사
+     */
+    public static void throwExceptionIfInvalidToken(String jwtToken) {
+        throwExceptionIfInvalidToken(jwtToken, true);
     }
 
-    public boolean validateTokenExceptExpiration(String jwtToken) {
+    /**
+     * 토큰 유효성 검사(만료 여부 검사 지정 가능)
+     */
+    public static void throwExceptionIfInvalidToken(String jwtToken, boolean exceptExpiration) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return true;
         } catch (ExpiredJwtException e) {
-            return true;
-        } catch (Exception e) {
-            return false;
+            if(!exceptExpiration) throw new TokenExpirationException();
+        }catch (Exception e) {
+            throw new JwtInvalidException();
         }
     }
 
     /**
      * 토큰은 유효하나 만료된 경우에만 true 리턴
      */
-    public boolean isValidButExpired(String jwtToken) {
+    public boolean isExpiredToken(String jwtToken) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return false;

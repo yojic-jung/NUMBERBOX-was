@@ -12,17 +12,16 @@ import java.util.Map;
 public class ResponseUtil {
 
     /**
-     * 응답 메시지 전송(200 제외)
+     * 예외 메시지 전송
      */
-    public static ResponseEntity<Map<String, Object>> response(Boolean showMessage, String message, HttpStatusCode httpStatusCode) {
+    public static ResponseEntity<Map<String, Object>> makeErrMsg(Boolean showMessage, String message, HttpStatusCode httpStatusCode) {
         Map<String, Object> resultMap = new HashMap<>();
-
         resultMap.put("showMessage", showMessage);
         resultMap.put("message", message);
         return new ResponseEntity(resultMap, httpStatusCode);
     }
 
-    public static ResponseEntity<Map<String, Object>> response(String message, HttpStatusCode httpStatusCode) {
-        return response(true, message, httpStatusCode);
+    public static ResponseEntity<Map<String, Object>> makeErrMsg(String message, HttpStatusCode httpStatusCode) {
+        return makeErrMsg(true, message, httpStatusCode);
     }
 }

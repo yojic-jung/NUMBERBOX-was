@@ -36,27 +36,27 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     // 사용자 요청에 대해 accessToken 존재 시 doFilterInternal에서 인증 정보 객체 생성하니 이후 서버단 로직에서 인증정보
     // 객체 사용가능
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        String accessToken = jwtUtil.resolveAccessToken(request);
-        String refreshToken = jwtUtil.resolveRefreshToken(request);
-        System.out.println("JwtRequestAuthFilter");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+        try{
+            String accessToken = jwtUtil.resolveAccessToken(request);
+            String refreshToken = jwtUtil.resolveRefreshToken(request);
 
-        JwtAuthenticationToken authRequest
-                = new JwtAuthenticationToken(accessToken, null, null);
-        authRequest.setDetails(refreshToken);
-        // 인증 요청
-        Authentication authentication = authenticationManager.authenticate(authRequest);
-        for (GrantedAuthority auth : authentication.getAuthorities()) {
-            System.out.println(auth.getAuthority());
+            JwtAuthenticationToken authRequest
+                    = new JwtAuthenticationToken(accessToken, null, null);
+            authRequest.setDetails(refreshToken);
+            // 인증 요청
+            Authentication authentication = authenticationManager.authenticate(authRequest);
+
+            // SecurityContextHolder에 인증정보 저장
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // 인증 성공 핸들러 호출
+            successfulAuthentication(request, response, filterChain, authentication);
+            filterChain.doFilter(request, response);
+        }catch (Exception exception){
+            // 인증 실패 핸들러 호출
+            unsuccessfulAuthentication(response, exception);
         }
-        // SecurityContextHolder에 인증정보 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        // 인증 성공 핸들러 호출
-        successfulAuthentication(request, response, filterChain, authentication);
-        filterChain.doFilter(request, response);
-        // 인증 실패 핸들러 호출
     }
 
 

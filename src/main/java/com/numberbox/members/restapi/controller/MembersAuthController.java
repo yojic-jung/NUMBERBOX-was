@@ -77,14 +77,6 @@ public class MembersAuthController {
 //        return map;
 //    }
 
-    @RequestMapping("/accessDenied")
-    public Map<String, Object> accessDenied() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("existMsg", true);
-        map.put("serverMsg", "해당 요청에 접근 권한이 없습니다.");
-        return map;
-    }
-
     @GetMapping(value = "/createEmailIdCode")
     public Map<String, Object> createEmailIdCode(HttpServletRequest request) {
         String email = request.getParameter("email");

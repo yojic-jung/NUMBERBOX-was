@@ -111,7 +111,7 @@ public class NaverLoginService implements NaverLoginUseCase {
         }
 
         String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = jwtUtil.createRefreshToken(members.getEmail(), members.getUserUniqId());
+        String refreshToken = jwtUtil.createRefreshToken();
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
 
         // 매니저 권한 임시 구현
