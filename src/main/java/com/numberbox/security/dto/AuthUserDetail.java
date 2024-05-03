@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDetail extends User {
+    public static final String ROLE_PREFIX = "ROLE_";
 
-    private static final String ROLE_PREFIX = "ROLE_";
     @Getter
     private final UUID userId;
 

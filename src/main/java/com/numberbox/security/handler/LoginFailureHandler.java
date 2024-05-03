@@ -29,7 +29,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         // password 같은지 비교
         else if (exception instanceof BadCredentialsException) {
             forwardToFailController(request, response, new PasswordMissMatchException());
-
         }
         // 활성 계정 체크
         else if (exception instanceof DisabledException) {

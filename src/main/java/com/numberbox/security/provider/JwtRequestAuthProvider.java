@@ -1,58 +1,59 @@
 package com.numberbox.security.provider;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.numberbox.security.dto.AuthUserDetail;
 import com.numberbox.security.dto.JwtAuthenticationToken;
 import com.numberbox.security.exception.*;
+import com.numberbox.security.service.UserTokenDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
 
 import static com.numberbox.security.provider.JwtUtil.throwExceptionIfInvalidToken;
 
 public class JwtRequestAuthProvider implements AuthenticationProvider {
-    private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
-    private final ObjectMapper mapper;
+    private final UserTokenDetailService userTokenDetailService;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public JwtRequestAuthProvider(UserDetailsService userDetailsService, JwtUtil jwtUtil, ObjectMapper mapper) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-        this.mapper = mapper;
+    public JwtRequestAuthProvider(UserTokenDetailService userTokenDetailService) {
+        this.userTokenDetailService = userTokenDetailService;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) {
         // 클라이언트 요청에 포함된 토큰 추출
-        String accessToken = (String) authentication.getPrincipal();
-        String refreshToken = (String) authentication.getDetails();
+        final String accessToken = (String) authentication.getPrincipal();
+        final String refreshToken = (String) authentication.getDetails();
 
-        // check1. accessToken 또는 refreshToken 존재 여부 파악
-        if (accessToken == null || refreshToken == null) throw new TokenNullException();
+        // check1. refreshToken 존재 여부 파악(accessToken은 존재함, 필터가 액세스 토큰 있는 경우에만 실행)
+        if (refreshToken == null) throw new RefreshTokenNullException();
 
         // check2. 토큰 유효성 검사
         checkValidToken(accessToken, refreshToken);
 
-        // accessToken에 저장된 사용자 인증 정보(userId, email, role) 추출
-        Map<String, Object> userInfo = takePayloadMap(accessToken);
+        // 서버에서 사용자 정보 조회
+        final String email = JwtUtil.getEmail(accessToken);
+        final AuthUserDetail user =
+                (AuthUserDetail) userTokenDetailService.loadUserByUsername(email);
 
-        // check3. refreshToken 소유자 체크(액세스 토큰 소유자와 같음)
-        checkTokenOwner(userInfo.get("userUniqId").toString(), refreshToken);
+        // check3. refreshToken 소유자 체크(액세스 토큰 소유자와 같아야함)
+        final String accessTokenOwner = JwtUtil.getUserUniqId(accessToken).toString();
+        checkTokenOwner(accessTokenOwner, refreshToken);
+
+        // check4. enabled 체크해야함
+        if (!user.isEnabled()) throw new DisabledException("비활성 계정입니다.");
 
         // Authentication 객체 반환
-        return makeAuthentication(accessToken, userInfo);
+        return makeAuthentication(user);
     }
 
     /**
      * 토큰 유효성 검사
      */
-    private void checkValidToken(String accessToken, String refreshToken){
+    private void checkValidToken(String accessToken, String refreshToken) {
         // accessToken 만료 여부 제외하고 유효성 검사
         boolean exceptExpire = true;
         throwExceptionIfInvalidToken(accessToken, exceptExpire);
@@ -67,45 +68,23 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
     /**
      * 토큰 소유자 검사
      */
-    private void checkTokenOwner(String userId, String refreshToken){
-        UUID userUniqId = UUID.fromString(userId);
-        boolean isTokenMatched = jwtUtil.checkTokenUserId(refreshToken, userUniqId);
-        if (!isTokenMatched) {
-            throw new TokenOwnerNotMatchingException(refreshToken);
-        }
+    private void checkTokenOwner(String userId, String refreshToken) {
+        final UUID clientUserId = UUID.fromString(userId);
+        final UUID serverUserId = userTokenDetailService.loadUserIdByRefreshToken(refreshToken);
+        if (!clientUserId.equals(serverUserId)) throw new TokenOwnerNotMatchingException();
     }
 
     /**
      * Authentication(인증 정보) 반환
      */
-    private Authentication makeAuthentication(String accessToken, Map<String, Object> userInfo){
-        if (jwtUtil.isExpiredToken(accessToken)) {
-            // accessToken 만료시 재생성하여 반환
-            String email = userInfo.get("email").toString();
-            UUID userUniqId = UUID.fromString(userInfo.get("userUniqId").toString());
-            List<String> roleList = (List<String>) userInfo.get("role");
+    private Authentication makeAuthentication(AuthUserDetail user) {
+        final UUID userUniqId = user.getUserId();
+        final List<GrantedAuthority> authorities = (List<GrantedAuthority>) user.getAuthorities();
 
-            String newAccessToken = jwtUtil.createAccessToken(email, userUniqId, roleList);
-            return jwtUtil.createAuthenticationByToken(newAccessToken);
-        } else {
-            // accessToken 만료 아닌 경우 기존 토큰 기반으로 반환
-            return jwtUtil.createAuthenticationByToken(accessToken);
-        }
-    }
-
-
-    /**
-     * 토큰 페이로드 추출
-     */
-    private Map<String, Object> takePayloadMap(String token) {
-        String[] check = token.split("\\.");
-        Base64.Decoder decoder = Base64.getDecoder();
-        String payload = new String(decoder.decode(check[1]));
-        try {
-            return mapper.readValue(payload, HashMap.class);
-        } catch (Exception e) {
-            throw new AuthInternalException();
-        }
+        UsernamePasswordAuthenticationToken auth
+                = new UsernamePasswordAuthenticationToken(user.getUsername(), "", authorities);
+        auth.setDetails(userUniqId);
+        return auth;
     }
 
     /**

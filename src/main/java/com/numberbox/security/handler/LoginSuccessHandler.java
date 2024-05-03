@@ -29,11 +29,9 @@ import static com.numberbox.security.util.SecurityUtil.responseOK;
 @Primary
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-    private final JwtUtil jwtUtil;
     private final ApplicationEventPublisher eventPublisher;
 
-    public LoginSuccessHandler(JwtUtil jwtUtil, ApplicationEventPublisher eventPublisher) {
-        this.jwtUtil = jwtUtil;
+    public LoginSuccessHandler(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
 
@@ -50,11 +48,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .collect(Collectors.toList());
 
         // accessToken(사용자 식별값, 권한) 및 refreshToken 발행
-        final String accessToken = jwtUtil.createAccessToken(username, userId, roleList);
-        final String refreshToken = jwtUtil.createRefreshToken();
+        final String accessToken = JwtUtil.createAccessToken(username, userId, roleList);
+        final String refreshToken = JwtUtil.createRefreshToken();
 
         // 로그인 성공 이벤트 발행
-        final String remainedRefreshToken = jwtUtil.resolveRefreshToken(request);
+        final String remainedRefreshToken = JwtUtil.resolveRefreshToken(request);
         final LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
         eventPublisher.publishEvent(loginSuccessEvent);
 

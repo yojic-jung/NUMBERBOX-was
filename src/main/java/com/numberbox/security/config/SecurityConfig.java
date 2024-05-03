@@ -168,8 +168,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class)
                 .exceptionHandling(
                         customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint)
-                )
-        ;
+                );
         return http.build();
     }
 
