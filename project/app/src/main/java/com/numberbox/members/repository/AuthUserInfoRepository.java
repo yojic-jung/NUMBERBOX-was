@@ -1,12 +1,12 @@
 package com.numberbox.members.repository;
 
+import com.numberbox.auth.control.dto.AuthUserInfo;
+import com.numberbox.auth.control.dto.AuthUserRole;
+import com.numberbox.auth.control.service.JwtRequestUserDetailService;
+import com.numberbox.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.jwt.repository.RefreshTokenInfoRepository;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
-import com.numberbox.security.dto.AuthUserInfo;
-import com.numberbox.security.dto.AuthUserRole;
-import com.numberbox.security.service.JwtRequestUserDetailService;
-import com.numberbox.security.service.LoginRequestUserDetailService;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

@@ -20,26 +20,34 @@ public class SecurityUtil {
     private static final ObjectMapper obj = new ObjectMapper();
 
     public static void responseErrMsg(HttpServletResponse response, HttpStatus status, String msg) {
-        sendResponse(response, status, true, msg);
+        sendResponse(response, status.value(), true, msg);
+    }
+
+    public static void responseErrMsg(HttpServletResponse response, int rawStatus, String msg) {
+        sendResponse(response, rawStatus, true, msg);
     }
 
     public static void responseErrMsg(HttpServletResponse response, HttpStatus status, boolean showMsg, String msg) {
-        sendResponse(response, status, showMsg, msg);
+        sendResponse(response, status.value(), showMsg, msg);
+    }
+
+    public static void responseErrMsg(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
+        sendResponse(response, rawStatus, showMsg, msg);
     }
 
     /**
      * 200 성공 응답 전송
      */
     public static void responseOK(HttpServletResponse response, boolean showMsg, String message) {
-        sendResponse(response, AuthResponse.OK.status, showMsg, message);
+        sendResponse(response, AuthResponse.OK.statusCode, showMsg, message);
     }
 
     public static void responseOK(HttpServletResponse response, String message) {
-        sendResponse(response, AuthResponse.OK.status, true, message);
+        sendResponse(response, AuthResponse.OK.statusCode, true, message);
     }
 
-    private static void sendResponse(HttpServletResponse response, HttpStatus status, boolean showMsg, String msg) {
-        response.setStatus(status.value());
+    private static void sendResponse(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
+        response.setStatus(rawStatus);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 

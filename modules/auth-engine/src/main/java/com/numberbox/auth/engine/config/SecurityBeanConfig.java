@@ -1,11 +1,13 @@
 package com.numberbox.auth.engine.config;
 
+import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.service.JwtRequestUserDetailService;
+import com.numberbox.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.auth.engine.filter.JwtRequestAuthFilter;
 import com.numberbox.auth.engine.filter.LoginRequestAuthFilter;
 import com.numberbox.auth.engine.provider.JwtRequestAuthProvider;
 import com.numberbox.auth.engine.provider.LoginRequestAuthProvider;
 import com.numberbox.auth.engine.service.*;
-import com.numberbox.auth.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -41,8 +43,9 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public JwtRequestAuthProvider jwtRequestAuthProvider(UserTokenDetailService userTokenDetailService) {
-        return new JwtRequestAuthProvider(userTokenDetailService);
+    public JwtRequestAuthProvider jwtRequestAuthProvider(UserTokenDetailService userTokenDetailService,
+                                                         AuthTokenService authTokenService) {
+        return new JwtRequestAuthProvider(userTokenDetailService, authTokenService);
     }
 
     @Bean
@@ -69,11 +72,10 @@ public class SecurityBeanConfig {
 
     @Bean
     public JwtRequestAuthFilter jwtRequestAuthFilter(
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            AuthTokenService authTokenService
     ) {
-        return new JwtRequestAuthFilter(
-                authenticationManager
-        );
+        return new JwtRequestAuthFilter(authenticationManager, authTokenService);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.numberbox.members.service;
 
+import com.numberbox.auth.control.service.AuthTokenService;
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;
@@ -11,8 +12,7 @@ import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.HwpJsonStrRequest;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.restapi.dto.request.PasswordRequest;
-import com.numberbox.security.provider.JwtUtil;
-import com.numberbox.security.util.StaticSecurityUtil;
+import com.numberbox.todo.StaticSecurityUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.Cookie;
@@ -44,7 +44,7 @@ public class MembersService {
     @Autowired
     private CommonUtil commonUtil;
     @Autowired
-    private JwtUtil jwtUtil;
+    private AuthTokenService authTokenService;
     @Autowired
     private MembersRepository membersRepository;
     @Autowired

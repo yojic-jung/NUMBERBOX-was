@@ -8,7 +8,6 @@ import com.numberbox.common.repository.ImgFileInfoRepo;
 import com.numberbox.common.repository.TmpImgFileInfoRepo;
 import com.numberbox.mathinfo.dto.MathContentsDto;
 import com.numberbox.members.entity.Members;
-import com.numberbox.security.util.StaticSecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,7 @@
 package com.numberbox.members.appservice.service;
 
+import com.numberbox.auth.control.config.AuthConfig;
+import com.numberbox.auth.control.service.AuthTokenService;
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.entity.Members;
@@ -7,7 +9,6 @@ import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
-import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +24,24 @@ public class NaverLoginService implements NaverLoginUseCase {
     private final MembersRepository membersRepository;
     private final MembersRoleRepository membersRoleRepository;
     private final RefreshTokenInfoService refreshTokenService;
-    private final JwtUtil jwtUtil;
+    private final AuthTokenService authTokenService;
 
     public NaverLoginService(
             MembersRepository membersRepository,
             MembersRoleRepository membersRoleRepository,
             RefreshTokenInfoService refreshTokenService,
-            JwtUtil jwtUtil
+            AuthTokenService authTokenService
     ) {
         this.membersRepository = membersRepository;
         this.membersRoleRepository = membersRoleRepository;
         this.refreshTokenService = refreshTokenService;
-        this.jwtUtil = jwtUtil;
+        this.authTokenService = authTokenService;
     }
 
     @Transactional
     @Override
     public Map<String, String> naverLogin(MembersRequest membersRequest, HttpServletRequest request) {
-        String expiredToken = jwtUtil.resolveRefreshToken(request);
+        String expiredToken = authTokenService.extractTokenFromRequestHeader(AuthConfig.refreshTokenName);
         // 로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰 db에서 삭제(클라이언트단에 로그아웃시 refresh토큰
         // 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
         if (expiredToken != null && !expiredToken.isEmpty()) {
@@ -110,8 +111,8 @@ public class NaverLoginService implements NaverLoginUseCase {
              */
         }
 
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = jwtUtil.createRefreshToken();
+        String accessToken = authTokenService.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
+        String refreshToken = authTokenService.createRefreshToken();
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
 
         // 매니저 권한 임시 구현

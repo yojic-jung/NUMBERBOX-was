@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.numberbox.todo.StaticSecurityUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersProfileRepository;
-import com.numberbox.security.util.StaticSecurityUtil;
 
 @Service
 public class ConvertService {

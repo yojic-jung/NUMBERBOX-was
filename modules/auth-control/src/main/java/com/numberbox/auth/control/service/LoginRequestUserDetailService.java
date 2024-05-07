@@ -1,6 +1,7 @@
-package com.numberbox.auth.engine.service;
+package com.numberbox.auth.control.service;
 
-import com.numberbox.auth.engine.dto.AuthUserInfo;
+
+import com.numberbox.auth.control.dto.AuthUserInfo;
 
 /**
  * Def. 서버측 사용자 인증 정보 제공 인터페이스

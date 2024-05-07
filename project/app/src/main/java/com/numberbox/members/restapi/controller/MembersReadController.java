@@ -3,7 +3,7 @@ package com.numberbox.members.restapi.controller;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.service.MembersService;
-import com.numberbox.security.util.StaticSecurityUtil;
+import com.numberbox.todo.StaticSecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

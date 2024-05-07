@@ -1,4 +1,4 @@
-package com.numberbox.auth.engine.service;
+package com.numberbox.auth.control.service;
 
 import java.util.UUID;
 

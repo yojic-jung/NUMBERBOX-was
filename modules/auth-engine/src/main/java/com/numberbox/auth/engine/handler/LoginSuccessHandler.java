@@ -1,8 +1,9 @@
 package com.numberbox.auth.engine.handler;
 
+import com.numberbox.auth.control.config.AuthConfig;
 import com.numberbox.auth.control.dto.AuthResponse;
-import com.numberbox.auth.engine.dto.LoginSuccessEvent;
-import com.numberbox.auth.engine.provider.JwtUtil;
+import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.dto.LoginSuccessEvent;
 import com.numberbox.auth.engine.util.SecurityUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +19,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.numberbox.auth.engine.util.SecurityUtil.makeCookie;
-import static com.numberbox.auth.engine.util.SecurityUtil.responseOK;
-
 /**
  * Def. 로그인 인증 성공 후처리
  */
@@ -28,9 +26,11 @@ import static com.numberbox.auth.engine.util.SecurityUtil.responseOK;
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final ApplicationEventPublisher eventPublisher;
+    private final AuthTokenService authTokenService;
 
-    public LoginSuccessHandler(ApplicationEventPublisher eventPublisher) {
+    public LoginSuccessHandler(ApplicationEventPublisher eventPublisher, AuthTokenService authTokenService) {
         this.eventPublisher = eventPublisher;
+        this.authTokenService = authTokenService;
     }
 
 //    @Transactional(rollbackFor = {Exception.class})
@@ -46,11 +46,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .collect(Collectors.toList());
 
         // accessToken(사용자 식별값, 권한) 및 refreshToken 발행
-        final String accessToken = JwtUtil.createAccessToken(username, userId, roleList);
-        final String refreshToken = JwtUtil.createRefreshToken();
+        final String accessToken = authTokenService.createAccessToken(username, userId, roleList);
+        final String refreshToken = authTokenService.createRefreshToken();
 
         // 로그인 성공 이벤트 발행
-        final String remainedRefreshToken = JwtUtil.resolveRefreshToken(request);
+        final String remainedRefreshToken = authTokenService.extractTokenFromCookie(AuthConfig.refreshTokenName);
         final LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
         eventPublisher.publishEvent(loginSuccessEvent);
 
@@ -70,9 +70,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 클라이언트가 로그인 상태 유지 요청한 경우
         if (loginState != null && loginState.equals("keep")) {
-            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) JwtUtil.REFRESH_TOKEN_VALID_TIME / 1000);
+            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) AuthConfig.REFRESH_TOKEN_VALID_TIME / 1000);
         } else {
-            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) JwtUtil.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000);
+            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000);
         }
     }
 }

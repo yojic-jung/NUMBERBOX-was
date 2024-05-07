@@ -1,7 +1,9 @@
 package com.numberbox.auth.engine.service;
 
+import com.numberbox.auth.control.service.JwtRequestUserDetailService;
+import com.numberbox.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.auth.engine.dto.AuthUserDetail;
-import com.numberbox.auth.engine.dto.AuthUserInfo;
+import com.numberbox.auth.control.dto.AuthUserInfo;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

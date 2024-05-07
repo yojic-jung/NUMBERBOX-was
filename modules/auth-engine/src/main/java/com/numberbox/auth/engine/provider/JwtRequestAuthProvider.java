@@ -1,9 +1,11 @@
 package com.numberbox.auth.engine.provider;
 
+import com.numberbox.auth.control.service.AuthTokenService;
 import com.numberbox.auth.engine.dto.AuthUserDetail;
 import com.numberbox.auth.engine.dto.JwtAuthenticationToken;
 import com.numberbox.auth.engine.exception.RefreshTokenNullException;
 import com.numberbox.auth.engine.exception.TokenOwnerNotMatchingException;
+import com.numberbox.auth.engine.service.AuthJwtService;
 import com.numberbox.auth.engine.service.UserTokenDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,13 +16,13 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
 
-import static com.numberbox.auth.engine.provider.JwtUtil.throwExceptionIfInvalidToken;
-
 public class JwtRequestAuthProvider implements AuthenticationProvider {
     private final UserTokenDetailService userTokenDetailService;
+    private final AuthTokenService authTokenService;
 
-    public JwtRequestAuthProvider(UserTokenDetailService userTokenDetailService) {
+    public JwtRequestAuthProvider(UserTokenDetailService userTokenDetailService, AuthTokenService authTokenService) {
         this.userTokenDetailService = userTokenDetailService;
+        this.authTokenService = authTokenService;
     }
 
     @Override
@@ -36,12 +38,12 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
         checkValidToken(accessToken, refreshToken);
 
         // 서버에서 사용자 정보 조회
-        final String email = JwtUtil.getEmail(accessToken);
+        final String email = authTokenService.getEmail(accessToken);
         final AuthUserDetail user =
                 (AuthUserDetail) userTokenDetailService.loadUserByUsername(email);
 
         // check3. refreshToken 소유자 체크(액세스 토큰 소유자와 같아야함)
-        final String accessTokenOwner = JwtUtil.getUserUniqId(accessToken).toString();
+        final String accessTokenOwner = authTokenService.getUserUniqId(accessToken).toString();
         checkTokenOwner(accessTokenOwner, refreshToken);
 
         // check4. enabled 체크해야함
@@ -57,10 +59,10 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
     private void checkValidToken(String accessToken, String refreshToken) {
         // accessToken 만료 여부 제외하고 유효성 검사
         boolean exceptExpire = true;
-        JwtUtil.throwExceptionIfInvalidToken(accessToken, exceptExpire);
+        authTokenService.throwExceptionIfInvalidToken(accessToken, exceptExpire);
         // refreshToken 유효성 검사
         try {
-            JwtUtil.throwExceptionIfInvalidToken(refreshToken);
+            authTokenService.throwExceptionIfInvalidToken(refreshToken);
         } catch (ExpiredJwtException ex) {
             // todo IP 체크하여 접속한 이력 있다면 리프레시 토큰도 재발급
         }

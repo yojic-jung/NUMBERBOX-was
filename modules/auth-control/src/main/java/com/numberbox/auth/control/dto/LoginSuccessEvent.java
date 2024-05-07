@@ -1,4 +1,4 @@
-package com.numberbox.auth.engine.dto;
+package com.numberbox.auth.control.dto;
 
 import jakarta.annotation.Nullable;
 

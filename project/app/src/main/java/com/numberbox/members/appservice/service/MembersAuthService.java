@@ -1,5 +1,6 @@
 package com.numberbox.members.appservice.service;
 
+import com.numberbox.auth.control.service.AuthTokenService;
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.appservice.usecase.MembersAuthUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
@@ -10,7 +11,6 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
-import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class MembersAuthService implements MembersAuthUseCase {
     private final RefreshTokenInfoService refreshTokenService;
     private final EmailIdCodeRepository emailIdCodeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtUtil jwtUtil;
+    private final AuthTokenService authTokenService;
 
     public MembersAuthService(
             MembersRepository membersRepository,
@@ -40,7 +40,7 @@ public class MembersAuthService implements MembersAuthUseCase {
             RefreshTokenInfoService refreshTokenService,
             EmailIdCodeRepository emailIdCodeRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
-            JwtUtil jwtUtil
+            AuthTokenService authTokenService
     ) {
         this.membersRepository = membersRepository;
         this.membersRoleRepository = membersRoleRepository;
@@ -49,7 +49,7 @@ public class MembersAuthService implements MembersAuthUseCase {
         this.refreshTokenService = refreshTokenService;
         this.emailIdCodeRepository = emailIdCodeRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.jwtUtil = jwtUtil;
+        this.authTokenService = authTokenService;
     }
 
     @Transactional
@@ -113,8 +113,8 @@ public class MembersAuthService implements MembersAuthUseCase {
 
         List<String> role = new ArrayList<>();
         role.add(membersRole.getRoleName());
-        String accessToken = jwtUtil.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = jwtUtil.createRefreshToken();
+        String accessToken = authTokenService.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
+        String refreshToken = authTokenService.createRefreshToken();
         refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
         map.put("isSuccess", "success");
         map.put("accessToken", accessToken);

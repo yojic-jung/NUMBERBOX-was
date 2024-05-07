@@ -17,6 +17,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) {
-        SecurityUtil.responseErrMsg(response, ACCESS_DENIED.status, ACCESS_DENIED.message);
+        SecurityUtil.responseErrMsg(response, ACCESS_DENIED.statusCode, ACCESS_DENIED.message);
     }
 }

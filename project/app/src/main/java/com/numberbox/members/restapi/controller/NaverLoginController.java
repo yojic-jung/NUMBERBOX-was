@@ -1,8 +1,8 @@
 package com.numberbox.members.restapi.controller;
 
+import com.numberbox.auth.control.config.AuthConfig;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
-import com.numberbox.security.provider.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ public class NaverLoginController {
             response.setHeader("role", returnMap.get("role"));
             String loginState = request.getParameter("loginState");
             if (loginState != null && loginState.equals("keep")) {
-                refreshTokenCookie.setMaxAge((int) (JwtUtil.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000));
+                refreshTokenCookie.setMaxAge((int) (AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000));
             } else {
                 refreshTokenCookie.setMaxAge(60 * 60 * 6); // 6시간
             }

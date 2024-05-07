@@ -1,9 +1,9 @@
 package com.numberbox.observer;
 
+import com.numberbox.auth.control.dto.LoginSuccessEvent;
 import com.numberbox.jwt.entity.RefreshTokenInfo;
 import com.numberbox.jwt.repository.RefreshTokenInfoRepository;
 import com.numberbox.members.repository.MembersRepository;
-import com.numberbox.security.dto.LoginSuccessEvent;
 import jakarta.transaction.Transactional;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

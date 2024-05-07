@@ -13,7 +13,7 @@ import com.numberbox.mathinfo.repository.MathResourceImgRepository;
 import com.numberbox.mathinfo.repository.MathResourceMenuRepository;
 import com.numberbox.mathinfo.repository.MathResourceRepository;
 import com.numberbox.members.entity.Members;
-import com.numberbox.security.util.StaticSecurityUtil;
+import com.numberbox.todo.StaticSecurityUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;

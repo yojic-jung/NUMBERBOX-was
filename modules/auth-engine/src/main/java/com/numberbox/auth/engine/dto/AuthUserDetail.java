@@ -1,5 +1,7 @@
 package com.numberbox.auth.engine.dto;
 
+import com.numberbox.auth.control.dto.AuthUserInfo;
+import com.numberbox.auth.control.dto.AuthUserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

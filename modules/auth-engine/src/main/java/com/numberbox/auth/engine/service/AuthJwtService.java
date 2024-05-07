@@ -1,7 +1,7 @@
-package com.numberbox.auth.engine.provider;
+package com.numberbox.auth.engine.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.numberbox.auth.engine.exception.AuthInternalException;
+import com.numberbox.auth.control.config.AuthConfig;
+import com.numberbox.auth.control.service.AuthTokenService;
 import com.numberbox.auth.engine.exception.JwtInvalidException;
 import com.numberbox.auth.engine.exception.TokenExpirationException;
 import io.jsonwebtoken.*;
@@ -9,40 +9,43 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.WebUtils;
 
 import java.util.*;
 
 @Component
-public class JwtUtil {
-    private static final ObjectMapper mapper = new ObjectMapper();
-    private static String secretKey;
-    // todo 사용자 설정 상수로 빼기
-    private static final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; // 1시간
-    public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 24 * 30; // 1달 (로그인 유지 요청한 경우)
-    public static final long REFRESH_TOKEN_VALID_TIME_DEFAULT = 1000L * 60 * 60 * 6; // 6시간
+public class AuthJwtService implements AuthTokenService {
+    private String secretKey;
 
     @Value("${numberbox.jwtSecretKey}")
     public void setSecretKey(String secretKey){
         this.secretKey = secretKey;
     }
 
-    public static String resolveAccessToken(HttpServletRequest request) {
-        String token = request.getHeader("access-token");
-        if (token != null && token.equals("null"))
-            token = null;
+    @Override
+    public String extractTokenFromRequestHeader(String tokenName) {
+        HttpServletRequest clientRequest =extractClientRequest();
+        final String token = clientRequest.getHeader(tokenName);
+        if (token != null && token.equals("null")) return null;
         return token;
     }
 
-    public static String resolveRefreshToken(HttpServletRequest request) {
-        String token = null;
-        Cookie cookie = WebUtils.getCookie(request, "refresh-token");
-        if (cookie != null)
-            token = cookie.getValue();
-        return token;
+    @Override
+    public String extractTokenFromCookie(String tokenName) {
+        HttpServletRequest clientRequest =extractClientRequest();
+        Cookie cookie = WebUtils.getCookie(clientRequest, tokenName);
+        if (cookie != null) return cookie.getValue();
+        return null;
     }
 
-    public static String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
+    private HttpServletRequest extractClientRequest(){
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    }
+
+    @Override
+    public String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
         claims.put("userUniqId", userUniqId);
@@ -80,7 +83,7 @@ public class JwtUtil {
 //        }
 
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + ACCESS_TOKEN_VALID_TIME);
+        Date expiration = new Date(now.getTime() + AuthConfig.ACCESS_TOKEN_VALID_TIME);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("nsoohak")
@@ -126,11 +129,12 @@ public class JwtUtil {
 //                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
 //    }
 
-    public static String createRefreshToken() {
+    @Override
+    public String createRefreshToken() {
         Claims claims = Jwts.claims();
         claims.put("nsoohak.com", true);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + REFRESH_TOKEN_VALID_TIME_DEFAULT);
+        Date expiration = new Date(now.getTime() + AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("nsoohak")
@@ -142,7 +146,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String getEmail(String token) {
+    @Override
+    public String getEmail(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
@@ -150,7 +155,8 @@ public class JwtUtil {
                 .get("email", String.class);
     }
 
-    public static UUID getUserUniqId(String token) {
+    @Override
+    public UUID getUserUniqId(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
@@ -158,27 +164,28 @@ public class JwtUtil {
                 .get("userUniqId", UUID.class);
     }
 
-    public static List<String> getRole(String token) {
-        return (List<String>) Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", Object.class);
-    }
+//    public List<String> getRole(String token) {
+//        return (List<String>) Jwts.parser()
+//                .setSigningKey(secretKey)
+//                .parseClaimsJws(token)
+//                .getBody()
+//                .get("role", Object.class);
+//    }
 
     /**
      * 토큰 페이로드 추출
      */
-    public static  Map<String, Object> takePayloadMap(String token) {
-        String[] check = token.split("\\.");
-        Base64.Decoder decoder = Base64.getDecoder();
-        String payload = new String(decoder.decode(check[1]));
-        try {
-            return mapper.readValue(payload, HashMap.class);
-        } catch (Exception e) {
-            throw new AuthInternalException();
-        }
-    }
+//    @Override
+//    public  Map<String, Object> takePayloadMap(String token) {
+//        String[] check = token.split("\\.");
+//        Base64.Decoder decoder = Base64.getDecoder();
+//        String payload = new String(decoder.decode(check[1]));
+//        try {
+//            return mapper.readValue(payload, HashMap.class);
+//        } catch (Exception e) {
+//            throw new AuthInternalException();
+//        }
+//    }
 
 //    @Transactional
 //    public static void delRefreshToken(HttpServletRequest request, HttpServletResponse response) {
@@ -199,14 +206,16 @@ public class JwtUtil {
     /**
      * 토큰 유효성 검사
      */
-    public static void throwExceptionIfInvalidToken(String jwtToken) {
+    @Override
+    public void throwExceptionIfInvalidToken(String jwtToken) {
         throwExceptionIfInvalidToken(jwtToken, true);
     }
 
     /**
      * 토큰 유효성 검사(만료 여부 검사 지정 가능)
      */
-    public static void throwExceptionIfInvalidToken(String jwtToken, boolean exceptExpiration) {
+    @Override
+    public void throwExceptionIfInvalidToken(String jwtToken, boolean exceptExpiration) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
         } catch (ExpiredJwtException e) {
