@@ -3,6 +3,7 @@ package com.numberbox.members.service;
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;
+import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.mathinfo.repository.MathContentsRepository;
 import com.numberbox.members.dto.*;
 import com.numberbox.members.entity.*;
@@ -14,6 +15,7 @@ import com.numberbox.security.provider.JwtUtil;
 import com.numberbox.security.util.StaticSecurityUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
 import javax.mail.MessagingException;
 import java.io.File;
@@ -63,10 +66,23 @@ public class MembersService {
     private ModelMapper modelMapper;
     @Autowired
     private EmailIdCodeRepository emailIdCodeRepository;
+    @Autowired
+    private RefreshTokenInfoService refreshTokenService;
 
     @Transactional
     public void delRefreshToken(HttpServletRequest request, HttpServletResponse response) {
-        jwtUtil.delRefreshToken(request, response);
+        String jwtToken = "";
+        Cookie cookie = WebUtils.getCookie(request, "refresh-token");
+        if (cookie != null) {
+            jwtToken = cookie.getValue();
+            cookie.setMaxAge(0);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setSecure(true);
+            cookie.setValue("");
+            response.addCookie(cookie);
+        }
+        refreshTokenService.deleteByToken(jwtToken);
     }
 
     @Transactional

@@ -9,7 +9,7 @@ import com.numberbox.jwt.entity.RefreshTokenInfo;
 
 public interface RefreshTokenInfoRepository extends JpaRepository<RefreshTokenInfo, Long> {
 
-	UUID finUserUniqIdByToken(String token);
+	UUID findUserUniqIdByToken(String token);
 
 	boolean existsByTokenAndUserUniqId(String token, UUID userUniqId);
 

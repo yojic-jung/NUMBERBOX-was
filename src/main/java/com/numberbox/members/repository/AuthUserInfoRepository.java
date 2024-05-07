@@ -39,6 +39,6 @@ public class AuthUserInfoRepository implements LoginRequestUserDetailService, Jw
 
     @Override
     public UUID loadUserIdByRefreshToken(String token) {
-        return refreshTokenInfoRepository.finUserUniqIdByToken(token);
+        return refreshTokenInfoRepository.findUserUniqIdByToken(token);
     }
 }
