@@ -1,9 +1,9 @@
 package com.numberbox.common.error.controller;
 
-import com.numberbox.security.dto.AuthResponse;
+import com.numberbox.auth.control.dto.AuthResponse;
 import com.numberbox.common.error.port.in.LoginFailureUseCase;
 import com.numberbox.common.util.ResponseUtil;
-import com.numberbox.security.exception.*;
+import com.numberbox.auth.control.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Map;
 
-import static com.numberbox.security.dto.AuthResponse.*;
+import static com.numberbox.auth.control.dto.AuthResponse.*;
 
 /**
  * 로그인 실패시 후처리 진행 후 실패 상황에 맞는 응답 전송
@@ -58,11 +58,11 @@ public class LoginFailureController {
     }
 
     private ResponseEntity<Map<String, Object>> response(AuthResponse authResponse) {
-        return ResponseUtil.makeErrMsg(authResponse.message, authResponse.status);
+        return ResponseUtil.makeErrMsg(authResponse.message, authResponse.statusCode);
     }
 
     private ResponseEntity<Map<String, Object>> response(boolean showMessage, AuthResponse authResponse) {
-        return ResponseUtil.makeErrMsg(showMessage, authResponse.message, authResponse.status);
+        return ResponseUtil.makeErrMsg(showMessage, authResponse.message, authResponse.statusCode);
     }
 
     @PostMapping("/accessDenied")

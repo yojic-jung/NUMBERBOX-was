@@ -21,7 +21,15 @@ public class ResponseUtil {
         return new ResponseEntity(resultMap, httpStatusCode);
     }
 
+    public static ResponseEntity<Map<String, Object>> makeErrMsg(Boolean showMessage, String message, int rawStatus) {
+        return makeErrMsg(showMessage, message, HttpStatusCode.valueOf(rawStatus));
+    }
+
     public static ResponseEntity<Map<String, Object>> makeErrMsg(String message, HttpStatusCode httpStatusCode) {
         return makeErrMsg(true, message, httpStatusCode);
+    }
+
+    public static ResponseEntity<Map<String, Object>> makeErrMsg(String message, int rawStatus) {
+        return makeErrMsg(true, message, HttpStatusCode.valueOf(rawStatus));
     }
 }

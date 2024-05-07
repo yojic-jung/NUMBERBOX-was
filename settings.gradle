@@ -1,7 +1,11 @@
 rootProject.name = 'NUMBERBOX'
 
-include(":modules")
-
 include(":project")
 include(":project:app")
+
+include(":modules")
+include(":modules:auth-control")
+include(":modules:auth-engine")
+
+
 

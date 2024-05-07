@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+group = 'com.numberbox'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":modules:auth-control")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //spring-security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //jwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    //mapper, UUID
+    implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
+    implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar { enabled = false }
+bootRun { enabled = false }
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
