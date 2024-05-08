@@ -1,6 +1,6 @@
 package com.numberbox.members.appservice.service;
 
-import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.appservice.usecase.MembersAuthUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
@@ -11,8 +11,6 @@ import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +24,8 @@ public class MembersAuthService implements MembersAuthUseCase {
     private final MembersRoleRepository membersRoleRepository;
     private final MembersPrivateRepository membersPrivateRepository;
     private final MembersProfileRepository membersProfileRepository;
-
-    private final RefreshTokenInfoService refreshTokenService;
     private final EmailIdCodeRepository emailIdCodeRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final AuthTokenService authTokenService;
+    private final AuthPasswordEncoder authPasswordEncoder;
 
     public MembersAuthService(
             MembersRepository membersRepository,
@@ -39,39 +34,37 @@ public class MembersAuthService implements MembersAuthUseCase {
             MembersProfileRepository membersProfileRepository,
             RefreshTokenInfoService refreshTokenService,
             EmailIdCodeRepository emailIdCodeRepository,
-            BCryptPasswordEncoder bCryptPasswordEncoder,
-            AuthTokenService authTokenService
+            AuthPasswordEncoder authPasswordEncoder
     ) {
         this.membersRepository = membersRepository;
         this.membersRoleRepository = membersRoleRepository;
         this.membersPrivateRepository = membersPrivateRepository;
         this.membersProfileRepository = membersProfileRepository;
-        this.refreshTokenService = refreshTokenService;
         this.emailIdCodeRepository = emailIdCodeRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.authTokenService = authTokenService;
+        this.authPasswordEncoder = authPasswordEncoder;
     }
 
     @Transactional
     @Override
-    public Map<String, String> signUp(HttpServletRequest request, MembersRequest membersRequest) {
-        HashMap<String, String> map = new HashMap<>();
+    public Map<String, Object> signUp(MembersRequest membersRequest) {
+        HashMap<String, Object> map = new HashMap<>();
         // 이메일 인증코드 확인
-        EmailIdCode emailIdCode = emailIdCodeRepository.findByEmail(membersRequest.getEmail());
+        String email = membersRequest.getEmail();
+        EmailIdCode emailIdCode = emailIdCodeRepository.findByEmail(email);
         Duration duration = Duration.between(emailIdCode.getSysCreateTime(), LocalDateTime.now());
         if (duration.getSeconds() > 180) {
             map.put("isSuccess", "emailIdCodeExpired");
             return map;
         }
-        boolean isEmailIdentified = bCryptPasswordEncoder.matches(membersRequest.getEmailIdCode(), emailIdCode.getIdCode());
+        boolean isEmailIdentified = authPasswordEncoder.matches(membersRequest.getEmailIdCode(), emailIdCode.getIdCode());
         if (!isEmailIdentified) {
             map.put("isSuccess", "emailIdCodeMissMatch");
             return map;
         }
 
-        emailIdCodeRepository.deleteByEmail(membersRequest.getEmail());
+        emailIdCodeRepository.deleteByEmail(email);
 
-        boolean existsEmail = membersRepository.existsByEmail(membersRequest.getEmail());
+        boolean existsEmail = membersRepository.existsByEmail(email);
         if (existsEmail) {
             map.put("isSuccess", "existsEmail");
             return map;
@@ -82,7 +75,7 @@ public class MembersAuthService implements MembersAuthUseCase {
          * if(existsPhone) { map.put("isSuccess", "existsPhone"); return map; }
          */
 
-        membersRequest.setPassword(bCryptPasswordEncoder.encode(membersRequest.getPassword()));
+        membersRequest.setPassword(authPasswordEncoder.encode(membersRequest.getPassword()));
         membersRequest.setHumanStatus(0);
         membersRequest.setFailCount(0);
         Members members = membersRepository.save(membersRequest.toEntity());
@@ -113,12 +106,12 @@ public class MembersAuthService implements MembersAuthUseCase {
 
         List<String> role = new ArrayList<>();
         role.add(membersRole.getRoleName());
-        String accessToken = authTokenService.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = authTokenService.createRefreshToken();
-        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
+
+        // todo map 아닌 dto로 만들어서 넘기기
         map.put("isSuccess", "success");
-        map.put("accessToken", accessToken);
-        map.put("refreshToken", refreshToken);
+        map.put("email", email);
+        map.put("userUniqId", userUniqId);
+        map.put("role", role);
         return map;
     }
 

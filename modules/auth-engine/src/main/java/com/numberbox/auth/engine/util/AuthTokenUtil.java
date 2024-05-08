@@ -1,14 +1,10 @@
-package com.numberbox.auth.control.service;
+package com.numberbox.auth.engine.util;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-public interface AuthTokenService {
-    String extractTokenFromRequestHeader(String tokenName);
-
-    String extractTokenFromCookie(String tokenName);
-
+// todo 클래스명 변경 util 없애기
+public interface AuthTokenUtil {
     String createAccessToken(String email, UUID userUniqId, List<String> roleList);
 
     String createRefreshToken();

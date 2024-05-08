@@ -1,14 +1,10 @@
 package com.numberbox.auth.engine.handler;
 
-import com.numberbox.auth.control.config.AuthConfig;
 import com.numberbox.auth.control.dto.AuthResponse;
-import com.numberbox.auth.control.service.AuthTokenService;
-import com.numberbox.auth.control.dto.LoginSuccessEvent;
-import com.numberbox.auth.engine.util.SecurityUtil;
-import jakarta.servlet.http.Cookie;
+import com.numberbox.auth.control.service.TokenResponseService;
+import com.numberbox.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,15 +21,12 @@ import java.util.stream.Collectors;
 @Primary
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-    private final ApplicationEventPublisher eventPublisher;
-    private final AuthTokenService authTokenService;
+    private final TokenResponseService tokenResponseService;
 
-    public LoginSuccessHandler(ApplicationEventPublisher eventPublisher, AuthTokenService authTokenService) {
-        this.eventPublisher = eventPublisher;
-        this.authTokenService = authTokenService;
+    public LoginSuccessHandler(TokenResponseService tokenResponseService) {
+        this.tokenResponseService = tokenResponseService;
     }
 
-//    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
@@ -45,34 +38,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        // accessToken(사용자 식별값, 권한) 및 refreshToken 발행
-        final String accessToken = authTokenService.createAccessToken(username, userId, roleList);
-        final String refreshToken = authTokenService.createRefreshToken();
-
-        // 로그인 성공 이벤트 발행
-        final String remainedRefreshToken = authTokenService.extractTokenFromCookie(AuthConfig.refreshTokenName);
-        final LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
-        eventPublisher.publishEvent(loginSuccessEvent);
-
         // 응답(토큰, 권한 포함)
-        response.setHeader("access-token", accessToken);
-        response.setHeader("role", roleList.toString());
-        response.addCookie(makeRefreshTokenCookie(request, refreshToken));
-        SecurityUtil.responseOK(response, false, AuthResponse.OK.message);
-    }
-
-    /**
-     * 리프레시 토큰 쿠키 생성
-     */
-    private Cookie makeRefreshTokenCookie(HttpServletRequest request, String refreshToken) {
-        // 리프레시 토큰 유효기간 설정
-        final String loginState = request.getParameter("loginState");
-
-        // 클라이언트가 로그인 상태 유지 요청한 경우
-        if (loginState != null && loginState.equals("keep")) {
-            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) AuthConfig.REFRESH_TOKEN_VALID_TIME / 1000);
-        } else {
-            return SecurityUtil.makeCookie("refresh-token", refreshToken, (int) AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000);
-        }
+        tokenResponseService.createAndSetTokenToResponse(username, userId, roleList);
+        AuthWebUtil.responseOK(response, false, AuthResponse.OK.message);
     }
 }

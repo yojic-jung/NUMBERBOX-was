@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.numberbox.auth.control.dto.AuthResponse;
 import com.numberbox.auth.engine.exception.AuthInternalException;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 // todo 코드 리팩토링
-public class SecurityUtil {
-    private SecurityUtil() {
+public class AuthWebUtil {
+    private AuthWebUtil() {
     }
 
     private static final ObjectMapper obj = new ObjectMapper();
@@ -65,6 +67,11 @@ public class SecurityUtil {
         }
     }
 
+    public static String getCookieValue(HttpServletRequest request, String cookieName){
+        Cookie cookie = WebUtils.getCookie(request, cookieName);
+        return  cookie == null ? null : cookie.getValue();
+    }
+
     public static Cookie makeCookie(String name, String value, int maxAge) {
         return makeCookie(name, value, "/", true, true, maxAge);
     }
@@ -80,4 +87,5 @@ public class SecurityUtil {
         refreshTokenCookie.setMaxAge(maxAge);
         return refreshTokenCookie;
     }
+
 }

@@ -1,49 +1,32 @@
 package com.numberbox.members.restapi.controller;
 
-import com.numberbox.auth.control.config.AuthConfig;
+import com.numberbox.auth.control.service.TokenResponseService;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+@RestController
 public class NaverLoginController {
-
     private final NaverLoginUseCase naverLoginUseCase;
+    private final TokenResponseService tokenResponseService;
 
-    public NaverLoginController(NaverLoginUseCase naverLoginUseCase) {
+    public NaverLoginController(NaverLoginUseCase naverLoginUseCase, TokenResponseService tokenResponseService) {
         this.naverLoginUseCase = naverLoginUseCase;
+        this.tokenResponseService = tokenResponseService;
     }
 
     @PostMapping("/naverLogin")
-    public Map<String, Object> naverLogin(MembersRequest members, HttpServletRequest request,
-                                          HttpServletResponse response) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, String> returnMap = naverLoginUseCase.naverLogin(members, request);
-        String isSuccess = returnMap.get("isSuccess");
-        if (isSuccess.equals("loginSuccess") || isSuccess.equals("signUpSuccess")) {
-            Cookie refreshTokenCookie = new Cookie("refresh-token", returnMap.get("refreshToken"));
-            response.setHeader("access-token", returnMap.get("accessToken"));
-            response.setHeader("role", returnMap.get("role"));
-            String loginState = request.getParameter("loginState");
-            if (loginState != null && loginState.equals("keep")) {
-                refreshTokenCookie.setMaxAge((int) (AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT / 1000));
-            } else {
-                refreshTokenCookie.setMaxAge(60 * 60 * 6); // 6시간
-            }
-            refreshTokenCookie.setPath("/"); // context-path를 myWasApi로 설정하면서 쿠키 Path가 /myWasApi로 바뀜 다시 / 루트 컨텐스트로 쿠키 패쓰
-            // 설정
-            refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true);
-            response.addCookie(refreshTokenCookie);
-
-        }
-        map.put("isSuccess", isSuccess);
-        return map;
+    public Map<String, Object> naverLogin(MembersRequest members, HttpServletRequest request) {
+        Map<String, Object> returnMap = naverLoginUseCase.naverLogin(members, request);
+        tokenResponseService.createAndSetTokenToResponse();
+        return returnMap;
     }
 
 }

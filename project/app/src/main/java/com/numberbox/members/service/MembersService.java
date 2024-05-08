@@ -1,6 +1,6 @@
 package com.numberbox.members.service;
 
-import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;
@@ -21,7 +21,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.WebUtils;
@@ -44,8 +43,6 @@ public class MembersService {
     @Autowired
     private CommonUtil commonUtil;
     @Autowired
-    private AuthTokenService authTokenService;
-    @Autowired
     private MembersRepository membersRepository;
     @Autowired
     private MembersProfileRepository membersProfileRepository;
@@ -60,7 +57,7 @@ public class MembersService {
     @Autowired
     private AccessLogInfoRepository accessLogInfoRepository;
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private AuthPasswordEncoder authPasswordEncoder;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -280,7 +277,7 @@ public class MembersService {
             map.put("isExist", true);
             String randPasswrod = CommonUtil.makeRandomPassword();
             MembersRequest membersRequest = modelMapper.map(members, MembersRequest.class);
-            membersRequest.setPassword(bCryptPasswordEncoder.encode(randPasswrod));
+            membersRequest.setPassword(authPasswordEncoder.encode(randPasswrod));
             membersRequest.setTmpPassword(true);
             membersRepository.save(membersRequest.toEntity());
 
@@ -299,7 +296,7 @@ public class MembersService {
         HashMap<String, Object> map = new HashMap<>();
         Members members = StaticSecurityUtil.getMembers();
         Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
-        boolean isCertified = bCryptPasswordEncoder.matches(password, corfirmMembers.getPassword());
+        boolean isCertified = authPasswordEncoder.matches(password, corfirmMembers.getPassword());
         if (isCertified) {
             map.put("isCertified", true);
             MembersPrivate membersPrivate = membersPrivateRepository.findByUserUniqId(corfirmMembers.getUserUniqId());
@@ -314,12 +311,12 @@ public class MembersService {
         HashMap<String, Object> map = new HashMap<>();
         Members members = StaticSecurityUtil.getMembers();
         Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
-        boolean isCertified = bCryptPasswordEncoder.matches(passwordRequest.getOldPassword(),
+        boolean isCertified = authPasswordEncoder.matches(passwordRequest.getOldPassword(),
                 corfirmMembers.getPassword());
         if (isCertified) {
             MembersRequest membersRequest = modelMapper.map(corfirmMembers, MembersRequest.class);
             membersRequest.setTmpPassword(false);
-            membersRequest.setPassword(bCryptPasswordEncoder.encode(passwordRequest.getNewPassword()));
+            membersRequest.setPassword(authPasswordEncoder.encode(passwordRequest.getNewPassword()));
             membersRepository.save(membersRequest.toEntity());
             map.put("isPassChanged", true);
         } else {
@@ -377,7 +374,7 @@ public class MembersService {
             return map;
         }
         Members corfirmMembers = membersRepository.findByEmail(members.getEmail());
-        isCertified = bCryptPasswordEncoder.matches(memberDto.getPassword(), corfirmMembers.getPassword());
+        isCertified = authPasswordEncoder.matches(memberDto.getPassword(), corfirmMembers.getPassword());
         if (!isCertified) {
             map.put("existMsg", true);
             map.put("serverMsg", "계정 정보가 올바르지 않습니다.");
@@ -471,7 +468,7 @@ public class MembersService {
             idCode += (rand.nextInt(8) + 1);
         EmailIdCodeDto emailIdCodeDto = new EmailIdCodeDto();
         emailIdCodeDto.setEmail(email);
-        emailIdCodeDto.setIdCode(bCryptPasswordEncoder.encode(idCode));
+        emailIdCodeDto.setIdCode(authPasswordEncoder.encode(idCode));
 
         EmailIdCode emailIdCode = emailIdCodeRepository.save(emailIdCodeDto.toEntity());
         boolean isSuccess = entityManager.contains(emailIdCode);

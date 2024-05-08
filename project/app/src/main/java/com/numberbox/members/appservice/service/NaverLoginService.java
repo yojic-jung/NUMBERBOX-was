@@ -1,8 +1,5 @@
 package com.numberbox.members.appservice.service;
 
-import com.numberbox.auth.control.config.AuthConfig;
-import com.numberbox.auth.control.service.AuthTokenService;
-import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
@@ -23,32 +20,19 @@ import java.util.Map;
 public class NaverLoginService implements NaverLoginUseCase {
     private final MembersRepository membersRepository;
     private final MembersRoleRepository membersRoleRepository;
-    private final RefreshTokenInfoService refreshTokenService;
-    private final AuthTokenService authTokenService;
 
     public NaverLoginService(
             MembersRepository membersRepository,
-            MembersRoleRepository membersRoleRepository,
-            RefreshTokenInfoService refreshTokenService,
-            AuthTokenService authTokenService
+            MembersRoleRepository membersRoleRepository
     ) {
         this.membersRepository = membersRepository;
         this.membersRoleRepository = membersRoleRepository;
-        this.refreshTokenService = refreshTokenService;
-        this.authTokenService = authTokenService;
     }
 
     @Transactional
     @Override
-    public Map<String, String> naverLogin(MembersRequest membersRequest, HttpServletRequest request) {
-        String expiredToken = authTokenService.extractTokenFromRequestHeader(AuthConfig.refreshTokenName);
-        // 로그인시 클라이언트단에 refresh토큰이 남아있는 경우 해당 refresh토큰 db에서 삭제(클라이언트단에 로그아웃시 refresh토큰
-        // 삭제하여 정상적인 로직시 해당 로직 타는 경우 없지만 refresh토큰 탈취하여 사용하는 경우 만료시킴 )
-        if (expiredToken != null && !expiredToken.isEmpty()) {
-            refreshTokenService.deleteByToken(expiredToken);
-        }
-
-        HashMap<String, String> map = new HashMap<>();
+    public Map<String, Object> naverLogin(MembersRequest membersRequest, HttpServletRequest request) {
+        HashMap<String, Object> map = new HashMap<>();
         Members members = membersRepository.findByEmail(membersRequest.getEmail());
         List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
 
@@ -111,10 +95,6 @@ public class NaverLoginService implements NaverLoginUseCase {
              */
         }
 
-        String accessToken = authTokenService.createAccessToken(members.getEmail(), members.getUserUniqId(), role);
-        String refreshToken = authTokenService.createRefreshToken();
-        refreshTokenService.addRefreshToken(refreshToken, members.getUserUniqId());
-
         // 매니저 권한 임시 구현
         boolean isManager = false;
         boolean isAdmin = false;
@@ -134,10 +114,7 @@ public class NaverLoginService implements NaverLoginUseCase {
             map.put("role", "USER");
         }
 
-        map.put("accessToken", accessToken);
-        map.put("refreshToken", refreshToken);
         return map;
-
     }
 
 }

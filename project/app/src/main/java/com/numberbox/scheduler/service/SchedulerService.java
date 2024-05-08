@@ -1,5 +1,6 @@
 package com.numberbox.scheduler.service;
 
+import com.numberbox.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
@@ -35,7 +36,7 @@ import java.util.List;
 public class SchedulerService {
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private AuthPasswordEncoder authPasswordEncoder;
     @Autowired
     private MembersRepository membersRepository;
     @Autowired
@@ -81,7 +82,7 @@ public class SchedulerService {
             for (Members members : membersList) {
                 MembersRequest membersRequest = modelMapper.map(members, MembersRequest.class);
                 membersRequest.setTmpPassword(false);
-                membersRequest.setPassword(bCryptPasswordEncoder.encode(CommonUtil.makeRandomPassword()));
+                membersRequest.setPassword(authPasswordEncoder.encode(CommonUtil.makeRandomPassword()));
                 targetMembersList.add(membersRequest.toEntity());
             }
             membersRepository.saveAll(targetMembersList);

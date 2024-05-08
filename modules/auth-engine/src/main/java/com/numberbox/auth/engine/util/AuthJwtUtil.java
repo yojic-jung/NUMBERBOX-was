@@ -1,47 +1,21 @@
-package com.numberbox.auth.engine.service;
+package com.numberbox.auth.engine.util;
 
-import com.numberbox.auth.control.config.AuthConfig;
-import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.config.AuthConstantConfig;
 import com.numberbox.auth.engine.exception.JwtInvalidException;
 import com.numberbox.auth.engine.exception.TokenExpirationException;
 import io.jsonwebtoken.*;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.WebUtils;
 
 import java.util.*;
 
 @Component
-public class AuthJwtService implements AuthTokenService {
+public class AuthJwtUtil implements AuthTokenUtil {
     private String secretKey;
 
     @Value("${numberbox.jwtSecretKey}")
     public void setSecretKey(String secretKey){
         this.secretKey = secretKey;
-    }
-
-    @Override
-    public String extractTokenFromRequestHeader(String tokenName) {
-        HttpServletRequest clientRequest =extractClientRequest();
-        final String token = clientRequest.getHeader(tokenName);
-        if (token != null && token.equals("null")) return null;
-        return token;
-    }
-
-    @Override
-    public String extractTokenFromCookie(String tokenName) {
-        HttpServletRequest clientRequest =extractClientRequest();
-        Cookie cookie = WebUtils.getCookie(clientRequest, tokenName);
-        if (cookie != null) return cookie.getValue();
-        return null;
-    }
-
-    private HttpServletRequest extractClientRequest(){
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
     @Override
@@ -83,7 +57,7 @@ public class AuthJwtService implements AuthTokenService {
 //        }
 
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + AuthConfig.ACCESS_TOKEN_VALID_TIME);
+        Date expiration = new Date(now.getTime() + AuthConstantConfig.ACCESS_TOKEN_VALID_TIME);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("nsoohak")
@@ -134,7 +108,7 @@ public class AuthJwtService implements AuthTokenService {
         Claims claims = Jwts.claims();
         claims.put("nsoohak.com", true);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + AuthConfig.REFRESH_TOKEN_VALID_TIME_DEFAULT);
+        Date expiration = new Date(now.getTime() + AuthConstantConfig.REFRESH_TOKEN_VALID_TIME);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuer("nsoohak")

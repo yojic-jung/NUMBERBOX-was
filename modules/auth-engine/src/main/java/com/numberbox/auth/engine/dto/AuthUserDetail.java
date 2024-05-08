@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Def. 서버에서 전달된 사용자 인증 정보
+ */
 public class AuthUserDetail extends User {
-    public static final String ROLE_PREFIX = "ROLE_";
+    private static final String ROLE_PREFIX = "ROLE_";
 
     private final UUID userId;
 

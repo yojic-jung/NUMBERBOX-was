@@ -7,7 +7,7 @@ import java.util.UUID;
  * 
  * @param userId - 사용자 id
  * @param refreshToken - 발행한 리프레시 토큰
- * @param remainedRefreshToken - nullable, 로그인 시도시 이미 존재했던 리프레시 토큰(삭제대상)
+ * @param remainedRefreshToken - nullable, 로그인 시도시 존재하고 있는 리프레시 토큰(삭제대상)
  */
 public record LoginSuccessEvent(UUID userId, String refreshToken, String remainedRefreshToken) {
 }

@@ -1,10 +1,9 @@
 package com.numberbox.auth.engine.filter;
 
-import com.numberbox.auth.control.config.AuthConfig;
-import com.numberbox.auth.control.service.AuthTokenService;
+import com.numberbox.auth.control.config.AuthConstantConfig;
 import com.numberbox.auth.engine.dto.JwtAuthenticationToken;
 import com.numberbox.auth.engine.exception.TokenException;
-import com.numberbox.auth.engine.util.SecurityUtil;
+import com.numberbox.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,20 +18,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private final AuthenticationManager authenticationManager;
-    private final AuthTokenService authTokenService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public JwtRequestAuthFilter(AuthenticationManager authenticationManager, AuthTokenService authTokenService) {
+    public JwtRequestAuthFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.authTokenService = authTokenService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             // 클라이언트 토큰 추출
-            String accessToken = authTokenService.extractTokenFromRequestHeader(AuthConfig.accessTokenName);
-            String refreshToken = authTokenService.extractTokenFromCookie(AuthConfig.refreshTokenName);
+            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME);
+            String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
 
             // 클라이언트 인증 객체 생성
             JwtAuthenticationToken authRequest
@@ -55,18 +52,19 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private void unsuccessfulAuthentication(HttpServletResponse response, Exception exception) {
         // 인증 실패 응답 메시지 전송
         if (exception instanceof TokenException) {
-            SecurityUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
+            // todo 리프레시 토큰 관련 에러 이벤트 발행??? 리프레시 토큰 DB에서 삭제 하도록
+            AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
         } else if (exception instanceof DisabledException) {
-            SecurityUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
+            AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
         } else if (exception instanceof Exception) {
             logger.warn("jwt 인증 과정 중 예외 발생 : " + exception);
-            SecurityUtil.responseErrMsg(response, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+            AuthWebUtil.responseErrMsg(response, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
         }
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String accessToken = authTokenService.extractTokenFromRequestHeader(AuthConfig.accessTokenName);
+        final String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME);
         return accessToken == null;
     }
 }

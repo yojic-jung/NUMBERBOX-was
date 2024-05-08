@@ -1,6 +1,6 @@
 package com.numberbox.auth.engine.handler;
 
-import com.numberbox.auth.engine.util.SecurityUtil;
+import com.numberbox.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +17,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) {
-        SecurityUtil.responseErrMsg(response, ACCESS_DENIED.statusCode, ACCESS_DENIED.message);
+        AuthWebUtil.responseErrMsg(response, ACCESS_DENIED.statusCode, ACCESS_DENIED.message);
     }
 }

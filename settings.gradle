@@ -2,6 +2,7 @@ rootProject.name = 'NUMBERBOX'
 
 include(":project")
 include(":project:app")
+include(":project:bootstrap")
 
 include(":modules")
 include(":modules:auth-control")

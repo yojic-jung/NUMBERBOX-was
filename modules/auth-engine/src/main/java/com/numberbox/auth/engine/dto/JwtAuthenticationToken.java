@@ -5,6 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * Def. jwt 기반 인증 객체
+ */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal;
     private final Object credentials;
