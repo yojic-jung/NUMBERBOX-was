@@ -1,11 +1,13 @@
 package com.numberbox.auth.control.dto;
 
-import jakarta.annotation.Nullable;
-
 import java.util.UUID;
 
 /**
  * Def. 로그인 성공 이벤트
+ * 
+ * @param userId - 사용자 id
+ * @param refreshToken - 발행한 리프레시 토큰
+ * @param remainedRefreshToken - nullable, 로그인 시도시 이미 존재했던 리프레시 토큰(삭제대상)
  */
-public record LoginSuccessEvent(UUID userId, String refreshToken, @Nullable String remainedRefreshToken) {
+public record LoginSuccessEvent(UUID userId, String refreshToken, String remainedRefreshToken) {
 }

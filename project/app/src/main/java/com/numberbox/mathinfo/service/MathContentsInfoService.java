@@ -14,6 +14,7 @@ import com.numberbox.members.entity.MembersProfile;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersFollowInfoRepository;
 import com.numberbox.members.repository.MembersProfileRepository;
+import com.numberbox.todo.StaticSecurityUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.co.shineware.nlp.komoran.constant.DEFAULT_MODEL;
