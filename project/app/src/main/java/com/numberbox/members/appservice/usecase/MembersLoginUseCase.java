@@ -1,10 +1,9 @@
 package com.numberbox.members.appservice.usecase;
 
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.members.restapi.dto.response.SignUpResultDto;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.Map;
-
-public interface NaverLoginUseCase {
-    public Map<String, Object> naverLogin(MembersRequest membersRequest, HttpServletRequest request);
+public interface MembersLoginUseCase {
+    SignUpResultDto login(String requestEmail);
 }

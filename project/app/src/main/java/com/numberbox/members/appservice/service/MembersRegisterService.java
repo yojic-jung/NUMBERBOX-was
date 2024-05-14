@@ -1,16 +1,17 @@
 package com.numberbox.members.appservice.service;
 
 import com.numberbox.auth.control.util.AuthPasswordEncoder;
-import com.numberbox.jwt.service.RefreshTokenInfoService;
-import com.numberbox.members.appservice.usecase.MembersAuthUseCase;
+import com.numberbox.members.appservice.usecase.MembersRegisterUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;
 import com.numberbox.members.dto.MembersRoleDto;
+import com.numberbox.members.dto.enums.SignUpResultType;
 import com.numberbox.members.entity.EmailIdCode;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.*;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.members.restapi.dto.response.SignUpResultDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class MembersAuthService implements MembersAuthUseCase {
+public class MembersRegisterService implements MembersRegisterUseCase {
     private final MembersRepository membersRepository;
     private final MembersRoleRepository membersRoleRepository;
     private final MembersPrivateRepository membersPrivateRepository;
@@ -27,12 +28,11 @@ public class MembersAuthService implements MembersAuthUseCase {
     private final EmailIdCodeRepository emailIdCodeRepository;
     private final AuthPasswordEncoder authPasswordEncoder;
 
-    public MembersAuthService(
+    public MembersRegisterService(
             MembersRepository membersRepository,
             MembersRoleRepository membersRoleRepository,
             MembersPrivateRepository membersPrivateRepository,
             MembersProfileRepository membersProfileRepository,
-            RefreshTokenInfoService refreshTokenService,
             EmailIdCodeRepository emailIdCodeRepository,
             AuthPasswordEncoder authPasswordEncoder
     ) {
@@ -46,28 +46,24 @@ public class MembersAuthService implements MembersAuthUseCase {
 
     @Transactional
     @Override
-    public Map<String, Object> signUp(MembersRequest membersRequest) {
-        HashMap<String, Object> map = new HashMap<>();
+    public SignUpResultDto signUp(MembersRequest membersRequest) {
         // 이메일 인증코드 확인
         String email = membersRequest.getEmail();
         EmailIdCode emailIdCode = emailIdCodeRepository.findByEmail(email);
         Duration duration = Duration.between(emailIdCode.getSysCreateTime(), LocalDateTime.now());
         if (duration.getSeconds() > 180) {
-            map.put("isSuccess", "emailIdCodeExpired");
-            return map;
+            return new SignUpResultDto(SignUpResultType.EMAIL_CODE_EXPIRED);
         }
         boolean isEmailIdentified = authPasswordEncoder.matches(membersRequest.getEmailIdCode(), emailIdCode.getIdCode());
         if (!isEmailIdentified) {
-            map.put("isSuccess", "emailIdCodeMissMatch");
-            return map;
+            return new SignUpResultDto(SignUpResultType.EMAIL_CODE_MISS_MATCH);
         }
 
         emailIdCodeRepository.deleteByEmail(email);
 
         boolean existsEmail = membersRepository.existsByEmail(email);
         if (existsEmail) {
-            map.put("isSuccess", "existsEmail");
-            return map;
+            return new SignUpResultDto(SignUpResultType.EMAIL_EXIST);
         }
         /*
          * boolean existsPhone =
@@ -104,15 +100,8 @@ public class MembersAuthService implements MembersAuthUseCase {
         mebersPrivateDto.setBirth(membersRequest.getBirth());
         membersPrivateRepository.save(mebersPrivateDto.toEntity());
 
-        List<String> role = new ArrayList<>();
-        role.add(membersRole.getRoleName());
-
-        // todo map 아닌 dto로 만들어서 넘기기
-        map.put("isSuccess", "success");
-        map.put("email", email);
-        map.put("userUniqId", userUniqId);
-        map.put("role", role);
-        return map;
+        List<String> roles = new ArrayList<>();
+        roles.add(membersRole.getRoleName());
+        return new SignUpResultDto(SignUpResultType.SUCCESS, email, userUniqId, roles);
     }
-
 }

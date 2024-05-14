@@ -1,23 +1,24 @@
 package com.numberbox.members.appservice.service;
 
-import com.numberbox.members.appservice.usecase.NaverLoginUseCase;
+import com.numberbox.members.appservice.usecase.MembersLoginUseCase;
+import com.numberbox.members.dto.enums.SignUpResultType;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;
 import com.numberbox.members.repository.MembersRepository;
 import com.numberbox.members.repository.MembersRoleRepository;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
+import com.numberbox.members.restapi.dto.response.SignUpResultDto;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Qualifier("naver")
 @Service
-public class NaverLoginService implements NaverLoginUseCase {
+public class NaverLoginService implements MembersLoginUseCase {
     private final MembersRepository membersRepository;
     private final MembersRoleRepository membersRoleRepository;
 
@@ -31,18 +32,19 @@ public class NaverLoginService implements NaverLoginUseCase {
 
     @Transactional
     @Override
-    public Map<String, Object> naverLogin(MembersRequest membersRequest, HttpServletRequest request) {
-        HashMap<String, Object> map = new HashMap<>();
-        Members members = membersRepository.findByEmail(membersRequest.getEmail());
+    public SignUpResultDto login(String requestEmail) {
+        Members members = membersRepository.findByEmail(requestEmail);
         List<MembersRole> membersRoleList = membersRoleRepository.findByUserUniqId(members.getUserUniqId());
 
-        List<String> role = new ArrayList<>();
         if (members != null) {
+            String email = members.getEmail();
+            UUID userUniqId = members.getUserUniqId();
 
+            List<String> roles = new ArrayList<>();
             boolean isDropAccount = false;
             for (MembersRole membersRole : membersRoleList) {
                 // 권한 추가
-                role.add(membersRole.getRoleName());
+                roles.add(membersRole.getRoleName());
                 if (!membersRole.isEnabled()) {
                     // 탈퇴회원인 경우 로그인 불가 처리
                     isDropAccount = true;
@@ -50,17 +52,17 @@ public class NaverLoginService implements NaverLoginUseCase {
             }
 
             if (isDropAccount) {
-                map.put("isSuccess", "dropAccount");
-                return map;
+                return new SignUpResultDto(SignUpResultType.DROP_ACCOUNT);
             }
 
             // 로그인 시간 및 휴먼상태 초기화
-            membersRepository.initFailCntZeroAndLastLoginDate(members.getUserUniqId(), LocalDateTime.now());
-            membersRepository.initHumanStatus(members.getUserUniqId());
-            map.put("isSuccess", "loginSuccess");
+            membersRepository.initFailCntZeroAndLastLoginDate(userUniqId, LocalDateTime.now());
+            membersRepository.initHumanStatus(userUniqId);
+            return new SignUpResultDto(SignUpResultType.SUCCESS, email, userUniqId, roles);
+
         } else {
-            map.put("isSuccess", "EndService");
-            return map;
+            // todo 수정 필요
+            return new SignUpResultDto(SignUpResultType.DROP_ACCOUNT);
             /*
              * //로그인 API로 회원가입하는 경우 //휴대폰 인증 체크 boolean existsPhone =
              * membersPrivateRepository.existsByPhoneNumber(membersDto.getPhoneNumber());
@@ -94,27 +96,6 @@ public class NaverLoginService implements NaverLoginUseCase {
              * map.put("isSuccess", "signUpSuccess");
              */
         }
-
-        // 매니저 권한 임시 구현
-        boolean isManager = false;
-        boolean isAdmin = false;
-        for (MembersRole memberRole : membersRoleList) {
-            if (memberRole.getRoleName().equals("MANAGER")) {
-                isManager = true;
-            } else if (memberRole.getRoleName().equals("ADMIN")) {
-                isAdmin = true;
-            }
-        }
-
-        if (isAdmin) {
-            map.put("role", "ADMIN");
-        } else if (!isAdmin && isManager) {
-            map.put("role", "MANAGER");
-        } else {
-            map.put("role", "USER");
-        }
-
-        return map;
     }
 
 }

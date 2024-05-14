@@ -11,6 +11,16 @@ import java.util.Map;
  */
 public class ResponseUtil {
 
+    public static ResponseEntity<Map<String, Object>> ok(Boolean showMessage, String message, HttpStatusCode httpStatusCode) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("showMessage", showMessage);
+        resultMap.put("message", message);
+        resultMap.put("data", message);
+        return new ResponseEntity(resultMap, httpStatusCode);
+    }
+
+
+
     /**
      * 예외 메시지 전송
      */

@@ -3,10 +3,8 @@ rootProject.name = 'NUMBERBOX'
 include(":project")
 include(":project:app")
 include(":project:bootstrap")
+include(":project:rest-api")
 
 include(":modules")
 include(":modules:auth-control")
 include(":modules:auth-engine")
-
-
-
