@@ -11,7 +11,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,28 +45,28 @@ public class AwsS3Service {
     }
 
     // 단일 파일 S3 전달
-    public String uploadToS3SeverSingleFile(int actionId, MultipartFile file) throws IOException {
-        Random random1 = new Random();
-        long currentTime1 = System.currentTimeMillis();
-        int randomValue1 = random1.nextInt(100);
-        LocalDate now = LocalDate.now();
-        String year = Integer.toString(now.getYear());
-        int monthValue = now.getMonthValue();
-
-        // 폴더 이름 생성 규칙은 actionId-연월
-        String fileName = file.getOriginalFilename();
-        if (actionId == 10) {
-            fileName = "editorImgUpld/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_"
-                    + randomValue1 + "_" + file.getOriginalFilename();
-        } else if (actionId == 11) {
-            fileName = "hwpToHtml/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_" + randomValue1
-                    + "_" + file.getOriginalFilename();
-        }
-
-        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-        return s3Client.getUrl(bucket, fileName).toString();
-    }
+//    public String uploadToS3SeverSingleFile(int actionId, MultipartFile file) throws IOException {
+//        Random random1 = new Random();
+//        long currentTime1 = System.currentTimeMillis();
+//        int randomValue1 = random1.nextInt(100);
+//        LocalDate now = LocalDate.now();
+//        String year = Integer.toString(now.getYear());
+//        int monthValue = now.getMonthValue();
+//
+//        // 폴더 이름 생성 규칙은 actionId-연월
+//        String fileName = file.getOriginalFilename();
+//        if (actionId == 10) {
+//            fileName = "editorImgUpld/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_"
+//                    + randomValue1 + "_" + file.getOriginalFilename();
+//        } else if (actionId == 11) {
+//            fileName = "hwpToHtml/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_" + randomValue1
+//                    + "_" + file.getOriginalFilename();
+//        }
+//
+//        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
+//                .withCannedAcl(CannedAccessControlList.PublicRead));
+//        return s3Client.getUrl(bucket, fileName).toString();
+//    }
 
     // 단일 파일 S3 전달
     public String uploadToS3SeverSingleFile(int actionId, File file, String fileName) throws IOException {

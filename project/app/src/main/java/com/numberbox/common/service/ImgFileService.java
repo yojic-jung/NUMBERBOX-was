@@ -1,8 +1,6 @@
 package com.numberbox.common.service;
 
 import com.numberbox.common.dto.ImgFileInfoDto;
-import com.numberbox.common.dto.ImgFileModel;
-import com.numberbox.common.dto.TmpImgFileInfoDto;
 import com.numberbox.common.entity.ImgFileInfo;
 import com.numberbox.common.repository.ImgFileInfoRepo;
 import com.numberbox.common.repository.TmpImgFileInfoRepo;
@@ -114,30 +112,30 @@ public class ImgFileService {
         }
     }
 
-    @Transactional
-    public void registerTmpImgFileInfo(ImgFileModel imgFileModel, String s3Url) {
-        Members members = StaticSecurityUtil.getMembers();
-        UUID userUniqId = members.getUserUniqId();
-
-        TmpImgFileInfoDto imgDto = new TmpImgFileInfoDto();
-        imgDto.setUserUniqId(userUniqId);
-        imgDto.setActionId(imgFileModel.getActionId());
-
-        String imgPathStr = s3Url.replace(bucketUrl, "");
-        int firstSlashIdx = imgPathStr.indexOf("/");
-        int lastSlashIdx = imgPathStr.lastIndexOf("/");
-        try {
-            // imgPathCode, imgPath, imgFileName 모두 기존 url에서 뽑아오기
-            // (url에서 뽑지 않고 연월 구해서 재셋팅하면 실제 저장된 s3 연월 폴더와 db에 저장된 폴더 경로 및 imgPathCode가 불일치 될 수 있음)
-            imgDto.setImgPathCode(Integer.parseInt(imgPathStr.substring(firstSlashIdx + 1, lastSlashIdx)));
-            imgDto.setImgPath(imgPathStr.substring(0, lastSlashIdx));
-            imgDto.setImgFileName(imgPathStr.substring(lastSlashIdx + 1));
-        } catch (Exception e) {
-            return;
-        }
-
-        tmpImgFileInfoRepo.save(imgDto.toEntity());
-    }
+//    @Transactional
+//    public void registerTmpImgFileInfo(ImgFileModel imgFileModel, String s3Url) {
+//        Members members = StaticSecurityUtil.getMembers();
+//        UUID userUniqId = members.getUserUniqId();
+//
+//        TmpImgFileInfoDto imgDto = new TmpImgFileInfoDto();
+//        imgDto.setUserUniqId(userUniqId);
+//        imgDto.setActionId(imgFileModel.getActionId());
+//
+//        String imgPathStr = s3Url.replace(bucketUrl, "");
+//        int firstSlashIdx = imgPathStr.indexOf("/");
+//        int lastSlashIdx = imgPathStr.lastIndexOf("/");
+//        try {
+//            // imgPathCode, imgPath, imgFileName 모두 기존 url에서 뽑아오기
+//            // (url에서 뽑지 않고 연월 구해서 재셋팅하면 실제 저장된 s3 연월 폴더와 db에 저장된 폴더 경로 및 imgPathCode가 불일치 될 수 있음)
+//            imgDto.setImgPathCode(Integer.parseInt(imgPathStr.substring(firstSlashIdx + 1, lastSlashIdx)));
+//            imgDto.setImgPath(imgPathStr.substring(0, lastSlashIdx));
+//            imgDto.setImgFileName(imgPathStr.substring(lastSlashIdx + 1));
+//        } catch (Exception e) {
+//            return;
+//        }
+//
+//        tmpImgFileInfoRepo.save(imgDto.toEntity());
+//    }
 
     @Transactional
     public void removeImgFileInfo(int actionId, int contentsNo) {

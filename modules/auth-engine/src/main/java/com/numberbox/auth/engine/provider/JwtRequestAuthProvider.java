@@ -1,11 +1,11 @@
 package com.numberbox.auth.engine.provider;
 
-import com.numberbox.auth.engine.util.AuthTokenUtil;
 import com.numberbox.auth.engine.dto.AuthUserDetail;
 import com.numberbox.auth.engine.dto.JwtAuthenticationToken;
 import com.numberbox.auth.engine.exception.RefreshTokenNullException;
 import com.numberbox.auth.engine.exception.TokenOwnerNotMatchingException;
 import com.numberbox.auth.engine.service.UserTokenDetailService;
+import com.numberbox.auth.engine.util.AuthTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DisabledException;
@@ -13,7 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class JwtRequestAuthProvider implements AuthenticationProvider {
     private final UserTokenDetailService userTokenDetailService;
@@ -42,7 +43,7 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
                 (AuthUserDetail) userTokenDetailService.loadUserByUsername(email);
 
         // check3. refreshToken 소유자 체크(액세스 토큰 소유자와 같아야함)
-        final String accessTokenOwner = authTokenUtil.getUserUniqId(accessToken).toString();
+        final String accessTokenOwner = authTokenUtil.getUserUniqId(accessToken);
         checkTokenOwner(accessTokenOwner, refreshToken);
 
         // check4. enabled 체크해야함

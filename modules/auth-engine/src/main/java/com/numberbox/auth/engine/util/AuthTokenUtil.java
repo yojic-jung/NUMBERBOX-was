@@ -11,7 +11,7 @@ public interface AuthTokenUtil {
 
     String getEmail(String token);
 
-    UUID getUserUniqId(String token);
+    String getUserUniqId(String token);
 
     void throwExceptionIfInvalidToken(String jwtToken);
 

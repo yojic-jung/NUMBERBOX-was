@@ -1,8 +1,8 @@
 package com.numberbox.auth.engine.service;
 
+import com.numberbox.auth.control.dto.AuthUserInfo;
 import com.numberbox.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.auth.engine.dto.AuthUserDetail;
-import com.numberbox.auth.control.dto.AuthUserInfo;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +20,7 @@ public class LoginRequestUserDetailServiceWrapper implements UserDetailsService 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthUserInfo authUserInfo = loginRequestUserService.loadUserByUsername(username);
-        if(authUserInfo == null) return null;
+        if (authUserInfo == null) return null;
         else return new AuthUserDetail(authUserInfo);
     }
 }

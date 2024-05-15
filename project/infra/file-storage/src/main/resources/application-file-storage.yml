@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA4SERHKUEFTRCTG7F
+      secretKey: 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
+    bucket:
+      name: numberbox-bucket
+      url: https://numberbox-bucket.s3.ap-northeast-2.amazonaws.com/
+    region:
+      name: ap-northeast-2
+    stack:
+      auto: false

@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.numberbox'
+group = 'com.numberbox.bootstrap'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -23,8 +23,15 @@ repositories {
 }
 
 dependencies {
-    implementation project(":modules:auth-engine")
     implementation project(":project:app")
+    implementation project(":project:app-domain")
+    implementation project(":project:app-usecase")
+    implementation project(":project:rest-api")
+    implementation project(":project:infra:data-repository")
+    implementation project(":project:infra:file-storage")
+
+    implementation project(":modules:auth-engine")
+    implementation project(":modules:di-engine")
 
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

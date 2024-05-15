@@ -1,21 +1,16 @@
 package com.numberbox.common.controller;
 
 import com.numberbox.aws.s3.service.AwsS3Service;
-import com.numberbox.common.dto.ImgFileModel;
 import com.numberbox.common.service.ImgFileService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/common")
@@ -23,17 +18,17 @@ public class CommonController {
     private AwsS3Service awsS3Service;
     private ImgFileService imgFileService;
 
-    @PostMapping("/imgUpload")
-    public Map<String, Object> imgUpload(ImgFileModel imgFileModel) throws IOException {
-        Map<String, Object> map = new HashMap<>();
-        // s3에 저장
-        String s3ImgUrl = awsS3Service.uploadToS3SeverSingleFile(imgFileModel.getActionId(),
-                imgFileModel.getMultipartFile());
-        // tmpImgInfo에 저장
-        imgFileService.registerTmpImgFileInfo(imgFileModel, s3ImgUrl);
-        map.put("s3ImgUrl", s3ImgUrl);
-        return map;
-    }
+//    @PostMapping("/imgUpload")
+//    public Map<String, Object> imgUpload(ImgFileModel imgFileModel) throws IOException {
+//        Map<String, Object> map = new HashMap<>();
+//        // s3에 저장
+//        String s3ImgUrl = awsS3Service.uploadToS3SeverSingleFile(imgFileModel.getActionId(),
+//                imgFileModel.getMultipartFile());
+//        // tmpImgInfo에 저장
+//        imgFileService.registerTmpImgFileInfo(imgFileModel, s3ImgUrl);
+//        map.put("s3ImgUrl", s3ImgUrl);
+//        return map;
+//    }
 
     @GetMapping("/download")
     public void download(HttpServletRequest request, HttpServletResponse response) {

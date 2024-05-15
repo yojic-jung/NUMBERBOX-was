@@ -49,4 +49,12 @@ public class TmpImgFileInfo {
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy년 MM월 dd일", timezone = "Asia/Seoul")
     LocalDateTime sysCreateDate;
+
+    public TmpImgFileInfo(UUID userUniqId, int actionId, int imgPathCode, String imgPath, String imgFileName) {
+        this.userUniqId = userUniqId;
+        this.actionId = actionId;
+        this.imgPathCode = imgPathCode;
+        this.imgPath = imgPath;
+        this.imgFileName = imgFileName;
+    }
 }

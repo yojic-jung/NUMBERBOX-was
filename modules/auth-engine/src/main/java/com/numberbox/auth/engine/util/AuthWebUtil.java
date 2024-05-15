@@ -11,6 +11,7 @@ import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,32 +30,34 @@ public class AuthWebUtil {
         sendResponse(response, rawStatus, true, msg);
     }
 
-    public static void responseErrMsg(HttpServletResponse response, HttpStatus status, boolean showMsg, String msg) {
-        sendResponse(response, status.value(), showMsg, msg);
+    public static void responseErrMsg(HttpServletResponse response, HttpStatus status, boolean showMessage, String msg) {
+        sendResponse(response, status.value(), showMessage, msg);
     }
 
-    public static void responseErrMsg(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
-        sendResponse(response, rawStatus, showMsg, msg);
+    public static void responseErrMsg(HttpServletResponse response, int rawStatus, boolean showMessage, String msg) {
+        sendResponse(response, rawStatus, showMessage, msg);
     }
 
     /**
      * 200 성공 응답 전송
      */
-    public static void responseOK(HttpServletResponse response, boolean showMsg, String message) {
-        sendResponse(response, AuthResponse.OK.statusCode, showMsg, message);
+    public static void responseOK(HttpServletResponse response, boolean showMessage, String message) {
+        sendResponse(response, AuthResponse.OK.statusCode, showMessage, message);
     }
 
     public static void responseOK(HttpServletResponse response, String message) {
         sendResponse(response, AuthResponse.OK.statusCode, true, message);
     }
 
-    private static void sendResponse(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
+    private static void sendResponse(HttpServletResponse response, int rawStatus, boolean showMessage, String msg) {
         response.setStatus(rawStatus);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         Map<String, Object> map = new HashMap<>();
-        map.put("showMsg", showMsg);
+        map.put("timestamp", new Timestamp(System.currentTimeMillis()));
+        map.put("status", rawStatus);
+        map.put("showMessage", showMessage);
         map.put("message", msg);
 
         try {
@@ -67,9 +70,9 @@ public class AuthWebUtil {
         }
     }
 
-    public static String getCookieValue(HttpServletRequest request, String cookieName){
+    public static String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie cookie = WebUtils.getCookie(request, cookieName);
-        return  cookie == null ? null : cookie.getValue();
+        return cookie == null ? null : cookie.getValue();
     }
 
     public static Cookie makeCookie(String name, String value, int maxAge) {
@@ -77,7 +80,7 @@ public class AuthWebUtil {
     }
 
     /**
-     *  쿠키 생성
+     * 쿠키 생성
      */
     public static Cookie makeCookie(String name, String value, String path, boolean httpOnly, boolean secure, int maxAge) {
         Cookie refreshTokenCookie = new Cookie(name, value);

@@ -3,18 +3,23 @@ package com.numberbox.auth.engine.util;
 import com.numberbox.auth.control.config.AuthConstantConfig;
 import com.numberbox.auth.engine.exception.JwtInvalidException;
 import com.numberbox.auth.engine.exception.TokenExpirationException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 public class AuthJwtUtil implements AuthTokenUtil {
     private String secretKey;
 
     @Value("${numberbox.jwtSecretKey}")
-    public void setSecretKey(String secretKey){
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 
@@ -77,7 +82,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
 //        claims.put("role", role);
 //        claims.put("email", email);
 //        claims.put("nsoohak.com", true);
-        // todo aop로 빼기
+    // todo aop로 빼기
 //        try {
 //            String clientIp = request.getRemoteAddr();
 //            String osInfo = request.getHeader("sec-ch-ua-platform").toLowerCase().replaceAll("\"", "");
@@ -95,7 +100,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
 //            logger.warn("예외 발생 : 접속 로그 에러");
 //        }
 
-        // 액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
+    // 액세스 토큰 재발급시 사용자 마지막 로그인 날짜 초기화(자동 로그인으로 접속하는 경우, 액세스 토큰 유효기간 1시간)
 //        membersRepository.initFailCntZeroAndLastLoginDate(userUniqId, LocalDateTime.now());
 //        Date now = new Date();
 //        return Jwts.builder().setClaims(claims).setIssuer("nsoohak").setSubject("nsoohakAccessToken")
@@ -130,12 +135,12 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public UUID getUserUniqId(String token) {
+    public String getUserUniqId(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userUniqId", UUID.class);
+                .get("userUniqId", String.class);
     }
 
 //    public List<String> getRole(String token) {
@@ -193,8 +198,8 @@ public class AuthJwtUtil implements AuthTokenUtil {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
         } catch (ExpiredJwtException e) {
-            if(!exceptExpiration) throw new TokenExpirationException();
-        }catch (Exception e) {
+            if (!exceptExpiration) throw new TokenExpirationException();
+        } catch (Exception e) {
             throw new JwtInvalidException();
         }
     }

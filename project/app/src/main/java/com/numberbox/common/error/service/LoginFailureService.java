@@ -18,11 +18,11 @@ public class LoginFailureService implements LoginFailureUseCase {
     private MembersRepository membersRepository;
     private MembersRoleRepository membersRoleRepository;
 
-    public LoginFailureService(MembersRepository membersRepository, MembersRoleRepository membersRoleRepository){
-        this.membersRepository= membersRepository;
+    public LoginFailureService(MembersRepository membersRepository, MembersRoleRepository membersRoleRepository) {
+        this.membersRepository = membersRepository;
         this.membersRoleRepository = membersRoleRepository;
     }
-    
+
     @Override
     @Transactional
     public boolean disableUserIfFailCountOver(String userEmail) {

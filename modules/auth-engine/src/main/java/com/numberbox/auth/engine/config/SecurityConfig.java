@@ -14,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -45,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
+                        .requestMatchers("/accessDenied").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
@@ -169,20 +166,20 @@ public class SecurityConfig {
 
     //현재 cors 설정 사실상 의미 없음, web서버와 was 같은 서버에서 동작되고
     //web서버의 로컬에서 경로에 따라 같은 서버의 was로 연결되게끔 설정 (도메인 설정하지 않음)
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {    //cors 추가
-        CorsConfiguration configuration = new CorsConfiguration();
-        // - (3)
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-        configuration.addExposedHeader("access-token");            // 추가한 코드
-        configuration.addExposedHeader("role");            // 추가한 코드
-        //configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {    //cors 추가
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        // - (3)
+//        configuration.addAllowedOriginPattern("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L);
+//        configuration.addExposedHeader("access-token");            // 추가한 코드
+//        configuration.addExposedHeader("role");            // 추가한 코드
+//        //configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }
