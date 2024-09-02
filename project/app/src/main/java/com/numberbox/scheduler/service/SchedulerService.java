@@ -1,6 +1,6 @@
 package com.numberbox.scheduler.service;
 
-import com.numberbox.auth.control.util.AuthPasswordEncoder;
+import com.numberbox.modules.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.jwt.service.RefreshTokenInfoService;
 import com.numberbox.mathdocs.repository.MathDocsPaperRepository;
@@ -19,7 +19,6 @@ import com.numberbox.members.restapi.dto.request.MembersRequest;
 import jakarta.servlet.ServletContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

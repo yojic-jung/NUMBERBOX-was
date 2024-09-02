@@ -26,6 +26,7 @@ public class ResponseUtil {
      */
     public static ResponseEntity<Map<String, Object>> makeErrMsg(Boolean showMessage, String message, HttpStatusCode httpStatusCode) {
         Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("code", httpStatusCode.value());
         resultMap.put("showMessage", showMessage);
         resultMap.put("message", message);
         return new ResponseEntity(resultMap, httpStatusCode);

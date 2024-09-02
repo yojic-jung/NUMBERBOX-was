@@ -1,6 +1,6 @@
 package com.numberbox.restapi.members.controller;
 
-import com.numberbox.auth.control.service.TokenResponseService;
+import com.numberbox.modules.auth.control.service.TokenResponseService;
 import com.numberbox.members.appservice.usecase.MembersRegisterUseCase;
 import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.restapi.dto.response.SignUpResultDto;

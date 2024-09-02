@@ -23,8 +23,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	//web서버의 로컬에서 경로에 따라 같은 서버의 was로 연결되게끔 설정 (도메인 설정하지 않음)
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")		
-            .allowedOrigins("http://localhost:3000", "https://nsoohak.com", "https://nsoohak.com:8080"
+        registry.addMapping("/**")
+            .allowedOrigins("http://localhost:3000", "http://localhost:8080", "https://nsoohak.com", "https://nsoohak.com:8080"
             		, "https://www.nsoohak.com", "https://www.nsoohak.com:8080")
             .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
     }

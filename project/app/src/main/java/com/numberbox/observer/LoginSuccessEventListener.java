@@ -1,6 +1,6 @@
 package com.numberbox.observer;
 
-import com.numberbox.auth.control.dto.LoginSuccessEvent;
+import com.numberbox.modules.auth.control.dto.LoginSuccessEvent;
 import com.numberbox.jwt.entity.RefreshTokenInfo;
 import com.numberbox.jwt.repository.RefreshTokenInfoRepository;
 import com.numberbox.members.repository.MembersRepository;

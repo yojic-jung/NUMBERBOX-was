@@ -1,9 +1,9 @@
 package com.numberbox.members.repository;
 
-import com.numberbox.auth.control.dto.AuthUserInfo;
-import com.numberbox.auth.control.dto.AuthUserRole;
-import com.numberbox.auth.control.service.JwtRequestUserDetailService;
-import com.numberbox.auth.control.service.LoginRequestUserDetailService;
+import com.numberbox.modules.auth.control.dto.AuthUserInfo;
+import com.numberbox.modules.auth.control.dto.AuthUserRole;
+import com.numberbox.modules.auth.control.service.JwtRequestUserDetailService;
+import com.numberbox.modules.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.jwt.repository.RefreshTokenInfoRepository;
 import com.numberbox.members.entity.Members;
 import com.numberbox.members.entity.MembersRole;

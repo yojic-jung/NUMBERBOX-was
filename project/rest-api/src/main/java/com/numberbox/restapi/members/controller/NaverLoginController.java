@@ -1,10 +1,8 @@
 package com.numberbox.restapi.members.controller;
 
-import com.numberbox.auth.control.service.TokenResponseService;
+import com.numberbox.modules.auth.control.service.TokenResponseService;
 import com.numberbox.members.appservice.usecase.MembersLoginUseCase;
-import com.numberbox.members.restapi.dto.request.MembersRequest;
 import com.numberbox.members.restapi.dto.response.SignUpResultDto;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

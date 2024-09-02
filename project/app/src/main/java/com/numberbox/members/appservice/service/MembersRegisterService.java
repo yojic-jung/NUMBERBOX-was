@@ -1,6 +1,6 @@
 package com.numberbox.members.appservice.service;
 
-import com.numberbox.auth.control.util.AuthPasswordEncoder;
+import com.numberbox.modules.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.members.appservice.usecase.MembersRegisterUseCase;
 import com.numberbox.members.dto.MembersPrivateDto;
 import com.numberbox.members.dto.MembersProfileDto;

@@ -1,6 +1,6 @@
 package com.numberbox.members.service;
 
-import com.numberbox.auth.control.util.AuthPasswordEncoder;
+import com.numberbox.modules.auth.control.util.AuthPasswordEncoder;
 import com.numberbox.common.util.ClientConnect;
 import com.numberbox.common.util.CommonUtil;
 import com.numberbox.common.util.CustomTenFieldDto;

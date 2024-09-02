@@ -1,9 +1,12 @@
 package com.numberbox.common.error.controller;
 
-import com.numberbox.auth.control.dto.AuthResponse;
+import com.numberbox.modules.auth.control.dto.AuthResponse;
 import com.numberbox.common.error.port.in.LoginFailureUseCase;
 import com.numberbox.common.util.ResponseUtil;
-import com.numberbox.auth.control.exception.*;
+import com.numberbox.modules.auth.control.exception.BadAuthRequestException;
+import com.numberbox.modules.auth.control.exception.DisabledUserException;
+import com.numberbox.modules.auth.control.exception.PasswordMissMatchException;
+import com.numberbox.modules.auth.control.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Map;
 
-import static com.numberbox.auth.control.dto.AuthResponse.*;
+import static com.numberbox.modules.auth.control.dto.AuthResponse.*;
 
 /**
  * 로그인 실패시 후처리 진행 후 실패 상황에 맞는 응답 전송
