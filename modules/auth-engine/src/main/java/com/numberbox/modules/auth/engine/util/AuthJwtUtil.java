@@ -6,8 +6,8 @@ import com.numberbox.modules.auth.engine.exception.TokenExpirationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
+import static com.numberbox.modules.auth.control.config.AuthConstantConfig.ROLE_NAME;
 
 @Component
 public class AuthJwtUtil implements AuthTokenUtil {
@@ -20,7 +20,6 @@ public class AuthJwtUtil implements AuthTokenUtil {
 
     private static String EMAIL_KEY = "email";
     private static String USER_UNIQ_ID_KEY = "userUniqId";
-    private static String ROLE_KEY = "roles";
     private static String DOMAIN = "nsoohak.com";
     private static String ISSUER = "nsoohak";
     private static String ACCESS_TOKEN_SUBJECT = "nsoohakAccessToken";
@@ -32,7 +31,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
         Claims claims = Jwts.claims();
         claims.put(EMAIL_KEY, email);
         claims.put(USER_UNIQ_ID_KEY, userUniqId);
-        claims.put(ROLE_KEY, roleList);
+        claims.put(ROLE_NAME, roleList);
         claims.put(DOMAIN, true);
 
         // todo aop로 빼기

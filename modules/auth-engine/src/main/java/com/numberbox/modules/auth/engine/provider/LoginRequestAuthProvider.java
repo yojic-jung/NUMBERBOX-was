@@ -59,7 +59,7 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
 
         // Authentication 반환 (authorities 주입하면 authenticated 속성 자동으로 true 설정됨)
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(serverUserInfo.getUsername(), serverUserInfo.getAuthorities());
+                new UsernamePasswordAuthenticationToken(serverUserInfo.getUsername(), clientUserInfo.getCredentials(), serverUserInfo.getAuthorities());
         token.setDetails(serverUserInfo.getUserId());
         return token;
     }

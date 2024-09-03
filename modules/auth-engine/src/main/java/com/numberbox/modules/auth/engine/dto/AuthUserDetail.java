@@ -5,16 +5,15 @@ import com.numberbox.modules.auth.control.dto.AuthUserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import static com.numberbox.modules.auth.control.config.AuthConstantConfig.ROLE_PREFIX;
 
 /**
  * Def. 서버에서 전달된 사용자 인증 정보
  */
 public class AuthUserDetail extends User {
-    private static final String ROLE_PREFIX = "ROLE_";
 
     private final UUID userId;
 

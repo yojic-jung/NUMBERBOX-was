@@ -10,7 +10,10 @@ public class AuthConstantConfig {
     public static String REFRESH_TOKEN_NAME = "refresh-token";
 
     // 클라이언트에 전달할 사용자 권한 속성명
-    public static String ROLE_NAME = "role";
+    public static String ROLE_NAME = "roles";
+
+    // 시큐리티 권한 관리 role prefix
+    public static final String ROLE_PREFIX = "ROLE_";
 
     // 액세스 토큰 유효시간
     public static final long ACCESS_TOKEN_VALID_TIME = 1000L * 60 * 60; // 1시간
