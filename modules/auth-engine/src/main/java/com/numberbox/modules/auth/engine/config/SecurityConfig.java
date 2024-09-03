@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import static com.numberbox.modules.auth.control.config.AuthConstantConfig.ACCESS_TOKEN_NAME;
+import static com.numberbox.modules.auth.control.config.AuthConstantConfig.ROLE_NAME;
 
 @Configuration
 @EnableWebSecurity
@@ -178,8 +180,8 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        configuration.addExposedHeader("access-token");            // 추가한 코드
-        configuration.addExposedHeader("role");            // 추가한 코드
+        configuration.addExposedHeader(ACCESS_TOKEN_NAME);            // 추가한 코드
+        configuration.addExposedHeader(ROLE_NAME);            // 추가한 코드
         //configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

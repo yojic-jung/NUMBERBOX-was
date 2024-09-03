@@ -18,13 +18,22 @@ public class AuthJwtUtil implements AuthTokenUtil {
         this.secretKey = secretKey;
     }
 
+    private static String EMAIL_KEY = "email";
+    private static String USER_UNIQ_ID_KEY = "userUniqId";
+    private static String ROLE_KEY = "roles";
+    private static String DOMAIN = "nsoohak.com";
+    private static String ISSUER = "nsoohak";
+    private static String ACCESS_TOKEN_SUBJECT = "nsoohakAccessToken";
+    private static String REFRESH_TOKEN_SUBJECT = "nsoohakRefreshToken";
+    private static String AUDIENCE = "user";
+
     @Override
     public String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
         Claims claims = Jwts.claims();
-        claims.put("email", email);
-        claims.put("userUniqId", userUniqId);
-        claims.put("role", roleList);
-        claims.put("nsoohak.com", true);
+        claims.put(EMAIL_KEY, email);
+        claims.put(USER_UNIQ_ID_KEY, userUniqId);
+        claims.put(ROLE_KEY, roleList);
+        claims.put(DOMAIN, true);
 
         // todo aop로 빼기
 //        try {
@@ -60,9 +69,9 @@ public class AuthJwtUtil implements AuthTokenUtil {
         Date expiration = new Date(now.getTime() + AuthConstantConfig.ACCESS_TOKEN_VALID_TIME);
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuer("nsoohak")
-                .setSubject("nsoohakAccessToken")
-                .setAudience("user")
+                .setIssuer(ISSUER)
+                .setSubject(ACCESS_TOKEN_SUBJECT)
+                .setAudience(AUDIENCE)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -106,14 +115,14 @@ public class AuthJwtUtil implements AuthTokenUtil {
     @Override
     public String createRefreshToken() {
         Claims claims = Jwts.claims();
-        claims.put("nsoohak.com", true);
+        claims.put(DOMAIN, true);
         Date now = new Date();
         Date expiration = new Date(now.getTime() + AuthConstantConfig.REFRESH_TOKEN_VALID_TIME);
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuer("nsoohak")
-                .setSubject("nsoohakRefreshToken")
-                .setAudience("user")
+                .setIssuer(ISSUER)
+                .setSubject(REFRESH_TOKEN_SUBJECT)
+                .setAudience(AUDIENCE)
                 .setExpiration(expiration)
                 .setIssuedAt(now)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -126,7 +135,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("email", String.class);
+                .get(EMAIL_KEY, String.class);
     }
 
     @Override
@@ -135,7 +144,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userUniqId", String.class);
+                .get(USER_UNIQ_ID_KEY, String.class);
         return UUID.fromString(uuid);
     }
 
