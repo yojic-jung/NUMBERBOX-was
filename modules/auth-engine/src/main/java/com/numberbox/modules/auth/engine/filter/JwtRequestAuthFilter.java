@@ -28,7 +28,7 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             // 클라이언트 토큰 추출
-            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME);
+            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME).split(" ")[1];
             String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
 
             // 클라이언트 인증 객체 생성

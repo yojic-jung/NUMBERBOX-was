@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 
 import static com.numberbox.modules.auth.control.dto.AuthResponse.ACCESS_DENIED;
 
-// todo 무슨 역할인지 확인 필요
+/**
+ * 인증되지 않은 사용자가 리소스 접근시 호출됨
+ */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

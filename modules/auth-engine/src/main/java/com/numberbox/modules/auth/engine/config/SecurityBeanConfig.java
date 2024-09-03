@@ -9,7 +9,6 @@ import com.numberbox.modules.auth.engine.provider.JwtRequestAuthProvider;
 import com.numberbox.modules.auth.engine.provider.LoginRequestAuthProvider;
 import com.numberbox.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
 import com.numberbox.modules.auth.engine.service.LoginRequestUserDetailServiceWrapper;
-import com.numberbox.modules.auth.engine.service.UserTokenDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -49,8 +48,8 @@ public class SecurityBeanConfig {
      * jwt 인증시 서버측 사용자 인증 정보를 가져옴
      */
     @Bean
-    public UserTokenDetailService jwtRequestUserDetailService(LoginRequestUserDetailService loginRequestUserService,
-                                                              JwtRequestUserDetailService jwtRequestUserDetailService) {
+    public JwtRequestUserDetailServiceWrapper jwtRequestUserDetailService(LoginRequestUserDetailService loginRequestUserService,
+                                                                          JwtRequestUserDetailService jwtRequestUserDetailService) {
         return new JwtRequestUserDetailServiceWrapper(loginRequestUserService, jwtRequestUserDetailService);
     }
 
@@ -67,7 +66,7 @@ public class SecurityBeanConfig {
      * jwt 인증 요청시 인증 처리 담당 provider
      */
     @Bean
-    public JwtRequestAuthProvider jwtRequestAuthProvider(UserTokenDetailService userTokenDetailService,
+    public JwtRequestAuthProvider jwtRequestAuthProvider(JwtRequestUserDetailServiceWrapper userTokenDetailService,
                                                          AuthTokenUtil authTokenUtil) {
         return new JwtRequestAuthProvider(userTokenDetailService, authTokenUtil);
     }

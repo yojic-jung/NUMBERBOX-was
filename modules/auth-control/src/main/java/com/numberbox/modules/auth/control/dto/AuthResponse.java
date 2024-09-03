@@ -12,7 +12,7 @@ public enum AuthResponse {
     DISABLE_USER(403, "해당 계정이 잠금되었습니다.\n15분 후 다시 시도해주세요."),
     PASSWORD_MISS_MATCH(403, "이메일과 비밀번호를 다시 한번 입력해주시기 바랍니다.\n" +
             "5회 이상 실패시 15분간 계정이 비활성화 됩니다."),
-    ACCESS_DENIED(403, "해당 요청에 접근 권한이 없습니다.");
+    ACCESS_DENIED(401, "해당 요청에 접근 권한이 없습니다.");
 
     public final int statusCode;
     public final String message;

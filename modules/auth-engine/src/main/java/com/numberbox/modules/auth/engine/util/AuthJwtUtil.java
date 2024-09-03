@@ -131,11 +131,12 @@ public class AuthJwtUtil implements AuthTokenUtil {
 
     @Override
     public UUID getUserUniqId(String token) {
-        return Jwts.parser()
+        String uuid = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userUniqId", UUID.class);
+                .get("userUniqId", String.class);
+        return UUID.fromString(uuid);
     }
 
 //    public List<String> getRole(String token) {

@@ -2,7 +2,9 @@ package com.numberbox.modules.auth.control.config;
 
 public class AuthConstantConfig {
     // 클라이언트에 전달할 액세스 토큰 속성명
-    public static String ACCESS_TOKEN_NAME = "access-token";
+    public static String ACCESS_TOKEN_NAME = "Authorization";
+
+    public static String TOKEN_STANDARD_PREFIX = "Bearer";
 
     // 클라이언트에 전달할 리프레시 토큰 속성명
     public static String REFRESH_TOKEN_NAME = "refresh-token";

@@ -1,11 +1,11 @@
 package com.numberbox.modules.auth.engine.provider;
 
+import com.numberbox.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
 import com.numberbox.modules.auth.engine.util.AuthTokenUtil;
 import com.numberbox.modules.auth.engine.dto.AuthUserDetail;
 import com.numberbox.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.numberbox.modules.auth.engine.exception.RefreshTokenNullException;
 import com.numberbox.modules.auth.engine.exception.TokenOwnerNotMatchingException;
-import com.numberbox.modules.auth.engine.service.UserTokenDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DisabledException;
@@ -14,12 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JwtRequestAuthProvider implements AuthenticationProvider {
-    private final UserTokenDetailService userTokenDetailService;
+    private final JwtRequestUserDetailServiceWrapper userTokenDetailService;
     private final AuthTokenUtil authTokenUtil;
 
-    public JwtRequestAuthProvider(UserTokenDetailService userTokenDetailService, AuthTokenUtil authTokenUtil) {
+    public JwtRequestAuthProvider(JwtRequestUserDetailServiceWrapper userTokenDetailService, AuthTokenUtil authTokenUtil) {
         this.userTokenDetailService = userTokenDetailService;
         this.authTokenUtil = authTokenUtil;
     }
@@ -73,6 +74,7 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
     private void checkTokenOwner(String userId, String refreshToken) {
         final UUID clientUserId = UUID.fromString(userId);
         final UUID serverUserId = userTokenDetailService.loadUserIdByRefreshToken(refreshToken);
+
         if (!clientUserId.equals(serverUserId)) throw new TokenOwnerNotMatchingException();
     }
 
@@ -81,7 +83,7 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
      */
     private Authentication makeAuthentication(AuthUserDetail user) {
         final UUID userUniqId = user.getUserId();
-        final List<GrantedAuthority> authorities = (List<GrantedAuthority>) user.getAuthorities();
+        final List<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities());
 
         UsernamePasswordAuthenticationToken auth
                 = new UsernamePasswordAuthenticationToken(user.getUsername(), "", authorities);

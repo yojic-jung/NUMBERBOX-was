@@ -48,7 +48,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         // 로그인 성공 이벤트 발행
         publishLoginSuccessEvent(request, userId, refreshToken);
 
-        response.setHeader(ACCESS_TOKEN_NAME, accessToken);
+        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX+" "+accessToken);
         response.setHeader(ROLE_NAME, roleList.toString());
         response.addCookie(makeRefreshTokenCookie(request, refreshToken));
     }
@@ -71,7 +71,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        response.setHeader(ACCESS_TOKEN_NAME, accessToken);
+        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX+" "+accessToken);
         response.setHeader(ROLE_NAME, roleList.toString());
         response.addCookie(makeRefreshTokenCookie(request, refreshToken));
     }
