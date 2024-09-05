@@ -1,9 +1,17 @@
-rootProject.name = 'NUMBERBOX'
+rootProject.name = 'NUMBERBOX-was'
 
 include(":project")
 include(":project:app")
+include(":project:app-domain")
+include(":project:app-service")
 include(":project:bootstrap")
 include(":project:rest-api")
+
+include(":project:infrastructure")
+include(":project:infrastructure:orm-adapter")
+
+include(":project:user-interface")
+include(":project:user-interface:rest-api")
 
 include(":modules")
 include(":modules:auth-control")

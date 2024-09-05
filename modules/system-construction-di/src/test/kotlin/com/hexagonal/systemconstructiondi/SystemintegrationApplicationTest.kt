@@ -1,0 +1,6 @@
+package com.hexagonal.systemconstructiondi
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+
+@SpringBootApplication
+class SystemintegrationApplicationTest
