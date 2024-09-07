@@ -1,0 +1,13 @@
+local:
+  mail:
+    sender:
+      google:
+        account:
+          email: kamccicorp@gmail.com
+          password: ehjdlspvhlwrmjlp
+        server:
+          host: smtp.gmail.com
+          port: 465
+          auth: true
+          sslEnable: true
+          protocols: TLSv1.2

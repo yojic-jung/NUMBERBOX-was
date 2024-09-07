@@ -1,0 +1,14 @@
+mail:
+  sender:
+
+    google:
+      account:
+        email: ${local.mail.sender.google.account.email}
+        password: ${local.mail.sender.google.account.password}
+      server:
+        host: ${local.mail.sender.google.server.host}
+        port: ${local.mail.sender.google.server.port}
+        auth: ${local.mail.sender.google.server.auth}
+        sslEnable: ${local.mail.sender.google.server.sslEnable}
+        sslTrust: ${local.mail.sender.google.server.sslTrust}
+        protocols: ${local.mail.sender.google.server.protocols}

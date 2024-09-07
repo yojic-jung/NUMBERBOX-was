@@ -13,14 +13,16 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -29,35 +31,27 @@ import java.util.zip.ZipInputStream;
 @Component
 @RequiredArgsConstructor
 public class CommonUtil {
-
+    private static final String[] randomStr = {"~", "!", "@", "#", "%", "^", "&", "*", "-", "_", "=", "+", "?", ";", ":", ",", "."};
     @Value("${numberbox.emailAddress}")
     private String emailAddress;
-
     @Value("${numberbox.emailPassword}")
     private String emailPassword;
 
-    private static String[] randomStr = {"~", "!", "@", "#", "%", "^", "&", "*", "-", "_", "=", "+", "?", ";", ":",
-            ",", "."};
-
     public static String makeRandomPassword() {
         Random random = new Random();
-        String generatedString = random.ints(97, 123).limit(10)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
-        generatedString = generatedString + randomStr[random.nextInt(randomStr.length - 1)]
-                + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)]
-                + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)];
+        String generatedString = random.ints(97, 123).limit(10).collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+        generatedString = generatedString + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)] + randomStr[random.nextInt(randomStr.length - 1)];
         return generatedString;
     }
 
-    public static HashMap<String, Object> convertPPtSlidePngImge(String filePath, String fileName, boolean onlyOne)
-            throws FileNotFoundException, IOException {
+    public static HashMap<String, Object> convertPPtSlidePngImge(String filePath, String fileName, boolean onlyOne) throws IOException {
         final List<String> imageStrList = new ArrayList<>();
         XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath + "/" + fileName));
         originalPpt.close();
         Dimension pgsize = originalPpt.getPageSize();
         List<XSLFSlide> slides = originalPpt.getSlides();
         HashMap<String, Object> map = new HashMap<String, Object>();
-        if (onlyOne) {
+        if(onlyOne) {
             final BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.SCALE_SMOOTH);
             final Graphics2D graphics = img.createGraphics();
             // clear the drawing area
@@ -76,7 +70,7 @@ public class CommonUtil {
 
             imageStrList.add(encodedString);
         } else {
-            for (XSLFSlide slide : slides) {
+            for(XSLFSlide slide : slides) {
                 final BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.SCALE_SMOOTH);
                 final Graphics2D graphics = img.createGraphics();
 
@@ -102,8 +96,7 @@ public class CommonUtil {
         return map;
     }
 
-    public static String savePPtFirstSlideToPngImge(String filePath, String fileName, String imgFilePath)
-            throws FileNotFoundException, IOException {
+    public static String savePPtFirstSlideToPngImge(String filePath, String fileName, String imgFilePath) throws IOException {
         XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath + "/" + fileName));
         originalPpt.close();
         Dimension pgsize = originalPpt.getPageSize();
@@ -123,8 +116,7 @@ public class CommonUtil {
         return imgNames[0] + ".png";
     }
 
-    public static HashMap<String, Object> savePPtSlideToPngImge(String filePath, String fileName, String imgFilePath)
-            throws FileNotFoundException, IOException {
+    public static HashMap<String, Object> savePPtSlideToPngImge(String filePath, String fileName, String imgFilePath) throws IOException {
         final List<String> imageStrList = new ArrayList<>();
         XMLSlideShow originalPpt = new XMLSlideShow(new FileInputStream(filePath + "/" + fileName));
         originalPpt.close();
@@ -132,7 +124,7 @@ public class CommonUtil {
         List<XSLFSlide> slides = originalPpt.getSlides();
         HashMap<String, Object> map = new HashMap<String, Object>();
         int index = 0;
-        for (XSLFSlide slide : slides) {
+        for(XSLFSlide slide : slides) {
             Random random1 = new Random();
             long currentTime1 = System.currentTimeMillis();
             int randomValue1 = random1.nextInt(100);
@@ -148,7 +140,7 @@ public class CommonUtil {
             slide.draw(graphics);
             String[] imgNames = fileName.split("\\.");
             String imgName = imgNames[0] + "_" + index + ".png";
-            String imgFileName = Long.toString(currentTime1) + "_" + randomValue1 + "_" + imgName;
+            String imgFileName = currentTime1 + "_" + randomValue1 + "_" + imgName;
             File slideFile = new File(imgFilePath, imgFileName);
             ImageIO.write(img, "png", slideFile);
 
@@ -194,40 +186,40 @@ public class CommonUtil {
             fis = new FileInputStream(zipFile);
 
             // Zip 파일 스트림
-            zis = new ZipInputStream(fis, Charset.forName("UTF-8"));
+            zis = new ZipInputStream(fis, StandardCharsets.UTF_8);
 
             // 압축되어 있는 ZIP 파일의 목록 조회
-            while ((zipentry = zis.getNextEntry()) != null) {
+            while((zipentry = zis.getNextEntry()) != null) {
                 String filename = zipentry.getName();
                 File file = new File(zipUnzipPath, filename);
 
                 // entiry가 폴더면 폴더 생성
-                if (zipentry.isDirectory()) {
+                if(zipentry.isDirectory()) {
                     file.mkdirs();
                 } else {
                     // 파일이면 파일 만들기
                     try {
                         createFile(file, zis);
-                    } catch (Throwable e) {
+                    } catch(Throwable e) {
                         e.printStackTrace();
                     }
                 }
             }
             isChk = true;
 
-        } catch (Exception e) {
+        } catch(Exception e) {
             isChk = false;
         } finally {
-            if (zis != null) {
+            if(zis != null) {
                 try {
                     zis.close();
-                } catch (IOException e) {
+                } catch(IOException e) {
                 }
             }
-            if (fis != null) {
+            if(fis != null) {
                 try {
                     fis.close();
-                } catch (IOException e) {
+                } catch(IOException e) {
                 }
             }
         }
@@ -239,7 +231,7 @@ public class CommonUtil {
      * @param folder - 생성할 폴더 경로와 이름
      */
     private boolean makeFolder(String folder) {
-        if (folder.length() < 0) {
+        if(folder.length() < 0) {
             return false;
         }
 
@@ -247,10 +239,10 @@ public class CommonUtil {
         File Folder = new File(path);
 
         // 해당 디렉토리가 없을경우 디렉토리를 생성합니다.
-        if (!Folder.exists()) {
+        if(!Folder.exists()) {
             try {
                 Folder.mkdir(); // 폴더 생성합니다.
-            } catch (Exception e) {
+            } catch(Exception e) {
                 e.getStackTrace();
             }
         }
@@ -268,7 +260,7 @@ public class CommonUtil {
         // 디렉토리 확인
         File parentDir = new File(file.getParent());
         // 디렉토리가 없으면 생성하자
-        if (!parentDir.exists()) {
+        if(!parentDir.exists()) {
             parentDir.mkdirs();
         }
         FileOutputStream fos = null;
@@ -279,17 +271,17 @@ public class CommonUtil {
             byte[] buffer = new byte[256];
             int size = 0;
             // Zip스트림으로부터 byte뽑아내기
-            while ((size = zis.read(buffer)) > 0) {
+            while((size = zis.read(buffer)) > 0) {
                 // byte로 파일 만들기
                 fos.write(buffer, 0, size);
             }
-        } catch (Throwable e) {
+        } catch(Throwable e) {
             throw e;
         } finally {
-            if (fos != null) {
+            if(fos != null) {
                 try {
                     fos.close();
-                } catch (IOException e) {
+                } catch(IOException e) {
                 }
 
             }
@@ -298,7 +290,7 @@ public class CommonUtil {
 
     }
 
-    public void sendMail(String recipient, String title, String contents) throws AddressException, MessagingException {
+    public void sendMail(String recipient, String title, String contents) throws MessagingException {
         // 네이버일 경우 smtp.naver.com 을 입력합니다.
         // Google일 경우 smtp.gmail.com 을 입력합니다.
         String host = "smtp.gmail.com";
@@ -318,8 +310,8 @@ public class CommonUtil {
 
         // Session 생성
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            String un = emailAddress.split("@")[0];
-            String pw = emailPassword;
+            final String un = emailAddress.split("@")[0];
+            final String pw = emailPassword;
 
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
                 return new javax.mail.PasswordAuthentication(un, pw);

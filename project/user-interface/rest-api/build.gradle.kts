@@ -25,6 +25,9 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:orm-adapter"))
 
+    implementation(project(":modules:mail-sender-control"))
+
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

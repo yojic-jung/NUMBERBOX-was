@@ -4,11 +4,10 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("org.springframework.boot") version "3.2.3"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
 }
-
 group = "com.hexagonal"
 version = "0.0.1-SNAPSHOT"
 
@@ -21,10 +20,8 @@ repositories {
 }
 
 dependencies {
-    // todo 제거 가능??
-    implementation(project(":app-service"))
-    implementation(project(":app-domain"))
-    implementation(project(":modules:a"))
+    implementation(project(":project:app-service"))
+    implementation(project(":project:app-domain"))
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
