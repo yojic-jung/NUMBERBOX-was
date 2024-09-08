@@ -1,4 +1,4 @@
-package com.numberbox.ui.rest_api.util.response
+package com.numberbox.ui.restapi.util.response
 
 import java.sql.Timestamp
 
@@ -9,11 +9,10 @@ data class ResponseData<T>(
     val timestamp: Timestamp = Timestamp(System.currentTimeMillis()),
     val status: Int = SUCCESS_STATUS,
     val message: String = SUCCESS_MESSAGE,
-    val data: T
+    val data: T,
 ) {
     companion object {
         private const val SUCCESS_MESSAGE = "성공하였습니다."
         private const val SUCCESS_STATUS = 200
     }
 }
-

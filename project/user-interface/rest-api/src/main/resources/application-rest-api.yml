@@ -8,9 +8,10 @@ spring:
     static-path-pattern: /webapp/**
 # tomcat
 server:
+  servlet:
+    context-path: /myWasApi
   tomcat:
     max-http-form-post-size: 15000000
     remote-ip:
       remote-ip-header: X-Forwarded-For
-  servlet:
-    context-path: /myWasApi
+

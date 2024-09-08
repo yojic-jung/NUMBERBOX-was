@@ -1,4 +1,4 @@
-package com.numberbox.ui.rest_api.dto.request
+package com.numberbox.ui.restapi.dto.request
 
 import java.time.LocalDateTime
 
@@ -16,6 +16,5 @@ data class MemberSignupRequest(
     val phoneNumber: String,
     val birth: String,
     val signupDate: LocalDateTime,
-    val lastLoginDate: LocalDateTime
+    val lastLoginDate: LocalDateTime,
 )
-

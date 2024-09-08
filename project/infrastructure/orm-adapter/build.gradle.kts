@@ -46,12 +46,19 @@ dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
 
+    implementation(project(":modules:auth-control"))
+
     // jpa, querydsl
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
-    runtimeOnly("com.mysql:mysql-connector-j")
+    // mysql
+    implementation("com.mysql:mysql-connector-j")
+    // java-uuid-generator
+    implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
+
+    implementation(project(":modules:auth-control"))
 
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")

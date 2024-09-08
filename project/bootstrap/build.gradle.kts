@@ -1,6 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("org.springframework.boot") version "3.2.3"
@@ -9,7 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.22"
 }
 
-group = "com.hexagonal"
+group = "com.numberbox"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -21,12 +19,22 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":modules:auth-engine"))
+    implementation(project(":modules:mail-sender-engine"))
+    implementation(project(":modules:system-construction-di"))
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
+    implementation(project(":project:infrastructure:email-adapter"))
+    implementation(project(":project:infrastructure:orm-adapter"))
+    implementation(project(":project:user-interface:rest-api"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
@@ -34,16 +42,4 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-tasks.named<BootJar>("bootJar") {
-    enabled = false
-}
-
-tasks.named<BootRun>("bootRun") {
-    enabled = false
 }

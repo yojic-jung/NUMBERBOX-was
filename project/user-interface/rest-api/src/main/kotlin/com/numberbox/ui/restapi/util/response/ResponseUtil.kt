@@ -1,4 +1,4 @@
-package com.numberbox.ui.rest_api.util.response
+package com.numberbox.ui.restapi.util.response
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,4 +15,3 @@ object ResponseUtil {
         return ResponseEntity(responseData, HttpStatus.valueOf(responseData.status))
     }
 }
-

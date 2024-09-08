@@ -1,8 +1,8 @@
-package com.numberbox.ui.rest_api.controller.members
+package com.numberbox.ui.restapi.controller.members
 
 import com.numberbox.app.usecase.member.MemberSignupUseCase
-import com.numberbox.ui.rest_api.util.response.ResponseData
-import com.numberbox.ui.rest_api.util.response.ResponseUtil
+import com.numberbox.ui.restapi.util.response.ResponseData
+import com.numberbox.ui.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 class MemberSignupController(
 //    private val membersUseCase: MembersRegisterUseCase,
 //    private val tokenResponseService: TokenResponseService
-    private val memberSignupUseCase: MemberSignupUseCase
+    private val memberSignupUseCase: MemberSignupUseCase,
 ) {
     @GetMapping("/createEmailIdCode")
     fun createEmailVerifyCode(@RequestParam email: String): ResponseEntity<ResponseData<Map<String, Boolean>>> {
@@ -31,4 +31,3 @@ class MemberSignupController(
 //        return ResponseUtil.ok(signUpResult)
 //    }
 }
-

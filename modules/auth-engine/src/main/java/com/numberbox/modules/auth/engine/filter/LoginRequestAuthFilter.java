@@ -41,7 +41,6 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     private final AuthenticationManager authenticationManager;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public LoginRequestAuthFilter(AuthenticationManager authenticationManager,
