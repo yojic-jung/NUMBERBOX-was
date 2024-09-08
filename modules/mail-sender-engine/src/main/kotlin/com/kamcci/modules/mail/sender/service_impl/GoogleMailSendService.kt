@@ -1,8 +1,8 @@
 package com.kamcci.modules.mail.sender.service_impl
 
-import com.kamcci.modules.mail.sender.HttpContentType
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty
+import com.kamcci.modules.mail.sender.enums.HttpContentType
 import org.springframework.stereotype.Service
 import javax.mail.*
 import javax.mail.internet.InternetAddress
