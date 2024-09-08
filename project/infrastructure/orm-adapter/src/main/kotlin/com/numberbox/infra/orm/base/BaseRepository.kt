@@ -1,10 +1,10 @@
-package com.numberbox.infra.orm_adpater.abstract_code
+package com.numberbox.infra.orm.base
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
 
-abstract class CommonRepository {
+abstract class BaseRepository {
     @Autowired
     lateinit var em: EntityManager
 

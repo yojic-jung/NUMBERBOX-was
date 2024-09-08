@@ -1,4 +1,4 @@
-package com.numberbox.infra.orm_adpater.config
+package com.numberbox.infra.orm.config
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager

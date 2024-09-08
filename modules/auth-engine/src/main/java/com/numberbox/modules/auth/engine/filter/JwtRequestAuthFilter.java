@@ -58,6 +58,7 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
             AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
         } else if (exception instanceof Exception) {
             logger.warn("jwt 인증 과정 중 예외 발생 : " + exception);
+            // todo 서버에러는 프로젝트로 보내줘서 에러 로깅 해야함
             AuthWebUtil.responseErrMsg(response, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
         }
     }

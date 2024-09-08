@@ -1,7 +1,8 @@
-package com.numberbox.infra.orm_adpater.repository.auth
+package com.numberbox.infra.orm.repository.auth
 
-import com.numberbox.infra.orm_adpater.repository.member.MemberRefreshTokenInfoRepository
-import com.numberbox.infra.orm_adpater.repository.member.MemberRepository
+import com.numberbox.infra.orm.base.BaseRepository
+import com.numberbox.infra.orm.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
+import com.numberbox.infra.orm.repository.member.MemberRepository
 import com.numberbox.modules.auth.control.dto.AuthUserInfo
 import com.numberbox.modules.auth.control.dto.AuthUserRole
 import com.numberbox.modules.auth.control.service.JwtRequestUserDetailService
@@ -12,8 +13,7 @@ import java.util.*
 @Repository
 class AuthUserInfoRepository(
     private val memberRepository: MemberRepository,
-    private val refreshTokenInfoRepository: MemberRefreshTokenInfoRepository,
-) : LoginRequestUserDetailService, JwtRequestUserDetailService {
+) : LoginRequestUserDetailService, JwtRequestUserDetailService, BaseRepository() {
 
     override fun loadUserByUsername(username: String): AuthUserInfo? {
         val member = memberRepository.findByEmail(username) ?: return null
@@ -23,6 +23,11 @@ class AuthUserInfoRepository(
     }
 
     override fun loadUserIdByRefreshToken(token: String): UUID? {
-        return refreshTokenInfoRepository.findUserUniqIdByToken(token)
+        return queryFactory
+            .select(memberRefreshTokenEntity.userUniqId)
+            .from(memberRefreshTokenEntity)
+            .where(memberRefreshTokenEntity.token.eq(token))
+            .orderBy(memberRefreshTokenEntity.id.desc())
+            .fetchFirst()
     }
 }

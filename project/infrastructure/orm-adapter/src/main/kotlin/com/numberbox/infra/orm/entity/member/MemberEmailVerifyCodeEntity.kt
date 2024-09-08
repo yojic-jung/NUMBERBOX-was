@@ -1,4 +1,4 @@
-package com.numberbox.infra.orm_adpater.entity.member
+package com.numberbox.infra.orm.entity.member
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,13 +9,13 @@ import java.time.LocalDateTime
 
 @Table(name = "email_id_code")
 @Entity
-class MemberEmailIdCodeEntity {
+class MemberEmailVerifyCodeEntity {
     @Id
     @Column(name = "email", nullable = false)
     var email: String? = null
 
     @Column(name = "id_code", nullable = false)
-    var idCode: String? = null
+    var verifyCode: String? = null
 
     @Column(name = "try_cnt")
     var tryCnt: Int = 0

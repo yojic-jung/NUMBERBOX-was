@@ -1,4 +1,4 @@
-package com.numberbox.infra.orm_adpater.entity.member
+package com.numberbox.infra.orm.entity.member
 
 import com.fasterxml.uuid.Generators
 import jakarta.persistence.*
@@ -50,7 +50,7 @@ class MemberEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
     var role: MutableList<MemberRoleEntity> = mutableListOf()
-    
+
     // 0 : 일반계정
     // 1 : 임시 비밀번호 발급계정(임시 비밀번호 발급계정 비밀번호 수정 안 하는 경우 새로운 비밀번호로 수정(스케쥴러로 구현))
     @Column(name = "tmp_password", nullable = false)

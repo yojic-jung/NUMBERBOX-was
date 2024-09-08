@@ -1,4 +1,4 @@
-package com.numberbox.infra.orm_adpater.entity.member
+package com.numberbox.infra.orm.entity.member
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -15,7 +15,7 @@ class MemberRefreshTokenEntity {
     @Column(name = "token", nullable = false)
     var token: String = ""
 
-    @Column(name = "user_uniq_dd", nullable = false)
+    @Column(name = "user_uniq_id", nullable = false)
     var userUniqId: UUID = UUID.randomUUID()
 
     @Column(name = "token_create_date", nullable = false)

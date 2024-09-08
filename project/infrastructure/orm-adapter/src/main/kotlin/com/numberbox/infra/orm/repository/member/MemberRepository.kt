@@ -1,6 +1,6 @@
-package com.numberbox.infra.orm_adpater.repository.member
+package com.numberbox.infra.orm.repository.member
 
-import com.numberbox.infra.orm_adpater.entity.member.MemberEntity
+import com.numberbox.infra.orm.entity.member.MemberEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

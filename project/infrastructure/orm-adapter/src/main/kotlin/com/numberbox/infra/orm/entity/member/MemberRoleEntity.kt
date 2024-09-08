@@ -1,4 +1,4 @@
-package com.numberbox.infra.orm_adpater.entity.member
+package com.numberbox.infra.orm.entity.member
 
 import jakarta.persistence.*
 

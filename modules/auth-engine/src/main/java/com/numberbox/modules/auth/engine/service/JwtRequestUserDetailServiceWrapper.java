@@ -1,14 +1,13 @@
 package com.numberbox.modules.auth.engine.service;
 
+import com.numberbox.modules.auth.control.dto.AuthUserInfo;
 import com.numberbox.modules.auth.control.service.JwtRequestUserDetailService;
 import com.numberbox.modules.auth.control.service.LoginRequestUserDetailService;
 import com.numberbox.modules.auth.engine.dto.AuthUserDetail;
-import com.numberbox.modules.auth.control.dto.AuthUserInfo;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,11 +23,10 @@ public class JwtRequestUserDetailServiceWrapper implements UserDetailsService {
         this.jwtRequestUserDetailService = jwtRequestUserDetailService;
     }
 
-    // todo 여기서 한번에 리프레시 토큰 까지 가져오기
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthUserInfo authUserInfo = loginRequestUserService.loadUserByUsername(username);
-        if(authUserInfo == null) return null;
+        if (authUserInfo == null) return null;
         else return new AuthUserDetail(authUserInfo);
     }
 
