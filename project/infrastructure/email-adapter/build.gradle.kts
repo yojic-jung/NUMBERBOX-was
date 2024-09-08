@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("org.springframework.boot") version "3.2.3"
@@ -36,4 +38,12 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "17"
     }
+}
+
+tasks.named<BootJar>("bootJar") {
+    enabled = false
+}
+
+tasks.named<BootRun>("bootRun") {
+    enabled = false
 }

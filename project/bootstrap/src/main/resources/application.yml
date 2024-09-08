@@ -1,0 +1,35 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local:
+        - rest-api
+        - orm-adapter
+        - orm-adapter-local
+        - orm-adapter-env
+        - mail-sender-local
+        - mail-sender-env
+
+numberbox:
+  openaiSecretKey: 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
+  openaiForbiddenWord: \uADF8\uB798\uD504,\uC911\uB4F1,\uADF8,\uC218,\uC131\uC9C8,\uC5F0\uC0B0,\uB3C4\uD615,\uACC4\uC0B0,\uB9BD,\uAE30\uBCF8,\uC2DD,\uD65C\uC6A9,\uACF1\uC148,\uC815\uB9AC,\uAD00\uACC4,\uB73B,\uBE44,\uBD80,\uC758,\uC5EC\uB7EC,\uC5EC\uB7EC\uAC00\uC9C0,\uD574,\uAC01,\uD569,\uAC00\uC9C0,\uD45C,\uC218\uD559,\uAE30\uCD08,\uB2E8\uC6D0,\uC77C\uBC18,\uACC4\uC218,\uBC29\uC815\uC2DD
+  s3BucketUrl: https://numberbox-bucket.s3.ap-northeast-2.amazonaws.com/
+  jwtSecretKey: localsecret
+  hwpSocketIp: localhost
+cloud:
+  aws:
+    s3:
+      bucket: numberbox-bucket
+    credentials:
+      accessKey: AKIA4SERHKUEFTRCTG7F
+      secretKey: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+logging:
+  level:
+    root:
+      debug
+# DB config

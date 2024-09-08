@@ -1,0 +1,16 @@
+# multipartresolver
+spring:
+  servlet:
+    multipart:
+      maxFileSize: 15MB
+      maxRequestSize: 15MB
+  mvc:
+    static-path-pattern: /webapp/**
+# tomcat
+server:
+  tomcat:
+    max-http-form-post-size: 15000000
+    remote-ip:
+      remote-ip-header: X-Forwarded-For
+  servlet:
+    context-path: /myWasApi

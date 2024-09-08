@@ -5,11 +5,16 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+
     kotlin("jvm") version "1.9.22"
+    kotlin("kapt") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
+    kotlin("plugin.jpa") version "1.9.22"
+    kotlin("plugin.allopen") version "1.9.22"
+    kotlin("plugin.noarg") version "1.9.22"
 }
 
-group = "com.hexagonal"
+group = "com.numberbox"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -20,11 +25,35 @@ repositories {
     mavenCentral()
 }
 
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("org.springframework.stereotype.Repository")
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+}
+
 dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
 
+    // jpa, querydsl
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+
+    runtimeOnly("com.mysql:mysql-connector-j")
+
+    // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
