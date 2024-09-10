@@ -1,0 +1,44 @@
+package com.kamcci.numberbox.members.repository;
+
+import com.kamcci.modules.auth.control.dto.AuthUserInfo;
+import com.kamcci.modules.auth.control.dto.AuthUserRole;
+import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService;
+import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
+import com.kamcci.numberbox.jwt.repository.RefreshTokenInfoRepository;
+import com.kamcci.numberbox.members.entity.Members;
+import com.kamcci.numberbox.members.entity.MembersRole;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public class AuthUserInfoRepository implements LoginRequestUserDetailService, JwtRequestUserDetailService {
+    MembersRepository membersRepository;
+    RefreshTokenInfoRepository refreshTokenInfoRepository;
+
+    public AuthUserInfoRepository(MembersRepository membersRepository,
+                                  RefreshTokenInfoRepository refreshTokenInfoRepository) {
+        this.membersRepository = membersRepository;
+        this.refreshTokenInfoRepository = refreshTokenInfoRepository;
+    }
+
+    @Override
+    public AuthUserInfo loadUserByUsername(String username) {
+        Members member = membersRepository.findByEmail(username);
+
+        if (member == null) return null;
+
+        List<AuthUserRole> roles = new ArrayList<>();
+        for (MembersRole role : member.getRole()) {
+            roles.add(new AuthUserRole(role.getRoleName(), role.isEnabled()));
+        }
+        return new AuthUserInfo(member.getEmail(), member.getUserUniqId(), member.getPassword(), roles);
+    }
+
+    @Override
+    public UUID loadUserIdByRefreshToken(String token) {
+        return refreshTokenInfoRepository.findUserUniqIdByToken(token);
+    }
+}

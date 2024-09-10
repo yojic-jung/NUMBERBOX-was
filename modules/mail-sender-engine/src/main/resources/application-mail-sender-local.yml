@@ -10,5 +10,5 @@ mail:
         port: ${local.mail.sender.google.server.port}
         auth: ${local.mail.sender.google.server.auth}
         sslEnable: ${local.mail.sender.google.server.sslEnable}
-        sslTrust: ${local.mail.sender.google.server.sslTrust}
+        sslTrust: ${local.mail.sender.google.server.host}
         protocols: ${local.mail.sender.google.server.protocols}

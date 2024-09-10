@@ -30,6 +30,7 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
     annotation("org.springframework.stereotype.Repository")
+    annotation("com.kamcci.numberbox.app.domain.system_construction.UseCase")
 }
 
 noArg {

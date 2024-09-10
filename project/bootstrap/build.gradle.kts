@@ -22,12 +22,13 @@ dependencies {
     implementation(project(":modules:auth-engine"))
     implementation(project(":modules:mail-sender-engine"))
     implementation(project(":modules:system-construction-di"))
+
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:email-adapter"))
     implementation(project(":project:infrastructure:orm-adapter"))
     implementation(project(":project:user-interface:rest-api"))
-
+    
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
