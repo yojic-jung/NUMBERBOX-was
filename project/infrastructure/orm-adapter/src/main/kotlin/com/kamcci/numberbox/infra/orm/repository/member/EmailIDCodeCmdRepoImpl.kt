@@ -4,27 +4,25 @@ import com.kamcci.numberbox.app.member.EmailVerifyCodeSaveDto
 import com.kamcci.numberbox.app.repository.member.EmailIDCodeCmdRepository
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.MemberEmailVerifyCodeEntity
-import com.kamcci.numberbox.infra.orm.factory.member.MemberEmailVerifyCodeFactory
+import com.kamcci.numberbox.infra.orm.factory.member.MemberEmailVerifyCodeFactory.makeSaveEntity
+import com.kamcci.numberbox.infra.orm.factory.member.MemberEmailVerifyCodeFactory.makeUpdateEntity
 import org.springframework.stereotype.Repository
-import java.time.LocalDateTime
 
 @Repository
-class EmailIDCodeCmdRepoImpl(
-    private val memberEmailVerifyCodeFactory: MemberEmailVerifyCodeFactory,
-) : EmailIDCodeCmdRepository, BaseRepository() {
+class EmailIDCodeCmdRepoImpl : EmailIDCodeCmdRepository, BaseRepository() {
 
     override fun save(emailVerifyCodeSaveDto: EmailVerifyCodeSaveDto): Boolean {
-        val emailIDCodeEntity = memberEmailVerifyCodeFactory.save(emailVerifyCodeSaveDto)
-        val alradyEntity = em.find(MemberEmailVerifyCodeEntity::class.java, emailVerifyCodeSaveDto.email)
-        if (alradyEntity != null) {
-            alradyEntity.apply {
-                verifyCode = emailVerifyCodeSaveDto.verifyCode
-                sysCreateTime = LocalDateTime.now()
-            }
+        val emailCodeEntity = em.find(MemberEmailVerifyCodeEntity::class.java, emailVerifyCodeSaveDto.email)
+        return if (emailCodeEntity != null) {
+            val emailIDCodeUpdateEntity = makeUpdateEntity(emailVerifyCodeSaveDto)
+            em.persist(emailIDCodeUpdateEntity)
+            em.contains(emailIDCodeUpdateEntity)
         } else {
-            em.persist(emailIDCodeEntity)
+            val emailIDCodeSaveEntity = makeSaveEntity(emailVerifyCodeSaveDto)
+            em.contains(emailIDCodeSaveEntity)
+
         }
 
-        return em.contains(emailIDCodeEntity)
+
     }
 }
