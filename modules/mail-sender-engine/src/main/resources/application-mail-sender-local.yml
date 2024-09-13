@@ -1,6 +1,5 @@
 mail:
   sender:
-
     google:
       account:
         email: ${local.mail.sender.google.account.email}

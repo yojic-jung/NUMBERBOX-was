@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.service
 
-import com.kamcci.numberbox.app.domain.system_construction.TxExecute
+import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.member.EmailCodeMessageDto
 import com.kamcci.numberbox.app.member.EmailVerifyCodeSaveDto
@@ -14,7 +14,7 @@ class MemberSignupService(
     val emailIDCodeSaveDto: EmailIDCodeCmdRepository,
     val emailVerifyCodeSendUseCase: EmailVerifyCodeSendUseCase
 ) : MemberSignupUseCase {
-    @TxExecute
+    @TXExecute
     override fun createEmailCode(email: String): Boolean {
         // 이메일 검증 코드 uuid 생성
         val code = UUID.randomUUID().toString()

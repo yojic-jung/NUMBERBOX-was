@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.email
 
-import com.kamcci.modules.mail.sender.service_impl.MailSendService
+import com.kamcci.modules.mail.sender.service.MailSendService
 import com.kamcci.numberbox.app.member.EmailCodeMessageDto
 import com.kamcci.numberbox.app.usecase.member.EmailVerifyCodeSendUseCase
 import org.springframework.stereotype.Service

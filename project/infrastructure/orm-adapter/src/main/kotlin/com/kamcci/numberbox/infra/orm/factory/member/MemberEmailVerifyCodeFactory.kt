@@ -16,6 +16,7 @@ object MemberEmailVerifyCodeFactory {
 
     fun makeUpdateEntity(emailVerifyCodeSaveDto: EmailVerifyCodeSaveDto) = MemberEmailVerifyCodeEntity()
         .apply {
+            email = emailVerifyCodeSaveDto.email
             verifyCode = emailVerifyCodeSaveDto.verifyCode
             sysCreateTime = LocalDateTime.now()
         }

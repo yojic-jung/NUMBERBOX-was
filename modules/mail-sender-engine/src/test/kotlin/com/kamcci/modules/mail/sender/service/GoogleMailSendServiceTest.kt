@@ -1,4 +1,4 @@
-package com.kamcci.modules.mail.sender.service_impl
+package com.kamcci.modules.mail.sender.service
 
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty

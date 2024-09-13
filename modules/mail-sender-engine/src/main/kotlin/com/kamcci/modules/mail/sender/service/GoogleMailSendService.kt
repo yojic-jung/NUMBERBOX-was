@@ -1,10 +1,14 @@
-package com.kamcci.modules.mail.sender.service_impl
+package com.kamcci.modules.mail.sender.service
 
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty
 import com.kamcci.modules.mail.sender.enums.HttpContentType
+import com.kamcci.modules.mail.sender.processor.MailSendProcessor
 import org.springframework.stereotype.Service
-import javax.mail.*
+import javax.mail.Authenticator
+import javax.mail.Message
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
@@ -12,6 +16,7 @@ import javax.mail.internet.MimeMessage
 class GoogleMailSendService(
     private val accountProp: GoogleAccountProperty,
     private val googleProp: GoogleMailProperty,
+    private val mailSendProcessor: MailSendProcessor,
 ) : MailSendService {
 
     override fun sendTextMessage(
@@ -36,8 +41,6 @@ class GoogleMailSendService(
         contents: String,
         contentType: HttpContentType,
     ) {
-        // todo 이메일 정규식 validation
-
         // 1. 메일 서버 속성 설정
         val mailProps = System.getProperties()
         mailProps["mail.smtp.host"] = googleProp.host
@@ -75,6 +78,6 @@ class GoogleMailSendService(
         }
 
         // 메일 전송
-        Transport.send(message)
+        mailSendProcessor.send(message)
     }
 }

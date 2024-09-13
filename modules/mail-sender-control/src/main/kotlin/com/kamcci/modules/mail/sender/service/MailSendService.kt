@@ -1,4 +1,4 @@
-package com.kamcci.modules.mail.sender.service_impl
+package com.kamcci.modules.mail.sender.service
 
 /**
  * 메일 전송

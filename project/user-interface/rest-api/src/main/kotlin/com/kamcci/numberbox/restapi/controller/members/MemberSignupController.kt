@@ -1,22 +1,31 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
+import com.kamcci.numberbox.restapi.dto.request.EmailRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Validated
 @RestController
+@RequestMapping("/public")
 class MemberSignupController(
 //    private val membersUseCase: MembersRegisterUseCase,
 //    private val tokenResponseService: TokenResponseService
     private val memberSignupUseCase: MemberSignupUseCase,
 ) {
-    @GetMapping("/createEmailIdCode")
-    fun createEmailVerifyCode(@RequestParam email: String): ResponseEntity<ResponseData<Map<String, Boolean>>> {
-        memberSignupUseCase.createEmailCode(email)
+    @PostMapping("/createEmailIdCode")
+    fun createEmailVerifyCode(
+        @Valid
+        @RequestBody req: EmailRequest
+    ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
+        memberSignupUseCase.createEmailCode(req.email)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
 

@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ACCESS_TOKEN_NAME;
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_NAME;
 
@@ -31,24 +32,17 @@ public class SecurityConfig {
 
     // todo url 단순화
     @Bean
-    SecurityFilterChain filterChain(
-            HttpSecurity http,
-            UserDetailsService userDetailsService,
-            AuthenticationEntryPoint authenticationEntryPoint,
-            LoginRequestAuthFilter loginRequestAuthFilter,
-            JwtRequestAuthFilter jwtRequestAuthFilter
-    ) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
+    SecurityFilterChain filterChain(HttpSecurity http, UserDetailsService userDetailsService,
+                                    AuthenticationEntryPoint authenticationEntryPoint,
+                                    LoginRequestAuthFilter loginRequestAuthFilter,
+                                    JwtRequestAuthFilter jwtRequestAuthFilter) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsService)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
                         .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/delRefreshToken").hasAnyRole("USER")
@@ -58,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/certifications/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/findEmail").permitAll()
                         .requestMatchers(HttpMethod.GET, "/findPassword").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/createEmailIdCode").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/public/createEmailIdCode").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/myContentsCheckForHwpDown").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/registerMemberProfile").hasAnyRole("USER")
@@ -78,8 +72,10 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/myAccountDrop").hasAnyRole("USER")
 
-                        .requestMatchers(HttpMethod.POST, "/mathInfo/takeWorkContentsList").hasAnyRole("MANAGER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/mathInfo/takeWorkContentsListByContentsNo").hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/mathInfo/takeWorkContentsList")
+                        .hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/mathInfo/takeWorkContentsListByContentsNo")
+                        .hasAnyRole("MANAGER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/mathInfo/takeContentsListByContentsNo").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.POST, "/mathInfo/takeContentsList").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/mathInfo/takeMyContentsList").hasAnyRole("USER")
@@ -108,7 +104,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/mathInfo/takeMyResource").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.POST, "/mathInfo/myResourceDel").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.POST, "/mathInfo/takeIpsiYear").hasAnyRole("MANAGER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/mathInfo/takeIpsiContentsByYear").hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/mathInfo/takeIpsiContentsByYear")
+                        .hasAnyRole("MANAGER", "ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/mathInfo/changeQuesType").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/mathInfo/takeConCntByUnitAndType").hasAnyRole("ADMIN")
@@ -116,7 +113,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/mathInfo/mathTypeAdd").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/mathInfo/contentsMoveFromTo").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/mathInfo/mathTypeOrderChng").hasAnyRole("ADMIN")
-
 
                         .requestMatchers(HttpMethod.GET, "/mathDocs/mathDocs").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/mathDocs/mathDocsIpsi").hasAnyRole("USER")
@@ -136,36 +132,33 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/convert/myHwpConvertContents").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/convert/saveMyHwpContents").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/convert/removeConvertContents").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/convert/errHwpConvertContents").hasAnyRole("MANAGER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/convert/fileConvertStatistic").hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/convert/errHwpConvertContents")
+                        .hasAnyRole("MANAGER", "ADMIN").requestMatchers(HttpMethod.GET, "/convert/fileConvertStatistic")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
 
-                        .requestMatchers(HttpMethod.GET, "/mathInfo/mathContentsStatistic").hasAnyRole("TOP_TESTER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/mathDocs/mathDocsUsageStatistic").hasAnyRole("TOP_TESTER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/takeMembersStatistic").hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/mathInfo/mathContentsStatistic")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/mathDocs/mathDocsUsageStatistic")
+                        .hasAnyRole("TOP_TESTER", "ADMIN").requestMatchers(HttpMethod.GET, "/takeMembersStatistic")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount").hasAnyRole("TOP_TESTER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin").hasAnyRole("TOP_TESTER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin").hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/serviceCenter/takeErrReportCount")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/serviceCenter" + "/takeErrReportSearchBySttsAndTypeByAdmin")
+                        .hasAnyRole("TOP_TESTER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/common/imgUpload").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/common/download").permitAll()
 
-                        .requestMatchers("/mathInfo/**").permitAll()
-                        .requestMatchers("/author").hasAnyRole("user")
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterAt(
-                        loginRequestAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                )
+                        .requestMatchers("/mathInfo/**").permitAll().requestMatchers("/author").hasAnyRole("user")
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterAt(loginRequestAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class)
-                .exceptionHandling(
-                        customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint)
-                );
+                .exceptionHandling(customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint));
         return http.build();
     }
 

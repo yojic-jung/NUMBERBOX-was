@@ -26,6 +26,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

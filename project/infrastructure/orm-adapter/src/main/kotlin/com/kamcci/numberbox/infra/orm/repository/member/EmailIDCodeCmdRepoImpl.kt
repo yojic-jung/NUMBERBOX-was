@@ -15,14 +15,11 @@ class EmailIDCodeCmdRepoImpl : EmailIDCodeCmdRepository, BaseRepository() {
         val emailCodeEntity = em.find(MemberEmailVerifyCodeEntity::class.java, emailVerifyCodeSaveDto.email)
         return if (emailCodeEntity != null) {
             val emailIDCodeUpdateEntity = makeUpdateEntity(emailVerifyCodeSaveDto)
-            em.persist(emailIDCodeUpdateEntity)
+            em.merge(emailIDCodeUpdateEntity)
             em.contains(emailIDCodeUpdateEntity)
         } else {
             val emailIDCodeSaveEntity = makeSaveEntity(emailVerifyCodeSaveDto)
             em.contains(emailIDCodeSaveEntity)
-
         }
-
-
     }
 }

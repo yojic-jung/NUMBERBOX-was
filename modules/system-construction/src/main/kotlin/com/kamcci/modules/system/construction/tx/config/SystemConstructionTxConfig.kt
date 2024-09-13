@@ -1,7 +1,7 @@
 package com.kamcci.modules.system.construction.tx.config
 
-import com.kamcci.modules.system.construction.tx.advice.CustomTransactionAdvice
-import com.kamcci.modules.system.construction.tx.config.CustomTxAnnotationConstant.CUSTOM_TX_ANNOTATION
+import com.kamcci.modules.system.construction.tx.advice.SystemConstructionTXAdvice
+import com.kamcci.modules.system.construction.tx.config.CustomTxUserConfig.CUSTOM_TX_ANNOTATION
 import org.aopalliance.intercept.MethodInterceptor
 import org.springframework.aop.Advisor
 import org.springframework.aop.Pointcut
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
-class CustomTxConfig(
+class SystemConstructionTxConfig(
     private val txManager: PlatformTransactionManager,
 ) {
     @Bean
@@ -25,7 +25,7 @@ class CustomTxConfig(
     @Qualifier("txClass")
     @Bean
     fun customTransactionAdvice(): MethodInterceptor {
-        val customTxAdvice = CustomTransactionAdvice(txManager)
+        val customTxAdvice = SystemConstructionTXAdvice(txManager)
         return customTxAdvice
     }
 
