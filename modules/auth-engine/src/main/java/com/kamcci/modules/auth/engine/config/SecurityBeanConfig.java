@@ -1,6 +1,5 @@
 package com.kamcci.modules.auth.engine.config;
 
-import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
 import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService;
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
 import com.kamcci.modules.auth.engine.filter.JwtRequestAuthFilter;
@@ -9,6 +8,8 @@ import com.kamcci.modules.auth.engine.provider.JwtRequestAuthProvider;
 import com.kamcci.modules.auth.engine.provider.LoginRequestAuthProvider;
 import com.kamcci.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
 import com.kamcci.modules.auth.engine.service.LoginRequestUserDetailServiceWrapper;
+import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,12 +27,15 @@ import java.util.List;
 
 @Configuration
 public class SecurityBeanConfig {
+    @Value("${auth.login.url.process}")
+    private String processUrl;
+
     /**
      * 비밀번호 인코더
      */
     @Primary
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -48,8 +52,9 @@ public class SecurityBeanConfig {
      * jwt 인증시 서버측 사용자 인증 정보를 가져옴
      */
     @Bean
-    public JwtRequestUserDetailServiceWrapper jwtRequestUserDetailService(LoginRequestUserDetailService loginRequestUserService,
-                                                                          JwtRequestUserDetailService jwtRequestUserDetailService) {
+    public JwtRequestUserDetailServiceWrapper jwtRequestUserDetailService(
+            LoginRequestUserDetailService loginRequestUserService,
+            JwtRequestUserDetailService jwtRequestUserDetailService) {
         return new JwtRequestUserDetailServiceWrapper(loginRequestUserService, jwtRequestUserDetailService);
     }
 
@@ -87,25 +92,18 @@ public class SecurityBeanConfig {
      * 로그인 인증 요청시 사용되는 인증 필터
      */
     @Bean
-    public LoginRequestAuthFilter loginRequestAuthenticationFilter(
-            AuthenticationManager authenticationManager,
-            AuthenticationSuccessHandler authenticationSuccessHandler,
-            AuthenticationFailureHandler authenticationFailureHandler
-    ) {
-        return new LoginRequestAuthFilter(
-                authenticationManager,
-                authenticationSuccessHandler,
-                authenticationFailureHandler
-        );
+    public LoginRequestAuthFilter loginRequestAuthenticationFilter(AuthenticationManager authenticationManager,
+                                                                   AuthenticationSuccessHandler authenticationSuccessHandler,
+                                                                   AuthenticationFailureHandler authenticationFailureHandler) {
+        return new LoginRequestAuthFilter(processUrl, authenticationManager, authenticationSuccessHandler,
+                authenticationFailureHandler);
     }
 
     /**
      * jwt 인증 요청시 사용되는 인증 필터
      */
     @Bean
-    public JwtRequestAuthFilter jwtRequestAuthFilter(
-            AuthenticationManager authenticationManager
-    ) {
+    public JwtRequestAuthFilter jwtRequestAuthFilter(AuthenticationManager authenticationManager) {
         return new JwtRequestAuthFilter(authenticationManager);
     }
 

@@ -5,7 +5,7 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
 }
 
@@ -27,7 +27,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("jakarta.validation:jakarta.validation-api:3.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // kotlin 직렬화(data class request 생성자 오류 해결)
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

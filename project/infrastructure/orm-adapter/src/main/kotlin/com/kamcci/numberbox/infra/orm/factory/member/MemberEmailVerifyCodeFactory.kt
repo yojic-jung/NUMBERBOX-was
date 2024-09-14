@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.factory.member
 
-import com.kamcci.numberbox.app.member.EmailVerifyCodeSaveDto
+import com.kamcci.numberbox.app.domain.member.EmailVerifyCodeSaveDto
 import com.kamcci.numberbox.infra.orm.entity.member.MemberEmailVerifyCodeEntity
 import java.time.LocalDateTime
 

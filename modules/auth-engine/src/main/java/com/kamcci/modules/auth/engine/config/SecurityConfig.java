@@ -2,6 +2,7 @@ package com.kamcci.modules.auth.engine.config;
 
 import com.kamcci.modules.auth.engine.filter.JwtRequestAuthFilter;
 import com.kamcci.modules.auth.engine.filter.LoginRequestAuthFilter;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,7 +25,14 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_NAM
 
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(value = {AuthUrlProperty.class})
 public class SecurityConfig {
+    private final AuthUrlProperty authUrlProperty;
+
+    public SecurityConfig(AuthUrlProperty authUrlProperty) {
+        this.authUrlProperty = authUrlProperty;
+    }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers("/webapp/**");
@@ -40,7 +48,10 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/loginProcess").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/public/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/public/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, authUrlProperty.getProcess()).permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/loginFail").permitAll()
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         .requestMatchers(HttpMethod.POST, "/signup").permitAll()
@@ -52,7 +63,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/certifications/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/findEmail").permitAll()
                         .requestMatchers(HttpMethod.GET, "/findPassword").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/public/createEmailIdCode").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/myContentsCheckForHwpDown").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/registerMemberProfile").hasAnyRole("USER")

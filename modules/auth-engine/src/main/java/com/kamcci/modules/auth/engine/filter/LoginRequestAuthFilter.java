@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,6 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.io.IOException;
 
@@ -32,21 +32,17 @@ import java.io.IOException;
  * - 성공 및 실패 핸들러에게 후처리 요청
  */
 public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilter {
-    // todo 모듈화 진행하면 사용자 설정으로 빼야함
-    private static final RequestMatcher LOGIN_REQUEST_MATCHER = new AntPathRequestMatcher("/loginProcess", "POST");
-
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+    private final ObjectMapper objectMapper =
+            new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final AuthenticationManager authenticationManager;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public LoginRequestAuthFilter(AuthenticationManager authenticationManager,
+    public LoginRequestAuthFilter(String processUrl, AuthenticationManager authenticationManager,
                                   AuthenticationSuccessHandler authenticationSuccessHandler,
                                   AuthenticationFailureHandler authenticationFailureHandler) {
-        super(LOGIN_REQUEST_MATCHER);
+        super(new AntPathRequestMatcher(processUrl, HttpMethod.POST.name()));
         super.setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
@@ -54,25 +50,25 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
+            AuthenticationException {
         try {
             // 사용자 요청 authentication(인증) 객체 추출
             final Authentication authRequest = obtainAuthenticationRequest(request);
 
             // manager에게 인증 요청(Authentication(인증) 객체 반환하면 SecurityContext에 저장됨)
             return authenticationManager.authenticate(authRequest);
-        } catch (AuthenticationException ex) {
+        } catch(AuthenticationException ex) {
             throw ex;
-        } catch (MismatchedInputException ex) {
+        } catch(MismatchedInputException ex) {
             // 클라이언트에서 usename, password 올바른 형식으로 요청하지 않음
             logger.warn("시큐리티 인증 요청 형식 올바르지 않음 : " + ex);
             // failureHandler를 태우기 위해 AuthenticationException 타입으로 전환
             throw new BadInputRequestException();
-        } catch (JsonParseException ex) {
+        } catch(JsonParseException ex) {
             logger.warn("시큐리티 인증 요청 형식 올바르지 않음 : " + ex);
             throw new BadInputRequestException();
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             logger.error("시큐리티 인증 과정 중 예외 발생 : " + ex);
             // 실패 핸들러 타도록 Auth 예외로 전환
             throw new AuthInternalException();
@@ -88,7 +84,7 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
         final String password = authRequest.password();
 
         // json요청에 username과 password 속성 명시하지 않은 경우(속성 명시되어 있으면 빈값 넘어옴)
-        if (username == null || password == null) {
+        if(username == null || password == null) {
             throw new BadInputRequestException();
         }
 

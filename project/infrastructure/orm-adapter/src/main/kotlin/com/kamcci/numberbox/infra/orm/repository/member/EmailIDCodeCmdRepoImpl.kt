@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.repository.member
 
-import com.kamcci.numberbox.app.member.EmailVerifyCodeSaveDto
+import com.kamcci.numberbox.app.domain.member.EmailVerifyCodeSaveDto
 import com.kamcci.numberbox.app.repository.member.EmailIDCodeCmdRepository
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.MemberEmailVerifyCodeEntity

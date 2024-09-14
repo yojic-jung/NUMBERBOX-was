@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.member
+package com.kamcci.numberbox.app.domain.member
 
 /**
  * 이메일 검증 코드 메시지 양식

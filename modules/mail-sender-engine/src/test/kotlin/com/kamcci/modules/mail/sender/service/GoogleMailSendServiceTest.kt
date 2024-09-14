@@ -2,11 +2,11 @@ package com.kamcci.modules.mail.sender.service
 
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty
+import com.kamcci.modules.mail.sender.processor.MockMailSendProcessor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mockStatic
 import org.mockito.kotlin.any
-import javax.mail.MessagingException
 import javax.mail.Transport
 import javax.mail.internet.AddressException
 
@@ -24,7 +24,7 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("test@email.com", "")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp)
+        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
 
         // when
         mockStatic(Transport::class.java).`when`<Unit> { Transport.send(any()) }.then { } // 실제 전송은 모킹
@@ -36,7 +36,7 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("", "")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp)
+        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
 
         // when & then
         assertThrows<AddressException> {
@@ -49,24 +49,11 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("test@email.com", "1234")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp)
+        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
 
         // when & then
         assertThrows<AddressException> {
             googleMailSendService.sendHTMLMessage("", title, contents)
-        }
-    }
-
-    @Test
-    fun `호스트 정보 미작성 - 실패`() {
-        // given
-        val googleAccountProp = GoogleAccountProperty("test@email.com", "1234")
-        val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp)
-
-        // when & then
-        assertThrows<MessagingException> {
-            googleMailSendService.sendHTMLMessage(recipientEmail, title, contents)
         }
     }
 }
