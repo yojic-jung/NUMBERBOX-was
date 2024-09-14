@@ -2,7 +2,7 @@ package com.kamcci.numberbox.email
 
 import com.kamcci.modules.mail.sender.service.MailSendService
 import com.kamcci.numberbox.app.domain.member.EmailCodeMessageDto
-import com.kamcci.numberbox.app.email.sender.EmailVerifyCodeSender
+import com.kamcci.numberbox.app.email.sender.member.EmailVerifyCodeSender
 import org.springframework.stereotype.Service
 
 @Service

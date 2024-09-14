@@ -25,7 +25,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any>? {
 //        println(ex.stackTraceToString())
         logger.warn(ex)
-        return ResponseUtil.errMsg(ex, status, request)
+        return ResponseUtil.error(ex, status, request)
     }
 
     /**
@@ -39,6 +39,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         request: WebRequest
     ): ResponseEntity<Any> {
         logger.error(ex)
-        return ResponseUtil.errMsg(ex, statusCode, request)
+        return ResponseUtil.error(ex, statusCode, request)
     }
 }

@@ -4,6 +4,7 @@ import com.kamcci.modules.auth.control.exception.BadAuthRequestException;
 import com.kamcci.modules.auth.control.exception.DisabledUserException;
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException;
 import com.kamcci.modules.auth.control.exception.UserNotFoundException;
+import com.kamcci.modules.auth.engine.config.AuthUrlProperty;
 import com.kamcci.modules.auth.engine.exception.AuthInternalServerException;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
 import jakarta.servlet.RequestDispatcher;
@@ -24,28 +25,33 @@ import java.io.IOException;
  */
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
+    private final AuthUrlProperty authUrlProperty;
+
+    public LoginFailureHandler(AuthUrlProperty authUrlProperty) {
+        this.authUrlProperty = authUrlProperty;
+    }
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         // 시큐리티 의존성 없는 예외타입으로 전환하여 모듈 호출자가 예외 처리할 수 있도록 전달
-        if (exception instanceof UsernameNotFoundException) {
+        if(exception instanceof UsernameNotFoundException) {
             forwardToFailController(request, response, new UserNotFoundException());
         }
         // password 같은지 비교
-        else if (exception instanceof BadCredentialsException) {
+        else if(exception instanceof BadCredentialsException) {
             forwardToFailController(request, response, new PasswordMissMatchException());
         }
         // 활성 계정 체크
-        else if (exception instanceof DisabledException) {
+        else if(exception instanceof DisabledException) {
             forwardToFailController(request, response, new DisabledUserException());
 
         }
         // 잘못된 형식으로 인증 요청
-        else if (exception instanceof BadInputRequestException) {
+        else if(exception instanceof BadInputRequestException) {
             forwardToFailController(request, response, new BadAuthRequestException());
 
-        }
-        else {
+        } else {
             forwardToFailController(request, response, new AuthInternalServerException());
         }
     }
@@ -53,10 +59,10 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     /**
      * 실패 후처리 진행할 수 있도록 FailController에게 요청
      */
-    private void forwardToFailController(HttpServletRequest request, HttpServletResponse response, Exception exception)
-            throws ServletException, IOException {
+    private void forwardToFailController(HttpServletRequest request, HttpServletResponse response,
+                                         Exception exception) throws ServletException, IOException {
         request.setAttribute("auth.error.exception", exception);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/loginFail");
+        RequestDispatcher dispatcher = request.getRequestDispatcher(authUrlProperty.fail());
         dispatcher.forward(request, response);
     }
 }

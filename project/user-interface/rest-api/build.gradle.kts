@@ -24,6 +24,9 @@ dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
 
+    implementation(project(":modules:auth-control"))
+
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 

@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.email.sender
+package com.kamcci.numberbox.app.email.sender.member
 
 import com.kamcci.numberbox.app.domain.member.EmailCodeMessageDto
 

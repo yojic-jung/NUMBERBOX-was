@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.member.EmailCodeMessageDto
 import com.kamcci.numberbox.app.domain.member.EmailVerifyCodeSaveDto
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.email.sender.EmailVerifyCodeSender
+import com.kamcci.numberbox.app.email.sender.member.EmailVerifyCodeSender
 import com.kamcci.numberbox.app.repository.member.EmailIDCodeCmdRepository
 import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
 import java.util.*

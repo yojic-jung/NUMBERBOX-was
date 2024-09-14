@@ -23,6 +23,7 @@ class MemberSignupController(
         @Valid
         @RequestBody req: EmailRequest
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
+
         memberSignupUseCase.createEmailCode(req.email)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
