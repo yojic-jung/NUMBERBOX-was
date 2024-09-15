@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.repository.member
 
+import java.util.*
+
 interface MemberRoleModifyRepository {
-    fun updateEnabledById(userId: Long, enabled: Boolean): Boolean
-
-
+    fun updateEnabledById(id: UUID, enabled: Boolean): Boolean
 }

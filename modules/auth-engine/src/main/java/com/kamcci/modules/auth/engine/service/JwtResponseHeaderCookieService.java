@@ -36,7 +36,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
      * todo 제대로 동작하는지 테스트 필요
      */
     @Override
-    public void createAndSetTokenToResponse(String email, UUID userId, List<String> roleList) {
+    public void responseAuthToken(String email, UUID userId, List<String> roleList) {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response =
@@ -48,18 +48,17 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         // 로그인 성공 이벤트 발행
         publishLoginSuccessEvent(request, userId, refreshToken);
 
-        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX+" "+accessToken);
+        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
         response.setHeader(ROLE_NAME, roleList.toString());
         response.addCookie(makeRefreshTokenCookie(request, refreshToken));
     }
 
     // todo 이름 변경?? refreshTokenCreatedEvent
-    private void publishLoginSuccessEvent(HttpServletRequest request, UUID userId, String refreshToken){
+    private void publishLoginSuccessEvent(HttpServletRequest request, UUID userId, String refreshToken) {
         final String remainedRefreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
         final LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
         eventPublisher.publishEvent(loginSuccessEvent);
     }
-
 
     /**
      * accessToken을 헤더에, refreshToken을 쿠키에 담음
@@ -71,7 +70,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX+" "+accessToken);
+        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
         response.setHeader(ROLE_NAME, roleList.toString());
         response.addCookie(makeRefreshTokenCookie(request, refreshToken));
     }
@@ -84,8 +83,9 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         final String loginState = request.getParameter(LOGIN_KEEP_ATTR);
 
         // 클라이언트가 로그인 상태 유지 요청한 경우
-        if (loginState != null && loginState.equals(LOGIN_KEEP_VAL)) {
-            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) REFRESH_TOKEN_VALID_TIME_OP_KEEP / 1000);
+        if(loginState != null && loginState.equals(LOGIN_KEEP_VAL)) {
+            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken,
+                    (int) REFRESH_TOKEN_VALID_TIME_OP_KEEP / 1000);
         } else {
             return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) REFRESH_TOKEN_VALID_TIME / 1000);
         }

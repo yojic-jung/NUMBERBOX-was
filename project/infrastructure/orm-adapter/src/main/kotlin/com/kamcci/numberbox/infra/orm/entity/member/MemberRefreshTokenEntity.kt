@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.entity.member
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
 import java.util.*
 
@@ -15,10 +16,11 @@ class MemberRefreshTokenEntity {
     @Column(name = "token", nullable = false)
     var token: String = ""
 
+    @NotNull
     @Column(name = "user_uniq_id", nullable = false)
-    var userUniqId: UUID = UUID.randomUUID()
+    var memberId: UUID? = null
 
     @Column(name = "token_create_date", nullable = false)
     @CreationTimestamp
-    var tokenCreateDate: LocalDateTime = LocalDateTime.now()
+    var sysCreateTime: LocalDateTime = LocalDateTime.now()
 }

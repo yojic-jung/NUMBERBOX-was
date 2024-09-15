@@ -52,9 +52,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/public/*").permitAll()
                         .requestMatchers(HttpMethod.POST, authUrlProperty.process()).permitAll()
                         .requestMatchers(HttpMethod.POST, authUrlProperty.fail()).permitAll()
-                        
+
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/signup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
                         .requestMatchers(HttpMethod.GET, "/delRefreshToken").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "/takeResource").permitAll()

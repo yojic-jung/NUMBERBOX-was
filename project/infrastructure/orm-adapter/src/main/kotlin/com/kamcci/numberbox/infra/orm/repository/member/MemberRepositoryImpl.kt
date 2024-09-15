@@ -15,9 +15,9 @@ class MemberRepositoryImpl : BaseRepository() {
     ) {
         queryFactory
             .update(memberEntity)
-            .set(memberEntity.lastLoginDate, LocalDateTime.now())
+            .set(memberEntity.lastLoginTime, LocalDateTime.now())
             .set(memberEntity.failCount, failCount)
             .set(memberEntity.humanStatus, humanStatus)
-            .where(memberEntity.userUniqId.eq(userUniqId))
+            .where(memberEntity.id.eq(userUniqId))
     }
 }

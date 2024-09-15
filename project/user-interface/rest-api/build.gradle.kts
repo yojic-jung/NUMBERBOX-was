@@ -7,6 +7,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
+    kotlin("kapt") version "1.9.22"
 }
 
 group = "com.hexagonal"
@@ -18,6 +19,12 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
 }
 
 dependencies {
@@ -34,6 +41,9 @@ dependencies {
 
     // kotlin 직렬화(data class request 생성자 오류 해결)
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

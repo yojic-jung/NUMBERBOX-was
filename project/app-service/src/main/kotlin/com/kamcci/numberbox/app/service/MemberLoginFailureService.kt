@@ -24,16 +24,15 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val userId = memberReadRepository.findIdByEmail(email)
-        val failCount: Int = memberReadRepository.findFailCountById(userId)
+        val id = memberReadRepository.findIdByEmail(email)
+        val failCount: Int = memberReadRepository.findFailCountById(id)
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount == DISABLE_COUNT) {
-            membersRoleModifyRepository.updateEnabledById(userId, false)
+            membersRoleModifyRepository.updateEnabledById(id, false)
         }
         // 실패 카운트 +1
-        memberModifyRepository.updateFailCountById(userId, failCount + 1)
-
+        memberModifyRepository.updateFailCountById(id, failCount + 1)
         return failCount >= DISABLE_COUNT
     }
 
@@ -48,7 +47,7 @@ class MemberLoginFailureService(
             membersRoleModifyRepository.updateEnabledById(userId, false)
             memberModifyRepository.updateFailCountById(userId, 0)
         } else {
-            // 비활성화 잠금 시간이 지나지 않으면 마지막 실패시간만 변경(지속적으로 실패 요청시 계정 잠금시간을 늘리기 위하여)
+            // 비활성화 잠금 시간이 지나지 않으면 마지막 실패 시간만 변경(지속적으로 실패시 계정 잠금시간을 늘리기 위하여)
             memberModifyRepository.updateLastFailTimeById(userId, LocalDateTime.now())
         }
         return isAfterLockTime

@@ -1,0 +1,17 @@
+package com.kamcci.numberbox.infra.orm.repository.member
+
+import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
+import com.kamcci.numberbox.app.repository.member.MemberPrivateSaveRepository
+import com.kamcci.numberbox.infra.orm.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.factory.member.MemberPrivateFactory
+import org.springframework.stereotype.Repository
+import java.util.*
+
+@Repository
+class MemberPrivateSaveRepositoryImpl : MemberPrivateSaveRepository, BaseRepository() {
+    override fun save(uuid: UUID, privateSignUpDto: MemberPrivateSignUpDto): UUID {
+        val memberPrivateEntity = MemberPrivateFactory.getSaveEntity(uuid, privateSignUpDto)
+        em.persist(memberPrivateEntity)
+        return memberPrivateEntity.memberId!!
+    }
+}

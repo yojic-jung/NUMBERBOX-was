@@ -1,13 +1,15 @@
 package com.kamcci.numberbox.app.repository.member
 
 import java.time.LocalDateTime
+import java.util.*
 
 interface MemberReadRepository {
 
-    fun findIdByEmail(email: String): Long
+    fun findIdByEmail(email: String): UUID
 
-    fun findFailCountById(userId: Long): Int
+    fun findFailCountById(id: UUID): Int
 
-    fun findLastFailTimeById(userId: Long): LocalDateTime
+    fun findLastFailTimeById(id: UUID): LocalDateTime
 
+    fun existsByEmail(email: String): Boolean
 }

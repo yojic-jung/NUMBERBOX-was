@@ -10,9 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_PREFIX;
 
 /**
@@ -34,13 +36,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         final UUID userId = (UUID) authentication.getDetails();
 
         // 권한 가져오기
-        final List<String> roleList = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(authority -> authority.replace(ROLE_PREFIX, ""))
-                .collect(Collectors.toList());
+        final List<String> roleList = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .map(authority -> authority.replace(ROLE_PREFIX, "")).collect(Collectors.toList());
 
         // 응답(토큰, 권한 포함)
-        tokenResponseService.createAndSetTokenToResponse(username, userId, roleList);
+        tokenResponseService.responseAuthToken(username, userId, roleList);
         AuthWebUtil.responseOK(response, false, AuthResponse.OK.message);
     }
 }

@@ -15,7 +15,6 @@ import java.util.*
 @Component
 class LoginSuccessEventListener(
     private val memberRepository: MemberRepositoryImpl,
-    private val memberRefreshTokenFactory: MemberRefreshTokenFactory,
     private val memberRefreshTokenRepo: MemberRefreshTokenRepository,
 ) {
 
@@ -40,7 +39,7 @@ class LoginSuccessEventListener(
             ?.let { memberRefreshTokenRepo.deleteByToken(it) }
 
         // 새로운 리프레시 토큰 저장
-        val rerfreshTokenEntity = memberRefreshTokenFactory.getSaveEntity(refreshToken, userUniqId)
+        val rerfreshTokenEntity = MemberRefreshTokenFactory.getSaveEntity(refreshToken, userUniqId)
         memberRefreshTokenRepo.save(rerfreshTokenEntity)
     }
 }

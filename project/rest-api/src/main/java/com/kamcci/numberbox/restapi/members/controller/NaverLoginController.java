@@ -25,7 +25,8 @@ public class NaverLoginController {
     public ResponseEntity<ResponseData<SignUpResultDto>> naverLogin(String email) {
         // todo 테스트 필요 and email 외의 다른 인증 키값도 보안상 필요
         SignUpResultDto signUpResultDto = membersLoginUseCase.login(email);
-        tokenResponseService.createAndSetTokenToResponse(signUpResultDto.getEmail(), signUpResultDto.getUserUniqId(), signUpResultDto.getRoles());
+        tokenResponseService.responseAuthToken(signUpResultDto.getEmail(), signUpResultDto.getUserUniqId(),
+                signUpResultDto.getRoles());
         return ResponseUtil.ok(signUpResultDto);
     }
 }

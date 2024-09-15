@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.email.sender.member
 
-import com.kamcci.numberbox.app.domain.member.EmailCodeMessageDto
+import com.kamcci.numberbox.app.domain.dto.member.EmailCodeMessageDto
 
 /**
  * 이메일 검증 코드 발송

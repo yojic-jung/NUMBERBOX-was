@@ -23,7 +23,8 @@ public class MembersRegisterController {
     @PostMapping("/signup")
     public ResponseEntity<ResponseData<SignUpResultDto>> signup(MembersRequest members) {
         SignUpResultDto signUpResult = membersUseCase.signUp(members);
-        tokenResponseService.createAndSetTokenToResponse(signUpResult.getEmail(), signUpResult.getUserUniqId(), signUpResult.getRoles());
+        tokenResponseService.responseAuthToken(signUpResult.getEmail(), signUpResult.getUserUniqId(),
+                signUpResult.getRoles());
         return ResponseUtil.ok(signUpResult);
     }
 }

@@ -19,12 +19,12 @@ class AuthUserInfoRepository(
         val member = memberRepository.findByEmail(username) ?: return null
 
         val roles = member.role.map { AuthUserRole(it.roleName, it.enabled) }
-        return AuthUserInfo(member.email, member.userUniqId, member.password, roles)
+        return AuthUserInfo(member.email, member.id, member.password, roles)
     }
 
     override fun loadUserIdByRefreshToken(token: String): UUID? {
         return queryFactory
-            .select(memberRefreshTokenEntity.userUniqId)
+            .select(memberRefreshTokenEntity.memberId)
             .from(memberRefreshTokenEntity)
             .where(memberRefreshTokenEntity.token.eq(token))
             .orderBy(memberRefreshTokenEntity.id.desc())

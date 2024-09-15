@@ -3,7 +3,6 @@ package com.kamcci.numberbox.infra.orm.entity.member
 import com.fasterxml.uuid.Generators
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 import java.util.*
 
@@ -12,7 +11,7 @@ import java.util.*
 class MemberEntity {
     @Id
     @Column(name = "user_uniq_id", columnDefinition = "BINARY(16)", nullable = false)
-    var userUniqId: UUID = UUID.randomUUID()
+    var id: UUID? = null
 
     @PrePersist
     fun createUserUniqId() {
@@ -26,7 +25,7 @@ class MemberEntity {
         sb.insert(18, "-")
         sb.insert(23, "-")
         uuid = UUID.fromString(sb.toString())
-        this.userUniqId = uuid
+        this.id = uuid
     }
 
     @Column(name = "email", nullable = false)
@@ -52,15 +51,14 @@ class MemberEntity {
     var role: MutableList<MemberRoleEntity> = mutableListOf()
 
     // 0 : 일반계정
-    // 1 : 임시 비밀번호 발급계정(임시 비밀번호 발급계정 비밀번호 수정 안 하는 경우 새로운 비밀번호로 수정(스케쥴러로 구현))
+    // 1 : 임시 비밀번호 발급계정(임시 비밀번호 발급계정 비밀번호 수정 안하는 경우 새로운 비밀번호로 수정(스케쥴러로 구현))
     @Column(name = "tmp_password", nullable = false)
     var tmpPassword: Boolean = false
 
+    @Column(name = "last_login_date", nullable = false)
+    var lastLoginTime: LocalDateTime = LocalDateTime.now()
+
     @CreationTimestamp
     @Column(name = "signup_date", nullable = false)
-    var signupDate: LocalDateTime? = LocalDateTime.now()
-
-    @UpdateTimestamp
-    @Column(name = "last_login_date", nullable = false)
-    var lastLoginDate: LocalDateTime = LocalDateTime.now()
+    var sysCreateTime: LocalDateTime? = LocalDateTime.now()
 }
