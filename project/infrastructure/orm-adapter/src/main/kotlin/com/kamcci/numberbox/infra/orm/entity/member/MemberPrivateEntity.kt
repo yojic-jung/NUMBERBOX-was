@@ -27,6 +27,9 @@ class MemberPrivateEntity {
     @Column(name = "birth", length = 6, nullable = false)
     var birth: String? = null
 
+    @Column(name = "sys_update_time", nullable = false)
+    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+
     @CreationTimestamp
     @Column(name = "sys_create_time", nullable = false)
     var sysCreateTime: LocalDateTime = LocalDateTime.now()

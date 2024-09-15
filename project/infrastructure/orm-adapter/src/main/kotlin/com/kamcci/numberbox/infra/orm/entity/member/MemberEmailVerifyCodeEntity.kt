@@ -20,6 +20,9 @@ class MemberEmailVerifyCodeEntity {
     @Column(name = "try_cnt")
     var tryCnt: Int = 0
 
+    @Column(name = "sys_update_time", nullable = false)
+    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+
     @CreationTimestamp
     @Column(name = "sys_create_time", nullable = false)
     var sysCreateTime: LocalDateTime = LocalDateTime.now()

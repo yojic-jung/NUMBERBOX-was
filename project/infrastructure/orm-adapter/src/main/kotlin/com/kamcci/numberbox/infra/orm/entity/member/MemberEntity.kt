@@ -58,6 +58,9 @@ class MemberEntity {
     @Column(name = "last_login_date", nullable = false)
     var lastLoginTime: LocalDateTime = LocalDateTime.now()
 
+    @Column(name = "sys_update_time", nullable = false)
+    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+
     @CreationTimestamp
     @Column(name = "signup_date", nullable = false)
     var sysCreateTime: LocalDateTime? = LocalDateTime.now()

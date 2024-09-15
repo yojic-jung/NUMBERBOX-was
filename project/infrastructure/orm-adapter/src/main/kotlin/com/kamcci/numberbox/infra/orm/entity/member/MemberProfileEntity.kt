@@ -2,6 +2,8 @@ package com.kamcci.numberbox.infra.orm.entity.member
 
 import com.kamcci.numberbox.app.domain.enumeration.ProfileType
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -62,4 +64,11 @@ class MemberProfileEntity {
      */
     @Column(length = 1, nullable = false)
     var aiContentsCnt: Int = 0
+
+    @Column(name = "sys_update_time", nullable = false)
+    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+
+    @CreationTimestamp
+    @Column(name = "sys_create_time", nullable = false)
+    var sysCreateTime: LocalDateTime = LocalDateTime.now()
 }

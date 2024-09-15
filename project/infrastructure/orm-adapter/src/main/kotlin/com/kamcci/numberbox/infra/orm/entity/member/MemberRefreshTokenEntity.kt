@@ -20,6 +20,9 @@ class MemberRefreshTokenEntity {
     @Column(name = "user_uniq_id", nullable = false)
     var memberId: UUID? = null
 
+    @Column(name = "sys_update_time", nullable = false)
+    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+
     @Column(name = "token_create_date", nullable = false)
     @CreationTimestamp
     var sysCreateTime: LocalDateTime = LocalDateTime.now()
