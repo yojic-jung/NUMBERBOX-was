@@ -28,19 +28,21 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             // 클라이언트 토큰 추출
-            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME).split(" ")[1];
-            String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
+            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME);
+            if(accessToken != null && !accessToken.isBlank()) {
 
-            // 클라이언트 인증 객체 생성
-            JwtAuthenticationToken authRequest = new JwtAuthenticationToken(accessToken, null, null);
-            authRequest.setDetails(refreshToken);
+                String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
 
-            // 인증 요청
-            Authentication authentication = authenticationManager.authenticate(authRequest);
+                // 클라이언트 인증 객체 생성
+                JwtAuthenticationToken authRequest = new JwtAuthenticationToken(accessToken, null, null);
+                authRequest.setDetails(refreshToken);
 
-            // SecurityContextHolder에 인증정보 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 인증 요청
+                Authentication authentication = authenticationManager.authenticate(authRequest);
 
+                // SecurityContextHolder에 인증정보 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
             filterChain.doFilter(request, response);
         } catch(Exception exception) {
             // 인증 실패 핸들러 호출

@@ -48,8 +48,8 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/public/*").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/public/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/public/**").permitAll()
                         .requestMatchers(HttpMethod.POST, authUrlProperty.process()).permitAll()
                         .requestMatchers(HttpMethod.POST, authUrlProperty.fail()).permitAll()
 

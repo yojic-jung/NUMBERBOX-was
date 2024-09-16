@@ -79,11 +79,11 @@ class MemberSignupService(
     private fun validate(signUpDto: MemberSignUpDto): MemberSignUpResultVo? {
         val emailVerifyCodeVo = emailVerifyCodeReadRepository.findByEmail(signUpDto.email)
             ?: throw BusinessInValidException("이메일 검증 코드 미존재시 회원가입이 불가합니다.")
-
         val duration = Duration.between(emailVerifyCodeVo.sysCreateTime, LocalDateTime.now())
 
         // 1. 이메일 인증 코드 만료여부 체크
         if (duration.seconds > EMAIL_CODE_EXPIRE_TIME) return MemberSignUpResultVo(false, EXPIRED_MSG)
+
         // 2. 이메일 코드 일치 여부 체크
         if (!signUpDto.emailVerifyCode.equals(emailVerifyCodeVo.verifyCode)) {
             return MemberSignUpResultVo(false, NOT_MATCH_CODE_MSG)

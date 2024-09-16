@@ -32,7 +32,11 @@ class MemberSignupController(
     }
 
     @PostMapping("/signUp")
-    fun signup(req: MemberSignupRequest): ResponseEntity<ResponseData<MemberSignUpResultVo>> {
+    fun signup(
+        @Valid
+        @RequestBody
+        req: MemberSignupRequest
+    ): ResponseEntity<ResponseData<MemberSignUpResultVo>> {
         val memberSignUpDto = signupMapper.toDto(req)
         val memberPrivateSignupDto = signupMapper.toPrivateDto(req.privateInfo)
 

@@ -14,21 +14,21 @@ import kotlin.reflect.KClass
     AnnotationTarget.FIELD,
     AnnotationTarget.VALUE_PARAMETER,
 )
-@Constraint(validatedBy = [EmailCheckValidator::class])
-annotation class EmailChecker(
-    val message: String = "유효한 이메일 형식이 아닙니다.",
+@Constraint(validatedBy = [PasswordCheckValidator::class])
+annotation class PasswordCheck(
+    val message: String = "유효한 비밀번호 형식이 아닙니다.",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
 )
 
 /** 1. validator */
 @Component
-class EmailCheckValidator(
-    @Value("\${member.email.regex}")
+class PasswordCheckValidator(
+    @Value("\${regex.member.password}")
     private val emailRegex: String
-) : ConstraintValidator<EmailChecker, String> {
+) : ConstraintValidator<PasswordCheck, String> {
     private lateinit var regexPattern: Regex
-    override fun initialize(constraintAnnotation: EmailChecker?) {
+    override fun initialize(constraintAnnotation: PasswordCheck?) {
         // Regex 객체 초기화
         regexPattern = Regex(emailRegex)
     }
