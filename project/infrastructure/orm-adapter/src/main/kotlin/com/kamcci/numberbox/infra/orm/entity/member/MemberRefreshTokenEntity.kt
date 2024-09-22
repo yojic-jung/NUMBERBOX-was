@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Table(name = "refresh_token_info")
+@Table(name = "member_refresh_token")
 class MemberRefreshTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +17,13 @@ class MemberRefreshTokenEntity {
     var token: String = ""
 
     @NotNull
-    @Column(name = "user_uniq_id", nullable = false)
+    @Column(name = "member_id", nullable = false)
     var memberId: UUID? = null
 
     @Column(name = "sys_update_time", nullable = false)
-    var sysUpdateTime: LocalDateTime? = LocalDateTime.now()
+    var sysUpdateTime: LocalDateTime = LocalDateTime.now()
 
-    @Column(name = "token_create_date", nullable = false)
+    @Column(name = "sys_create_time", nullable = false)
     @CreationTimestamp
     var sysCreateTime: LocalDateTime = LocalDateTime.now()
 }

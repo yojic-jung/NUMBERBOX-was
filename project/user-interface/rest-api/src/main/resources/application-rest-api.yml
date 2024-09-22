@@ -20,7 +20,7 @@ auth:
     url:
       process: /login/general
       fail: /login/fail
-
+      logout: /logout
 
 regex:
   member:

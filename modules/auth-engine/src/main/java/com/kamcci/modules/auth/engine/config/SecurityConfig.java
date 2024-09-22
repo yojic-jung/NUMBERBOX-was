@@ -2,7 +2,9 @@ package com.kamcci.modules.auth.engine.config;
 
 import com.kamcci.modules.auth.engine.filter.JwtRequestAuthFilter;
 import com.kamcci.modules.auth.engine.filter.LoginRequestAuthFilter;
+import com.kamcci.modules.auth.engine.handler.JwtLogoutSuccessHandler;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,22 +17,24 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ACCESS_TOKEN_NAME;
-import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_NAME;
+import static com.kamcci.modules.auth.control.config.AuthConstantConfig.*;
 
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(value = {AuthUrlProperty.class})
 public class SecurityConfig {
     private final AuthUrlProperty authUrlProperty;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public SecurityConfig(AuthUrlProperty authUrlProperty) {
+    public SecurityConfig(AuthUrlProperty authUrlProperty, ApplicationEventPublisher eventPublisher) {
         this.authUrlProperty = authUrlProperty;
+        this.eventPublisher = eventPublisher;
     }
 
     @Bean
@@ -47,15 +51,18 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        // 모든 http에 public
+                        .requestMatchers("/public/**").permitAll()
+                        // 내부 에러 처리 컨트롤러로 전달
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/public/**").permitAll()
+                        // 로그인 요청
                         .requestMatchers(HttpMethod.POST, authUrlProperty.process()).permitAll()
+                        // 로그인 실패시
                         .requestMatchers(HttpMethod.POST, authUrlProperty.fail()).permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/delRefreshToken").hasAnyRole("USER")
+
                         .requestMatchers(HttpMethod.GET, "/takeResource").permitAll()
                         .requestMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()
@@ -168,6 +175,15 @@ public class SecurityConfig {
                 .addFilterAt(loginRequestAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class)
                 .exceptionHandling(customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint));
+
+        // logout
+        http.logout(logout -> logout
+                // 로그아웃 url
+                .logoutRequestMatcher(new AntPathRequestMatcher(authUrlProperty.logout(), HttpMethod.POST.name()))
+                // 로그아웃 성공 핸들러
+                .logoutSuccessHandler(new JwtLogoutSuccessHandler(eventPublisher))
+                // 로그아웃 시 쿠키 삭제
+                .deleteCookies(REFRESH_TOKEN_NAME));
         return http.build();
     }
 

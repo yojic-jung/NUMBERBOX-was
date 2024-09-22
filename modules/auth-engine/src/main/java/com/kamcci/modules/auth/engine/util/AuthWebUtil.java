@@ -44,11 +44,11 @@ public class AuthWebUtil {
      * 200 성공 응답 전송
      */
     public static void responseOK(HttpServletResponse response, boolean showMsg, String message) {
-        sendResponse(response, AuthResponse.OK.statusCode, showMsg, message);
+        sendResponse(response, AuthResponse.LOGIN_OK.statusCode, showMsg, message);
     }
 
     public static void responseOK(HttpServletResponse response, String message) {
-        sendResponse(response, AuthResponse.OK.statusCode, true, message);
+        sendResponse(response, AuthResponse.LOGIN_OK.statusCode, true, message);
     }
 
     private static void sendResponse(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
