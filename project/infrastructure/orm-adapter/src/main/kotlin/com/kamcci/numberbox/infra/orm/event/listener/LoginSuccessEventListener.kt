@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.infra.orm.event.listener
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
+import com.kamcci.numberbox.infra.orm.adapter.member.MemberRefreshTokenRepository
+import com.kamcci.numberbox.infra.orm.adapter.member.MemberRepositorySupport
 import com.kamcci.numberbox.infra.orm.factory.member.MemberRefreshTokenFactory
-import com.kamcci.numberbox.infra.orm.repository.member.MemberRefreshTokenRepository
-import com.kamcci.numberbox.infra.orm.repository.member.MemberRepositoryImpl
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -14,7 +14,7 @@ import java.util.*
  */
 @Component
 class LoginSuccessEventListener(
-    private val memberRepository: MemberRepositoryImpl,
+    private val memberRepository: MemberRepositorySupport,
     private val memberRefreshTokenRepo: MemberRefreshTokenRepository,
 ) {
 

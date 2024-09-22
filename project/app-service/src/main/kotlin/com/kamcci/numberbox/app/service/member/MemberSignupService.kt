@@ -4,8 +4,9 @@ import com.kamcci.numberbox.app.domain.dto.member.*
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpResultVo.SignUpResultMSg.SUCCESS_MSG
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.email.sender.member.EmailVerifyCodeSender
-import com.kamcci.numberbox.app.repository.member.*
+import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
+import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
+import com.kamcci.numberbox.app.port.repository.member.*
 import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberSignupValidator
 import java.util.*
@@ -13,18 +14,18 @@ import java.util.*
 @UseCase
 class MemberSignupService(
     // 이메일 검증
-    private val emailVerifyCodeSaveDto: MemberEmailVerifyCodeModifyRepository,
+    private val emailVerifyCodeSaveDto: MemberEmailVerifyCodeModifyOrmPort,
     // 회원가입 유효성 검증
     private val memberSignupValidator: MemberSignupValidator,
     // 메일 처리기
-    private val emailVerifyCodeSender: EmailVerifyCodeSender,
+    private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
     // 계정 영속화 repository
-    private val memberSaveRepo: MemberSaveRepository,
-    private val roleSaveRepo: MemberRoleSaveRepository,
-    private val profileSaveRepo: MemberProfileSaveRepository,
-    private val privateSaveRepo: MemberPrivateSaveRepository,
+    private val memberSaveRepo: MemberSaveOrmPort,
+    private val roleSaveRepo: MemberRoleSaveOrmPort,
+    private val profileSaveRepo: MemberProfileSaveOrmPort,
+    private val privateSaveRepo: MemberPrivateSaveOrmPort,
 ) : MemberSignupUseCase {
 
 
@@ -36,7 +37,7 @@ class MemberSignupService(
 
         // 검증 코드 이메일 발송
         val message = MemberEmailCodeMessageDto(email, code)
-        emailVerifyCodeSender.send(message)
+        memberVerifyCodeEmailPort.send(message)
 
         // 검증 코드 저장
         return emailVerifyCodeSaveDto.save(emailCodeSaveDto)

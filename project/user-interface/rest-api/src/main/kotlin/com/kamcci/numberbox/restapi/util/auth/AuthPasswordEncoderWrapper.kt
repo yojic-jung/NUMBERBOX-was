@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.util.auth
 
 import com.kamcci.modules.auth.control.util.AuthPasswordEncoder
-import com.kamcci.numberbox.app.repository.member.MemberPasswordEncoder
+import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component

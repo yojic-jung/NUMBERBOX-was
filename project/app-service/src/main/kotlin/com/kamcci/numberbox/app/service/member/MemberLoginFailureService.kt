@@ -3,17 +3,17 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.repository.member.MemberModifyRepository
-import com.kamcci.numberbox.app.repository.member.MemberReadRepository
-import com.kamcci.numberbox.app.repository.member.MemberRoleModifyRepository
+import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
+import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.repository.member.MemberRoleModifyOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
 import java.time.LocalDateTime
 
 @UseCase
 class MemberLoginFailureService(
-    private val memberReadRepository: MemberReadRepository,
-    private val memberModifyRepository: MemberModifyRepository,
-    private val membersRoleModifyRepository: MemberRoleModifyRepository
+    private val memberReadOrmPort: MemberReadOrmPort,
+    private val memberModifyOrmPort: MemberModifyOrmPort,
+    private val membersRoleModifyRepository: MemberRoleModifyOrmPort
 ) : MemberLoginFailureUsecase {
     companion object {
         // 계정 비활성화 실패 카운트 기준
@@ -25,34 +25,34 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val id = memberReadRepository.findIdByEmail(email) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
+        val id = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
         val failCount =
-            memberReadRepository.findFailCountById(id) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.findFailCountById(id) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount == DISABLE_COUNT) {
             membersRoleModifyRepository.updateEnabledById(id, false)
         }
         // 실패 카운트 +1
-        memberModifyRepository.updateFailCountById(id, failCount + 1)
+        memberModifyOrmPort.updateFailCountById(id, failCount + 1)
         return failCount >= DISABLE_COUNT
     }
 
     @TXExecute
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
-        val userId = memberReadRepository.findIdByEmail(email) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
+        val userId = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
         val lastFailTime: LocalDateTime =
-            memberReadRepository.findLastFailTimeById(userId) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.findLastFailTimeById(userId) ?: throw BusinessSeverException("존재하지 않는 계정입니다.")
 
         val isAfterLockTime = lastFailTime.plusMinutes(DISABLE_LOCK_TIME).isBefore(LocalDateTime.now())
 
         // 비활성화 잠금 시간 지나면 enabled=true, failCount=0로 변경(로그인 시도 가능하도록)
         if (isAfterLockTime) {
             membersRoleModifyRepository.updateEnabledById(userId, false)
-            memberModifyRepository.updateFailCountById(userId, 0)
+            memberModifyOrmPort.updateFailCountById(userId, 0)
         } else {
             // 비활성화 잠금 시간이 지나지 않으면 마지막 실패 시간만 변경(지속적으로 실패시 계정 잠금시간을 늘리기 위하여)
-            memberModifyRepository.updateLastFailTimeById(userId, LocalDateTime.now())
+            memberModifyOrmPort.updateLastFailTimeById(userId, LocalDateTime.now())
         }
         return isAfterLockTime
     }
