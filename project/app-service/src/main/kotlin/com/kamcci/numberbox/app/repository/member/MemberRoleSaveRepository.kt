@@ -6,5 +6,5 @@ interface MemberRoleSaveRepository {
     /**
      * user 권한 사용자 권한 생성
      */
-    fun saveUserRole(uuid: UUID)
+    fun saveUserRole(memberId: UUID): Long
 }

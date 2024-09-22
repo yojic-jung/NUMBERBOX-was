@@ -9,8 +9,8 @@ import java.util.*
 
 @Repository
 class MemberPrivateSaveRepositoryImpl : MemberPrivateSaveRepository, BaseRepository() {
-    override fun save(uuid: UUID, privateSignUpDto: MemberPrivateSignUpDto): UUID {
-        val memberPrivateEntity = MemberPrivateFactory.getSaveEntity(uuid, privateSignUpDto)
+    override fun save(memberId: UUID, privateSignUpDto: MemberPrivateSignUpDto): UUID {
+        val memberPrivateEntity = MemberPrivateFactory.getSaveEntity(memberId, privateSignUpDto)
         em.persist(memberPrivateEntity)
         return memberPrivateEntity.memberId!!
     }

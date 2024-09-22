@@ -1,12 +1,15 @@
 package com.kamcci.numberbox.infra.orm.factory.member
 
+import com.kamcci.numberbox.infra.orm.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.entity.member.MemberRoleEntity
-import java.util.*
 
 object MemberRoleFactory {
-    fun getUserRoleEntity(uuid: UUID) =
-        MemberRoleEntity().apply {
-            member.id = uuid
+    fun getUserRoleEntity(memberEntity: MemberEntity): MemberRoleEntity {
+        MemberEntity()
+        return MemberRoleEntity().apply {
+            member = memberEntity
             roleName = "USER"
         }
+    }
+
 }

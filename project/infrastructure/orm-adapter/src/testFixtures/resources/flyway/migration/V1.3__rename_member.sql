@@ -1,0 +1,1 @@
+RENAME TABLE email_id_code to members_email_veify_code;

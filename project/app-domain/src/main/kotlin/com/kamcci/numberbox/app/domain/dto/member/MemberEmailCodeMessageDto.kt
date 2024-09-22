@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.dto.member
 /**
  * 이메일 검증 코드 메시지 양식
  */
-data class EmailCodeMessageDto(
+data class MemberEmailCodeMessageDto(
     val recipientEmail: String, // 수신인
     val verifyCode: String // 검증 코드
 ) {

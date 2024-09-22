@@ -12,12 +12,13 @@ class MemberRepositoryImpl : BaseRepository() {
         userUniqId: UUID,
         failCount: Int,
         humanStatus: Int,
-    ) {
-        queryFactory
+    ): Boolean {
+        return queryFactory
             .update(memberEntity)
             .set(memberEntity.lastLoginTime, LocalDateTime.now())
             .set(memberEntity.failCount, failCount)
             .set(memberEntity.humanStatus, humanStatus)
             .where(memberEntity.id.eq(userUniqId))
+            .execute() > 0
     }
 }

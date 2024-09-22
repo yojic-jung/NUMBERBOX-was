@@ -8,8 +8,9 @@ import java.time.LocalDateTime
 @Table(name = "members_role")
 class MemberRoleEntity {
     @Id
+    @Column(name = "seq_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var seqNo: Long = 0
+    var id: Long = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_uniq_id")

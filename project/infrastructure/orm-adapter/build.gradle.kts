@@ -5,6 +5,7 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("java-test-fixtures")
 
     kotlin("jvm")
     kotlin("kapt") version "1.9.22"
@@ -58,11 +59,21 @@ dependencies {
     // java-uuid-generator
     implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
 
-    implementation(project(":modules:auth-control"))
-
     // kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // test
+    testImplementation("org.flywaydb:flyway-core")
+    testImplementation("org.flywaydb:flyway-mysql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-test")
+    testFixturesImplementation("org.flywaydb:flyway-core")
+    testFixturesImplementation("org.flywaydb:flyway-mysql")
+
+    testFixturesImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testFixturesImplementation("org.testcontainers:mysql")
+    testFixturesImplementation("org.testcontainers:jdbc")
 }
 
 tasks.withType<KotlinCompile> {

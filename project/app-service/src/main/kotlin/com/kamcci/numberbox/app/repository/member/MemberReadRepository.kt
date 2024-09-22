@@ -5,11 +5,11 @@ import java.util.*
 
 interface MemberReadRepository {
 
-    fun findIdByEmail(email: String): UUID
+    fun findIdByEmail(email: String): UUID?
 
-    fun findFailCountById(id: UUID): Int
+    fun findFailCountById(id: UUID): Int?
 
-    fun findLastFailTimeById(id: UUID): LocalDateTime
+    fun findLastFailTimeById(id: UUID): LocalDateTime?
 
     fun existsByEmail(email: String): Boolean
 }

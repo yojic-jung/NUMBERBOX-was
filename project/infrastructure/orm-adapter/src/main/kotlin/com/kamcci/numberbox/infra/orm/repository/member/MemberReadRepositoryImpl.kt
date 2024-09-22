@@ -13,7 +13,7 @@ class MemberReadRepositoryImpl : MemberReadRepository, BaseRepository() {
             .select(memberEntity.id)
             .from(memberEntity)
             .where(memberEntity.email.eq(email))
-            .fetchOne()!!
+            .fetchOne()
 
 
     override fun findFailCountById(id: UUID) =
@@ -21,14 +21,14 @@ class MemberReadRepositoryImpl : MemberReadRepository, BaseRepository() {
             .select(memberEntity.failCount)
             .from(memberEntity)
             .where(memberEntity.id.eq(id))
-            .fetchOne()!!
+            .fetchOne()
 
     override fun findLastFailTimeById(id: UUID) =
         queryFactory
             .select(memberEntity.lastFailTime)
             .from(memberEntity)
             .where(memberEntity.id.eq(id))
-            .fetchOne()!!
+            .fetchOne()
 
     override fun existsByEmail(email: String): Boolean =
         queryFactory
