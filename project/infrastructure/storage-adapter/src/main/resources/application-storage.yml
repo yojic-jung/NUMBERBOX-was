@@ -1,0 +1,8 @@
+cloud:
+  aws:
+    s3:
+      credentials:
+        accessKey: ${prod.cloud.aws.s3.credentials.accessKey}
+        secretKey: ${prod.cloud.aws.s3.credentials.secretKey}
+      bucket: ${prod.cloud.aws.s3.bucket}
+      region: ${prod.cloud.aws.s3.region}

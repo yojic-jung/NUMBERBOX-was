@@ -3,8 +3,8 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpResultVo
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpResultVo.SignUpResultMSg.EXPIRED_MSG
+import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
+import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.EXPIRED_MSG
 import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
 import com.kamcci.numberbox.restapi.mapper.member.MemberSignupMapper
 import org.junit.jupiter.api.Test

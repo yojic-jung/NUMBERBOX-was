@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.domain.enumeration
+package com.kamcci.numberbox.app.domain.enumeration.member
 
 enum class ProfileType(val id: Int, val desc: String) {
     None(0, "미등록"),

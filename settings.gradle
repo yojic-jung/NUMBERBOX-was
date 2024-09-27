@@ -17,6 +17,7 @@ include(":project:rest-api")
 
 include(":project:infrastructure")
 include(":project:infrastructure:orm-adapter")
+include(":project:infrastructure:storage-adapter")
 include(":project:infrastructure:email-adapter")
 
 include(":project:user-interface")
@@ -27,4 +28,5 @@ include(":modules:auth-control")
 include(":modules:auth-engine")
 include(":modules:mail-sender-control")
 include(":modules:mail-sender-engine")
+
 include(":modules:system-construction")

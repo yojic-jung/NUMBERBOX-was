@@ -1,10 +1,10 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpResultVo
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpResultVo.SignUpResultMSg.*
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
+import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.*
 import com.kamcci.numberbox.app.port.repository.member.MemberEmailVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberSignupValidator

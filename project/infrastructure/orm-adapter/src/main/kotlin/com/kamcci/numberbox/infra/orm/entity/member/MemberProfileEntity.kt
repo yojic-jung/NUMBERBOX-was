@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.entity.member
 
-import com.kamcci.numberbox.app.domain.enumeration.ProfileType
+import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -22,7 +22,7 @@ class MemberProfileEntity {
      * MemberEntity.userUniqId
      */
     @Column(name = "user_uniq_id", columnDefinition = "BINARY(16)", updatable = false)
-    var userUniqId: UUID? = null
+    var memberId: UUID? = null
 
     /**
      * 별명

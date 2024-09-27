@@ -38,3 +38,6 @@ out/
 
 *.hwp
 *.log
+
+# 모든 -env.yml 파일 무시
+*-env.yml

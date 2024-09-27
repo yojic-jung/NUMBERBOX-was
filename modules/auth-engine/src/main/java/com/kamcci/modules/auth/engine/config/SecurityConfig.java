@@ -179,7 +179,7 @@ public class SecurityConfig {
         // logout
         http.logout(logout -> logout
                 // 로그아웃 url
-                .logoutRequestMatcher(new AntPathRequestMatcher(authUrlProperty.logout(), HttpMethod.POST.name()))
+                .logoutRequestMatcher(new AntPathRequestMatcher(authUrlProperty.logout(), HttpMethod.DELETE.name()))
                 // 로그아웃 성공 핸들러
                 .logoutSuccessHandler(new JwtLogoutSuccessHandler(eventPublisher))
                 // 로그아웃 시 쿠키 삭제

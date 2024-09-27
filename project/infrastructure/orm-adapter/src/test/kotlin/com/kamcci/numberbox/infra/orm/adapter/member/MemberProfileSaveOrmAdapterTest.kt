@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.domain.enumeration.ProfileType
+import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.entity.member.MemberProfileEntity
 import jakarta.persistence.EntityManager

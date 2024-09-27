@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.domain.dto.member
+package com.kamcci.numberbox.app.domain.vo.member
 
 import java.time.LocalDateTime
 

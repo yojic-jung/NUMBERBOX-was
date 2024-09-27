@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.converter
 
-import com.kamcci.numberbox.app.domain.enumeration.ProfileType
+import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
 
