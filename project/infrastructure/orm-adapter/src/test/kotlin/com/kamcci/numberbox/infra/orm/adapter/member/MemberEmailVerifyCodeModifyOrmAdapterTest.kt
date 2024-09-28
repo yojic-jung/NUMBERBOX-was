@@ -13,7 +13,7 @@ class MemberEmailVerifyCodeModifyOrmAdapterTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired
-    private val emailVerifyCodeModifyRepoImpl: MemberEmailVerifyCodeModifyOrmAdapter
+    private val emailVerifyCodeModifyRepoImpl: MemberEmailVerifyCodeSaveOrmAdapter
 ) {
     companion object {
         const val EMAIL = "test1234535@test.com"

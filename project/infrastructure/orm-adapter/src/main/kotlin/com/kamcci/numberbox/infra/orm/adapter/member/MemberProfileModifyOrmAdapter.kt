@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.port.repository.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
@@ -10,19 +11,29 @@ import java.util.*
 @Repository
 class MemberProfileModifyOrmAdapter : MemberProfileModifyOrmPort, BaseRepository() {
 
-    override fun modifyProfileTypeByMemberId(memberId: UUID, profileType: ProfileType) {
-        queryFactory
+    override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Long {
+        return queryFactory
             .update(memberProfileEntity)
             .set(memberProfileEntity.profileType, profileType)
             .where(memberProfileEntity.memberId.eq(memberId))
             .execute()
     }
 
-    override fun modifyImgByMemberId() {
+    override fun updateImgByMemberId(profileImgUpdtDto: MemberProfileImgUpdtDto): Long {
+        return queryFactory
+            .update(memberProfileEntity)
+            .set(memberProfileEntity.profileImgPath, profileImgUpdtDto.profileImgPath)
+            .set(memberProfileEntity.profileImgName, profileImgUpdtDto.profileImgName)
+            .where(memberProfileEntity.memberId.eq(profileImgUpdtDto.memberId))
+            .execute()
     }
 
-    override fun modifyNicknameByMemberId() {
-        TODO("Not yet implemented")
+    override fun updateNicknameByMemberId(memberId: UUID, nickname: String): Long {
+        return queryFactory
+            .update(memberProfileEntity)
+            .set(memberProfileEntity.nickname, nickname)
+            .where(memberProfileEntity.memberId.eq(memberId))
+            .execute()
     }
 
 }

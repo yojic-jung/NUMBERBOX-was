@@ -9,12 +9,12 @@ import java.util.*
  */
 interface MemberProfileModifyUseCase {
     // 프로필 타입 변경
-    fun modifyProfileTypeByMemberId(memberId: UUID, profileType: ProfileType)
+    fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Boolean
 
     // 프로필 이미지 변경
-    fun modifyImgByMemberId(memberId: UUID, file: File)
+    fun updateImgByMemberId(memberId: UUID, file: File): Boolean
 
     // 닉네임 변경
-    fun modifyNicknameByMemberId(memberId: UUID)
+    fun updateNicknameByMemberId(memberId: UUID, nickname: String): Boolean
 
 }

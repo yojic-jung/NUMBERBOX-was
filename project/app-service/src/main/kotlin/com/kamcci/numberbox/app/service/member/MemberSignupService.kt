@@ -18,7 +18,7 @@ import java.util.*
 @UseCase
 class MemberSignupService(
     // 이메일 검증
-    private val emailVerifyCodeSaveDto: MemberEmailVerifyCodeModifyOrmPort,
+    private val emailVerifyCodeSaveDto: MemberEmailVerifyCodeSaveOrmPort,
     // 회원가입 유효성 검증
     private val memberSignupValidator: MemberSignupValidator,
     // 메일 처리기
