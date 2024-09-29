@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.storage.adapter.service
 
-import com.kamcci.numberbox.app.domain.dto.port.storage.FileUploadDto
+import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,9 +19,8 @@ class AwsS3StorageTest {
         // File 객체 생성
         val file = File("src/test/resources/dummy/test.txt")
 
-        // S3에 업로드할 파일 이름 지정
-        val fileUploadDto = FileUploadDto("test/test.txt", file)
-        val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
+        // S3에 업로드
+        val fileUrl = awsS3UploadStorage.upload(file, FileType.HwpToHTML)
 
         // then
         assertThat(fileUrl).isNotNull()

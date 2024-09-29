@@ -33,8 +33,8 @@ class MemberProfileModifyService(
         val updtCnt = memberProfileModifyOrmPort.updateImgByMemberId(imgUpdtDto)
 
         // 4. 이미 존재하는 프로필 이미지 삭제
-        val filePath = profileImgVo.profileImgPath
-        val fileName = profileImgVo.profileImgName
+        val filePath = profileImgVo?.profileImgPath
+        val fileName = profileImgVo?.profileImgName
         if (!fileName.isNullOrEmpty() && !filePath.isNullOrEmpty()) {
             // 이미지 삭제
             fileStorage.delete("$filePath$fileName")

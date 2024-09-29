@@ -9,17 +9,16 @@ import com.kamcci.numberbox.app.port.storage.FileStorage
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
 import org.springframework.stereotype.Service
 import java.io.File
-import java.time.LocalDateTime
-import java.util.*
 
 @Service
 class AwsS3Storage(
     private val awsS3Property: AwsS3Property,
-    private val s3Client: AmazonS3Client
+    private val s3Client: AmazonS3Client,
+    private val filePathMaker: FilePathMaker
 ) : FileStorage {
     override fun upload(file: File, fileType: FileType): FileNameDto {
         // 파일 경로 설정
-        val fileNameDto = makeFileNameByType(file, fileType)
+        val fileNameDto = filePathMaker.makeFileNameByType(file, fileType)
 
         // s3 저장 요청 객체 생성
         val putRequest =
@@ -35,22 +34,5 @@ class AwsS3Storage(
 
     override fun delete(fileName: String) {
         s3Client.deleteObject(awsS3Property.bucket, fileName)
-    }
-
-    // 파일 경로 설정
-    private fun makeFileNameByType(file: File, fileType: FileType): FileNameDto {
-        val now = LocalDateTime.now()
-        val currentTime = System.currentTimeMillis()
-        val randomValue: Int = Random().nextInt(100)
-
-        // 최상위 폴더 경로
-        val rootPath = fileType.path
-        // depth1 폴더
-        val depth1Path = "${fileType.actionId}${now.year}${now.month}"
-        // 신규 파일 이름(파일이름간 중복 제거 목적)
-        val fileName = "${currentTime}_${randomValue}_${file.name}"
-
-        // 파일 경로와 이름 반환
-        return FileNameDto("${rootPath}${depth1Path}", fileName)
     }
 }
