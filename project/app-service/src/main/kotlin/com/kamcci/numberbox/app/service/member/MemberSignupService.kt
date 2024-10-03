@@ -1,9 +1,10 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberEmailCodeMessageDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberEmailVerifyCodeSaveDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
@@ -18,7 +19,7 @@ import java.util.*
 @UseCase
 class MemberSignupService(
     // 이메일 검증
-    private val emailVerifyCodeSaveDto: MemberEmailVerifyCodeSaveOrmPort,
+    private val emailVerifyCodeSaveDto: MemberVerifyCodeSaveOrmPort,
     // 회원가입 유효성 검증
     private val memberSignupValidator: MemberSignupValidator,
     // 메일 처리기
@@ -37,7 +38,7 @@ class MemberSignupService(
     override fun createEmailCode(email: String): Boolean {
         // 이메일 검증 코드 uuid 생성
         val code = UUID.randomUUID().toString()
-        val emailCodeSaveDto = MemberEmailVerifyCodeSaveDto(email, code)
+        val emailCodeSaveDto = MemberVerifyCodeSaveDto(email, VerifyCodeType.SignUp, code)
 
         // 검증 코드 이메일 발송
         val message = MemberEmailCodeMessageDto(email, code)

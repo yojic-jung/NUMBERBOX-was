@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.*
-import com.kamcci.numberbox.app.port.repository.member.MemberEmailVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,10 +16,10 @@ import java.util.*
 
 class MemberSignupValidatorServiceTest {
 
-    private val memberEmailVerifyCodeReadOrmPort: MemberEmailVerifyCodeReadOrmPort = mock()
+    private val memberVerifyCodeReadOrmPort: MemberVerifyCodeReadOrmPort = mock()
     private val memberReadOrmPort: MemberReadOrmPort = mock()
     private val memberSignupValidator =
-        MemberSignupValidatorService(memberEmailVerifyCodeReadOrmPort, memberReadOrmPort)
+        MemberSignupValidatorService(memberVerifyCodeReadOrmPort, memberReadOrmPort)
 
     companion object {
         const val EMAIL = "test@test.com"
@@ -33,7 +33,7 @@ class MemberSignupValidatorServiceTest {
 
     @Test
     fun `이메일 검증 코드 미존재 - 실패`() {
-        `when`(memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(null)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(null)
         // when & then
         assertThrows<BusinessInValidException> { memberSignupValidator.validate(signUpDto) }
     }
@@ -45,7 +45,7 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(181)
         )
-        `when`(memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
 
         // when
         val resultVo = memberSignupValidator.validate(signUpDto)!!
@@ -61,7 +61,7 @@ class MemberSignupValidatorServiceTest {
             verifyCode = "5c1d1a9a-3e12-488c-be48-88fdb92c2dd0",
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
 
         // when
         val resultVo = memberSignupValidator.validate(signUpDto)!!
@@ -77,7 +77,7 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
         `when`(memberReadOrmPort.existsByEmail(signUpDto.email)).thenReturn(true)
 
         // when
@@ -94,7 +94,7 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
         `when`(memberReadOrmPort.existsByEmail(signUpDto.email)).thenReturn(false)
 
         // when

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 @TcDBJpaTest
 class MemberEmailVerifyCodeReadOrmAdapterTest(
     @Autowired
-    private val memberEmailVerifyCodeReadRepo: MemberEmailVerifyCodeReadOrmAdapter
+    private val memberEmailVerifyCodeReadRepo: MemberVerifyCodeReadOrmAdapter
 ) {
     @Test
     fun `countByEmail - 성공`() {

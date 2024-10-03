@@ -3,9 +3,9 @@ package com.kamcci.numberbox.app.port.repository.member
 import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
 
 /**
- * Def. 이메일 검증 코드 영속화
+ * Def. 회원 검증 인증코드 영속화
  */
-interface MemberEmailVerifyCodeReadOrmPort {
+interface MemberVerifyCodeReadOrmPort {
     fun countByEmail(email: String): Long
 
     fun findByEmail(email: String): MemberEmailVerifyCodeVo?

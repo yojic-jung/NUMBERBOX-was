@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.entity.member
 
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -9,10 +10,13 @@ import java.time.LocalDateTime
 
 @Table(name = "members_veify_code")
 @Entity
-class MemberEmailVerifyCodeEntity {
+class MemberVerifyCodeEntity {
     @Id
     @Column(name = "email", nullable = false)
     var email: String? = null
+
+    @Column
+    var codeType: VerifyCodeType? = null
 
     @Column(name = "id_code", nullable = false)
     var verifyCode: String? = null

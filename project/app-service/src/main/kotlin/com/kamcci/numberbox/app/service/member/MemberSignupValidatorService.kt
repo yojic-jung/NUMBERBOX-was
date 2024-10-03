@@ -5,8 +5,8 @@ import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.*
-import com.kamcci.numberbox.app.port.repository.member.MemberEmailVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberSignupValidator
 import java.time.Duration
 import java.time.LocalDateTime
@@ -14,7 +14,7 @@ import java.util.*
 
 @UseCase
 class MemberSignupValidatorService(
-    private val memberEmailVerifyCodeReadOrmPort: MemberEmailVerifyCodeReadOrmPort,
+    private val memberVerifyCodeReadOrmPort: MemberVerifyCodeReadOrmPort,
     private val memberReadOrmPort: MemberReadOrmPort,
 ) : MemberSignupValidator {
     companion object {
@@ -23,7 +23,7 @@ class MemberSignupValidatorService(
     }
 
     override fun validate(signUpDto: MemberSignUpDto): MemberSignUpResultVo? {
-        val emailVerifyCodeVo = memberEmailVerifyCodeReadOrmPort.findByEmail(signUpDto.email)
+        val emailVerifyCodeVo = memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)
             ?: throw BusinessInValidException("이메일 검증 코드 미존재시 회원가입이 불가합니다.")
         val duration = Duration.between(emailVerifyCodeVo.sysCreateTime, LocalDateTime.now())
 

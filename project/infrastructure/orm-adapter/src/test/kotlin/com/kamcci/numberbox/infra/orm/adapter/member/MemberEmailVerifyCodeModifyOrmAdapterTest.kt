@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberEmailVerifyCodeSaveDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
 import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.entity.member.MemberEmailVerifyCodeEntity
+import com.kamcci.numberbox.infra.orm.entity.member.MemberVerifyCodeEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,7 +13,7 @@ class MemberEmailVerifyCodeModifyOrmAdapterTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired
-    private val emailVerifyCodeModifyRepoImpl: MemberEmailVerifyCodeSaveOrmAdapter
+    private val emailVerifyCodeModifyRepoImpl: MemberVerifyCodeSaveOrmAdapter
 ) {
     companion object {
         const val EMAIL = "test1234535@test.com"
@@ -22,12 +22,12 @@ class MemberEmailVerifyCodeModifyOrmAdapterTest(
 
     @Test
     fun `MemberEmailVerifyCodeEntity 영속화 - 성공`() {
-        val saveDto = MemberEmailVerifyCodeSaveDto(EMAIL, VERIFY_CODE)
+        val saveDto = MemberVerifyCodeSaveDto(EMAIL, VERIFY_CODE)
         emailVerifyCodeModifyRepoImpl.save(saveDto)
         entityManager.flush()
         entityManager.clear()
 
-        val saveEntity = entityManager.find(MemberEmailVerifyCodeEntity::class.java, EMAIL)
+        val saveEntity = entityManager.find(MemberVerifyCodeEntity::class.java, EMAIL)
 
         assertThat(saveEntity.email).isEqualTo(EMAIL)
         assertThat(saveEntity.verifyCode).isEqualTo(VERIFY_CODE)
