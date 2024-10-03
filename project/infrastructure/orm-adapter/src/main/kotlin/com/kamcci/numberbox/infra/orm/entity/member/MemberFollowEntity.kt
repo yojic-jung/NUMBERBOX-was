@@ -23,6 +23,4 @@ class MemberFollowEntity {
 class FollowUserDomain(
     val followingUserNo: Long,
     val followerUserNo: Long
-) : Serializable {
-    private val serialVersionUID = 1L
-}
+) : Serializable

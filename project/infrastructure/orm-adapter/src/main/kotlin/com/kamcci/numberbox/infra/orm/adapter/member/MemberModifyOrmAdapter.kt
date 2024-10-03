@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import org.springframework.stereotype.Repository
@@ -12,7 +13,7 @@ class MemberModifyOrmAdapter : MemberModifyOrmPort, BaseRepository() {
         TODO("Not yet implemented")
     }
 
-    override fun updatePassword(passwd: String): Boolean {
+    override fun updatePassword(passwordUpdtDto: MemberPasswdUpdtDto): Boolean {
         TODO("Not yet implemented")
     }
 

@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.entity.member.MemberVerifyCodeEntity
 import jakarta.persistence.EntityManager
@@ -9,11 +10,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MemberEmailVerifyCodeModifyOrmAdapterTest(
+class MemberVerifyCodeModifyOrmAdapterTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired
-    private val emailVerifyCodeModifyRepoImpl: MemberVerifyCodeSaveOrmAdapter
+    private val verifyCodeModifyRepoImpl: MemberVerifyCodeSaveOrmAdapter
 ) {
     companion object {
         const val EMAIL = "test1234535@test.com"
@@ -22,8 +23,8 @@ class MemberEmailVerifyCodeModifyOrmAdapterTest(
 
     @Test
     fun `MemberEmailVerifyCodeEntity 영속화 - 성공`() {
-        val saveDto = MemberVerifyCodeSaveDto(EMAIL, VERIFY_CODE)
-        emailVerifyCodeModifyRepoImpl.save(saveDto)
+        val saveDto = MemberVerifyCodeSaveDto(EMAIL, VerifyCodeType.SignUp, VERIFY_CODE)
+        verifyCodeModifyRepoImpl.save(saveDto)
         entityManager.flush()
         entityManager.clear()
 

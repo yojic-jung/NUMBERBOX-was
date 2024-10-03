@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
@@ -23,7 +24,7 @@ class MemberSignupValidatorService(
     }
 
     override fun validate(signUpDto: MemberSignUpDto): MemberSignUpResultVo? {
-        val emailVerifyCodeVo = memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)
+        val emailVerifyCodeVo = memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)
             ?: throw BusinessInValidException("이메일 검증 코드 미존재시 회원가입이 불가합니다.")
         val duration = Duration.between(emailVerifyCodeVo.sysCreateTime, LocalDateTime.now())
 

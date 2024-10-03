@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.*
@@ -33,7 +34,7 @@ class MemberSignupValidatorServiceTest {
 
     @Test
     fun `이메일 검증 코드 미존재 - 실패`() {
-        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(null)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(null)
         // when & then
         assertThrows<BusinessInValidException> { memberSignupValidator.validate(signUpDto) }
     }
@@ -45,7 +46,9 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(181)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+            memberEmailVerifyCodeVo
+        )
 
         // when
         val resultVo = memberSignupValidator.validate(signUpDto)!!
@@ -61,7 +64,9 @@ class MemberSignupValidatorServiceTest {
             verifyCode = "5c1d1a9a-3e12-488c-be48-88fdb92c2dd0",
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+            memberEmailVerifyCodeVo
+        )
 
         // when
         val resultVo = memberSignupValidator.validate(signUpDto)!!
@@ -77,7 +82,9 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+            memberEmailVerifyCodeVo
+        )
         `when`(memberReadOrmPort.existsByEmail(signUpDto.email)).thenReturn(true)
 
         // when
@@ -94,7 +101,9 @@ class MemberSignupValidatorServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email)).thenReturn(memberEmailVerifyCodeVo)
+        `when`(memberVerifyCodeReadOrmPort.findByEmail(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+            memberEmailVerifyCodeVo
+        )
         `when`(memberReadOrmPort.existsByEmail(signUpDto.email)).thenReturn(false)
 
         // when

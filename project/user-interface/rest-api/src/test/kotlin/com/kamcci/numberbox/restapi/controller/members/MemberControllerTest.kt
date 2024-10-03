@@ -5,9 +5,10 @@ import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.EXPIRED_MSG
-import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeSaveUseCase
 import com.kamcci.numberbox.restapi.config.WebConfig
-import com.kamcci.numberbox.restapi.mapper.member.MemberSignupMapper
+import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -23,16 +24,20 @@ import java.util.*
 
 
 @ActiveProfiles("rest-api")
-@WebMvcTest(MemberSignupController::class)
-class MemberSignupControllerTest {
+@WebMvcTest(MemberController::class)
+class MemberControllerTest {
+    @MockBean
+    lateinit var memberModifyUseCase: MemberModifyUseCase
+
+    @MockBean
+    lateinit var memberVerifyCodeSaveUseCase: MemberVerifyCodeSaveUseCase
+
     @MockBean
     lateinit var tokenResponseService: TokenResponseService
 
     @MockBean
-    lateinit var signupUseCase: MemberSignupUseCase
+    lateinit var memberMapper: MemberMapper
 
-    @MockBean
-    lateinit var signupMapper: MemberSignupMapper
 
     @MockBean
     private lateinit var webConfig: WebConfig
@@ -102,9 +107,9 @@ class MemberSignupControllerTest {
         val memberSignUpDto = MemberSignUpDto(EMAIL, PW, UUID.fromString(VERIFY_CODE))
         val memberPrivateSignupDto = null
         val mockMemberSignUpResultVo = MemberSignUpResultVo(false, EXPIRED_MSG)
-        `when`(signupMapper.toDto(any())).thenReturn(memberSignUpDto)
-        `when`(signupMapper.toPrivateDto(any())).thenReturn(memberPrivateSignupDto)
-        `when`(signupUseCase.signup(memberSignUpDto, memberPrivateSignupDto))
+        `when`(memberMapper.toSignupDto(any())).thenReturn(memberSignUpDto)
+        `when`(memberMapper.toSignupPrivateDto(any())).thenReturn(memberPrivateSignupDto)
+        `when`(memberModifyUseCase.signup(memberSignUpDto, memberPrivateSignupDto))
             .thenReturn(mockMemberSignUpResultVo)
 
         val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
@@ -132,9 +137,9 @@ class MemberSignupControllerTest {
         val memberSignUpDto = MemberSignUpDto(EMAIL, PW, UUID.fromString(VERIFY_CODE))
         val memberPrivateSignupDto = null
         val mockMemberSignUpResultVo = MemberSignUpResultVo(false, EXPIRED_MSG)
-        `when`(signupMapper.toDto(any())).thenReturn(memberSignUpDto)
-        `when`(signupMapper.toPrivateDto(any())).thenReturn(memberPrivateSignupDto)
-        `when`(signupUseCase.signup(memberSignUpDto, memberPrivateSignupDto))
+        `when`(memberMapper.toSignupDto(any())).thenReturn(memberSignUpDto)
+        `when`(memberMapper.toSignupPrivateDto(any())).thenReturn(memberPrivateSignupDto)
+        `when`(memberModifyUseCase.signup(memberSignUpDto, memberPrivateSignupDto))
             .thenReturn(mockMemberSignUpResultVo)
 
         //when
