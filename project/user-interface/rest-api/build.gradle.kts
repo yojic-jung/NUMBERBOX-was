@@ -33,7 +33,6 @@ dependencies {
 
     implementation(project(":modules:auth-control"))
 
-
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 

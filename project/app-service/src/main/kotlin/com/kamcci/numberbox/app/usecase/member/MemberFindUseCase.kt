@@ -8,7 +8,7 @@ interface MemberFindUseCase {
      * 이메일 찾기
      * todo 임의 난수 코드
      */
-    fun findMyEmail(userName: String, phoneNumber: String): String
+    fun findEmail(userName: String, phoneNumber: String): String
 
     /**
      * 비밀번호 찾기(이메일로 임시 비밀번호 발급)

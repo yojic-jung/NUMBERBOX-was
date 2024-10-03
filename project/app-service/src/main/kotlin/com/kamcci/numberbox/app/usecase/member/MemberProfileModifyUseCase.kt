@@ -16,5 +16,4 @@ interface MemberProfileModifyUseCase {
 
     // 닉네임 변경
     fun updateNicknameByMemberId(memberId: UUID, nickname: String): Boolean
-
 }

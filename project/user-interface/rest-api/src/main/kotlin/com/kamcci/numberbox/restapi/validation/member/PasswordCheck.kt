@@ -25,12 +25,12 @@ annotation class PasswordCheck(
 @Component
 class PasswordCheckValidator(
     @Value("\${regex.member.password}")
-    private val emailRegex: String
+    private val passwordRegex: String
 ) : ConstraintValidator<PasswordCheck, String> {
     private lateinit var regexPattern: Regex
     override fun initialize(constraintAnnotation: PasswordCheck?) {
         // Regex 객체 초기화
-        regexPattern = Regex(emailRegex)
+        regexPattern = Regex(passwordRegex)
     }
 
     override fun isValid(

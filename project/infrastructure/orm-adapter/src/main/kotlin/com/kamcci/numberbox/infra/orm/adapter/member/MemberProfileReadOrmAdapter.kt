@@ -30,6 +30,31 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .fetchOne()
     }
 
+    override fun findByProfileId(profileId: Long): MemberProfileVo? {
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    MemberProfileVo::class.java,
+                    memberProfileEntity.id,
+                    Expressions.constant(profileId),
+                    memberProfileEntity.profileImgName,
+                    memberProfileEntity.profileImgPath,
+                    memberProfileEntity.profileType,
+                )
+            )
+            .from(QMemberEntity.memberEntity)
+            .where(memberProfileEntity.id.eq(profileId))
+            .fetchOne()
+    }
+
+    override fun findProfileIdByMemberId(memberId: UUID): Long? {
+        return queryFactory
+            .select(memberProfileEntity.id)
+            .from(memberProfileEntity)
+            .where(memberProfileEntity.memberId.eq(memberId))
+            .fetchOne()
+    }
+
     override fun findProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
         return queryFactory
             .select(
@@ -45,4 +70,22 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .where(memberProfileEntity.memberId.eq(memberId))
             .fetchOne()
     }
+
+    override fun findByProfileIdList(profileId: List<Long>): List<MemberProfileVo> {
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    MemberProfileVo::class.java,
+                    memberProfileEntity.id,
+                    Expressions.constant(profileId),
+                    memberProfileEntity.profileImgName,
+                    memberProfileEntity.profileImgPath,
+                    memberProfileEntity.profileType,
+                )
+            )
+            .from(QMemberEntity.memberEntity)
+            .where(memberProfileEntity.id.`in`(profileId))
+            .fetch()
+    }
+
 }

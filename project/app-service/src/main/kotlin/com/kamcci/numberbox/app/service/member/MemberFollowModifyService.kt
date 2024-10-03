@@ -1,0 +1,21 @@
+package com.kamcci.numberbox.app.service.member
+
+import com.kamcci.numberbox.app.domain.system_construction.TXExecute
+import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.port.repository.member.MemberFollowModifyOrmPort
+import com.kamcci.numberbox.app.usecase.member.MemberFollowModifyUseCase
+
+@UseCase
+class MemberFollowModifyService(
+    private val memberFollowModifyOrmPort: MemberFollowModifyOrmPort
+) : MemberFollowModifyUseCase {
+    @TXExecute
+    override fun following(followingId: Long, followerId: Long): Boolean {
+        return memberFollowModifyOrmPort.save(followingId, followerId)
+    }
+
+    @TXExecute
+    override fun cancel(followingId: Long, followerId: Long): Boolean {
+        return memberFollowModifyOrmPort.delete(followingId, followerId)
+    }
+}

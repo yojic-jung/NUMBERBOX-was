@@ -1,8 +1,8 @@
 package com.kamcci.modules.auth.engine.support
 
-import com.kamcci.modules.auth.engine.annotation.UserEmail
-import com.kamcci.modules.auth.engine.annotation.UserID
-import com.kamcci.modules.auth.engine.annotation.UserRole
+import com.kamcci.modules.auth.control.annotation.UserEmail
+import com.kamcci.modules.auth.control.annotation.UserId
+import com.kamcci.modules.auth.control.annotation.UserRole
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
@@ -17,7 +17,7 @@ import java.util.*
 @Qualifier("userDetail")
 class UserDetailArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter) =
-        parameter.getParameterAnnotation(UserID::class.java) != null ||
+        parameter.getParameterAnnotation(UserId::class.java) != null ||
                 parameter.getParameterAnnotation(UserEmail::class.java) != null ||
                 parameter.getParameterAnnotation(UserRole::class.java) != null
 
@@ -29,7 +29,7 @@ class UserDetailArgumentResolver : HandlerMethodArgumentResolver {
     ): Any {
         val authentication = SecurityContextHolder.getContext().authentication
 
-        val hasUserIDAnnot = parameter.getParameterAnnotation(UserID::class.java) != null
+        val hasUserIDAnnot = parameter.getParameterAnnotation(UserId::class.java) != null
         val hasUserEmailAnnot = parameter.getParameterAnnotation(UserEmail::class.java) != null
         val isAnonymousUser = authentication.principal == "anonymousUser"
 

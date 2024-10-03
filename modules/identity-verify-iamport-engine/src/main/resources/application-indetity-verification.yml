@@ -1,0 +1,9 @@
+identity:
+  verification:
+    iamport:
+      apiUrl: ${prod.identity.verification.iamport.apiUrl}
+      apiKey: ${prod.identity.verification.iamport.apiKey}
+      apiSecret: ${prod.identity.verification.iamport.apiSecret}
+      merchant:
+        uid: ${prod.identity.verification.iamport.merchant.uid}
+        idCode: ${prod.identity.verification.iamport.merchant.idCode}

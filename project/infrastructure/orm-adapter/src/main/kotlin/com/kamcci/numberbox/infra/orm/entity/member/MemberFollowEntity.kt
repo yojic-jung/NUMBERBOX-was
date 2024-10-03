@@ -1,9 +1,7 @@
 package com.kamcci.numberbox.infra.orm.entity.member
 
-import jakarta.persistence.Column
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -16,10 +14,12 @@ class MemberFollowEntity {
     @EmbeddedId
     var id: FollowUserDomain? = null
 
+    @CreationTimestamp
     @Column(name = "sys_create_date", nullable = false)
     var sysCreateDate: LocalDateTime = LocalDateTime.now()
 }
 
+@Embeddable
 class FollowUserDomain(
     val followingUserNo: Long,
     val followerUserNo: Long

@@ -6,6 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.EXPIRED_MSG
 import com.kamcci.numberbox.app.usecase.member.MemberSignupUseCase
+import com.kamcci.numberbox.restapi.config.WebConfig
 import com.kamcci.numberbox.restapi.mapper.member.MemberSignupMapper
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -33,6 +34,9 @@ class MemberSignupControllerTest {
     @MockBean
     lateinit var signupMapper: MemberSignupMapper
 
+    @MockBean
+    private lateinit var webConfig: WebConfig
+
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -49,7 +53,6 @@ class MemberSignupControllerTest {
         private const val NAME = "홍길동"
         private const val PHONE = "01012341234"
         private const val BIRTH = "650123"
-
     }
 
     // json POST 요청
