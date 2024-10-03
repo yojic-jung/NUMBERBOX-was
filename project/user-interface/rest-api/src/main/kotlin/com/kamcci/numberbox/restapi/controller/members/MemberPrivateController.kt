@@ -1,0 +1,53 @@
+package com.kamcci.numberbox.restapi.controller.members
+
+import com.kamcci.modules.auth.control.annotation.UserEmail
+import com.kamcci.modules.auth.control.annotation.UserId
+import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
+import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
+import com.kamcci.numberbox.app.usecase.member.MemberPrivateModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
+import com.kamcci.numberbox.restapi.dto.request.member.MemberPhoneUpdtRequest
+import com.kamcci.numberbox.restapi.mapper.member.MemberPrivateMapper
+import com.kamcci.numberbox.restapi.util.response.ResponseData
+import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import java.util.*
+
+@RestController
+@RequestMapping("/member")
+class MemberPrivateController(
+    private val memberPrivateModifyUseCase: MemberPrivateModifyUseCase,
+    private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
+    private val memberPrivateMapper: MemberPrivateMapper,
+) {
+    // 휴대폰 번호 변경
+    @PutMapping("/phone")
+    fun updatePhoneNumber(
+        @UserId memberId: UUID,
+        @UserEmail email: String,
+        @RequestBody @Valid
+        req: MemberPhoneUpdtRequest
+    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
+        // 1. 인증코드 검증
+        val codeDto = MemberVerifyCodeDto(email, req.verifyCode, VerifyCodeType.PhoneNumber)
+        val verifyCodeRs = memberVerifyCodeReadUseCase.validate(codeDto)
+        if (!verifyCodeRs.isSuccess) {
+            return ResponseUtil.ok(
+                mapOf(
+                    "isSuccess" to verifyCodeRs.isSuccess,
+                    "verifyCodeResult" to verifyCodeRs
+                )
+            )
+        }
+
+        // 2. 휴대폰 번호 변경
+        val updtDto = memberPrivateMapper.toPhoneUpdtDto(memberId, req)
+        val isSuccess = memberPrivateModifyUseCase.updatePhoneNumber(updtDto)
+        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
+    }
+}

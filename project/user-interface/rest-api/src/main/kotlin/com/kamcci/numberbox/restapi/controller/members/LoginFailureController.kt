@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- *
+ * 로그인 실패 콜백
  */
 @RestController
-class MemberLoginController(
+class LoginFailureController(
     private val memberLoginFailureUsecase: MemberLoginFailureUsecase
 ) {
 

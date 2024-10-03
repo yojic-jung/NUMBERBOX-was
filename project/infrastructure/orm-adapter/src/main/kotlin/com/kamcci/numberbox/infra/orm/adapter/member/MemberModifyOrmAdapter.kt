@@ -1,31 +1,51 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.entity.member.QMemberEntity.memberEntity
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
 
 @Repository
 class MemberModifyOrmAdapter : MemberModifyOrmPort, BaseRepository() {
-    override fun updatePhoneNumber() {
-        TODO("Not yet implemented")
+    override fun updatePassword(memberId: UUID, password: String): Boolean {
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.password, password)
+            .set(memberEntity.sysUpdateTime, LocalDateTime.now())
+            .where(memberEntity.id.eq(memberId))
+            .execute() > 0
     }
 
-    override fun updatePassword(passwordUpdtDto: MemberPasswdUpdtDto): Boolean {
-        TODO("Not yet implemented")
+    override fun updatePassword(email: String, password: String): Boolean {
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.password, password)
+            .set(memberEntity.sysUpdateTime, LocalDateTime.now())
+            .where(memberEntity.email.eq(email))
+            .execute() > 0
     }
+
 
     override fun drop(memberId: UUID) {
         TODO("Not yet implemented")
     }
 
     override fun updateFailCountById(userId: UUID, failCount: Int): Boolean {
-        TODO("Not yet implemented")
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.failCount, failCount)
+            .set(memberEntity.lastFailTime, LocalDateTime.now())
+            .where(memberEntity.id.eq(userId))
+            .execute() > 0
     }
 
     override fun updateLastFailTimeById(userId: UUID, lastFailTime: LocalDateTime): Boolean {
-        TODO("Not yet implemented")
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.lastFailTime, lastFailTime)
+            .where(memberEntity.id.eq(userId))
+            .execute() > 0
     }
 }

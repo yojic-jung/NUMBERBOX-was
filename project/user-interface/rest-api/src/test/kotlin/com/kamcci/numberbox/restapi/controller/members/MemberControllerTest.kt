@@ -6,7 +6,6 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.EXPIRED_MSG
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeSaveUseCase
 import com.kamcci.numberbox.restapi.config.WebConfig
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import org.junit.jupiter.api.Test
@@ -20,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.util.*
 
 
 @ActiveProfiles("rest-api")
@@ -30,14 +28,10 @@ class MemberControllerTest {
     lateinit var memberModifyUseCase: MemberModifyUseCase
 
     @MockBean
-    lateinit var memberVerifyCodeSaveUseCase: MemberVerifyCodeSaveUseCase
-
-    @MockBean
     lateinit var tokenResponseService: TokenResponseService
 
     @MockBean
     lateinit var memberMapper: MemberMapper
-
 
     @MockBean
     private lateinit var webConfig: WebConfig
@@ -49,7 +43,7 @@ class MemberControllerTest {
 
     companion object {
         private const val CREATE_VERIFY_CODE_URL = "/public/createEmailIdCode"
-        private const val SIGNUP_URL = "/public/signUp"
+        private const val SIGNUP_URL = "/member/signUp"
 
         // 정상 케이스 테스트 케이스
         private const val EMAIL = "test@test.com"
@@ -69,18 +63,6 @@ class MemberControllerTest {
                     .content(objectMapper.writeValueAsString(reqBody))
             )
 
-    @Test
-    fun `이메일 검증 코드 생성 요청 - 성공`() {
-        // given
-        val reqBody = mapOf("email" to EMAIL)
-
-        //when
-        val resultAction = requestJsonPost(CREATE_VERIFY_CODE_URL, reqBody)
-
-        // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
-
-    }
 
     @Test
     fun `유효하지 않은 이메일로 이메일 검증코드 생성 요청- 실패`() {
@@ -104,7 +86,7 @@ class MemberControllerTest {
             "emailVerifyCode" to VERIFY_CODE,
         )
 
-        val memberSignUpDto = MemberSignUpDto(EMAIL, PW, UUID.fromString(VERIFY_CODE))
+        val memberSignUpDto = MemberSignUpDto(EMAIL, PW)
         val memberPrivateSignupDto = null
         val mockMemberSignUpResultVo = MemberSignUpResultVo(false, EXPIRED_MSG)
         `when`(memberMapper.toSignupDto(any())).thenReturn(memberSignUpDto)
@@ -134,7 +116,7 @@ class MemberControllerTest {
                     )
         )
         // mocking
-        val memberSignUpDto = MemberSignUpDto(EMAIL, PW, UUID.fromString(VERIFY_CODE))
+        val memberSignUpDto = MemberSignUpDto(EMAIL, PW)
         val memberPrivateSignupDto = null
         val mockMemberSignUpResultVo = MemberSignUpResultVo(false, EXPIRED_MSG)
         `when`(memberMapper.toSignupDto(any())).thenReturn(memberSignUpDto)

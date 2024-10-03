@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.app.port.repository.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import java.time.LocalDateTime
 import java.util.*
 
@@ -8,12 +7,12 @@ interface MemberModifyOrmPort {
     /**
      * 비밀번호 변경
      */
-    fun updatePassword(passwordUpdtDto: MemberPasswdUpdtDto): Boolean
+    fun updatePassword(memberId: UUID, password: String): Boolean
 
     /**
-     * 휴대폰 번호 변경
+     * 비밀번호 변경
      */
-    fun updatePhoneNumber()
+    fun updatePassword(email: String, password: String): Boolean
 
     /**
      * 회원 탈퇴

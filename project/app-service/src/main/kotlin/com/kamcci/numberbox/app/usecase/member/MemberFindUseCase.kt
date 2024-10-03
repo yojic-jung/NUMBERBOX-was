@@ -6,12 +6,15 @@ package com.kamcci.numberbox.app.usecase.member
 interface MemberFindUseCase {
     /**
      * 이메일 찾기
-     * todo 임의 난수 코드
      */
-    fun findEmail(userName: String, phoneNumber: String): String
+    fun findMyEmail(userName: String, phoneNumber: String): String?
 
     /**
-     * 비밀번호 찾기(이메일로 임시 비밀번호 발급)
+     * 비밀번호 찾기
+     *
+     * 응답값
+     * true: 이메일로 임시번호 발급
+     * false : 이메일 미존재
      */
-    fun findPasswd(email: String)
+    fun findMyPassword(email: String): Boolean
 }

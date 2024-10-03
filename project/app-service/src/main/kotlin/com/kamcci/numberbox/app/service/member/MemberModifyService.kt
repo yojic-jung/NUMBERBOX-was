@@ -1,44 +1,38 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.dto.member.*
+import com.kamcci.numberbox.app.domain.dto.member.MemberDropDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.repository.member.MemberPrivateSaveOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileSaveOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberRoleSaveOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberSaveOrmPort
+import com.kamcci.numberbox.app.port.repository.member.*
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberSignupValidator
 
 @UseCase
 class MemberModifyService(
-    // 회원가입 유효성 검증
-    private val memberSignupValidator: MemberSignupValidator,
+    private val memberModifyOrmPort: MemberModifyOrmPort,
+    private val memberReadOrmPort: MemberReadOrmPort,
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
-    // 계정 영속화 repository
+    // 회원가입 영속화 repository
     private val memberSaveRepo: MemberSaveOrmPort,
     private val roleSaveRepo: MemberRoleSaveOrmPort,
     private val profileSaveRepo: MemberProfileSaveOrmPort,
     private val privateSaveRepo: MemberPrivateSaveOrmPort,
 ) : MemberModifyUseCase {
-    override fun updatePassword(passwordUpdtDto: MemberPasswdUpdtDto): Boolean {
-        // 1. 인증코드 확인
-
-        // 2.
-        TODO("Not yet implemented")
-    }
-
-    override fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean {
-        TODO("Not yet implemented")
+    @TXExecute
+    override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
+        return memberModifyOrmPort.updatePassword(updtDto.memberId, updtDto.password)
     }
 
     @TXExecute
     override fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo {
-        // [validation 진행]
-        memberSignupValidator.validate(signUpDto)?.let { return it }
+        // [validation] 이메일 중복 여부 체크
+        val isEmailExists = memberReadOrmPort.existsByEmail(signUpDto.email)
+        if (isEmailExists) return MemberSignUpResultVo(false, MemberSignUpResultVo.SignUpResultMSg.EXIST_EMAIL_MSG)
 
         // [회원가입 진행]
         // 1. 계정 가입
@@ -59,6 +53,7 @@ class MemberModifyService(
         return MemberSignUpResultVo(true, MemberSignUpResultVo.SignUpResultMSg.SUCCESS_MSG)
     }
 
+    @TXExecute
     override fun drop(dropDto: MemberDropDto): Boolean {
         // 1. 인증코드 확인
         TODO("Not yet implemented")

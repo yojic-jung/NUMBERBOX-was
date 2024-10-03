@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class MemberVerifyCodeReadOrmAdapter : MemberVerifyCodeReadOrmPort, BaseRepository() {
 
-    override fun countByEmail(email: String, codeType: VerifyCodeType): Long {
+    override fun countByEmailAndCodeType(email: String, codeType: VerifyCodeType): Long {
         return queryFactory
             .select(memberVerifyCodeEntity.count())
             .from(memberVerifyCodeEntity)
@@ -22,7 +22,7 @@ class MemberVerifyCodeReadOrmAdapter : MemberVerifyCodeReadOrmPort, BaseReposito
             .fetchFirst()
     }
 
-    override fun findByEmail(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo? {
+    override fun findByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo? {
         return queryFactory
             .select(
                 Projections.constructor(

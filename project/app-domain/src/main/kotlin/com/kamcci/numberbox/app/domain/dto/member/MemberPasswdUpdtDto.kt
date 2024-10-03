@@ -8,7 +8,6 @@ import java.util.*
  */
 data class MemberPasswdUpdtDto(
     val memberId: UUID,
-    val verifyCode: UUID,
     val password: String,
     val passwordConfirm: String
 ) {

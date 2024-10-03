@@ -7,7 +7,7 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
  * Def. 회원 검증 인증코드 영속화
  */
 interface MemberVerifyCodeReadOrmPort {
-    fun countByEmail(email: String, codeType: VerifyCodeType): Long
+    fun countByEmailAndCodeType(email: String, codeType: VerifyCodeType): Long
 
-    fun findByEmail(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo?
+    fun findByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo?
 }

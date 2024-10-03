@@ -18,6 +18,9 @@ class MembersFollowController(
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
     private val memberProfileReadUseCase: MemberProfileReadUseCase
 ) {
+    /**
+     * 팔로잉
+     */
     @PostMapping("/{profileId}")
     fun following(
         @PathVariable profileId: Long,
@@ -38,6 +41,9 @@ class MembersFollowController(
         )
     }
 
+    /**
+     * 팔로잉 취소
+     */
     @DeleteMapping("/{profileId}")
     fun cancel(
         @PathVariable profileId: Long,

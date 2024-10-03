@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         // 모든 http에 public
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("**/public/**").permitAll()
                         // 내부 에러 처리 컨트롤러로 전달
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         // 로그인 요청

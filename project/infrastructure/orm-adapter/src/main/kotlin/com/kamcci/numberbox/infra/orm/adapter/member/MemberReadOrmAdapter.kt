@@ -3,6 +3,7 @@ package com.kamcci.numberbox.infra.orm.adapter.member
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberEntity.memberEntity
+import com.kamcci.numberbox.infra.orm.entity.member.QMemberPrivateEntity.memberPrivateEntity
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -15,6 +16,17 @@ class MemberReadOrmAdapter : MemberReadOrmPort, BaseRepository() {
             .where(memberEntity.email.eq(email))
             .fetchOne()
 
+    override fun findEmailByUsernameAndPhone(userName: String, phoneNumber: String): String? =
+        queryFactory
+            .select(memberEntity.email)
+            .from(memberEntity)
+            .innerJoin(memberPrivateEntity)
+            .on(memberEntity.id.eq(memberPrivateEntity.memberId))
+            .where(
+                memberPrivateEntity.userName.eq(userName),
+                memberPrivateEntity.phoneNumber.eq(phoneNumber),
+            )
+            .fetchOne()
 
     override fun findFailCountById(id: UUID) =
         queryFactory
