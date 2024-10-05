@@ -5,6 +5,8 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("java-test-fixtures")
+
     kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
     kotlin("kapt") version "1.9.22"
@@ -46,6 +48,9 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-test")
+
 }
 
 tasks.withType<KotlinCompile> {

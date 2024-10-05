@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/member/find/public")
+@RequestMapping("/member/public")
 class MemberFindController(
     private val memberVerifyCodeSaveUseCase: MemberVerifyCodeSaveUseCase,
     private val memberFindUseCase: MemberFindUseCase
@@ -20,7 +20,7 @@ class MemberFindController(
      * 인증 코드 발급
      */
     @PostMapping("/verifyCode")
-    fun createEmailVerifyCode(
+    fun createVerifyCode(
         @Valid
         @RequestBody req: EmailRequest
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
@@ -31,7 +31,7 @@ class MemberFindController(
     /**
      * 이메일 찾기
      */
-    @GetMapping("/email")
+    @GetMapping("/findEmail")
     fun findEmail(
         @ModelAttribute req: EmailFindRequest
     ): ResponseEntity<ResponseData<Map<String, String?>>> {
@@ -41,11 +41,10 @@ class MemberFindController(
     /**
      * 비밀번호 찾기
      */
-    @GetMapping("/password")
+    @GetMapping("/findPassword")
     fun findPassword(
         @RequestParam email: String
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
         return ResponseUtil.ok(mapOf("isSuccess" to memberFindUseCase.findMyPassword(email)))
     }
-
 }

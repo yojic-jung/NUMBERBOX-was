@@ -4,7 +4,6 @@ import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 import jakarta.validation.Payload
-import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
 @Retention(AnnotationRetention.RUNTIME)
@@ -20,8 +19,6 @@ annotation class PhoneCheck(
     val payload: Array<KClass<out Payload>> = [],
 )
 
-/** 1. validator */
-@Component
 class PhoneCheckValidator : ConstraintValidator<PhoneCheck, String> {
     override fun isValid(
         value: String,

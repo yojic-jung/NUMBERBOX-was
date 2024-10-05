@@ -21,7 +21,6 @@ annotation class PasswordCheck(
     val payload: Array<KClass<out Payload>> = [],
 )
 
-/** 1. validator */
 @Component
 class PasswordCheckValidator(
     @Value("\${regex.member.password}")

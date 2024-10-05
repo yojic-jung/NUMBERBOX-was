@@ -13,14 +13,13 @@ import kotlin.reflect.KClass
     AnnotationTarget.FIELD,
     AnnotationTarget.VALUE_PARAMETER,
 )
-@Constraint(validatedBy = [PhoneCheckValidator::class])
+@Constraint(validatedBy = [BirthCheckValidator::class])
 annotation class BirthCheck(
     val message: String = "유효한 생년월일 형식이 아닙니다.",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
 )
 
-/** 1. validator */
 @Component
 class BirthCheckValidator : ConstraintValidator<BirthCheck, String> {
     override fun isValid(

@@ -8,7 +8,7 @@ data class MemberVerifyCodeResultVo(
     val messageType: VerifyResultMSg,
 ) {
     enum class VerifyResultMSg(val desc: String) {
-        SUCCESS_MSG("인증에 성공하였습니다"),
+        VERIFY_SUCCESS("인증에 성공하였습니다"),
         NOT_EXIST("인증 코드가 존재하지 않습니다."),
         EXPIRED_MSG("만료된 인증 코드입니다."),
         NOT_MATCH_CODE_MSG("인증 코드가 일치하지 않습니다."),

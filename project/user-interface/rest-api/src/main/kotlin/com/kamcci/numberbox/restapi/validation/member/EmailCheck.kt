@@ -21,7 +21,6 @@ annotation class EmailCheck(
     val payload: Array<KClass<out Payload>> = [],
 )
 
-/** 1. validator */
 @Component
 class EmailCheckValidator(
     @Value("\${regex.member.email}")

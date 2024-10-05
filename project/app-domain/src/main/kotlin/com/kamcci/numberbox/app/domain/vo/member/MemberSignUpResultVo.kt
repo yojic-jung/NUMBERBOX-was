@@ -15,8 +15,6 @@ data class MemberSignUpResultVo(
 ) {
     enum class SignUpResultMSg(val desc: String) {
         SUCCESS_MSG("회원가입에 성공하였습니다."),
-        EXPIRED_MSG("만료된 인증 코드입니다."),
-        NOT_MATCH_CODE_MSG("인증 코드가 일치하지 않습니다."),
         EXIST_EMAIL_MSG("이미 존재하는 이메일입니다."),
     }
 

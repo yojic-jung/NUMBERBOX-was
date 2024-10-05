@@ -33,6 +33,6 @@ class MemberVerifyCodeReadUseCaseService(
             return MemberVerifyCodeResultVo(false, NOT_MATCH_CODE_MSG)
         }
 
-        return MemberVerifyCodeResultVo(true, SUCCESS_MSG)
+        return MemberVerifyCodeResultVo(true, VERIFY_SUCCESS)
     }
 }
