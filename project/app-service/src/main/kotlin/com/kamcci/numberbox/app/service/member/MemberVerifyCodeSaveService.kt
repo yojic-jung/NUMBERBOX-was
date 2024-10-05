@@ -23,7 +23,7 @@ class MemberVerifyCodeSaveService(
 
 
     @TXExecute
-    override fun createVerifyCode(email: String, codeType: VerifyCodeType): Boolean {
+    override fun createVerifyCode(email: String, codeType: VerifyCodeType): String {
         // 인증 코드 uuid 생성
         val code = UUID.randomUUID().toString()
         val emailCodeSaveDto = MemberVerifyCodeSaveDto(email, codeType, code)
@@ -33,6 +33,7 @@ class MemberVerifyCodeSaveService(
         memberVerifyCodeEmailPort.send(message, emailMessageTemplate)
 
         // 검증 코드 저장
-        return verifyCodeSaveDto.save(emailCodeSaveDto)
+        verifyCodeSaveDto.save(emailCodeSaveDto)
+        return code
     }
 }

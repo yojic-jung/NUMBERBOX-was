@@ -3,6 +3,9 @@ package com.kamcci.numberbox.app.port.repository.member
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 회원 변경
+ */
 interface MemberModifyOrmPort {
     /**
      * 비밀번호 변경

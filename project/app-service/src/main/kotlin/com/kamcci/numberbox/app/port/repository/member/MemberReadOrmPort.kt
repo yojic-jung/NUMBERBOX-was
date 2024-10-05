@@ -3,6 +3,9 @@ package com.kamcci.numberbox.app.port.repository.member
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 회원 조회
+ */
 interface MemberReadOrmPort {
 
     // 회원 id 조회

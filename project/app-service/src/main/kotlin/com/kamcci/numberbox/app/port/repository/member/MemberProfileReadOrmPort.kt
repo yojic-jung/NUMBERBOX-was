@@ -22,6 +22,4 @@ interface MemberProfileReadOrmPort {
 
     // 프로필 이미지 정보 조회
     fun findProfileImgByMemberId(memberId: UUID): MemberProfileImgVo?
-
-
 }

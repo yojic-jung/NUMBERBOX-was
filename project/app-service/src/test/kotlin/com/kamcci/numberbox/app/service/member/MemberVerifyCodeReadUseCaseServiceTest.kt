@@ -28,7 +28,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
 
 
     @Test
-    fun `이메일 검증 코드 미존재 - 실패`() {
+    fun `인증 코드 미존재 - 실패`() {
         `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, signUpDto.verifyCodeType))
             .thenReturn(null)
         // when
@@ -40,7 +40,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     }
 
     @Test
-    fun `이메일 검증 코드 유효 시간 지남 - 실패`() {
+    fun `인증 검증 코드 만료 시간 지남 - 실패`() {
         // given
         val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
             verifyCode = VERIFY_CODE,
@@ -57,7 +57,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     }
 
     @Test
-    fun `이메일 검증 코드 불일치 - 실패`() {
+    fun `인증 코드 불일치 - 실패`() {
         // given
         val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
             verifyCode = "5c1d1a9a-3e12-488c-be48-88fdb92c2dd0",
@@ -74,26 +74,8 @@ class MemberVerifyCodeReadUseCaseServiceTest {
         assertThat(resultVo.messageType).isEqualTo(NOT_MATCH_CODE_MSG)
     }
 
-//    @Test
-//    fun `중복 이메일 존재 - 실패`() {
-//        // given
-//        val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
-//            verifyCode = VERIFY_CODE,
-//            sysCreateTime = LocalDateTime.now().minusSeconds(180)
-//        )
-//        `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
-//            memberEmailVerifyCodeVo
-//        )
-//
-//        // when
-//        val resultVo = memberVerifyCodeReadUseCase.validate(signUpDto)
-//
-//        assertThat(resultVo.isSuccess).isFalse()
-//        assertThat(resultVo.messageType).isEqualTo(EXIST_EMAIL_MSG)
-//    }
-
     @Test
-    fun `회원가입 양식 유효성 검사 - 성공`() {
+    fun `인증 유효성 검사 - 성공`() {
         // given
         val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
             verifyCode = VERIFY_CODE,

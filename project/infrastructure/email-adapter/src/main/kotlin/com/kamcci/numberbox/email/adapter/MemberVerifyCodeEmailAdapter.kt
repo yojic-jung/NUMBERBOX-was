@@ -13,5 +13,4 @@ class MemberVerifyCodeEmailAdapter(
     override fun send(msgDto: EmailCodeMessageDto, msgTmpl: EmailMessageTemplate) {
         mailSendService.sendHTMLMessage(msgDto.recipientEmail, msgTmpl.title, msgTmpl.getContent(msgDto.code))
     }
-
 }
