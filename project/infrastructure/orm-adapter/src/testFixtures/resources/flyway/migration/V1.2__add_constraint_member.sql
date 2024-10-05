@@ -17,6 +17,11 @@ ALTER TABLE members_profile
         REFERENCES members (user_uniq_id) ON DELETE cascade
         ON UPDATE cascade;
 
+ALTER TABLE member_refresh_token
+    ADD CONSTRAINT member_refresh_token_foreign_key FOREIGN KEY (user_uniq_id)
+        REFERENCES members (user_uniq_id) ON DELETE cascade
+        ON UPDATE cascade;
+
 /* unique 추가 */
 ALTER TABLE members
     ADD CONSTRAINT email UNIQUE (email);

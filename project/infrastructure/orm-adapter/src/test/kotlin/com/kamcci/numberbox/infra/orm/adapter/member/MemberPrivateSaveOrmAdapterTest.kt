@@ -19,7 +19,6 @@ class MemberPrivateSaveOrmAdapterTest(
     @Autowired
     private val memberPrivateSaveRepo: MemberPrivateSaveOrmAdapter
 ) {
-
     private lateinit var privateSignUpDto: MemberPrivateSignUpDto
 
     @BeforeEach
@@ -30,7 +29,7 @@ class MemberPrivateSaveOrmAdapterTest(
     @Test
     fun `개인정보 영속화 테스트 - 성공`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = UUID.fromString("10ca3122-cda8-ea4d-9bc7-037cb86fdb20")
 
         // when
         val savedMemberId = memberPrivateSaveRepo.save(memberId, privateSignUpDto)

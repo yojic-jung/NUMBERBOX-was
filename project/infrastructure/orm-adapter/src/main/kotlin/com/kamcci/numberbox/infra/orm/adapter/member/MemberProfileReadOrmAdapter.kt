@@ -25,7 +25,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
                     memberProfileEntity.profileType,
                 )
             )
-            .from(QMemberEntity.memberEntity)
+            .from(memberProfileEntity)
             .where(memberProfileEntity.memberId.eq(memberId))
             .fetchOne()
     }
@@ -62,11 +62,11 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
                     MemberProfileImgVo::class.java,
                     memberProfileEntity.id,
                     Expressions.constant(memberId),
-                    memberProfileEntity.profileImgName,
                     memberProfileEntity.profileImgPath,
+                    memberProfileEntity.profileImgName,
                 )
             )
-            .from(QMemberEntity.memberEntity)
+            .from(memberProfileEntity)
             .where(memberProfileEntity.memberId.eq(memberId))
             .fetchOne()
     }
@@ -77,13 +77,13 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
                 Projections.constructor(
                     MemberProfileVo::class.java,
                     memberProfileEntity.id,
-                    Expressions.constant(profileId),
+                    memberProfileEntity.memberId,
                     memberProfileEntity.profileImgName,
                     memberProfileEntity.profileImgPath,
                     memberProfileEntity.profileType,
                 )
             )
-            .from(QMemberEntity.memberEntity)
+            .from(memberProfileEntity)
             .where(memberProfileEntity.id.`in`(profileId))
             .fetch()
     }

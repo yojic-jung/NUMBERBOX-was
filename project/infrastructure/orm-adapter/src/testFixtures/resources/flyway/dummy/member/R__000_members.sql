@@ -11,3 +11,18 @@ INSERT INTO `numberbox_tc`.`members` (`user_uniq_id`, `email`, `password`, `huma
 VALUES (UNHEX('10CA3122CDA8EA4D9BC7037CB86FDB20'), 'test@test.com',
         '$2a$10$wgZBmAEiDcytMZSQ.iwJuONFFJAwWa/i9Djl41NDLn3cHpmlVFU3.', '0', '0',
         '2023-08-26 15:05:16', '0', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23');
+
+INSERT INTO `numberbox_tc`.`members` (`user_uniq_id`, `email`, `password`, `human_status`, `fail_count`,
+                                      `last_fail_time`,
+                                      `tmp_password`, `signup_date`, `last_login_date`, `sys_update_time`)
+VALUES (UNHEX('24CA3122CDA8EA4D9BC7037CB86FDB20'), 'monkey@test.com',
+        '$2a$10$wgZBmAEiDcytMZSQ.iwJuONFFJAwWa/i9Djl41NDLn3cHpmlVFU3.', '0', '0',
+        '2023-08-26 15:05:16', '0', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23');
+
+
+INSERT INTO `numberbox_tc`.`members` (`user_uniq_id`, `email`, `password`, `human_status`, `fail_count`,
+                                      `last_fail_time`,
+                                      `tmp_password`, `signup_date`, `last_login_date`, `sys_update_time`)
+VALUES (UNHEX('33CA3122CDA8EA4D9BC7037CB86FDB20'), 'donkey@test.com',
+        '$2a$10$wgZBmAEiDcytMZSQ.iwJuONFFJAwWa/i9Djl41NDLn3cHpmlVFU3.', '0', '0',
+        '2023-08-26 15:05:16', '0', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23');

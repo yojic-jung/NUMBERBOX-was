@@ -35,6 +35,17 @@ class MemberReadOrmAdapterTest(
 
         // then
         assertThat(memberId).isNull()
+    }
+
+    @Test
+    fun `이름과 휴대폰번호로 이메일 조회 - 성공`() {
+        // given & when
+        val username = "홍길동"
+        val phone = "01009870987"
+        val email = memberReadRepo.findEmailByUsernameAndPhone(username, phone)
+
+        // then
+        assertThat(email).isEqualTo("dywlr@test.com")
 
     }
 

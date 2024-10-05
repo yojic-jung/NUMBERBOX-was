@@ -7,6 +7,5 @@ import java.util.*
  */
 data class MemberPhoneUpdtDto(
     val memberId: UUID,
-    val verifyCode: UUID,
     val phoneNumber: String,
 )
