@@ -3,11 +3,11 @@ package com.kamcci.numberbox.infra.orm.adapter.member
 import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.entity.member.MemberEntity
 import jakarta.persistence.EntityManager
-import junit.framework.TestCase.assertTrue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @TcDBJpaTest
@@ -64,14 +64,17 @@ class MemberModifyOrmAdapterTest(
     fun `마지막 실패 시간 변경 - 성공`() {
         // given
         val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
-        val failTime = LocalDateTime.now()
+        val failTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
 
         // when
         memberModifyOrmAdapter.updateLastFailTimeById(memberId, failTime)
+        em.flush()
+        em.clear()
 
-        // then (DB 접근 영속화 시간을 고려하여 2초 정도의 오차 범위 허용)
+        // then (DB 접근 시간 고려하여 1초 정도의 오차 범위 허용)
         val memberEntity = em.find(MemberEntity::class.java, memberId)
-        assertTrue(failTime <= memberEntity.lastFailTime)
-        assertTrue(failTime.plusSeconds(2) >= memberEntity.lastFailTime)
+        println(failTime)
+        println(memberEntity.lastFailTime)
+        assertThat(failTime).isEqualTo(memberEntity.lastFailTime)
     }
 }
