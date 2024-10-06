@@ -13,21 +13,65 @@ open class BaseMockMvcTest {
 
     val objectMapper: ObjectMapper = ObjectMapper()
 
-    // json POST 요청
-    fun requestJsonPost(url: String, reqBody: Map<String, Any>) =
-        mockMvc
-            .perform(
-                MockMvcRequestBuilders.post(url)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(reqBody))
-            )
+    // json GET 요청
+    fun requestGet(url: String) =
+        requestGet(url, mapOf())
 
-    // json POST 요청
-    fun requestGET(url: String, queryMap: Map<String, String>): ResultActions {
-        val queryString = queryMap.entries.joinToString("&") { (key, value) -> "${key}=${value}" }
+    fun requestGet(url: String, queryMap: Map<String, String>?): ResultActions {
+        val queryString = queryMap?.entries?.joinToString("&") { (key, value) -> "${key}=${value}" }
         return mockMvc
             .perform(
                 MockMvcRequestBuilders.get("${url}?$queryString")
             )
     }
+
+    // json POST 요청
+    fun requestJsonPost(url: String) = requestJsonPost(url, null)
+
+    fun requestJsonPost(url: String, reqBody: Map<String, Any>?): ResultActions {
+        val reqBuilder = MockMvcRequestBuilders.post(url)
+            .contentType(MediaType.APPLICATION_JSON)
+        if (reqBody != null) {
+            reqBuilder.content(objectMapper.writeValueAsString(reqBody))
+        }
+        return mockMvc.perform(reqBuilder)
+    }
+
+    // json PUT 요청
+    fun requestJsonPut(url: String) =
+        requestJsonPut(url, mapOf())
+
+    fun requestJsonPut(url: String, reqBody: Map<String, Any>?): ResultActions {
+        val reqBuilder = MockMvcRequestBuilders.put(url)
+            .contentType(MediaType.APPLICATION_JSON)
+        if (reqBody != null) {
+            reqBuilder.content(objectMapper.writeValueAsString(reqBody))
+        }
+        return mockMvc.perform(reqBuilder)
+    }
+
+    // json DELETE 요청
+    fun requestJsonDel(url: String) =
+        requestJsonDel(url, mapOf())
+
+    fun requestJsonDel(url: String, reqBody: Map<String, Any>?): ResultActions {
+        val reqBuilder = MockMvcRequestBuilders.delete(url)
+            .contentType(MediaType.APPLICATION_JSON)
+        if (reqBody != null) {
+            reqBuilder.content(objectMapper.writeValueAsString(reqBody))
+        }
+        return mockMvc.perform(reqBuilder)
+    }
+
+
+    // response
+    fun takeJsonResponse(resultAction: ResultActions) =
+        objectMapper.readTree(resultAction.andReturn().response.contentAsString)
+
+    fun takeJsonResponseData(resultAction: ResultActions) =
+        objectMapper.readTree(resultAction.andReturn().response.contentAsString).get("data")
+
+    fun removeQuotes(inp: Any) = removeQuotes(inp.toString())
+
+    fun removeQuotes(input: String): String = input.removePrefix("\"").removeSuffix("\"")
 }

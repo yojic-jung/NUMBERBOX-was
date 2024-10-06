@@ -12,6 +12,7 @@ import com.kamcci.numberbox.restapi.util.file.FileConvertUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Positive
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -36,10 +37,10 @@ class MemberProfileController(
 
 
     // 프로필 이미지 등록
-    @PutMapping("/img")
+    @PostMapping("/img")
     fun profileImgRegister(
         @UserId memberId: UUID,
-        @RequestBody @Valid
+        @ModelAttribute @Valid
         profileImgReq: ProfileImgUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // multipartFile to File
@@ -88,6 +89,7 @@ class MemberProfileController(
     // 다른 사람 프로필 보기
     @GetMapping("/{profileId}")
     fun profile(
+        @Positive(message = "프로필 아이디는 양수만 가능합니다.")
         @PathVariable profileId: Long,
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {

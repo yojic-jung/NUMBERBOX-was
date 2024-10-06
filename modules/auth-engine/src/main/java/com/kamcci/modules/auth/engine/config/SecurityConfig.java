@@ -63,6 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER")
+
                         .requestMatchers(HttpMethod.GET, "/takeResource").permitAll()
                         .requestMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/takeMerchantUid").permitAll()

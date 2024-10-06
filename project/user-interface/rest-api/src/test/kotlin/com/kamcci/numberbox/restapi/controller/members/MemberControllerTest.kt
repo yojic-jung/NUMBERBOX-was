@@ -10,13 +10,14 @@ import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
+import com.kammci.numberbox.restapi.resolver.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-
+import java.util.*
 
 @WebMvcUnitTest
 class MemberControllerTest : BaseMockMvcTest() {
@@ -27,9 +28,14 @@ class MemberControllerTest : BaseMockMvcTest() {
     lateinit var memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase
 
     @Autowired
+    lateinit var memberModifyUseCase: MemberModifyUseCase
+
+    @Autowired
     lateinit var memberMapper: MemberMapper
 
     companion object {
+        private const val EMAIl_URL = "/member/email"
+        private const val PASSWORD_URL = "/member/password"
         private const val SIGNUP_URL = "/member/public/signUp"
 
         // 정상 케이스 테스트 케이스
@@ -41,6 +47,69 @@ class MemberControllerTest : BaseMockMvcTest() {
         private const val BIRTH = "650123"
     }
 
+    @Test
+    fun `이메일 조회 - 성공`() {
+        // when
+        val resultAction = requestGet(EMAIl_URL)
+
+        // then
+        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("email"))).isEqualTo(EMAIL_FROM_RESOLVER)
+    }
+
+    @Test
+    fun `비밀번호 변경 - 실패(비밀번호 불일치)`() {
+        // given
+        val req = mapOf(
+            "verifyCode" to UUID.randomUUID(),
+            "password" to "abcdefgh1234!",
+            "passwordConfirm" to "abcdefgh1234!",
+        )
+        val verifyCodeRs = MemberVerifyCodeResultVo(false, VERIFY_SUCCESS)
+        `when`(memberVerifyCodeReadUseCase.validate(any())).thenReturn(verifyCodeRs)
+
+        // when
+        val resultAction = requestJsonPut(PASSWORD_URL, req)
+
+        // then
+        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
+    }
+
+    @Test
+    fun `비밀번호 변경 - 실패(인증 코드 실패)`() {
+        // given
+        val req = mapOf(
+            "verifyCode" to UUID.randomUUID(),
+            "password" to "abcdefgh1234!",
+            "passwordConfirm" to "abcdefgh1234!",
+        )
+        val verifyCodeRs = MemberVerifyCodeResultVo(false, VERIFY_SUCCESS)
+        `when`(memberVerifyCodeReadUseCase.validate(any())).thenReturn(verifyCodeRs)
+
+        // when
+        val resultAction = requestJsonPut(PASSWORD_URL, req)
+
+        // then
+        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
+    }
+
+    @Test
+    fun `비밀번호 변경 - 성공`() {
+        // given
+        val req = mapOf(
+            "verifyCode" to UUID.randomUUID(),
+            "password" to "abcdefgh1234!",
+            "passwordConfirm" to "abcdefgh1234!",
+        )
+        val verifyCodeRs = MemberVerifyCodeResultVo(false, VERIFY_SUCCESS)
+        `when`(memberVerifyCodeReadUseCase.validate(any())).thenReturn(verifyCodeRs)
+        `when`(memberModifyUseCase.updatePassword(any())).thenReturn(true)
+
+        // when
+        val resultAction = requestJsonPut(PASSWORD_URL, req)
+
+        // then
+        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
+    }
 
     @Test
     fun `회원가입 요청 개인정보 미포함 - 성공`() {
@@ -51,7 +120,6 @@ class MemberControllerTest : BaseMockMvcTest() {
             "confirmPassword" to PW,
             "emailVerifyCode" to VERIFY_CODE,
         )
-
         val memberSignUpDto = MemberSignUpDto(EMAIL, PW)
         val memberPrivateSignupDto = null
         val verifyCodeRs = MemberVerifyCodeResultVo(true, VERIFY_SUCCESS)
@@ -64,6 +132,7 @@ class MemberControllerTest : BaseMockMvcTest() {
         `when`(memberModifyMock.signup(memberSignUpDto, memberPrivateSignupDto))
             .thenReturn(mockMemberSignUpResultVo)
 
+        // when
         val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
 
         // then
@@ -249,7 +318,7 @@ class MemberControllerTest : BaseMockMvcTest() {
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
-        val jsonNode = objectMapper.readTree(resultAction.andReturn().response.contentAsString)
+        val jsonNode = takeJsonResponse(resultAction)
         assertThat(jsonNode.get("data").get("verifyCodeResult").get("isSuccess").asBoolean()).isFalse
     }
 }

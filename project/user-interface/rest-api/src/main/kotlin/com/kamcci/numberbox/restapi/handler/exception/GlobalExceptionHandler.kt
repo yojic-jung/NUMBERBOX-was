@@ -1,10 +1,13 @@
 package com.kamcci.numberbox.restapi.handler.exception
 
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
@@ -15,7 +18,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
-
     // MethodArgumentNotValid
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
@@ -23,10 +25,20 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? {
-//        println(ex.stackTraceToString())
         logger.warn(ex)
         return ResponseUtil.error(ex, status, request)
     }
+
+    @ExceptionHandler(value = [BusinessInValidException::class])
+    fun handleBusinessInValidException(
+        ex: Exception,
+        body: Any?,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        logger.error(ex)
+        return ResponseUtil.error(ex, HttpStatus.BAD_REQUEST, request)
+    }
+
 
     /**
      * 모든 예외타입에 대하여 응답 형식 지정

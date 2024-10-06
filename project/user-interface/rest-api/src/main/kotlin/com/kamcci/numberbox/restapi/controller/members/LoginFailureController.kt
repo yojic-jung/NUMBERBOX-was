@@ -42,7 +42,7 @@ class LoginFailureController(
                 // 과도한 비밀번호 불일치 요청시 계정 비활성화
                 val isDisabled: Boolean = memberLoginFailureUsecase.disableUserIfFailCountOver(userEmail)
                 if (isDisabled) ResponseUtil.error(exception, DISABLE_USER.statusCode, request)
-                else ResponseUtil.error(exception, ABLE_USER.statusCode, request)
+                else ResponseUtil.error(exception, PASSWORD_MISS_MATCH.statusCode, request)
             }
 
             // 비활성화된 계정
@@ -50,7 +50,7 @@ class LoginFailureController(
                 // 계정 비활성화 유효시간이 `지난 경우 다시 활성화
                 val isAfterDisableTime: Boolean = memberLoginFailureUsecase.ableUserIfDisableTimeOver(userEmail)
                 if (isAfterDisableTime) ResponseUtil.error(exception, ABLE_USER.statusCode, request)
-                else ResponseUtil.error(exception, PASSWORD_MISS_MATCH.statusCode, request)
+                else ResponseUtil.error(exception, DISABLE_USER.statusCode, request)
             }
 
             else -> {

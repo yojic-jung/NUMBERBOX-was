@@ -6,6 +6,7 @@ import com.kamcci.numberbox.restapi.dto.request.member.EmailFindRequest
 import com.kamcci.numberbox.restapi.dto.request.member.EmailRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import com.kamcci.numberbox.restapi.validation.member.EmailCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -33,6 +34,7 @@ class MemberFindController(
      */
     @GetMapping("/findEmail")
     fun findEmail(
+        @Valid
         @ModelAttribute req: EmailFindRequest
     ): ResponseEntity<ResponseData<Map<String, String?>>> {
         return ResponseUtil.ok(mapOf("email" to memberFindUseCase.findMyEmail(req.userName, req.phoneNumber)))
@@ -43,6 +45,7 @@ class MemberFindController(
      */
     @GetMapping("/findPassword")
     fun findPassword(
+        @EmailCheck
         @RequestParam email: String
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
         return ResponseUtil.ok(mapOf("isSuccess" to memberFindUseCase.findMyPassword(email)))

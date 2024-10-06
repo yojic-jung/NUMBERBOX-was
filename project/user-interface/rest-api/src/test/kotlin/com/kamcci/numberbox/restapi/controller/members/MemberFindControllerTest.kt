@@ -19,7 +19,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `이메일 검증 코드 생성 요청 - 성공`() {
+    fun `인증 코드 생성 요청 - 성공`() {
         // given
         val reqBody = mapOf(
             "email" to EMAIL,
@@ -34,7 +34,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `유효하지 않은 이메일로 이메일 검증코드 생성 요청- 실패`() {
+    fun `유효하지 않은 이메일로 인증 코드 생성 요청- 실패`() {
         // given
         val reqBody = mapOf(
             "email" to "testtest.com",
@@ -57,7 +57,61 @@ class MemberFindControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestGET(FIND_EMAIL_URL, reqBody)
+        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+
+        // then
+        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+    }
+
+    @Test
+    fun `이메일 찾기 - 실패(유효하지 않은 이름)`() {
+        // given
+        val reqBody = mapOf(
+            "userName" to "이",
+            "phoneNumber" to "01012341234"
+        )
+
+        //when
+        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+
+        // then
+        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
+    fun `이메일 찾기 - 실패(유효하지 않은 휴대폰 번호)`() {
+        // given
+        val reqBody = mapOf(
+            "userName" to "이름",
+            "phoneNumber" to "010123456789"
+        )
+
+        //when
+        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+
+        // then
+        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
+    fun `비밀번호 찾기 - 실패(유효하지 않은 이메일)`() {
+        // given
+        val reqBody = mapOf("email" to "email")
+
+        //when
+        val resultAction = requestGet(FIND_PASSWD_URL, reqBody)
+
+        // then
+        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
+    fun `비밀번호 찾기 - 성공`() {
+        // given
+        val reqBody = mapOf("email" to "test@test.com")
+
+        //when
+        val resultAction = requestGet(FIND_PASSWD_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
