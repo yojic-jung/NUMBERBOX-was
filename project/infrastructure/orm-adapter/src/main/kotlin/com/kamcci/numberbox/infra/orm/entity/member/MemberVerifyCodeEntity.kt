@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
-@Table(name = "members_veify_code")
+@Table(name = "members_verify_code")
 @Entity
 class MemberVerifyCodeEntity {
     @Id

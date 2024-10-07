@@ -1,10 +1,10 @@
 package com.kamcci.numberbox.email.template
 
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
-import org.springframework.beans.factory.annotation.Qualifier
+import com.kamcci.numberbox.app.domain.system_construction.Aliases
 import org.springframework.stereotype.Component
 
-@Qualifier("emailVerify")
+@Aliases("emailVerify")
 @Component
 class EmailVerifyMessageTemplate : EmailMessageTemplate {
     override val title: String

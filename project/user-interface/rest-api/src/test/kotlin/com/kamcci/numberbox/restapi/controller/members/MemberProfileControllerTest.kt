@@ -117,7 +117,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
     @Test
     fun `내 프로필 보기 - 성공`() {
-        val memberProfileVo = MemberProfileVo(1L, UUID.randomUUID(), "", "", ProfileType.Teacher)
+        val memberProfileVo = MemberProfileVo(1L, UUID.randomUUID(), "", "", "", ProfileType.Teacher)
         val list = listOf(memberProfileVo)
         `when`(memberProfileReadUseCase.findByMemberId(any())).thenReturn(memberProfileVo)
         `when`(memberProfileReadUseCase.findFollowingProfileByMemberId(any())).thenReturn(list)

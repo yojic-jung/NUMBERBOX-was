@@ -85,9 +85,9 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         // 클라이언트가 로그인 상태 유지 요청한 경우
         if(loginState != null && loginState.equals(LOGIN_KEEP_VAL)) {
             return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken,
-                    (int) REFRESH_TOKEN_VALID_TIME_OP_KEEP / 1000);
+                    (int) (REFRESH_TOKEN_VALID_TIME_OP_KEEP / 1000L));
         } else {
-            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) REFRESH_TOKEN_VALID_TIME / 1000);
+            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) (REFRESH_TOKEN_VALID_TIME / 1000L));
         }
     }
 }

@@ -14,14 +14,11 @@ import java.util.*
 
 @UseCase
 class MemberVerifyCodeSaveService(
-    private val verifyCodeSaveDto: MemberVerifyCodeSaveOrmPort,
-    // 메일 처리기
+    private val memberVerifyCodeSaveOrmPort: MemberVerifyCodeSaveOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     @Aliases("emailVerify")
     private val emailMessageTemplate: EmailMessageTemplate
 ) : MemberVerifyCodeSaveUseCase {
-
-
     @TXExecute
     override fun createVerifyCode(email: String, codeType: VerifyCodeType): String {
         // 인증 코드 uuid 생성
@@ -33,7 +30,7 @@ class MemberVerifyCodeSaveService(
         memberVerifyCodeEmailPort.send(message, emailMessageTemplate)
 
         // 검증 코드 저장
-        verifyCodeSaveDto.save(emailCodeSaveDto)
+        memberVerifyCodeSaveOrmPort.save(emailCodeSaveDto)
         return code
     }
 }

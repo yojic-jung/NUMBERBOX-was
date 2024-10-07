@@ -11,6 +11,7 @@ import kotlin.reflect.KClass
 class CustomAnnotationCapableBeanFactory(
     private val beanDefinitionControlManager: BeanDefinitionControlManager,
 ) : AnnotationCapableBeanFactory {
+
     @Throws(BeansException::class)
     override fun registerOnlyWith(
         customBeanAnnotation: KClass<out Annotation>,

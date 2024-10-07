@@ -25,6 +25,8 @@ class MemberFindController(
         @Valid
         @RequestBody req: EmailRequest
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
+        // todo 이메일 중복 체크
+
         memberVerifyCodeSaveUseCase.createVerifyCode(req.email, req.codeType)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }

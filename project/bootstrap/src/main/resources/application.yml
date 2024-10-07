@@ -9,6 +9,8 @@ spring:
         - orm-adapter-env
         - mail-sender-local
         - mail-sender-env
+        - storage
+        - storage-env
 
 numberbox:
   openaiSecretKey: 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

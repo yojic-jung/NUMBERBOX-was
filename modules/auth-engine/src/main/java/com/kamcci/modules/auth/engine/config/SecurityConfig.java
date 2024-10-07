@@ -52,7 +52,6 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         // 모든 http에 public
-                        .requestMatchers("**/public/**").permitAll()
                         // 내부 에러 처리 컨트롤러로 전달
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         // 로그인 요청
@@ -63,7 +62,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/member/public/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/member/public/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/member/public/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/member/public/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/member/profile").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.GET, "/takeResource").permitAll()
                         .requestMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")
@@ -164,7 +168,7 @@ public class SecurityConfig {
                         .hasAnyRole("TOP_TESTER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportByAdmin")
                         .hasAnyRole("TOP_TESTER", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/serviceCenter" + "/takeErrReportSearchBySttsAndTypeByAdmin")
+                        .requestMatchers(HttpMethod.GET, "/serviceCenter/takeErrReportSearchBySttsAndTypeByAdmin")
                         .hasAnyRole("TOP_TESTER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/serviceCenter/replyErrorReport").hasAnyRole("ADMIN")
 

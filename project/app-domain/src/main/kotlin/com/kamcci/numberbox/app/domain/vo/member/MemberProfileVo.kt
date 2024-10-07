@@ -6,7 +6,8 @@ import java.util.*
 data class MemberProfileVo(
     val id: Long,
     val memberId: UUID,
-    val profileImgName: String,
-    val profileImgPath: String,
+    val nickname: String,
+    val profileImgName: String?,
+    val profileImgPath: String?,
     val profileType: ProfileType
 )

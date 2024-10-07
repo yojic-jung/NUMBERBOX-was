@@ -35,8 +35,20 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         body: Any?,
         request: WebRequest
     ): ResponseEntity<Any> {
-        logger.error(ex)
+        println(ex.stackTraceToString())
+
+//        logger.warn(ex)
         return ResponseUtil.error(ex, HttpStatus.BAD_REQUEST, request)
+    }
+
+    @ExceptionHandler(value = [Exception::class])
+    fun handleException(
+        ex: Exception,
+        body: Any?,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        logger.error(ex)
+        return ResponseUtil.error(ex, HttpStatus.INTERNAL_SERVER_ERROR, request)
     }
 
 
@@ -50,7 +62,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         statusCode: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any> {
-        logger.error(ex)
+        logger.warn(ex)
         return ResponseUtil.error(ex, statusCode, request)
     }
 }

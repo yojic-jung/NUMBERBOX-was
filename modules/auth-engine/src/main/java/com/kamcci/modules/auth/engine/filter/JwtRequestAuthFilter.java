@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_STANDARD_PREFIX;
+
 public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,7 +30,8 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
             // 클라이언트 토큰 추출
-            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME);
+            String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME)
+                    .replace(TOKEN_STANDARD_PREFIX, "").trim();
             if(accessToken != null && !accessToken.isBlank()) {
 
                 String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);

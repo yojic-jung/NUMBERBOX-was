@@ -25,8 +25,11 @@ dependencies {
 
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
+
     implementation(project(":project:infrastructure:email-adapter"))
     implementation(project(":project:infrastructure:orm-adapter"))
+    implementation(project(":project:infrastructure:storage-adapter"))
+
     implementation(project(":project:user-interface:rest-api"))
 
     implementation("org.springframework.boot:spring-boot-starter")
