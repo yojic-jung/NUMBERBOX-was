@@ -3,41 +3,45 @@ package com.kamcci.numberbox.restapi.config.member
 import com.kamcci.numberbox.app.usecase.member.*
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import org.mockito.Mockito
+import org.mockito.Mockito.mock
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
 class MemberControllerConfig {
     @Bean
-    fun memberFollowReadUseCase(): MemberFollowReadUseCase = Mockito.mock()
+    fun memberFollowReadUseCase(): MemberFollowReadUseCase = mock()
 
     @Bean
-    fun memberFollowModifyUseCase(): MemberFollowModifyUseCase = Mockito.mock()
+    fun memberFollowModifyUseCase(): MemberFollowModifyUseCase = mock()
 
     @Bean
-    fun memberFindUseCase(): MemberFindUseCase = Mockito.mock()
+    fun memberFindUseCase(): MemberFindUseCase = mock()
 
     @Bean
-    fun memberLoginFailureUsecase(): MemberLoginFailureUsecase = Mockito.mock()
+    fun memberLoginFailureUsecase(): MemberLoginFailureUsecase = mock()
 
     @Bean
-    fun memberModifyUseCase(): MemberModifyUseCase = Mockito.mock()
+    fun memberModifyUseCase(): MemberModifyUseCase = mock()
 
     @Bean
-    fun memberMapper(): MemberMapper = Mockito.mock()
+    fun memberMapper(): MemberMapper = mock()
 
     @Bean
-    fun memberPrivateModifyUseCase(): MemberPrivateModifyUseCase = Mockito.mock()
+    fun memberPrivateModifyUseCase(): MemberPrivateModifyUseCase = mock()
 
     @Bean
-    fun memberProfileReadUseCase(): MemberProfileReadUseCase = Mockito.mock()
+    fun memberProfileReadUseCase(): MemberProfileReadUseCase = mock()
 
     @Bean
-    fun memberProfileModifyUseCase(): MemberProfileModifyUseCase = Mockito.mock()
+    fun memberProfileModifyUseCase(): MemberProfileModifyUseCase = mock()
 
     @Bean
-    fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadUseCase = Mockito.mock()
+    fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadUseCase = mock()
 
     @Bean
-    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeSaveUseCase = Mockito.mock()
+    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeSaveUseCase = mock()
+
+    @Bean
+    fun memberReadUseCase(): MemberReadUseCase = mock()
 }

@@ -14,6 +14,8 @@ interface MemberReadOrmPort {
     // 이메일 조회
     fun findEmailByUsernameAndPhone(userName: String, phoneNumber: String): String?
 
+    fun existEmail(email: String): Boolean
+
     // 로그인 실패 카운트 조회
     fun findFailCountById(id: UUID): Int?
 

@@ -4,11 +4,10 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberDropDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
-import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.EXIST_EMAIL_MSG
-import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo.SignUpResultMSg.SUCCESS_MSG
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.repository.member.*
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
@@ -22,6 +21,7 @@ class MemberModifyService(
     // 회원가입 영속화 repository
     private val memberSaveRepo: MemberSaveOrmPort,
     private val roleSaveRepo: MemberRoleSaveOrmPort,
+    private val roleReadRepo: MemberRoleReadOrmPort,
     private val profileSaveRepo: MemberProfileSaveOrmPort,
     private val privateSaveRepo: MemberPrivateSaveOrmPort,
 ) : MemberModifyUseCase {
@@ -34,7 +34,7 @@ class MemberModifyService(
     override fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo {
         // [validation] 이메일 중복 여부 체크
         val isEmailExists = memberReadOrmPort.existsByEmail(signUpDto.email)
-        if (isEmailExists) return MemberSignUpResultVo(false, EXIST_EMAIL_MSG)
+        if (isEmailExists) throw BusinessValidException("이미 존재하는 이메일입니다.")
 
         // [회원가입 진행]
         // 1. 계정 가입
@@ -52,7 +52,8 @@ class MemberModifyService(
 
         // 4. 권한 설정
         roleSaveRepo.saveUserRole(id)
-        return MemberSignUpResultVo(true, SUCCESS_MSG)
+        val roleList = roleReadRepo.findRoleByMemberId(id)
+        return MemberSignUpResultVo(id, signUpDto.email, roleList)
     }
 
     @TXExecute

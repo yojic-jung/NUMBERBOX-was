@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
@@ -25,9 +25,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val id = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessInValidException("존재하지 않는 계정입니다.")
+        val id = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
         val failCount =
-            memberReadOrmPort.findFailCountById(id) ?: throw BusinessInValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.findFailCountById(id) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount == DISABLE_COUNT) {
@@ -40,9 +40,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
-        val userId = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessInValidException("존재하지 않는 계정입니다.")
+        val userId = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
         val lastFailTime: LocalDateTime =
-            memberReadOrmPort.findLastFailTimeById(userId) ?: throw BusinessInValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.findLastFailTimeById(userId) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 
         val isAfterLockTime = lastFailTime.plusMinutes(DISABLE_LOCK_TIME).isBefore(LocalDateTime.now())
 

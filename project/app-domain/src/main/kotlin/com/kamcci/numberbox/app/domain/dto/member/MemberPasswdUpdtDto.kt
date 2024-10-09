@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.domain.dto.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import java.util.*
 
 /**
@@ -12,6 +12,6 @@ data class MemberPasswdUpdtDto(
     val passwordConfirm: String
 ) {
     init {
-        if (password != passwordConfirm) throw BusinessInValidException("비밀번호와 비밀번호 확인 문자가 일치하지 않습니다.")
+        if (password != passwordConfirm) throw BusinessValidException("비밀번호와 비밀번호 확인 문자가 일치하지 않습니다.")
     }
 }

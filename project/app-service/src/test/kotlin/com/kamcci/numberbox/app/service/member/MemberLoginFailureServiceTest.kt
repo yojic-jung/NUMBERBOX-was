@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberRoleModifyOrmPort
@@ -49,7 +49,7 @@ class MemberLoginFailureServiceTest {
         val email = "test"
         Mockito.`when`(memberReadOrmPort.findIdByEmail(email)).thenReturn(null)
 
-        assertThrows<BusinessInValidException> {
+        assertThrows<BusinessValidException> {
             memberLoginFailureService.disableUserIfFailCountOver(email)
         }
     }
@@ -85,7 +85,7 @@ class MemberLoginFailureServiceTest {
         val email = "test"
         Mockito.`when`(memberReadOrmPort.findIdByEmail(email)).thenReturn(null)
 
-        assertThrows<BusinessInValidException> {
+        assertThrows<BusinessValidException> {
             memberLoginFailureService.ableUserIfDisableTimeOver(email)
         }
     }

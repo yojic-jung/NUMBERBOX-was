@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.dto.request.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.restapi.validation.member.EmailCheck
 import com.kamcci.numberbox.restapi.validation.member.PasswordCheck
 import jakarta.validation.Valid
@@ -27,7 +27,7 @@ data class MemberSignupRequest(
     init {
         // 비밀번호 검증 확인
         if (password != confirmPassword) {
-            throw BusinessInValidException("비밀번호가 일치하지 않습니다.")
+            throw BusinessValidException("비밀번호가 일치하지 않습니다.")
         }
     }
 }

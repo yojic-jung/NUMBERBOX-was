@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
@@ -25,14 +25,14 @@ class MemberProfileController(
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
 ) {
     // 프로필 등록
-    @PutMapping("")
+    @PostMapping("")
     fun profileRegister(
         @UserId memberId: UUID,
         @RequestBody @Valid
         profileImgReq: ProfileTypeUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        val isRegisted = memberProfileModifyUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
-        return ResponseUtil.ok(mapOf("isRegisted" to isRegisted))
+        val isRegistered = memberProfileModifyUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
+        return ResponseUtil.ok(mapOf("isRegistered" to isRegistered))
     }
 
 
@@ -98,7 +98,7 @@ class MemberProfileController(
 
         // 2. 팔로우 여부 조회
         val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
-            ?: throw BusinessInValidException("해당 계정의 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
         val isMyFollower = memberFollowReadUseCase.isMyFollower(profileId, myProfileId)
 
         // 3. 팔로워 수 조회

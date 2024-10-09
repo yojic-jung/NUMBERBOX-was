@@ -34,15 +34,7 @@ class MemberPrivateController(
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 인증코드 검증
         val codeDto = MemberVerifyCodeDto(email, req.verifyCode, VerifyCodeType.PhoneNumber)
-        val verifyCodeRs = memberVerifyCodeReadUseCase.validate(codeDto)
-        if (!verifyCodeRs.isSuccess) {
-            return ResponseUtil.ok(
-                mapOf(
-                    "isSuccess" to verifyCodeRs.isSuccess,
-                    "verifyCodeResult" to verifyCodeRs
-                )
-            )
-        }
+        memberVerifyCodeReadUseCase.validate(codeDto)
 
         // 2. 휴대폰 번호 변경
         val updtDto = MemberPhoneUpdtDto(memberId, req.phoneNumber)

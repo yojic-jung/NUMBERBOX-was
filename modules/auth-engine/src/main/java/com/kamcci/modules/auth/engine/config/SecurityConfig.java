@@ -62,12 +62,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         .requestMatchers(HttpMethod.POST, "/naverLogin").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/member/public/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/member/public/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/member/public/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/member/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/public/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/public/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/public/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/member/profile").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/member/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/member/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/member/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/member/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.GET, "/takeResource").permitAll()
                         .requestMatchers(HttpMethod.GET, "/takeResourceByResourceNo").hasAnyRole("MANAGER", "ADMIN")

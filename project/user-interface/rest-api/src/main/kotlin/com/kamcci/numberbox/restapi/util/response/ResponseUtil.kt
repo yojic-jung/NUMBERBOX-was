@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.context.request.WebRequest
 
+
 /**
  * 응답 형식 반환 util
  */
@@ -18,17 +19,57 @@ object ResponseUtil {
         return ResponseEntity(responseData, HttpStatus.valueOf(responseData.status))
     }
 
+    // WebRequest를 사용하는 경우
     fun error(exception: Exception, statusCode: HttpStatusCode, request: WebRequest): ResponseEntity<Any> {
-        val requestUri = request.contextPath
-        val responseErrMsg =
-            ResponseErrMsg(status = statusCode.value(), message = exception.message.toString(), path = requestUri)
-        return ResponseEntity(responseErrMsg, statusCode)
+        return error(exception, statusCode, false, request)
     }
 
-    fun error(exception: Exception, statusCode: Int, request: HttpServletRequest): ResponseEntity<ResponseErrMsg> {
-        val requestUri = request.contextPath
+    fun error(
+        exception: Exception,
+        statusCode: HttpStatusCode,
+        showMsg: Boolean,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        val uri = if (request is HttpServletRequest) {
+            request.requestURI
+        } else {
+            request.contextPath
+        }
+        return error(exception, statusCode.value(), showMsg, uri)
+    }
+
+    // HttpServletRequest를 사용하는 경우
+    fun error(
+        exception: Exception,
+        statusCode: Int,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        return error(exception, statusCode, false, request.requestURI)
+    }
+
+    fun error(
+        exception: Exception,
+        statusCode: Int,
+        showMsg: Boolean,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        return error(exception, statusCode, showMsg, request.requestURI)
+    }
+
+    // 에러메시지 응답 반환
+    private fun error(
+        exception: Exception,
+        statusCode: Int,
+        showMsg: Boolean,
+        requestUri: String
+    ): ResponseEntity<Any> {
         val responseErrMsg =
-            ResponseErrMsg(status = statusCode, message = exception.message.toString(), path = requestUri)
+            ResponseErrMsg(
+                status = statusCode,
+                showMsg = showMsg,
+                message = exception.message.toString(),
+                path = requestUri
+            )
         return ResponseEntity(responseErrMsg, HttpStatusCode.valueOf(statusCode))
     }
 }

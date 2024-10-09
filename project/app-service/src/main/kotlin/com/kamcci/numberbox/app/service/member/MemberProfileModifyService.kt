@@ -3,6 +3,7 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.repository.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
@@ -17,10 +18,12 @@ class MemberProfileModifyService(
     private val memberProfileModifyOrmPort: MemberProfileModifyOrmPort,
     private val fileStorage: FileStorage
 ) : MemberProfileModifyUseCase {
+    @TXExecute
     override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Boolean {
         return memberProfileModifyOrmPort.updateProfileTypeByMemberId(memberId, profileType) > 0
     }
 
+    @TXExecute
     override fun updateImgByMemberId(memberId: UUID, file: File): Boolean {
         // 1. 이미 등록된 프로필 이미지 정보 가져오기
         val profileImgVo = memberProfileReadOrmPort.findProfileImgByMemberId(memberId)
@@ -42,6 +45,7 @@ class MemberProfileModifyService(
         return updtCnt > 0
     }
 
+    @TXExecute
     override fun updateNicknameByMemberId(memberId: UUID, nickname: String): Boolean {
         return memberProfileModifyOrmPort.updateNicknameByMemberId(memberId, nickname) > 0
     }

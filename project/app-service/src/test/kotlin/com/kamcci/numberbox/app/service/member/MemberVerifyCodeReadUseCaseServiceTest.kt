@@ -2,11 +2,12 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
-import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeResultVo.VerifyResultMSg.*
 import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import java.time.LocalDateTime
@@ -31,12 +32,11 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     fun `인증 코드 미존재 - 실패`() {
         `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, signUpDto.verifyCodeType))
             .thenReturn(null)
-        // when
-        val resultVo = memberVerifyCodeReadUseCase.validate(signUpDto)
 
-        // then
-        assertThat(resultVo.isSuccess).isFalse()
-        assertThat(resultVo.messageType).isEqualTo(NOT_EXIST)
+        // when & then
+        assertThrows<BusinessValidException> {
+            memberVerifyCodeReadUseCase.validate(signUpDto)
+        }
     }
 
     @Test
@@ -49,11 +49,10 @@ class MemberVerifyCodeReadUseCaseServiceTest {
         `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp))
             .thenReturn(memberEmailVerifyCodeVo)
 
-        // when
-        val resultVo = memberVerifyCodeReadUseCase.validate(signUpDto)
-
-        assertThat(resultVo.isSuccess).isFalse()
-        assertThat(resultVo.messageType).isEqualTo(EXPIRED_MSG)
+        // when & then
+        assertThrows<BusinessValidException> {
+            memberVerifyCodeReadUseCase.validate(signUpDto)
+        }
     }
 
     @Test
@@ -67,11 +66,10 @@ class MemberVerifyCodeReadUseCaseServiceTest {
             memberEmailVerifyCodeVo
         )
 
-        // when
-        val resultVo = memberVerifyCodeReadUseCase.validate(signUpDto)
-
-        assertThat(resultVo.isSuccess).isFalse()
-        assertThat(resultVo.messageType).isEqualTo(NOT_MATCH_CODE_MSG)
+        // when & then
+        assertThrows<BusinessValidException> {
+            memberVerifyCodeReadUseCase.validate(signUpDto)
+        }
     }
 
     @Test
@@ -85,9 +83,9 @@ class MemberVerifyCodeReadUseCaseServiceTest {
             memberEmailVerifyCodeVo
         )
 
-        // when
-        val resultVo = memberVerifyCodeReadUseCase.validate(signUpDto)
-
-        assertThat(resultVo.isSuccess).isTrue()
+        // when & then
+        assertDoesNotThrow {
+            memberVerifyCodeReadUseCase.validate(signUpDto)
+        }
     }
 }

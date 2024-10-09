@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -26,7 +26,7 @@ class MemberProfileReadServiceTest {
     fun `팔로잉 조회 - 실패(프로필 미존재 회원)`() {
         val memberId = UUID.randomUUID()
         `when`(memberProfileReadOrmPort.findProfileIdByMemberId(memberId)).thenReturn(null)
-        assertThrows<BusinessInValidException> {
+        assertThrows<BusinessValidException> {
             memberProfileReadService.findFollowingProfileByMemberId(memberId)
         }
     }
@@ -42,7 +42,7 @@ class MemberProfileReadServiceTest {
     fun `팔로워 조회 - 실패(프로필 미존재 회원)`() {
         val memberId = UUID.randomUUID()
         `when`(memberProfileReadOrmPort.findProfileIdByMemberId(memberId)).thenReturn(null)
-        assertThrows<BusinessInValidException> {
+        assertThrows<BusinessValidException> {
             memberProfileReadService.findFollowerProfileByMemberId(memberId)
         }
     }

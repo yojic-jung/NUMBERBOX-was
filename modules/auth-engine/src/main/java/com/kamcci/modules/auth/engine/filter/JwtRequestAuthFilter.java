@@ -32,7 +32,7 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
             // 클라이언트 토큰 추출
             String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME)
                     .replace(TOKEN_STANDARD_PREFIX, "").trim();
-            if(accessToken != null && !accessToken.isBlank()) {
+            if(accessToken != null && !accessToken.isBlank() && !accessToken.equals("null")) {
 
                 String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
 

@@ -1,9 +1,8 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeResultVo
-import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeResultVo.VerifyResultMSg.*
 import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
 import java.time.Duration
@@ -19,20 +18,18 @@ class MemberVerifyCodeReadUseCaseService(
         private const val EMAIL_CODE_EXPIRE_TIME = 180
     }
 
-    override fun validate(codeDto: MemberVerifyCodeDto): MemberVerifyCodeResultVo {
+    override fun validate(codeDto: MemberVerifyCodeDto) {
         // 1. 인증 코드 존재 여부 조회
         val verifyCodeVo = memberVerifyCodeReadOrmPort.findByEmailAndCodeType(codeDto.email, codeDto.verifyCodeType)
-            ?: return MemberVerifyCodeResultVo(false, NOT_EXIST)
+            ?: throw BusinessValidException("인증 코드가 존재하지 않습니다.")
 
         // 2. 인증 코드 만료여부 체크
         val duration = Duration.between(verifyCodeVo.sysCreateTime, LocalDateTime.now())
-        if (duration.seconds > EMAIL_CODE_EXPIRE_TIME) return MemberVerifyCodeResultVo(false, EXPIRED_MSG)
+        if (duration.seconds > EMAIL_CODE_EXPIRE_TIME) throw BusinessValidException("만료된 인증 코드입니다.")
 
         // 3. 인증 코드 일치 여부 체크
         if (codeDto.verifyCode != UUID.fromString(verifyCodeVo.verifyCode)) {
-            return MemberVerifyCodeResultVo(false, NOT_MATCH_CODE_MSG)
+            throw BusinessValidException("인증 코드가 일치하지 않습니다.")
         }
-
-        return MemberVerifyCodeResultVo(true, VERIFY_SUCCESS)
     }
 }

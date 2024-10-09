@@ -7,5 +7,5 @@ enum class ProfileType(val id: Int, val desc: String) {
     Teacher(3, "교사"),
     SchoolParent(4, "학부모"),
     Student(5, "학생"),
-    Etc(6, "미등록"),
+    Etc(6, "기타"),
 }

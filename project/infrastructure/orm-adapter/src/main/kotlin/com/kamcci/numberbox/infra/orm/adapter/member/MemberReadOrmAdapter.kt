@@ -28,6 +28,13 @@ class MemberReadOrmAdapter : MemberReadOrmPort, BaseRepository() {
             )
             .fetchOne()
 
+    override fun existEmail(email: String): Boolean =
+        queryFactory
+            .selectOne()
+            .from(memberEntity)
+            .where(memberEntity.email.eq(email))
+            .fetchOne() != null
+
     override fun findFailCountById(id: UUID) =
         queryFactory
             .select(memberEntity.failCount)
