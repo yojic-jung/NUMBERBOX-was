@@ -1,9 +1,6 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberDropDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.*
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
@@ -27,7 +24,20 @@ class MemberModifyService(
 ) : MemberModifyUseCase {
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
-        return memberModifyOrmPort.updatePassword(updtDto.memberId, updtDto.password)
+        // 이전 비밀번호 일치 여부 확인
+        val dbPassword = memberReadOrmPort.findPasswordByMemberId(updtDto.memberId) ?: return false
+        val isPasswordEqual = memberPasswordEncoder.matches(updtDto.previousPassword, dbPassword)
+        if (!isPasswordEqual) return false
+
+        // 비밀번호 변경
+        val encodedPassword = memberPasswordEncoder.encode(updtDto.password)
+        return memberModifyOrmPort.updatePassword(updtDto.memberId, encodedPassword)
+    }
+
+    @TXExecute
+    override fun confirmPassword(confirmDto: MemberPasswdConfirmDto): Boolean {
+        val encodedPassword = memberReadOrmPort.findPasswordByMemberId(confirmDto.memberId) ?: return false
+        return memberPasswordEncoder.matches(confirmDto.password, encodedPassword)
     }
 
     @TXExecute

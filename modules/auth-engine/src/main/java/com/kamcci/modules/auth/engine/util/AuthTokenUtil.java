@@ -7,13 +7,15 @@ import java.util.UUID;
 public interface AuthTokenUtil {
     String createAccessToken(String email, UUID userUniqId, List<String> roleList);
 
+    String createAccessToken(String oldAccessToken);
+
     String createRefreshToken();
 
     String getEmail(String token);
 
     UUID getUserUniqId(String token);
 
-    void throwExceptionIfInvalidToken(String jwtToken);
+    List<String> getRoles(String token);
 
-    void throwExceptionIfInvalidToken(String jwtToken, boolean exceptExpiration);
+    void checkValidToken(String jwtToken, boolean checkExpiration);
 }

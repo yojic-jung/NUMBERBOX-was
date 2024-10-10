@@ -31,6 +31,15 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         this.eventPublisher = eventPublisher;
     }
 
+    @Override
+    public void refreshAccessToken(String oldAccessToken) {
+        HttpServletResponse response =
+                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+
+        String accessToken = authTokenUtil.createAccessToken(oldAccessToken);
+        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+    }
+
     /**
      * accessToken을 만들어 헤더에, refreshToken을 만들어 쿠키에 담음
      * todo 제대로 동작하는지 테스트 필요

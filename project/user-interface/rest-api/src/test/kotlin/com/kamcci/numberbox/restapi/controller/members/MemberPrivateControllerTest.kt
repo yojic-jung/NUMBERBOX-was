@@ -30,7 +30,7 @@ class MemberPrivateControllerTest : BaseMockMvcTest() {
         `when`(memberPrivateModifyUseCase.updatePhoneNumber(any())).thenReturn(true)
 
         //when
-        val resultAction = requestJsonPut(UPDATE_PHONE_URL, reqBody)
+        val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -46,7 +46,7 @@ class MemberPrivateControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPut(UPDATE_PHONE_URL, reqBody)
+        val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)

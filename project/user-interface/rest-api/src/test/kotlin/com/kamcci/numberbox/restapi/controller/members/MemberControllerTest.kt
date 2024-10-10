@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import com.kammci.numberbox.restapi.resolver.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
@@ -14,8 +13,6 @@ import java.util.*
 
 @WebMvcUnitTest
 class MemberControllerTest : BaseMockMvcTest() {
-    @Autowired
-    lateinit var memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase
 
     @Autowired
     lateinit var memberModifyUseCase: MemberModifyUseCase
@@ -28,7 +25,7 @@ class MemberControllerTest : BaseMockMvcTest() {
     @Test
     fun `이메일 조회 - 성공`() {
         // when
-        val resultAction = requestGet(EMAIl_URL)
+        val resultAction = getRequest(EMAIl_URL)
 
         // then
         assertThat(removeQuotes(takeJsonResponseData(resultAction).get("email"))).isEqualTo(EMAIL_FROM_RESOLVER)
@@ -44,27 +41,12 @@ class MemberControllerTest : BaseMockMvcTest() {
         )
 
         // when
-        val resultAction = requestJsonPut(PASSWORD_URL, req)
+        val resultAction = putRequest(PASSWORD_URL, req)
 
         // then
         assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
     }
 
-    @Test
-    fun `비밀번호 변경 - 실패(인증 코드 실패)`() {
-        // given
-        val req = mapOf(
-            "verifyCode" to UUID.randomUUID(),
-            "password" to "abcdefgh1234!",
-            "passwordConfirm" to "abcdefgh1234!",
-        )
-
-        // when
-        val resultAction = requestJsonPut(PASSWORD_URL, req)
-
-        // then
-        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
-    }
 
     @Test
     fun `비밀번호 변경 - 성공`() {
@@ -77,7 +59,7 @@ class MemberControllerTest : BaseMockMvcTest() {
         `when`(memberModifyUseCase.updatePassword(any())).thenReturn(true)
 
         // when
-        val resultAction = requestJsonPut(PASSWORD_URL, req)
+        val resultAction = putRequest(PASSWORD_URL, req)
 
         // then
         assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")

@@ -2,14 +2,18 @@ package com.kamcci.modules.auth.engine.config;
 
 import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService;
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
+import com.kamcci.modules.auth.control.service.TokenResponseService;
 import com.kamcci.modules.auth.engine.filter.JwtRequestAuthFilter;
 import com.kamcci.modules.auth.engine.filter.LoginRequestAuthFilter;
 import com.kamcci.modules.auth.engine.provider.JwtRequestAuthProvider;
 import com.kamcci.modules.auth.engine.provider.LoginRequestAuthProvider;
 import com.kamcci.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
+import com.kamcci.modules.auth.engine.service.JwtResponseHeaderCookieService;
 import com.kamcci.modules.auth.engine.service.LoginRequestUserDetailServiceWrapper;
+import com.kamcci.modules.auth.engine.util.AuthJwtUtil;
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -37,6 +41,16 @@ public class SecurityBeanConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthTokenUtil authTokenUtil() {
+        return new AuthJwtUtil();
+    }
+
+    @Bean
+    public TokenResponseService tokenResponseService(ApplicationEventPublisher eventPublisher) {
+        return new JwtResponseHeaderCookieService(authTokenUtil(), eventPublisher);
     }
 
     /**
@@ -103,8 +117,9 @@ public class SecurityBeanConfig {
      * jwt 인증 요청시 사용되는 인증 필터
      */
     @Bean
-    public JwtRequestAuthFilter jwtRequestAuthFilter(AuthenticationManager authenticationManager) {
-        return new JwtRequestAuthFilter(authenticationManager);
+    public JwtRequestAuthFilter jwtRequestAuthFilter(TokenResponseService tokenResponseService,
+                                                     AuthenticationManager authenticationManager) {
+        return new JwtRequestAuthFilter(authenticationManager, tokenResponseService);
     }
 
 }

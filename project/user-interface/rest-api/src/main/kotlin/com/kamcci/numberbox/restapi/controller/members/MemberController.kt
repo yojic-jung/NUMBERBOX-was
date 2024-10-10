@@ -2,10 +2,9 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
-import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
+import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdConfirmRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberVerifyCodeRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
@@ -20,7 +19,6 @@ import java.util.*
 @RequestMapping("/member")
 class MemberController(
     private val memberModifyUseCase: MemberModifyUseCase,
-    private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
     private val memberMapper: MemberMapper,
 ) {
     // 내 이메일
@@ -36,17 +34,22 @@ class MemberController(
         @UserEmail email: String,
         @RequestBody @Valid req: MemberPasswdUpdtRequest
     ): ResponseEntity<ResponseData<Any>> {
-        // 1. 인증코드 검증
-        val codeDto = MemberVerifyCodeDto(email, req.verifyCode, VerifyCodeType.Password)
-        memberVerifyCodeReadUseCase.validate(codeDto)
-
-        // 2. 비밀번호 변경
         val updtDto = memberMapper.toPasswdUpdtDto(memberId, req)
         val isSuccess = memberModifyUseCase.updatePassword(updtDto)
 
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 
+    // 비밀번호 확인
+    @PostMapping("/password-confirm")
+    fun confirmPassword(
+        @UserId memberId: UUID,
+        @RequestBody @Valid req: MemberPasswdConfirmRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        val confirmDto = MemberPasswdConfirmDto(memberId, req.password)
+        val isSuccess = memberModifyUseCase.confirmPassword(confirmDto)
+        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
+    }
 
     // 탈퇴
     @PostMapping("/drop")

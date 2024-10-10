@@ -30,9 +30,10 @@ class MemberLoginFailureService(
             memberReadOrmPort.findFailCountById(id) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
-        if (failCount == DISABLE_COUNT) {
+        if (failCount >= DISABLE_COUNT) {
             membersRoleModifyRepository.updateEnabledById(id, false)
         }
+
         // 실패 카운트 +1
         memberModifyOrmPort.updateFailCountById(id, failCount + 1)
         return failCount >= DISABLE_COUNT
@@ -48,7 +49,7 @@ class MemberLoginFailureService(
 
         // 비활성화 잠금 시간 지나면 enabled=true, failCount=0로 변경(로그인 시도 가능하도록)
         if (isAfterLockTime) {
-            membersRoleModifyRepository.updateEnabledById(userId, false)
+            membersRoleModifyRepository.updateEnabledById(userId, true)
             memberModifyOrmPort.updateFailCountById(userId, 0)
         } else {
             // 비활성화 잠금 시간이 지나지 않으면 마지막 실패 시간만 변경(지속적으로 실패시 계정 잠금시간을 늘리기 위하여)

@@ -6,7 +6,6 @@ import com.kamcci.modules.auth.engine.exception.RefreshTokenNullException;
 import com.kamcci.modules.auth.engine.exception.TokenOwnerNotMatchingException;
 import com.kamcci.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,14 +29,15 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) {
         // 클라이언트 요청에 포함된 토큰 추출
-        final String accessToken = (String) authentication.getPrincipal();
-        final String refreshToken = (String) authentication.getDetails();
+        String accessToken = (String) authentication.getPrincipal();
+        String refreshToken = (String) authentication.getDetails();
 
         // check1. refreshToken 존재 여부 파악(accessToken은 존재함, 필터가 액세스 토큰 있는 경우에만 실행)
         if(refreshToken == null) throw new RefreshTokenNullException();
 
         // check2. 토큰 유효성 검사
-        checkValidToken(accessToken, refreshToken);
+        authTokenUtil.checkValidToken(accessToken, false);
+        authTokenUtil.checkValidToken(refreshToken, true);
 
         // 서버에서 사용자 정보 조회
         final String email = authTokenUtil.getEmail(accessToken);
@@ -52,21 +52,6 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
 
         // Authentication 객체 반환
         return makeAuthentication(user);
-    }
-
-    /**
-     * 토큰 유효성 검사
-     */
-    private void checkValidToken(String accessToken, String refreshToken) {
-        // accessToken 만료 여부 제외하고 유효성 검사
-        boolean exceptExpire = true;
-        authTokenUtil.throwExceptionIfInvalidToken(accessToken, exceptExpire);
-        // refreshToken 유효성 검사
-        try {
-            authTokenUtil.throwExceptionIfInvalidToken(refreshToken);
-        } catch(ExpiredJwtException ex) {
-            // todo IP 체크하여 접속한 이력 있다면 리프레시 토큰도 재발급
-        }
     }
 
     /**

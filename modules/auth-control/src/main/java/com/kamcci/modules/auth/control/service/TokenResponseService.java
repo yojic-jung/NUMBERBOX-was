@@ -7,7 +7,10 @@ import java.util.UUID;
  * Def. 토큰을 response에 담음
  */
 public interface TokenResponseService {
-    // email, userId, roleList를 통해 토큰을 만들어 response에 담음
+    // 액세스 토큰 재발급
+    void refreshAccessToken(String oldAccessToken);
+
+    // 액세스 토큰 및 리프레시 토큰을 만들어 response에 담음
     void responseAuthToken(String email, UUID userId, List<String> roleList);
 
     // accessToken, refreshToken을 response에 담음

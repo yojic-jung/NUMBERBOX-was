@@ -54,7 +54,12 @@ class LoginFailureController(
             is DisabledUserException -> {
                 // 계정 비활성화 유효시간이 `지난 경우 다시 활성화
                 val isAfterDisableTime: Boolean = memberLoginFailureUsecase.ableUserIfDisableTimeOver(userEmail)
-                if (isAfterDisableTime) ResponseUtil.error(exception, ABLE_USER.statusCode, isShowErrMsg, request)
+                if (isAfterDisableTime) ResponseUtil.error(
+                    DisabledUserException("계정 잠금이 해제 되었습니다.\n다시 로그인 시도해주세요."),
+                    ABLE_USER.statusCode,
+                    isShowErrMsg,
+                    request
+                )
                 else ResponseUtil.error(exception, DISABLE_USER.statusCode, isShowErrMsg, request)
             }
 

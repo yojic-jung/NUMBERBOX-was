@@ -14,7 +14,6 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.*
 
 @WebMvcUnitTest
@@ -42,7 +41,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberProfileModifyUseCase.updateProfileTypeByMemberId(any(), any())).thenReturn(true)
 
         //when
-        val resultAction = requestJsonPut(PROFILE_REG_URL, reqBody)
+        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
 
         // then
         assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isRegisted"))).isEqualTo("true")
@@ -54,10 +53,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("profileType" to "123")
 
         //when
-        val resultAction = requestJsonPut(PROFILE_REG_URL, reqBody)
+        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
 
@@ -65,14 +64,14 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `프로필 이미지 등록 - 성공`() {
         // given
         val file = MockMultipartFile("imgFile", "originalFilename", "image/jpeg", "12345".toByteArray())
-        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any())).thenReturn(true)
+//        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any(), any())).thenReturn(true)
 
         // when
         val resultActions =
             mockMvc.perform(multipart(PROFILE_IMG_URL).file(file))
 
         // then
-        resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultActions)
     }
 
 
@@ -80,14 +79,14 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `프로필 이미지 등록 - 실패`() {
         // given
         val file = MockMultipartFile("noName", "originalFilename", "image/jpeg", "12345".toByteArray())
-        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any())).thenReturn(true)
+//        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any(), any())).thenReturn(true)
 
         // when
         val resultActions =
             mockMvc.perform(multipart(PROFILE_IMG_URL).file(file))
 
         // then
-        resultActions.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultActions)
     }
 
     @Test
@@ -96,10 +95,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("nickname" to "nickname")
 
         //when
-        val resultAction = requestJsonPut(NICKNAME_CHNG_URL, reqBody)
+        val resultAction = putRequest(NICKNAME_CHNG_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -108,10 +107,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("nickname" to "")
 
         //when
-        val resultAction = requestJsonPut(NICKNAME_CHNG_URL, reqBody)
+        val resultAction = putRequest(NICKNAME_CHNG_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
 
@@ -124,10 +123,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberProfileReadUseCase.findFollowerProfileByMemberId(any())).thenReturn(list)
 
         // when
-        val resultAction = requestGet(MY_PROFILE_URL)
+        val resultAction = getRequest(MY_PROFILE_URL)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -137,10 +136,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberFollowReadUseCase.countFollower(any())).thenReturn(1)
 
         // when
-        val resultAction = requestGet("$MY_PROFILE_URL/1")
+        val resultAction = getRequest("$MY_PROFILE_URL/1")
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -149,18 +148,18 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
 
         // when
-        val resultAction = requestGet("$MY_PROFILE_URL/1")
+        val resultAction = getRequest("$MY_PROFILE_URL/1")
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
     fun `다른 사람 프로필 보기 - 실패(프로필 id 양수 아님)`() {
         // when
-        val resultAction = requestGet("$MY_PROFILE_URL/0")
+        val resultAction = getRequest("$MY_PROFILE_URL/0")
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 }

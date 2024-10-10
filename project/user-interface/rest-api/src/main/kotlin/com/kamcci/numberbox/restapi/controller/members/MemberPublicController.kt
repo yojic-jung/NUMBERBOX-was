@@ -85,6 +85,7 @@ class MemberPublicController(
         @EmailCheck
         @RequestParam email: String
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
-        return ResponseUtil.ok(mapOf("isSuccess" to memberFindUseCase.findMyPassword(email)))
+        memberFindUseCase.findMyPassword(email)
+        return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
 }

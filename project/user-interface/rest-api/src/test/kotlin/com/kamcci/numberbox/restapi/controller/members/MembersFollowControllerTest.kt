@@ -26,7 +26,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(1L)
 
         //when
-        val resultAction = requestJsonPost("$FOLLOWING_URL/2", reqBody)
+        val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -39,7 +39,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
 
         //when
-        val resultAction = requestJsonPost("$FOLLOWING_URL/2", reqBody)
+        val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -52,7 +52,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
 
         //when
-        val resultAction = requestJsonDel("$FOLLOWING_URL/2", reqBody)
+        val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -65,7 +65,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
 
         //when
-        val resultAction = requestJsonDel("$FOLLOWING_URL/2", reqBody)
+        val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)

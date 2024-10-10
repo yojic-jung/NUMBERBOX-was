@@ -8,7 +8,6 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
-import com.kamcci.numberbox.restapi.util.file.FileConvertUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -43,11 +42,13 @@ class MemberProfileController(
         @ModelAttribute @Valid
         profileImgReq: ProfileImgUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        // multipartFile to File
-        val imgFile = FileConvertUtil.toFile(profileImgReq.imgFile)
         // 프로필 이미지 변경
-        val isUpdated = memberProfileModifyUseCase.updateImgByMemberId(memberId, imgFile)
-        return ResponseUtil.ok(mapOf("isUpdated" to isUpdated))
+        val fileNameVo = memberProfileModifyUseCase.updateImgByMemberId(
+            memberId,
+            profileImgReq.imgFile.originalFilename!!,
+            profileImgReq.imgFile.inputStream
+        )
+        return ResponseUtil.ok(mapOf("fileNameVo" to fileNameVo))
     }
 
     // 닉네임 변경

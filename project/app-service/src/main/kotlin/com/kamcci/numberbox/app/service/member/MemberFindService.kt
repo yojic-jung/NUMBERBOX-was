@@ -2,9 +2,12 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailCodeMessageDto
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.Aliases
+import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
+import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberFindUseCase
@@ -14,6 +17,7 @@ class MemberFindService(
     private val memberReadOrmPort: MemberReadOrmPort,
     private val memberModifyOrmPort: MemberModifyOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
+    private val passwordEncoder: MemberPasswordEncoder,
     @Aliases("password")
     private val emailMessageTemplate: EmailMessageTemplate
 ) : MemberFindUseCase {
@@ -22,25 +26,26 @@ class MemberFindService(
         const val TMP_PASSWD_LENGTH = 40
     }
 
+    @TXExecute
     override fun findMyEmail(userName: String, phoneNumber: String): String? {
         return memberReadOrmPort.findEmailByUsernameAndPhone(userName, phoneNumber)
     }
 
-    override fun findMyPassword(email: String): Boolean {
-        val isExist = memberReadOrmPort.existsByEmail(email)
-        // 이메일 존재하는 경우
-        if (isExist) {
-            // 임시 비밀번호로 변경
-            val tmpPassword = makeTmpPassword()
-            memberModifyOrmPort.updatePassword(email, tmpPassword)
-
-            // 임시 비밀번호 메시지 전송
-            val msgDto = EmailCodeMessageDto(email, tmpPassword)
-            memberVerifyCodeEmailPort.send(msgDto, emailMessageTemplate)
+    @TXExecute
+    override fun findMyPassword(email: String) {
+        memberReadOrmPort.existsByEmail(email).let {
+            if (!it) throw BusinessValidException("해당 계정이 존재하지 않습니다.")
         }
-        return isExist
-    }
+        // 이메일 존재하는 경우
+        // 임시 비밀번호로 변경
+        val tmpPassword = makeTmpPassword()
+        val encodedPassword = passwordEncoder.encode(tmpPassword)
+        memberModifyOrmPort.updatePassword(email, encodedPassword)
 
+        // 임시 비밀번호 메시지 전송
+        val msgDto = EmailCodeMessageDto(email, tmpPassword)
+        memberVerifyCodeEmailPort.send(msgDto, emailMessageTemplate)
+    }
 
     fun makeTmpPassword(): String {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9') + "!@#%*()-_+[]{};:,.?".toList()

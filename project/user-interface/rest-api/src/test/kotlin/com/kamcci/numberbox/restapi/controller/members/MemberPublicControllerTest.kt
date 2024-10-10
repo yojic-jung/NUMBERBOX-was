@@ -41,7 +41,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         `when`(memberReadUseCase.existEmail(any())).thenReturn(false)
 
         //when
-        val resultAction = requestJsonPost(CREATE_VERIFY_CODE_URL, reqBody)
+        val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -57,7 +57,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         `when`(memberReadUseCase.existEmail(any())).thenReturn(false)
 
         //when
-        val resultAction = requestJsonPost(CREATE_VERIFY_CODE_URL, reqBody)
+        val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -74,7 +74,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -91,7 +91,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -108,7 +108,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -132,7 +132,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -155,7 +155,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -178,7 +178,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(SIGNUP_URL, reqBody)
+        val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -193,7 +193,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestJsonPost(CREATE_VERIFY_CODE_URL, reqBody)
+        val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -208,7 +208,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+        val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
@@ -223,7 +223,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+        val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -238,7 +238,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         )
 
         //when
-        val resultAction = requestGet(FIND_EMAIL_URL, reqBody)
+        val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -250,7 +250,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("email" to "email")
 
         //when
-        val resultAction = requestGet(FIND_PASSWD_URL, reqBody)
+        val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
@@ -262,7 +262,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("email" to "test@test.com")
 
         //when
-        val resultAction = requestGet(FIND_PASSWD_URL, reqBody)
+        val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
 
         // then
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)

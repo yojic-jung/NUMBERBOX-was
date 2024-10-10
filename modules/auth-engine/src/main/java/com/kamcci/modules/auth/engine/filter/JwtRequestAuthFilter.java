@@ -1,8 +1,10 @@
 package com.kamcci.modules.auth.engine.filter;
 
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
+import com.kamcci.modules.auth.control.service.TokenResponseService;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.TokenException;
+import com.kamcci.modules.auth.engine.exception.TokenExpirationException;
 import com.kamcci.modules.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,9 +23,12 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_ST
 public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private final AuthenticationManager authenticationManager;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final TokenResponseService tokenResponseService;
 
-    public JwtRequestAuthFilter(AuthenticationManager authenticationManager) {
+    public JwtRequestAuthFilter(AuthenticationManager authenticationManager,
+                                TokenResponseService tokenResponseService) {
         this.authenticationManager = authenticationManager;
+        this.tokenResponseService = tokenResponseService;
     }
 
     @Override
@@ -45,12 +50,17 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
 
                 // SecurityContextHolder에 인증정보 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                successfulAuthentication(accessToken);
             }
             filterChain.doFilter(request, response);
         } catch(Exception exception) {
             // 인증 실패 핸들러 호출
             unsuccessfulAuthentication(response, exception);
         }
+    }
+
+    private void successfulAuthentication(String accessToken) {
+        tokenResponseService.refreshAccessToken(accessToken);
     }
 
     private void unsuccessfulAuthentication(HttpServletResponse response, Exception exception) {
@@ -60,6 +70,9 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
             AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
         } else if(exception instanceof DisabledException) {
             AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
+        } else if(exception instanceof TokenExpirationException) {
+            String errMsg = "로그인 유효 기간이 만료되었습니다.\n다시 로그인을 해주시기 바랍니다.";
+            AuthWebUtil.responseErrMsg(response, HttpStatus.UNAUTHORIZED, true, errMsg);
         } else if(exception instanceof Exception) {
             logger.warn("jwt 인증 과정 중 예외 발생 : " + exception);
             // todo 서버에러는 프로젝트로 보내줘서 에러 로깅 해야함

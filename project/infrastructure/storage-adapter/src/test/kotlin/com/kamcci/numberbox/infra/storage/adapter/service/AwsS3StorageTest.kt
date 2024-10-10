@@ -12,7 +12,7 @@ import java.io.File
 @ActiveProfiles("storage", "storage-env")
 class AwsS3StorageTest {
     @Autowired
-    lateinit var awsS3UploadStorage: AwsS3Storage
+    lateinit var awsS3UploadStorage: AwsS3StorageAdapter
 
     @Test
     fun `파일 객체 `() {

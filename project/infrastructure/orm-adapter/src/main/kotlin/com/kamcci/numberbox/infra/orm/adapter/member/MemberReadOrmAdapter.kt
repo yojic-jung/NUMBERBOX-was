@@ -35,6 +35,13 @@ class MemberReadOrmAdapter : MemberReadOrmPort, BaseRepository() {
             .where(memberEntity.email.eq(email))
             .fetchOne() != null
 
+    override fun findPasswordByMemberId(memberId: UUID): String? =
+        queryFactory
+            .select(memberEntity.password)
+            .from(memberEntity)
+            .where(memberEntity.id.eq(memberId))
+            .fetchOne()
+
     override fun findFailCountById(id: UUID) =
         queryFactory
             .select(memberEntity.failCount)
