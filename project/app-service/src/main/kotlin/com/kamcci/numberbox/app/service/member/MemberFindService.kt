@@ -47,7 +47,7 @@ class MemberFindService(
         memberVerifyCodeEmailPort.send(msgDto, emailMessageTemplate)
     }
 
-    fun makeTmpPassword(): String {
+    private fun makeTmpPassword(): String {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9') + "!@#%*()-_+[]{};:,.?".toList()
         return (1..TMP_PASSWD_LENGTH)
             .map { chars.random() }

@@ -1,0 +1,46 @@
+package com.kamcci.numberbox.app.service.common.file
+
+import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+
+class FileNameMakeServiceTest {
+    private val fileNameMakeService = FileNameMakeService()
+
+    @Test
+    fun `알파벳과 숫자로만 이루어진 랜덤 문자열 생성 - 성공`() {
+        // given
+        val length = 10
+
+        // when
+        val randomString = fileNameMakeService.generateRandomString(length)
+
+        // then
+        // 1. 길이가 10인지 확인
+        assertEquals(length, randomString.length)
+
+        // 2. 알파벳과 숫자로만 이루어져 있는지 확인
+        assertTrue(randomString.matches(Regex("^[a-zA-Z0-9]+$")))
+    }
+
+    @Test
+    fun `확장자는 그대로 가져가며 새로운 파일 이름 생성 - 성공`() {
+        // given
+        val fileName = "test.png"
+        val fileType = FileType.ProfileIMG
+
+        // when
+        val fileNameVo = fileNameMakeService.makeFileNameByType(fileName, fileType)
+
+        // then
+        // 1. 파일 경로 첫글자는 파일 타입 상태코드
+        assertEquals(fileType.path, fileNameVo.path.split("/")[0])
+
+        // 2. 파일 확장자 그대로
+        val expectedExtension = fileName.substringAfterLast(".")
+        val actualExtension = fileNameVo.name.substringAfterLast(".")
+        assertEquals(expectedExtension, actualExtension)
+    }
+
+}
