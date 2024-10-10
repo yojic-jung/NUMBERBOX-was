@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcUnitTest
 class MembersFollowControllerTest : BaseMockMvcTest() {
@@ -29,7 +28,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -42,7 +41,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -55,7 +54,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -68,6 +67,6 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
         val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 }

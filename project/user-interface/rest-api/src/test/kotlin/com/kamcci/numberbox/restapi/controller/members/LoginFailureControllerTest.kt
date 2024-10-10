@@ -6,6 +6,7 @@ import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
+import com.kamcci.numberbox.restapi.util.response.ResponseErrMsg
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +35,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.BAD_AUTH_REQUEST.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.BAD_AUTH_REQUEST.statusCode)
     }
 
     @Test
@@ -48,7 +50,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.USER_NOT_FOUND.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.USER_NOT_FOUND.statusCode)
     }
 
     @Test
@@ -63,7 +66,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
     }
 
 
@@ -79,7 +83,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.PASSWORD_MISS_MATCH.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.PASSWORD_MISS_MATCH.statusCode)
     }
 
     @Test
@@ -94,7 +99,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.ABLE_USER.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.ABLE_USER.statusCode)
     }
 
     @Test
@@ -109,7 +115,8 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
     }
 
     @Test
@@ -124,8 +131,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val result = loginFailureController.loginFailCallback(mockRequest)
 
         // then
-        assertThat(result.body?.status).isEqualTo(AuthResponse.AUTH_SERVER_ERROR.statusCode)
+        val errMsg = result.body as ResponseErrMsg
+        assertThat(errMsg.status).isEqualTo(AuthResponse.AUTH_SERVER_ERROR.statusCode)
     }
-
-
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.util.*
 
 @WebMvcUnitTest
@@ -33,7 +32,7 @@ class MemberPrivateControllerTest : BaseMockMvcTest() {
         val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -49,7 +48,7 @@ class MemberPrivateControllerTest : BaseMockMvcTest() {
         val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
 }

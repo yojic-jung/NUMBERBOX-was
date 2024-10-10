@@ -7,7 +7,6 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -41,10 +40,10 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberProfileModifyUseCase.updateProfileTypeByMemberId(any(), any())).thenReturn(true)
 
         //when
-        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
+        val resultAction = postRequest(PROFILE_REG_URL, reqBody)
 
         // then
-        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isRegisted"))).isEqualTo("true")
+        assert2xx(resultAction)
     }
 
     @Test
@@ -53,7 +52,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("profileType" to "123")
 
         //when
-        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
+        val resultAction = postRequest(PROFILE_REG_URL, reqBody)
 
         // then
         assert4xx(resultAction)
@@ -64,7 +63,6 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `프로필 이미지 등록 - 성공`() {
         // given
         val file = MockMultipartFile("imgFile", "originalFilename", "image/jpeg", "12345".toByteArray())
-//        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any(), any())).thenReturn(true)
 
         // when
         val resultActions =
@@ -79,7 +77,6 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `프로필 이미지 등록 - 실패`() {
         // given
         val file = MockMultipartFile("noName", "originalFilename", "image/jpeg", "12345".toByteArray())
-//        `when`(memberProfileModifyUseCase.updateImgByMemberId(any(), any(), any())).thenReturn(true)
 
         // when
         val resultActions =

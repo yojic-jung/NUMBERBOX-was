@@ -44,7 +44,7 @@ class MemberControllerTest : BaseMockMvcTest() {
         val resultAction = putRequest(PASSWORD_URL, req)
 
         // then
-        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
+        assert4xx(resultAction)
     }
 
 
@@ -52,7 +52,7 @@ class MemberControllerTest : BaseMockMvcTest() {
     fun `비밀번호 변경 - 성공`() {
         // given
         val req = mapOf(
-            "verifyCode" to UUID.randomUUID(),
+            "previousPassword" to "sadfjl123",
             "password" to "abcdefgh1234!",
             "passwordConfirm" to "abcdefgh1234!",
         )
@@ -62,8 +62,6 @@ class MemberControllerTest : BaseMockMvcTest() {
         val resultAction = putRequest(PASSWORD_URL, req)
 
         // then
-        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("isSuccess"))).isEqualTo("false")
+        assert2xx(resultAction)
     }
-
-
 }

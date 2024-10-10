@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcUnitTest
 class MemberPublicControllerTest : BaseMockMvcTest() {
@@ -44,7 +43,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -54,13 +53,13 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
             "email" to EMAIL,
             "codeType" to VerifyCodeType.SignUp
         )
-        `when`(memberReadUseCase.existEmail(any())).thenReturn(false)
+        `when`(memberReadUseCase.existEmail(any())).thenReturn(true)
 
         //when
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -77,7 +76,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -94,7 +93,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -111,7 +110,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
 
@@ -135,7 +134,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -158,7 +157,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -181,7 +180,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(SIGNUP_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -196,7 +195,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -211,7 +210,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -226,7 +225,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -241,7 +240,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = getRequest(FIND_EMAIL_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -253,7 +252,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError)
+        assert4xx(resultAction)
     }
 
     @Test
@@ -265,6 +264,6 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
         val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
 
         // then
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
+        assert2xx(resultAction)
     }
 }
