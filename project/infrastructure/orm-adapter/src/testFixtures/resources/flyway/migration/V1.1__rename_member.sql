@@ -3,3 +3,4 @@
  */
 RENAME TABLE email_id_code to members_verify_code;
 RENAME TABLE refresh_token_info to member_refresh_token;
+RENAME TABLE formul_key to math_formula_key;

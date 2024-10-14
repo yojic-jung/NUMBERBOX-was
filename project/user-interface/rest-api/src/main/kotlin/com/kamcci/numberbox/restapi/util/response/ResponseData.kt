@@ -9,7 +9,7 @@ data class ResponseData<T>(
     val timestamp: LocalDateTime = LocalDateTime.now(),
     val status: Int = SUCCESS_STATUS,
     val message: String = SUCCESS_MESSAGE,
-    val data: T,
+    val data: T?,
 ) {
     companion object {
         private const val SUCCESS_MESSAGE = "성공하였습니다."
