@@ -12,7 +12,6 @@ rootProject.name = 'NUMBERBOX-was'
 
 include(":project")
 include(":project:app")
-include(":project:rest-api")
 
 // project-bootstrap
 include(":project:bootstrap")
