@@ -100,15 +100,15 @@ class MemberProfileController(
         // 2. 팔로우 여부 조회
         val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
-        val isMyFollower = memberFollowReadUseCase.isMyFollower(profileId, myProfileId)
+        val isMyFollower = memberFollowReadUseCase.isFollowing(profileId, myProfileId)
 
         // 3. 팔로워 수 조회
         val followerCount = memberFollowReadUseCase.countFollower(profileId)
         return ResponseUtil.ok(
             mapOf(
                 "profile" to profile,
-                "isMyFollower" to isMyFollower,
-                "followerCount" to followerCount,
+                "isFollowing" to isMyFollower,
+                "followerCnt" to followerCount,
             )
         )
     }

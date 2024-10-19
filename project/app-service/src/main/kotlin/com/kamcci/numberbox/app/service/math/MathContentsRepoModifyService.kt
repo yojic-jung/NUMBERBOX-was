@@ -5,10 +5,12 @@ import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoModifyOrmPort
+import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoModifyUseCase
 
 @UseCase
 class MathContentsRepoModifyService(
+    private val mathConRepoReadOrmPort: MathContentsRepoReadOrmPort,
     private val mathConRepoModifyOrmPort: MathContentsRepoModifyOrmPort
 ) : MathContentsRepoModifyUseCase {
     companion object {
@@ -19,13 +21,21 @@ class MathContentsRepoModifyService(
 
     @TXExecute
     override fun save(modifyDto: MathContentsRepoModifyDto) {
-        return mathConRepoModifyOrmPort.save(modifyDto)
-            .let { if (it) throw BusinessValidException(ALREADY_EXIST) }
+        // 존재여부 체크
+        val isExist = mathConRepoReadOrmPort.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId)
+        if (isExist) throw BusinessValidException(ALREADY_EXIST)
+
+        // 저장
+        mathConRepoModifyOrmPort.save(modifyDto)
     }
 
     @TXExecute
     override fun delete(modifyDto: MathContentsRepoModifyDto) {
-        return mathConRepoModifyOrmPort.delete(modifyDto)
-            .let { if (!it) throw BusinessValidException(NOT_EXIST) }
+        // 존재여부 체크
+        val isExist = mathConRepoReadOrmPort.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId)
+        if (!isExist) throw BusinessValidException(NOT_EXIST)
+
+        // 삭제
+        mathConRepoModifyOrmPort.delete(modifyDto)
     }
 }

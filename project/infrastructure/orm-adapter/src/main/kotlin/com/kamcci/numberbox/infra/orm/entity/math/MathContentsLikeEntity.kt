@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 @Entity
-@Table(name = "math_con_repo_info")
+@Table(name = "math_con_like_info")
 class MathContentsLikeEntity {
     @EmbeddedId
     var id: MathContentsLikeDomain? = null

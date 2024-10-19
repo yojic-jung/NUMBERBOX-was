@@ -2,13 +2,12 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeModifyUseCase
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoModifyUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
-import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
+import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import com.kamcci.numberbox.restapi.util.math.MathUnitUtil.getUnitIdList
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -21,14 +20,69 @@ import java.util.*
 @RestController
 @RequestMapping("/math/content")
 class MathContentsController(
+    private val memberProfileReadUseCase: MemberProfileReadUseCase,
     private val mathUnitInfoReadUseCase: MathUnitInfoReadUseCase,
     private val mathContentsReadUseCase: MathContentsReadUseCase,
-    private val mathConRepoModifyUseCase: MathContentsRepoModifyUseCase,
-    private val mathConLikeModifyUseCase: MathContentsLikeModifyUseCase,
+    private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
 ) {
+    companion object {
+        const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
+        const val NOT_EXIST_CONTENTS = "존재하지 않는 수학 문제입니다."
+    }
     // 문제 등록
 
-    
+
+    // 문제 번호로 조회
+    @GetMapping("/{contentsId}")
+    fun getContentsById(
+        @UserId memberId: UUID,
+        @PathVariable contentsId: Long
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문제 조회
+        val res =
+            mathContentsReadUseCase.findByContentsId(contentsId) ?: throw BusinessValidException(NOT_EXIST_CONTENTS)
+
+        return ResponseUtil.ok(mapOf("contents" to res))
+    }
+
+
+    // 나의 문제
+    @GetMapping("/user")
+    fun myContents(
+        @UserId memberId: UUID,
+        @ModelAttribute
+        @Valid req: ValidPageRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문제 조회
+        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val res = mathContentsReadUseCase.findByMemberId(memberId, pageReq)
+
+        return ResponseUtil.ok(mapOf("contents" to res))
+    }
+
+    // 사용자 문제
+    @GetMapping("/user/{profileId}")
+    fun userContents(
+        @PathVariable profileId: Long,
+        @ModelAttribute
+        @Valid req: ValidPageRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // 프로필 조회
+        val profile =
+            memberProfileReadUseCase.findByProfileId(profileId) ?: throw BusinessValidException(NOT_EXIST_MEMBER)
+
+        // 문제 조회
+        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val res = mathContentsReadUseCase.findByProfileId(profileId, pageReq)
+
+        return ResponseUtil.ok(
+            mapOf(
+                "profile" to profile,
+                "contents" to res,
+            )
+        )
+    }
+
     // 문제 조회
     @GetMapping("/list")
     fun read(
@@ -47,48 +101,19 @@ class MathContentsController(
         return ResponseUtil.ok(mapOf("contents" to res))
     }
 
-
-    // 저장소에 문제 저장
-    @PostMapping("/repo")
-    fun putRepo(
-        @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
+    // 내 저장소 문제 조회
+    @GetMapping("/repo")
+    fun myRepoContents(
+        @UserId memberId: UUID,
+        @ModelAttribute @Valid req: ValidPageRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsRepoModifyDto(req.contentsId, userId)
-        mathConRepoModifyUseCase.save(modifyDto)
-        return ResponseUtil.ok(true)
+        // 저장소에 등록된 문제 id 목록 조회
+        val contentsIdList = mathContentsRepoReadUseCase.findContentsIdByMemberId(memberId)
+
+        // 문제 조회
+        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val res = mathContentsReadUseCase.findByContentsId(contentsIdList, pageReq)
+        return ResponseUtil.ok(mapOf("contents" to res))
     }
 
-    // 저장소에서 삭제
-    @DeleteMapping("/repo")
-    fun deleteRepo(
-        @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
-    ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsRepoModifyDto(req.contentsId, userId)
-        mathConRepoModifyUseCase.delete(modifyDto)
-        return ResponseUtil.ok(true)
-    }
-
-    // 문제 좋아요
-    @PostMapping("/like")
-    fun likeContents(
-        @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
-    ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
-        mathConLikeModifyUseCase.save(modifyDto)
-        return ResponseUtil.ok(true)
-    }
-
-    // 문제 좋아요 취소
-    @DeleteMapping("/like")
-    fun likeCancelContents(
-        @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
-    ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
-        mathConLikeModifyUseCase.delete(modifyDto)
-        return ResponseUtil.ok(true)
-    }
 }

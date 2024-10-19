@@ -4,7 +4,6 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.entity.member.QMemberEntity
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.Expressions
@@ -44,7 +43,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
                     memberProfileEntity.profileType,
                 )
             )
-            .from(QMemberEntity.memberEntity)
+            .from(memberProfileEntity)
             .where(memberProfileEntity.id.eq(profileId))
             .fetchOne()
     }

@@ -3,85 +3,102 @@ package com.kamcci.numberbox.infra.orm.adapter.math
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
+import com.kamcci.numberbox.app.domain.vo.math.MathContentsDetailVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsLicenseEntity.mathContentsLicenseEntity
-import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsLikeEntity.mathContentsLikeEntity
-import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsRepositoryEntity.mathContentsRepositoryEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathUnitInfoEntity.mathUnitInfoEntity
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
-import com.querydsl.core.types.Projections
+import com.kamcci.numberbox.infra.orm.util.math.MathContentsExpression
 import com.querydsl.core.types.dsl.Expressions
-import com.querydsl.jpa.JPAExpressions
+import com.querydsl.jpa.impl.JPAQuery
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MathContentsReadOrmAdapter : MathContentsReadOrmPort, BaseRepository() {
-    override fun findByUnitId(memberId: UUID, unitId: List<Int>, pageReq: PageRequest): List<MathContentsVo> {
+class MathContentsReadOrmAdapter(
+    private val mathContentsExpression: MathContentsExpression
+) : MathContentsReadOrmPort, BaseRepository() {
+    override fun findByContentsId(contentsId: Long): MathContentsVo? =
+        findBy(contentsId = contentsId, contentsIdList = null, profileId = null, pageReq = null)
+            .fetchOne()
+
+    override fun findByContentsId(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
+        findBy(contentsId = null, contentsIdList = contentsId, profileId = null, pageReq = pageReq)
+            .fetch()
+
+    override fun findByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo> =
+        findBy(contentsId = null, contentsIdList = null, profileId = profileId, pageReq = pageReq)
+            .fetch()
+
+    // 검색조건에 따른 동적 쿼리
+    private fun findBy(
+        contentsId: Long?,
+        contentsIdList: List<Long>?,
+        profileId: Long?,
+        pageReq: PageRequest?
+    ): JPAQuery<MathContentsVo> {
+        // id 검색 조건
+        val idCondition =
+            when {
+                contentsId != null -> mathContentsEntity.id.eq(contentsId)
+
+                contentsIdList != null -> mathContentsEntity.id.`in`(contentsIdList)
+
+                profileId != null -> memberProfileEntity.id.eq(profileId)
+
+                else -> null
+            }
+
+        val qry: JPAQuery<MathContentsVo> =
+            queryFactory
+                .select(mathContentsExpression.ceMathContentsVo())
+                .from(mathContentsEntity)
+                .innerJoin(mathUnitInfoEntity)
+                .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+                .innerJoin(memberProfileEntity)
+                .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
+                .leftJoin(mathContentsLicenseEntity)
+                .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+                .where(idCondition)
+
+        if (pageReq != null) {
+            qry.offset(pageReq.getOffset())
+                .limit(pageReq.volume)
+                .orderBy(mathContentsEntity.sysCreateDate.desc())
+        }
+
+        return qry
+
+    }
+
+    override fun findDetailByMemberId(memberId: UUID, pageReq: PageRequest): List<MathContentsDetailVo> {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MathContentsVo::class.java,
-                    mathContentsEntity.id,
-                    mathContentsEntity.unitId,
-                    mathContentsEntity.typeId,
-                    mathContentsEntity.contents,
-                    mathContentsEntity.contentsImg,
-                    mathContentsEntity.solution,
-                    mathContentsEntity.solutionImg,
-                    mathContentsEntity.imgPath,
-                    mathContentsEntity.solutionImgPath,
-                    mathContentsEntity.firNo,
-                    mathContentsEntity.secNo,
-                    mathContentsEntity.thrNo,
-                    mathContentsEntity.fourNo,
-                    mathContentsEntity.fifNo,
-                    mathContentsEntity.multiChoiceType,
-                    mathContentsEntity.answer,
-                    mathContentsEntity.choiceAnswer,
-                    mathContentsEntity.quesLevel,
-                    mathContentsEntity.ansExistStts,
-                    mathContentsEntity.svcPosbStts,
-                    mathContentsEntity.contentsClassify,
-                    mathContentsEntity.orgContentsNo,
-                    mathContentsEntity.transConCnt,
-                    mathContentsEntity.sysCreateDate,
-                    mathContentsEntity.sysUpdateDate,
-                    mathContentsLicenseEntity.onlineLicStts,
-                    mathContentsLicenseEntity.perLicStts,
-                    mathContentsLicenseEntity.perLicPrice,
-                    mathContentsLicenseEntity.entLicStts,
-                    mathContentsLicenseEntity.entLicPrice,
-                    mathContentsLicenseEntity.shareStts,
-                    memberProfileEntity.id,
-                    memberProfileEntity.nickname,
-                    memberProfileEntity.profileImgName,
-                    memberProfileEntity.profileImgPath,
-                    mathUnitInfoEntity.subject,
-                    mathUnitInfoEntity.firUnit,
-                    mathUnitInfoEntity.secUnit,
-                    mathUnitInfoEntity.thrUnit,
-                    JPAExpressions
-                        .selectOne()
-                        .from(mathContentsRepositoryEntity)
-                        .where(
-                            mathContentsRepositoryEntity.id.contentsId.eq(mathContentsEntity.id),
-                            mathContentsRepositoryEntity.id.memberId.eq(memberId),
-                        )
-                        .exists(),
-                    JPAExpressions
-                        .selectOne()
-                        .from(mathContentsLikeEntity)
-                        .where(
-                            mathContentsLikeEntity.id.contentsId.eq(mathContentsEntity.id),
-                            mathContentsLikeEntity.id.memberId.eq(memberId),
-                        )
-                        .exists()
-                )
-            )
+            .select(mathContentsExpression.ceMathContentsDetailVo(memberId))
+            .from(mathContentsEntity)
+            .innerJoin(mathUnitInfoEntity)
+            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+            .innerJoin(memberProfileEntity)
+            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
+            .leftJoin(mathContentsLicenseEntity)
+            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+            .where(mathContentsEntity.memberId.eq(memberId))
+            .offset(pageReq.getOffset())
+            .limit(pageReq.volume)
+            .orderBy(mathContentsEntity.quesLevel.desc())
+            .fetch()
+    }
+
+
+    override fun findDetailByUnitId(
+        memberId: UUID,
+        unitId: List<Int>,
+        pageReq: PageRequest
+    ): List<MathContentsDetailVo> {
+        return queryFactory
+            .select(mathContentsExpression.ceMathContentsDetailVo(memberId))
             .from(mathContentsEntity)
             .innerJoin(mathUnitInfoEntity)
             .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
@@ -97,13 +114,13 @@ class MathContentsReadOrmAdapter : MathContentsReadOrmPort, BaseRepository() {
                             mathContentsLicenseEntity.shareStts.eq(Expressions.asBoolean(true))
                         )
                     ),
-                mathContentsEntity.unitId.`in`(unitId)
             )
             .offset(pageReq.getOffset())
             .limit(pageReq.volume)
             .orderBy(mathContentsEntity.quesLevel.desc())
             .fetch()
     }
+
 
     override fun countByUnitId(unitId: List<Int>): Long {
         return queryFactory

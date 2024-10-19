@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.port.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
+import com.kamcci.numberbox.app.domain.vo.math.MathContentsDetailVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import java.util.*
 
@@ -8,8 +9,20 @@ import java.util.*
  * 수학문제 조회
  */
 interface MathContentsReadOrmPort {
+    // 문제 id로 조회
+    fun findByContentsId(contentsId: Long): MathContentsVo?
+
+    // 문제 id로 조회
+    fun findByContentsId(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo>
+
+    // 사용자 프로필 id로 조회
+    fun findByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo>
+
+    // 사용자 id로 조회
+    fun findDetailByMemberId(memberId: UUID, pageReq: PageRequest): List<MathContentsDetailVo>
+
     // 단원으로 수학문제 조회
-    fun findByUnitId(memberId: UUID, unitId: List<Int>, pageReq: PageRequest): List<MathContentsVo>
+    fun findDetailByUnitId(memberId: UUID, unitId: List<Int>, pageReq: PageRequest): List<MathContentsDetailVo>
 
     // 단원으로 수학문제 카운트
     fun countByUnitId(unitId: List<Int>): Long

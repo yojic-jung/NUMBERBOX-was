@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/member/follow")
+@RequestMapping("/member/following")
 class MembersFollowController(
     private val memberFollowModifyUseCase: MemberFollowModifyUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
@@ -29,16 +29,11 @@ class MembersFollowController(
         // 팔로잉 하기
         val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
-        val isSuccess = memberFollowModifyUseCase.following(profileId, myProfileId)
+        memberFollowModifyUseCase.following(profileId, myProfileId)
 
-        // 나의 팔로워 수
-        val count = memberFollowReadUseCase.countFollower(myProfileId)
-        return ResponseUtil.ok(
-            mapOf(
-                "isSuccess" to isSuccess,
-                "count" to count
-            )
-        )
+        // 해당 사용자의 팔로워 수
+        val followerCnt = memberFollowReadUseCase.countFollower(profileId)
+        return ResponseUtil.ok(mapOf("followerCnt" to followerCnt))
     }
 
     /**
@@ -52,7 +47,10 @@ class MembersFollowController(
         // 팔로잉 취소
         val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
-        val isSuccess = memberFollowModifyUseCase.cancel(profileId, myProfileId)
-        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
+        memberFollowModifyUseCase.cancel(profileId, myProfileId)
+
+        // 해당 사용자의 팔로워 수
+        val followerCnt = memberFollowReadUseCase.countFollower(profileId)
+        return ResponseUtil.ok(mapOf("isSuccess" to followerCnt))
     }
 }

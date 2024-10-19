@@ -4,16 +4,14 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import java.time.LocalDateTime
-import java.util.*
 
 /**
  *  수학 문제
+ *  - 좋아요, 저장소 정보 포함
  */
-data class MathContentsVo(
+data class MathContentsDetailVo(
     // 문제 id
     val contentsId: Long,
-    // 문제 제작자
-    val memberId: UUID,
     // 단원 id
     val unitId: Int,
     // 유형 id
@@ -90,4 +88,8 @@ data class MathContentsVo(
     val secUnit: String,
     // 소단원
     val thrUnit: String,
+    // 저장소 저장 여부
+    val isMyRepoContents: Boolean,
+    // 좋아요 여부
+    val isLikeContents: Boolean
 )

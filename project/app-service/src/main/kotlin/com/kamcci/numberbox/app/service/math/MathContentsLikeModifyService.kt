@@ -5,10 +5,12 @@ import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.repository.math.MathContentsLikeModifyOrmPort
+import com.kamcci.numberbox.app.port.repository.math.MathContentsLikeReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsLikeModifyUseCase
 
 @UseCase
 class MathContentsLikeModifyService(
+    private val mathConLikeReadOrmPort: MathContentsLikeReadOrmPort,
     private val mathConLikeModifyPort: MathContentsLikeModifyOrmPort
 ) : MathContentsLikeModifyUseCase {
     companion object {
@@ -19,13 +21,21 @@ class MathContentsLikeModifyService(
 
     @TXExecute
     override fun save(modifyDto: MathContentsLikeModifyDto) {
-        return mathConLikeModifyPort.save(modifyDto)
-            .let { if (it) throw BusinessValidException(ALREADY_EXIST) }
+        // 존재여부 체크
+        val isExist = mathConLikeReadOrmPort.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId)
+        if (isExist) throw BusinessValidException(ALREADY_EXIST)
+
+        // 좋아요
+        mathConLikeModifyPort.save(modifyDto)
     }
 
     @TXExecute
     override fun delete(modifyDto: MathContentsLikeModifyDto) {
-        return mathConLikeModifyPort.delete(modifyDto)
-            .let { if (!it) throw BusinessValidException(NOT_EXIST) }
+        // 존재여부 체크
+        val isExist = mathConLikeReadOrmPort.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId)
+        if (!isExist) throw BusinessValidException(NOT_EXIST)
+
+        // 좋아요 취소
+        mathConLikeModifyPort.delete(modifyDto)
     }
 }

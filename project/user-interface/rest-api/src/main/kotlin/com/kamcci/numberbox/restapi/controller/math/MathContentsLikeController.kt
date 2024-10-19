@@ -1,0 +1,40 @@
+package com.kamcci.numberbox.restapi.controller.math
+
+import com.kamcci.modules.auth.control.annotation.UserId
+import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeModifyUseCase
+import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
+import com.kamcci.numberbox.restapi.util.response.ResponseData
+import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import java.util.*
+
+@RestController
+@RequestMapping("/math/like/content")
+class MathContentsLikeController(
+    private val mathConLikeModifyUseCase: MathContentsLikeModifyUseCase,
+) {
+    // 문제 좋아요
+    @PostMapping("")
+    fun likeContents(
+        @UserId userId: UUID,
+        @RequestBody @Valid req: ContentsIdRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
+        mathConLikeModifyUseCase.save(modifyDto)
+        return ResponseUtil.ok(true)
+    }
+
+    // 문제 좋아요 취소
+    @DeleteMapping("")
+    fun likeCancelContents(
+        @UserId userId: UUID,
+        @RequestBody @Valid req: ContentsIdRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
+        mathConLikeModifyUseCase.delete(modifyDto)
+        return ResponseUtil.ok(true)
+    }
+}

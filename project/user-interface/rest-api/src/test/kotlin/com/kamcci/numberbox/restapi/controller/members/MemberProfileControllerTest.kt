@@ -129,7 +129,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     @Test
     fun `다른 사람 프로필 보기 - 성공`() {
         `when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(1L)
-        `when`(memberFollowReadUseCase.isMyFollower(any(), any())).thenReturn(true)
+        `when`(memberFollowReadUseCase.isFollowing(any(), any())).thenReturn(true)
         `when`(memberFollowReadUseCase.countFollower(any())).thenReturn(1)
 
         // when

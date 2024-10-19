@@ -17,6 +17,6 @@ class MemberFollowReadService(
     override fun countFollower(followingId: Long): Long =
         memberFollowReadOrmPort.countFollower(followingId)
 
-    override fun isMyFollower(follwingId: Long, followerId: Long): Boolean =
+    override fun isFollowing(follwingId: Long, followerId: Long): Boolean =
         memberFollowReadOrmPort.existFollow(follwingId, followerId)
 }

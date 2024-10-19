@@ -13,5 +13,6 @@ interface MemberFollowReadUseCase {
     // 팔로워 수 조회
     fun countFollower(followingId: Long): Long
 
-    fun isMyFollower(follwingId: Long, followerId: Long): Boolean
+    // 팔로잉 했는지 여부
+    fun isFollowing(follwingId: Long, followerId: Long): Boolean
 }
