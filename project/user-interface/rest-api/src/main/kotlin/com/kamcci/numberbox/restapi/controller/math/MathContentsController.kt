@@ -3,6 +3,7 @@ package com.kamcci.numberbox.restapi.controller.math
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
@@ -10,6 +11,7 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
+import com.kamcci.numberbox.restapi.mapper.mapper.MathContentsMapper
 import com.kamcci.numberbox.restapi.util.math.MathUnitUtil.getUnitIdList
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -24,7 +26,10 @@ class MathContentsController(
     private val memberProfileReadUseCase: MemberProfileReadUseCase,
     private val mathUnitInfoReadUseCase: MathUnitInfoReadUseCase,
     private val mathContentsReadUseCase: MathContentsReadUseCase,
+    private val mathContentsModifyUseCase: MathContentsModifyUseCase,
     private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
+
+    private val mathContentsMapper: MathContentsMapper
 ) {
     companion object {
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
@@ -38,7 +43,10 @@ class MathContentsController(
         @RequestBody
         @Valid createReq: MathContentsCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        return ResponseUtil.ok(mapOf("contents" to "res"))
+        val contents = mathContentsMapper.toContents(memberId, createReq)
+        val licnse = mathContentsMapper.toLicense(createReq)
+        val contentsId = mathContentsModifyUseCase.createUserCustomContents(contents, licnse)
+        return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }
 
 

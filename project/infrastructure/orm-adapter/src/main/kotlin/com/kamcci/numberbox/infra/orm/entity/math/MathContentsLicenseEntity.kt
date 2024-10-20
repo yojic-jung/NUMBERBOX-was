@@ -12,8 +12,8 @@ import java.time.LocalDateTime
 @Table(name = "math_contents_license")
 class MathContentsLicenseEntity {
     @Id
-    @Column(name = "contents_no")
-    var contentsId: Long = 0
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
 
     // 온라인 공유 여부
     @Column(length = 1, nullable = false)
@@ -25,7 +25,7 @@ class MathContentsLicenseEntity {
 
     // 개인 대상 판매 가격
     @Column(length = 6, nullable = true)
-    var perLicPrice: Int? = null
+    var perLicPrice: Int = 0
 
     // 기업 대상 공유 여부
     @Column(length = 1, nullable = false)
@@ -33,7 +33,7 @@ class MathContentsLicenseEntity {
 
     // 기업 대상 판매 가격
     @Column(length = 6, nullable = true)
-    var entLicPrice: Int? = null
+    var entLicPrice: Int = 0
 
     // 플랫폼 내 공유 여부
     @Column(length = 1, nullable = false)
@@ -48,6 +48,6 @@ class MathContentsLicenseEntity {
     var sysUpdateDate: LocalDateTime? = null
 
     @ManyToOne
-    @JoinColumn(name = "contents_no", insertable = false, updatable = false)
+    @JoinColumn(name = "contents_no", referencedColumnName = "contents_no")
     var mathContents: MathContentsEntity? = null
 }

@@ -1,24 +1,24 @@
 package com.kamcci.numberbox.infra.orm.entity.math
 
+import com.kamcci.numberbox.app.domain.enumeration.math.MathTypeClassifyType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
-import java.util.*
 
 /**
- * 수학문제 출처 정보
+ * 유사문제 출처 정보
  */
 @Entity
 @Table(name = "math_contents_comp")
-class MathContentsSourceEntity {
+class MathContentsSimilarSrcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var seqNo: Int = 0
 
     // 수학문제 id
     @Column(name = "contents_no", length = 11, nullable = false, updatable = false)
-    var contentsId: Int? = null
+    var contentsId: Long? = null
 
     // 출처 - 교재
     @Column(length = 20, nullable = false)
@@ -38,11 +38,7 @@ class MathContentsSourceEntity {
 
     // 문제 유형
     @Column(length = 20, nullable = true)
-    var mathTypeClassify: String? = null
-
-    // 제작자
-    @Column(name = "user_uniq_id", columnDefinition = "BINARY(16)")
-    var memberId: UUID? = null
+    var mathTypeClassify: MathTypeClassifyType? = null
 
     @Column(updatable = false)
     @CreationTimestamp

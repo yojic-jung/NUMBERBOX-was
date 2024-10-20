@@ -24,6 +24,9 @@ interface MathContentsReadOrmPort {
     // 단원으로 수학문제 조회
     fun findDetailByUnitId(memberId: UUID, unitId: List<Int>, pageReq: PageRequest): List<MathContentsDetailVo>
 
+    // 변형문제 갯수 조회
+    fun findTransContCntById(id: Long): Int?
+
     // 단원으로 수학문제 카운트
     fun countByUnitId(unitId: List<Int>): Long
 

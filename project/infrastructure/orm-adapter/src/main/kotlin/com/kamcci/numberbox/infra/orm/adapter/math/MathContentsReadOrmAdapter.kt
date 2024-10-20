@@ -61,7 +61,7 @@ class MathContentsReadOrmAdapter(
                 .innerJoin(memberProfileEntity)
                 .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
                 .leftJoin(mathContentsLicenseEntity)
-                .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+                .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
                 .where(idCondition)
 
         if (pageReq != null) {
@@ -83,7 +83,7 @@ class MathContentsReadOrmAdapter(
             .innerJoin(memberProfileEntity)
             .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
             .leftJoin(mathContentsLicenseEntity)
-            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
             .where(mathContentsEntity.memberId.eq(memberId))
             .offset(pageReq.getOffset())
             .limit(pageReq.volume)
@@ -105,7 +105,7 @@ class MathContentsReadOrmAdapter(
             .innerJoin(memberProfileEntity)
             .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
             .leftJoin(mathContentsLicenseEntity)
-            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
                 mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse)
@@ -121,13 +121,21 @@ class MathContentsReadOrmAdapter(
             .fetch()
     }
 
+    override fun findTransContCntById(id: Long): Int? {
+        return queryFactory
+            .select(mathContentsEntity.transConCnt)
+            .from(mathContentsEntity)
+            .where(mathContentsEntity.id.eq(id))
+            .fetchOne()
+    }
+
 
     override fun countByUnitId(unitId: List<Int>): Long {
         return queryFactory
             .select(mathContentsEntity.id.count())
             .from(mathContentsEntity)
             .leftJoin(mathContentsLicenseEntity)
-            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.contentsId))
+            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
                 mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse)

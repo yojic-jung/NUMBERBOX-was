@@ -91,7 +91,7 @@ class MathContentsEntity {
 
     // 출저 - 문제 번호
     @Column(length = 4, nullable = true)
-    var orgSrcNo: Int? = null
+    var orgSrcNo: Int = 0
 
     // 난이도
     @Column(length = 1, nullable = false)
@@ -115,8 +115,8 @@ class MathContentsEntity {
      * - 변형 문제의 경우 원본 문제 번호를 갖음
      * - 변형 문제 아닌 경우 0
      */
-    @Column(length = 11, nullable = false, updatable = false)
-    var orgContentsNo: Int = 0
+    @Column(name = "org_contents_no", length = 11, nullable = false, updatable = false)
+    var orgContentsId: Long = 0
 
     // 변형 문제 갯수
     @Column(length = 4, nullable = false, updatable = false)
@@ -145,13 +145,13 @@ class MathContentsEntity {
 
     // 자체제작 수학문제 출처
     @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY)
-    var mathContentsSources: MutableList<MathContentsSourceEntity> = mutableListOf()
+    var mathContentsSimilarSrc: MutableList<MathContentsSimilarSrcEntity> = mutableListOf()
 
     // 라이센스 정보
-    @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     var mathContentsLicenses: MutableList<MathContentsLicenseEntity> = mutableListOf()
 
     // 입시 수학 문제 출처
     @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY)
-    var mathContentsIpsiSources: MutableList<MathContentsIpsiSourceEntity> = mutableListOf()
+    var mathContentsIpsiSrc: MutableList<MathContentsIpsiSrcEntity> = mutableListOf()
 }

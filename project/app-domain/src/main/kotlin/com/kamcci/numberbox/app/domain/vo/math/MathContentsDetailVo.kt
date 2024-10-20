@@ -53,7 +53,7 @@ data class MathContentsDetailVo(
     // 문제 구분
     val contentsClassify: ContentsClassifyType,
     // 원본 문제 번호
-    val orgContentsNo: Int?,
+    val orgContentsId: Long?,
     // 변형 문제 수
     val transConCnt: Int?,
     // 문제 생성 시간

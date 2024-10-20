@@ -8,15 +8,15 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 /**
- * 입시 수학문제 출저 정보
+ * 입시 수학문제 출처 정보
  */
 @Entity
 @Table(name = "math_contents_ipsi")
-class MathContentsIpsiSourceEntity {
+class MathContentsIpsiSrcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "seq_no")
-    var id: Int = 0
+    var id: Long = 0
 
     // 출제 기관
     @Column(name = "manage_ins", length = 1, nullable = false)
