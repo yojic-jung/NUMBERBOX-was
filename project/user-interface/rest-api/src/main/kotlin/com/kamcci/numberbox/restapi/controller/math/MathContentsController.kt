@@ -8,6 +8,7 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
+import com.kamcci.numberbox.restapi.dto.request.math.MathContentsCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import com.kamcci.numberbox.restapi.util.math.MathUnitUtil.getUnitIdList
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -29,7 +30,16 @@ class MathContentsController(
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
         const val NOT_EXIST_CONTENTS = "존재하지 않는 수학 문제입니다."
     }
+
     // 문제 등록
+    @PostMapping("")
+    fun makeContents(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid createReq: MathContentsCreateRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        return ResponseUtil.ok(mapOf("contents" to "res"))
+    }
 
 
     // 문제 번호로 조회

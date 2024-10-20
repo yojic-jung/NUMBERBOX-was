@@ -8,9 +8,13 @@ package com.kamcci.numberbox.restapi.dto.response.math
  */
 data class MathUnitGroupResponse(
     // 단원 고유번호
-    val unitUniqNo: Int,
+    val unitId: Int,
     // 부모 단원
-    val parentVal: String,
-    // 자기 자신 단원
-    val mainVal: String
+    val parentUnitName: String,
+    // 단원명
+    val unitName: String
 )
+/**
+ * typeNo
+ * mainVal
+ */

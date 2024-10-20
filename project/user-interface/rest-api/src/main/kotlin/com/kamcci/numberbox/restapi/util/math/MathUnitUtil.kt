@@ -18,7 +18,7 @@ object MathUnitUtil {
 
         for (info in mathUnitList) {
             val key = mainVal(info)
-            if (resultList.isEmpty() || resultList.last().mainVal != key) {
+            if (resultList.isEmpty() || resultList.last().unitName != key) {
                 resultList.add(MathUnitGroupResponse(id(info), parentVal(info), key))
             }
         }
