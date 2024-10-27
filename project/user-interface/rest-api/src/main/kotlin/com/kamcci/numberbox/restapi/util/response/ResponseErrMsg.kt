@@ -8,7 +8,6 @@ import java.time.LocalDateTime
 data class ResponseErrMsg(
     val timestamp: LocalDateTime = LocalDateTime.now(),
     val status: Int = SUCCESS_STATUS,
-    val showMsg: Boolean = false,
     val message: String = SUCCESS_MESSAGE,
     val path: String?,
 ) {

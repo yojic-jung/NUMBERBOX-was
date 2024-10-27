@@ -5,14 +5,13 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.InHouse
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.Ipsi
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.vo.math.MathContentsOnlyVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
-import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
+import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
 import com.kamcci.numberbox.restapi.dto.request.math.*
@@ -35,7 +34,8 @@ class MathContentsController(
     private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
     // 문제 제작 목적
     private val mathContentsModifyUseCase: MathContentsModifyUseCase,
-    private val mathContentsMapper: MathContentsMapper
+    private val mathConGrammarModifyUseCase: MathContentsGrammarModifyUseCase,
+    private val mathContentsMapper: MathContentsMapper,
 ) {
     companion object {
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
@@ -140,31 +140,50 @@ class MathContentsController(
         )
     }
 
+    // 문제 문법 등록
+    @PutMapping("/grammar")
+    fun putMathGrammer(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid modifyReq: MathContestGrammarModifyRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문법 등록
+        mathConGrammarModifyUseCase.createGrammar(modifyReq.contentsId, modifyReq.grammar)
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(mapOf("success" to true))
+    }
 
-    // 문제 번호로 조회
+    // 문제 id로 조회
     @GetMapping("/{contentsId}")
     fun getContentsById(
         @UserId memberId: UUID,
         @PathVariable contentsId: Long,
-        @RequestParam contentsClassify: ContentsClassifyType
+        @RequestParam contentsOnly: Boolean?,
+        @RequestParam contentsClassify: ContentsClassifyType,
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 조회
         val res =
             when {
+                // 문제만 조회
+                contentsOnly != null && contentsOnly -> mathContentsReadUseCase.findContentsOnly(contentsId, memberId)
+
                 // 자체제작 문제는 유사문제 정보
-                contentsClassify == InHouse -> mathContentsReadUseCase.findInHouseContentsByContentsId(contentsId)
+                contentsClassify == InHouse -> mathContentsReadUseCase.findInHouseContentsById(contentsId)
 
                 // 입시 문제는 입시 출처 정보
-                contentsClassify == Ipsi -> mathContentsReadUseCase.findIpsiContentsByContentsId(contentsId)
+                contentsClassify == Ipsi -> mathContentsReadUseCase.findIpsiContentsById(contentsId)
 
                 // 그외는 라이선스 정보
-                else -> mathContentsReadUseCase.findByContentsId(contentsId)
-
+                else -> mathContentsReadUseCase.findById(contentsId)
             } ?: throw BusinessValidException(NOT_EXIST_CONTENTS)
 
         // 나의 제작문제인지 판별
         val isMine =
             when {
+                contentsOnly != null && contentsOnly -> {
+                    res as MathContentsOnlyVo
+                    res.memberId == memberId
+                }
                 // 자체제작 문제는 유사문제 정보
                 contentsClassify == InHouse -> {
                     res as MathInHouseContentsVo
@@ -203,7 +222,7 @@ class MathContentsController(
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.findDetailByMemberId(memberId, pageReq)
+        val res = mathContentsReadUseCase.findDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
 
         return ResponseUtil.ok(mapOf("contents" to res))
     }
@@ -260,7 +279,18 @@ class MathContentsController(
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.findByContentsId(contentsIdList, pageReq)
+        val res = mathContentsReadUseCase.findById(contentsIdList, pageReq)
+        return ResponseUtil.ok(mapOf("contents" to res))
+    }
+
+    // 문제 삭제
+    @DeleteMapping("/{contentsId}")
+    fun deleteContents(
+        @UserId memberId: UUID,
+        @PathVariable contentsId: Long
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문제 삭제
+        val res = mathContentsModifyUseCase.delete(contentsId, memberId)
         return ResponseUtil.ok(mapOf("contents" to res))
     }
 

@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsDetailVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
@@ -15,31 +16,38 @@ class MathContentsReadService(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort
 ) : MathContentsReadUseCase {
 
-    override fun findByContentsId(contentsId: Long): MathContentsVo? =
-        mathContentsReadOrmPort.findByContentsId(contentsId)
+    override fun findById(contentsId: Long): MathContentsVo? =
+        mathContentsReadOrmPort.findById(contentsId)
 
 
-    override fun findByContentsId(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
-        mathContentsReadOrmPort.findByContentsId(contentsId, pageReq)
+    override fun findById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
+        mathContentsReadOrmPort.findById(contentsId, pageReq)
 
     override fun findByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo> =
         mathContentsReadOrmPort.findByProfileId(profileId, pageReq)
 
     override fun findDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? =
-        mathContentsReadOrmPort.findDetailByContentsIdAndMemberId(id, memberId)
+        mathContentsReadOrmPort.findDetailByIdAndMemberId(id, memberId)
 
-    override fun findDetailByMemberId(memberId: UUID, pageReq: PageRequest): List<MathContentsDetailVo> =
-        mathContentsReadOrmPort.findDetailByMemberId(memberId, pageReq)
+    override fun findDetailByMemberId(
+        memberId: UUID,
+        svcPosbSttsType: ContentsSvcPosbSttsType?,
+        pageReq: PageRequest
+    ): List<MathContentsDetailVo> =
+        mathContentsReadOrmPort.findDetailByMemberId(memberId, svcPosbSttsType, pageReq)
 
-    override fun findInHouseContentsByContentsId(contentsId: Long): MathInHouseContentsVo? =
-        mathContentsReadOrmPort.findInHouseContentsByContentsId(contentsId)
+    override fun findInHouseContentsById(contentsId: Long): MathInHouseContentsVo? =
+        mathContentsReadOrmPort.findInHouseContentsById(contentsId)
 
-    override fun findIpsiContentsByContentsId(contentsId: Long): MathIpsiContentsVo? =
-        mathContentsReadOrmPort.findIpsiContentsByContentsId(contentsId)
+    override fun findIpsiContentsById(contentsId: Long): MathIpsiContentsVo? =
+        mathContentsReadOrmPort.findIpsiContentsById(contentsId)
 
 
     override fun findDetailByUnitId(memberId: UUID, unitId: List<Int>, pageReq: PageRequest) =
         mathContentsReadOrmPort.findDetailByUnitId(memberId, unitId, pageReq)
+
+    override fun findContentsOnly(contentsId: Long, memberId: UUID) =
+        mathContentsReadOrmPort.findContentsOnly(contentsId, memberId)
 
     override fun countByUnitId(unitId: List<Int>) = mathContentsReadOrmPort.countByUnitId(unitId)
 

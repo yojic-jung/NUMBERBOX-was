@@ -36,10 +36,8 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         request: WebRequest
     ): ResponseEntity<Any> {
         println(ex.stackTraceToString())
-        val businessInValidEx = ex as BusinessValidException
-
 //        logger.warn(ex)
-        return ResponseUtil.error(ex, HttpStatus.BAD_REQUEST, businessInValidEx.showMsg, request)
+        return ResponseUtil.error(ex, HttpStatus.BAD_REQUEST, request)
     }
 
     @ExceptionHandler(value = [Exception::class])

@@ -12,6 +12,7 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.repository.math.MathContentsModifyOrmPort
 import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
+import java.util.*
 
 @UseCase
 class MathContentsModifyService(
@@ -107,5 +108,11 @@ class MathContentsModifyService(
     ): Boolean {
         // 수학문제 저장
         return mathContentsModifyOrmPort.updateTransContents(contentsId, Release, contentsModifyDto) > 0
+    }
+
+    @TXExecute
+    override fun delete(contentsId: Long, memberId: UUID) {
+        // 수학문제 출시 상태 미출시로 변경
+        mathContentsModifyOrmPort.updateSvcPosbStts(contentsId, memberId, NotRelease)
     }
 }

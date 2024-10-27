@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
+import java.util.*
 
 /**
  * 수학문제 - 변경
@@ -114,4 +115,13 @@ interface MathContentsModifyOrmPort {
         svcPosbSttsType: ContentsSvcPosbSttsType,
         contentsModifyDto: MathContentsModifyDto
     ): Long
+
+    /**
+     * 서비스 가능 상태 변경
+     */
+    fun updateSvcPosbStts(
+        contentsId: Long,
+        memberId: UUID,
+        svcPosbSttsType: ContentsSvcPosbSttsType
+    ): Boolean
 }

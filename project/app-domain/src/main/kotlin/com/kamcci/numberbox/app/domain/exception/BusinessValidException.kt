@@ -1,3 +1,7 @@
 package com.kamcci.numberbox.app.domain.exception
 
-data class BusinessValidException(val msg: String, val showMsg: Boolean = false) : RuntimeException(msg)
+import com.kamcci.numberbox.app.domain.exception.code.BaseErrCodeType
+
+data class BusinessValidException(val msg: String) : RuntimeException(msg) {
+    constructor(errType: BaseErrCodeType) : this(msg = "[NB-APP-ERR-${errType.code}] : ${errType.message}")
+}

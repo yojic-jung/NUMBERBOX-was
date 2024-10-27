@@ -15,6 +15,7 @@ import com.kamcci.numberbox.infra.orm.factory.math.MathContentsIpsiFactory
 import com.kamcci.numberbox.infra.orm.factory.math.MathContentsLicenseFactory
 import com.kamcci.numberbox.infra.orm.factory.math.MathContentsSimilarSrcFactory
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository() {
@@ -161,5 +162,21 @@ class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository()
         val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
         em.persist(contentsEntity)
         return contentsEntity.id
+    }
+
+    override fun updateSvcPosbStts(
+        contentsId: Long,
+        memberId: UUID,
+        svcPosbSttsType: ContentsSvcPosbSttsType
+    ): Boolean {
+        return queryFactory
+            .update(mathContentsEntity)
+            .set(mathContentsEntity.svcPosbStts, svcPosbSttsType)
+            .where(
+                mathContentsEntity.id.eq(contentsId),
+                mathContentsEntity.memberId.eq(memberId),
+            )
+            .execute() > 0
+
     }
 }

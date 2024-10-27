@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import java.util.*
 
 /**
  * 수학문제 - 변경
@@ -90,4 +91,14 @@ interface MathContentsModifyUseCase {
         contentsModifyDto: MathContentsModifyDto,
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Boolean
+
+    /**
+     * 수학문제 삭제 - 자기 자신의 문제만 삭제 가능
+     * @param   contentsId          수학문제 id
+     * @param   memberId            member id
+     */
+    fun delete(
+        contentsId: Long,
+        memberId: UUID
+    )
 }

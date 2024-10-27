@@ -11,4 +11,7 @@ class MathContentsRepoReadService(
 ) : MathContentsRepoReadUseCase {
     override fun findContentsIdByMemberId(memberId: UUID): List<Long> =
         mathContentsRepoReadOrmPort.findContentsIdByMemberId(memberId)
+
+    override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean =
+        mathContentsRepoReadOrmPort.existByContentsIdAndMemberId(contentsId, memberId)
 }
