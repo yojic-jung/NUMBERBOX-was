@@ -1,11 +1,14 @@
 package com.kamcci.modules.auth.control.exception;
 
+import com.kamcci.modules.auth.control.exception.base.BaseAuthException;
+import com.kamcci.modules.auth.control.exception.code.Auth100ErrCodeType;
+
 /**
  * 비활성 계정
  */
-public class DisabledUserException extends RuntimeException {
+public class DisabledUserException extends BaseAuthException {
     public DisabledUserException() {
-        super("과도한 비밀번호 실패로 인해 계정이 비활성화 되었습니다.\n15분 후 다시 시도 해주세요");
+        super(Auth100ErrCodeType.DISABLED_USER);
     }
 
     public DisabledUserException(String msg) {

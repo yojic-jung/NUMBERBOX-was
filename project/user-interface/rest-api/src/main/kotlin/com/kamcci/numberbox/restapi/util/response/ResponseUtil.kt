@@ -42,6 +42,14 @@ object ResponseUtil {
         return error(exception, statusCode, request.requestURI)
     }
 
+    fun error(
+        exception: Exception,
+        statusCode: HttpStatus,
+        request: HttpServletRequest
+    ): ResponseEntity<Any> {
+        return error(exception, statusCode.value(), request.requestURI)
+    }
+
 
     // 에러메시지 응답 반환
     private fun error(

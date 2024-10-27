@@ -1,13 +1,15 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.modules.auth.control.dto.AuthResponse.*
 import com.kamcci.modules.auth.control.exception.BadAuthRequestException
 import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
+import com.kamcci.numberbox.restapi.exception.code.RestApi100ErrCodeType
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -27,20 +29,26 @@ class LoginFailureController(
         return when (exception) {
             // 클라이언트의 로그인 요청 형식이 잘못됨
             is BadAuthRequestException -> {
-                ResponseUtil.error(exception, BAD_AUTH_REQUEST.statusCode, request)
+                ResponseUtil.error(exception, HttpStatus.BAD_REQUEST, request)
             }
 
             // 계정 존재하지 않음
             is UserNotFoundException -> {
-                ResponseUtil.error(exception, USER_NOT_FOUND.statusCode, request)
+                ResponseUtil.error(exception, HttpStatus.UNAUTHORIZED, request)
             }
 
             // 비밀번호 불일치
             is PasswordMissMatchException -> {
                 // 과도한 비밀번호 불일치 요청시 계정 비활성화
                 val isDisabled: Boolean = memberLoginFailureUsecase.disableUserIfFailCountOver(userEmail)
-                if (isDisabled) ResponseUtil.error(DisabledUserException(), DISABLE_USER.statusCode, request)
-                else ResponseUtil.error(exception, PASSWORD_MISS_MATCH.statusCode, request)
+                if (isDisabled) ResponseUtil.error(
+                    BusinessValidException(RestApi100ErrCodeType.DISABLE_USER, exception),
+                    HttpStatus.FORBIDDEN, request
+                )
+                else ResponseUtil.error(
+                    BusinessValidException(RestApi100ErrCodeType.PASSWORD_MISS_MATCH, exception),
+                    HttpStatus.FORBIDDEN, request
+                )
             }
 
             // 비활성화된 계정
@@ -48,15 +56,19 @@ class LoginFailureController(
                 // 계정 비활성화 유효시간이 `지난 경우 다시 활성화
                 val isAfterDisableTime: Boolean = memberLoginFailureUsecase.ableUserIfDisableTimeOver(userEmail)
                 if (isAfterDisableTime) ResponseUtil.error(
-                    DisabledUserException("계정 잠금이 해제 되었습니다.\n다시 로그인 시도해주세요."),
-                    ABLE_USER.statusCode,
+                    BusinessValidException(RestApi100ErrCodeType.DISABLE_TO_ABLE, exception),
+                    HttpStatus.FORBIDDEN,
                     request
                 )
-                else ResponseUtil.error(exception, DISABLE_USER.statusCode, request)
+                else ResponseUtil.error(
+                    BusinessValidException(RestApi100ErrCodeType.DISABLE_USER, exception),
+                    HttpStatus.FORBIDDEN,
+                    request
+                )
             }
 
             else -> {
-                ResponseUtil.error(exception, AUTH_SERVER_ERROR.statusCode, request)
+                ResponseUtil.error(exception, HttpStatus.INTERNAL_SERVER_ERROR, request)
             }
         }
     }

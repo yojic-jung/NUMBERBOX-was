@@ -6,10 +6,11 @@ import com.kamcci.modules.auth.control.exception.code.BaseAuthErrCodeType;
  * Auth 모듈 기본 예외 타입
  */
 public class BaseAuthException extends RuntimeException {
-    final BaseAuthErrCodeType errCodeType;
-
     public BaseAuthException(BaseAuthErrCodeType errCodeType) {
-        super("[KC-AUTH-" + errCodeType.getCode() + "]" + errCodeType.getMessage());
-        this.errCodeType = errCodeType;
+        super("[KC-AUTH-ERR-" + errCodeType.getCode() + "]" + errCodeType.getMessage());
+    }
+
+    public BaseAuthException(String msg) {
+        super(msg);
     }
 }

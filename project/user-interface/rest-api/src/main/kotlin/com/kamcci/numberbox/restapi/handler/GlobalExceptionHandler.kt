@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.handler.exception
+package com.kamcci.numberbox.restapi.handler
 
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
