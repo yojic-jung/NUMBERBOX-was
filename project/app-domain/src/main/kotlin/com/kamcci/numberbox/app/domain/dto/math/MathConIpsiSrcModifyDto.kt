@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
 /**
  * 입시 수학문제 출처 정보 생성 dto
  */
-data class MathConIpsiSrcCreateDto(
+data class MathConIpsiSrcModifyDto(
     // 출제 기관
     val manageIns: IpsiManageInsType,
     // 출제 연도

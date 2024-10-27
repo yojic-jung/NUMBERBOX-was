@@ -5,10 +5,14 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsDetailVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
+import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
+import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
 import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsIpsiSrcEntity.mathContentsIpsiSrcEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsLicenseEntity.mathContentsLicenseEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsSimilarSrcEntity.mathContentsSimilarSrcEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathUnitInfoEntity.mathUnitInfoEntity
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.kamcci.numberbox.infra.orm.util.math.MathContentsExpression
@@ -71,41 +75,32 @@ class MathContentsReadOrmAdapter(
         }
 
         return qry
+    }
 
+    override fun findDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
+        return detailCommonQuery(memberId)
+            .where(
+                mathContentsEntity.id.eq(id),
+                mathContentsEntity.memberId.eq(memberId),
+            )
+            .fetchOne()
     }
 
     override fun findDetailByMemberId(memberId: UUID, pageReq: PageRequest): List<MathContentsDetailVo> {
-        return queryFactory
-            .select(mathContentsExpression.ceMathContentsDetailVo(memberId))
-            .from(mathContentsEntity)
-            .innerJoin(mathUnitInfoEntity)
-            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
-            .innerJoin(memberProfileEntity)
-            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
-            .leftJoin(mathContentsLicenseEntity)
-            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
+        return detailCommonQuery(memberId)
             .where(mathContentsEntity.memberId.eq(memberId))
             .offset(pageReq.getOffset())
             .limit(pageReq.volume)
-            .orderBy(mathContentsEntity.quesLevel.desc())
+            .orderBy(mathContentsEntity.sysCreateDate.desc())
             .fetch()
     }
-
 
     override fun findDetailByUnitId(
         memberId: UUID,
         unitId: List<Int>,
         pageReq: PageRequest
     ): List<MathContentsDetailVo> {
-        return queryFactory
-            .select(mathContentsExpression.ceMathContentsDetailVo(memberId))
-            .from(mathContentsEntity)
-            .innerJoin(mathUnitInfoEntity)
-            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
-            .innerJoin(memberProfileEntity)
-            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
-            .leftJoin(mathContentsLicenseEntity)
-            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
+        return detailCommonQuery(memberId)
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
                 mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse)
@@ -119,6 +114,46 @@ class MathContentsReadOrmAdapter(
             .limit(pageReq.volume)
             .orderBy(mathContentsEntity.quesLevel.desc())
             .fetch()
+    }
+
+    private fun detailCommonQuery(memberId: UUID): JPAQuery<MathContentsDetailVo> {
+        return queryFactory
+            .select(mathContentsExpression.ceMathContentsDetailVo(memberId))
+            .from(mathContentsEntity)
+            .innerJoin(mathUnitInfoEntity)
+            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+            .innerJoin(memberProfileEntity)
+            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
+            .leftJoin(mathContentsLicenseEntity)
+            .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
+    }
+
+    override fun findInHouseContentsByContentsId(contentsId: Long): MathInHouseContentsVo? {
+        return queryFactory
+            .select(mathContentsExpression.ceMathInHouseContentsVo())
+            .from(mathContentsEntity)
+            .innerJoin(mathUnitInfoEntity)
+            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+            .innerJoin(memberProfileEntity)
+            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
+            .leftJoin(mathContentsSimilarSrcEntity)
+            .on(mathContentsEntity.id.eq(mathContentsSimilarSrcEntity.mathContents.id))
+            .where(mathContentsEntity.id.eq(contentsId))
+            .fetchOne()
+    }
+
+    override fun findIpsiContentsByContentsId(contentsId: Long): MathIpsiContentsVo? {
+        return queryFactory
+            .select(mathContentsExpression.ceMathIpsiContentsVo())
+            .from(mathContentsEntity)
+            .innerJoin(mathUnitInfoEntity)
+            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+            .innerJoin(memberProfileEntity)
+            .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
+            .leftJoin(mathContentsIpsiSrcEntity)
+            .on(mathContentsEntity.id.eq(mathContentsIpsiSrcEntity.mathContents.id))
+            .where(mathContentsEntity.id.eq(contentsId))
+            .fetchOne()
     }
 
     override fun findTransContCntById(id: Long): Int? {

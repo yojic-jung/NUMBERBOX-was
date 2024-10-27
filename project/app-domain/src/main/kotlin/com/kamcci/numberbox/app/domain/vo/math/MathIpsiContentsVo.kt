@@ -1,17 +1,17 @@
 package com.kamcci.numberbox.app.domain.vo.math
 
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
-import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
+import com.kamcci.numberbox.app.domain.enumeration.math.*
 import java.time.LocalDateTime
+import java.util.*
 
 /**
- *  수학 문제 - 사용자 제작(라이선스 정보 포함)
- *          - 좋아요, 저장소 정보 포함
+ *  수학 문제 - 라이선스 정보 포함
  */
-data class MathContentsDetailVo(
+data class MathIpsiContentsVo(
     // 문제 id
     val contentsId: Long,
+    // 문제 제작자
+    val memberId: UUID,
     // 단원 id
     val unitId: Int,
     // 유형 id
@@ -60,18 +60,22 @@ data class MathContentsDetailVo(
     val sysCreateDate: LocalDateTime,
     // 문제 수정 시간
     val sysUpdateDate: LocalDateTime,
-    // 온라인 공유 여부
-    val onlineLicStts: Boolean?,
-    // 개인 대상 공유 여부
-    val perLicStts: Boolean?,
-    // 개인 대상 판매 금액
-    val perLicPrice: Int?,
-    // 기업 대상 공유 여부
-    val entLicStts: Boolean?,
-    // 기업 대상 판매 금액
-    val entLicPrice: Int?,
-    // 공유 여부
-    val shareStts: Boolean?,
+    // 가/나형 구분 : 1 (통합) 2 (가) 3 (나)
+    val paperType: IpsiPaperType?,
+    // 홀수형 번호
+    val oddQuesNum: Int,
+    // 짝수형 번호
+    val evenQuesNum: Int?,
+    // 오답률
+    val wrongRatio: Int,
+    // 출제 연도
+    val impYear: Int,
+    // 출제 월
+    val impMonth: Int,
+    // 출제 기관
+    val manageIns: IpsiManageInsType,
+    // 입시 수학문제 id
+    val ipsiSrcId: Long,
     // 프로필 id
     val profileId: Long,
     // 닉네임
@@ -88,8 +92,4 @@ data class MathContentsDetailVo(
     val secUnit: String,
     // 소단원
     val thrUnit: String,
-    // 저장소 저장 여부
-    val isMyRepoContents: Boolean,
-    // 좋아요 여부
-    val isLikeContents: Boolean
 )

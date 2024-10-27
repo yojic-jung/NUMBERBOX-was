@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 /**
- *  수학 문제
+ *  수학 문제 - 라이선스 정보 포함
  */
 data class MathContentsVo(
     // 문제 id

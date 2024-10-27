@@ -3,6 +3,7 @@ package com.kamcci.modules.auth.engine.support
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.modules.auth.control.annotation.UserRole
+import com.kamcci.modules.auth.control.enumeration.UserRoleType
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder
@@ -46,7 +47,14 @@ class UserDetailArgumentResolver : HandlerMethodArgumentResolver {
             hasUserEmailAnnot && isAnonymousUser -> ""
 
             // @UserRole 적용 및 인증된 사용자
-            isAnonymousUser -> authentication.authorities.map { it.authority }
+            isAnonymousUser -> {
+                val roles = authentication.authorities.map { it.authority }
+                val roleTypeList: MutableList<UserRoleType?> = mutableListOf()
+                roles.forEach { role ->
+                    roleTypeList.add(UserRoleType.entries.find { it.name == role })
+                }
+                roleTypeList
+            }
             // @UserRole 적용 및 익명 사용자
             else -> listOf<String>()
         }

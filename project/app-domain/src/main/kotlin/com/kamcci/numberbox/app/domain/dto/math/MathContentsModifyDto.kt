@@ -1,17 +1,17 @@
-package com.kamcci.numberbox.restapi.dto.request.math
+package com.kamcci.numberbox.app.domain.dto.math
 
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
+import java.util.*
 
 /**
- * 수학문제 생성 request
+ * 수학문제 생성 및 수정 dto
  */
-data class MathContentsCreateRequest(
+data class MathContentsModifyDto(
+    // 제작자
+    val memberId: UUID,
     // 단원 id
     val unitId: Int,
     // 유형 id
     val typeId: Int,
-    // 수학문제 구분
-    val contentsClassify: ContentsClassifyType,
     // 수학 문제
     val contents: String,
     // 해설
@@ -32,12 +32,4 @@ data class MathContentsCreateRequest(
     val fifNo: String?,
     // 난이도
     val quesLevel: Int,
-    // 공유 여부
-    val shareStts: Boolean,
-    // 온라인 공유 여부
-    val onlineLicStts: Boolean,
-    // 개인 대상 공유 여부
-    val perLicStts: Boolean,
-    // 기업 대상 공유 여부
-    val entLicStts: Boolean,
 )

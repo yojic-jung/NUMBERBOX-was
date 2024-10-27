@@ -1,12 +1,14 @@
 package com.kamcci.numberbox.infra.orm.adapter.math
 
-import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcCreateDto
-import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseCreateDto
+import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
+import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsCreateDto
+import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.port.repository.math.MathContentsModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.entity.math.MathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
 import com.kamcci.numberbox.infra.orm.factory.math.MathContentsFactory
 import com.kamcci.numberbox.infra.orm.factory.math.MathContentsIpsiFactory
@@ -18,11 +20,13 @@ import org.springframework.stereotype.Repository
 class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository() {
     override fun saveWithLicense(
         svcPosbSttsType: ContentsSvcPosbSttsType,
-        contentsCreateDto: MathContentsCreateDto,
-        licenseCreateDto: MathConLicenseCreateDto
+        contentsModifyDto: MathContentsModifyDto,
+        licenseCreateDto: MathConLicenseModifyDto
     ): Long {
         // 수학문제 엔티티 생성
-        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsCreateDto)
+        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsModifyDto)
+        contentsEntity.contentsClassify = ContentsClassifyType.UserCustom
+
         // 저작권 정보 엔티티 생성
         val licenseEntity = MathContentsLicenseFactory.getSaveEntity(licenseCreateDto)
 
@@ -37,11 +41,13 @@ class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository()
 
     override fun saveWithSimilarSrc(
         svcPosbSttsType: ContentsSvcPosbSttsType,
-        contentsCreateDto: MathContentsCreateDto,
+        contentsModifyDto: MathContentsModifyDto,
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
         // 수학문제 엔티티 생성
-        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsCreateDto)
+        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsModifyDto)
+        contentsEntity.contentsClassify = ContentsClassifyType.InHouse
+
         // 유사문제 출처 정보 엔티티 생성
         val similarSrcEntity = MathContentsSimilarSrcFactory.getSaveEntity(contentsEntity.id, similarSrcDto)
         contentsEntity.mathContentsSimilarSrc = mutableListOf(similarSrcEntity)
@@ -53,11 +59,13 @@ class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository()
 
     override fun saveWithIpsiSrc(
         svcPosbSttsType: ContentsSvcPosbSttsType,
-        contentsCreateDto: MathContentsCreateDto,
-        ipsiSrcCreateDto: MathConIpsiSrcCreateDto
+        contentsModifyDto: MathContentsModifyDto,
+        ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
         // 수학문제 엔티티 생성
-        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsCreateDto)
+        val contentsEntity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsModifyDto)
+        contentsEntity.contentsClassify = ContentsClassifyType.Ipsi
+
         // 입시문제 출처 정보 엔티티 생성
         val similarSrcEntity = MathContentsIpsiFactory.getSaveEntity(ipsiSrcCreateDto)
         contentsEntity.mathContentsIpsiSrc = mutableListOf(similarSrcEntity)
@@ -67,12 +75,13 @@ class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository()
         return contentsEntity.id
     }
 
-    override fun saveForTransContents(
+    override fun saveTransContents(
         orgContentsId: Long,
         svcPosbSttsType: ContentsSvcPosbSttsType,
-        contentsCreateDto: MathContentsCreateDto
+        contentsModifyDto: MathContentsModifyDto
     ): Long {
-        val entity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsCreateDto)
+        val entity = MathContentsFactory.getSaveEntity(svcPosbSttsType, contentsModifyDto)
+        entity.contentsClassify = ContentsClassifyType.Modified
         entity.orgContentsId = orgContentsId // 원본문제 id 셋팅
         em.persist(entity)
         return entity.id
@@ -84,5 +93,73 @@ class MathContentsModifyOrmAdapter : MathContentsModifyOrmPort, BaseRepository()
             .set(mathContentsEntity.transConCnt, transContCnt)
             .where(mathContentsEntity.id.eq(id))
             .execute() > 0
+    }
+
+    override fun updateWithLicense(
+        contentsId: Long,
+        svcPosbSttsType: ContentsSvcPosbSttsType,
+        contentsModifyDto: MathContentsModifyDto,
+        licenseCreateDto: MathConLicenseModifyDto
+    ): Long {
+        // 수학문제 엔티티 수정
+        val orgEntity = em.find(MathContentsEntity::class.java, contentsId)
+        val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
+
+        // 저작권 정보 엔티티 수정
+        val orgLicenseEntity = orgEntity.mathContentsLicenses[0]
+        MathContentsLicenseFactory.getUpdateEntity(orgLicenseEntity, licenseCreateDto)
+
+        // 영속화
+        em.persist(contentsEntity)
+        return contentsEntity.id
+    }
+
+    override fun updateWithSimilarSrc(
+        contentsId: Long,
+        svcPosbSttsType: ContentsSvcPosbSttsType,
+        contentsModifyDto: MathContentsModifyDto,
+        similarSrcDto: MathConSimilarSrcCreateDto
+    ): Long {
+        // 수학문제 엔티티 수정
+        val orgEntity = em.find(MathContentsEntity::class.java, contentsId)
+        val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
+
+        // 유사문제 출처 정보 엔티티 수정
+        val orgSimilarSrcEntity = orgEntity.mathContentsSimilarSrc[0]
+        MathContentsSimilarSrcFactory.getUpdateEntity(orgSimilarSrcEntity, similarSrcDto)
+
+        // 영속화
+        em.persist(contentsEntity)
+        return contentsEntity.id
+    }
+
+    override fun updateWithIpsiSrc(
+        contentsId: Long,
+        svcPosbSttsType: ContentsSvcPosbSttsType,
+        contentsModifyDto: MathContentsModifyDto,
+        ipsiSrcCreateDto: MathConIpsiSrcModifyDto
+    ): Long {
+        // 수학문제 엔티티 수정
+        val orgEntity = em.find(MathContentsEntity::class.java, contentsId)
+        val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
+
+        // 입시문제 출처 정보 엔티티 수정
+        val orgIpsiSrcEntity = orgEntity.mathContentsIpsiSrc[0]
+        MathContentsIpsiFactory.getUpdateEntity(orgIpsiSrcEntity, ipsiSrcCreateDto)
+
+        // 영속화
+        em.persist(contentsEntity)
+        return contentsEntity.id
+    }
+
+    override fun updateTransContents(
+        contentsId: Long,
+        svcPosbSttsType: ContentsSvcPosbSttsType,
+        contentsModifyDto: MathContentsModifyDto
+    ): Long {
+        val orgEntity = em.find(MathContentsEntity::class.java, contentsId)
+        val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
+        em.persist(contentsEntity)
+        return contentsEntity.id
     }
 }

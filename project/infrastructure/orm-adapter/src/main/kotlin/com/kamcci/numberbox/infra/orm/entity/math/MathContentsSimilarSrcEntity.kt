@@ -14,7 +14,8 @@ import java.time.LocalDateTime
 class MathContentsSimilarSrcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var seqNo: Int = 0
+    @Column(name = "seq_no", nullable = false)
+    var id: Long = 0
 
     // 수학문제 id
     @Column(name = "contents_no", length = 11, nullable = false, updatable = false)

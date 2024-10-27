@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.app.domain.dto.math
 
 /**
- * 사용자 수학문제 저작권 정보 생성 dto
+ * 사용자 수학문제 저작권 정보 생성 및 수정 dto
  */
-data class MathConLicenseCreateDto(
+data class MathConLicenseModifyDto(
     // 공유 여부
     val shareStts: Boolean,
     // 온라인 공유 여부

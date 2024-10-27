@@ -1,20 +1,13 @@
-package com.kamcci.numberbox.app.domain.dto.math
-
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import java.util.*
+package com.kamcci.numberbox.restapi.dto.request.math
 
 /**
- * 수학문제 생성 dto
+ * 수학문제 생성 및 수정 request
  */
-data class MathContentsCreateDto(
-    // 제작자
-    val memberId: UUID,
+data class MathContentsModifyRequest(
     // 단원 id
     val unitId: Int,
     // 유형 id
     val typeId: Int,
-    // 수학문제 구분
-    val contentsClassify: ContentsClassifyType,
     // 수학 문제
     val contents: String,
     // 해설
@@ -35,10 +28,19 @@ data class MathContentsCreateDto(
     val fifNo: String?,
     // 난이도
     val quesLevel: Int,
-    /**
-     * 자체 제작 문제인 경우 사용 컬럼
-     */
-//    val orgSrcRef: String? = null,
-//    val orgSrcNo: Int = 0,
-//    val orgSrcContentsId: Int = 0,
-)
+) {
+    companion object {
+        // 객관식 정답 가능한 값
+        val choiceAnswerValues = listOf("①", "②", "③", "④", "⑤")
+    }
+
+    init {
+        // 객관식 정답 가능 값
+        choiceAnswer?.forEach {
+            require(choiceAnswerValues.contains(it))
+        }
+
+        // 문제 난이도는 1부터 5까지
+        require(quesLevel in 1..5)
+    }
+}
