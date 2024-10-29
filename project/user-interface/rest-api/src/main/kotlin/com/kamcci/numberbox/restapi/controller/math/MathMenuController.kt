@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
+import com.kamcci.numberbox.app.usecase.math.MathContentsIpsiReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathFormulaKeyReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathTypeInfoReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class MathMenuController(
     private val mathUnitInfoReadUseCase: MathUnitInfoReadUseCase,
     private val mathTypeInfoReadUseCase: MathTypeInfoReadUseCase,
+    private val mathContentsIpsiReadUseCase: MathContentsIpsiReadUseCase,
     private val mathFormulaKeyReadUseCase: MathFormulaKeyReadUseCase
 ) {
     @GetMapping("/unit")
@@ -40,5 +42,10 @@ class MathMenuController(
         val shortcutKeyList = mathFormulaKeyReadUseCase.findAll()
         val shortcutkeyGroupMap = shortcutKeyList.groupBy { it.classification }
         return ResponseUtil.ok(mapOf("shortCutKey" to shortcutKeyList) + shortcutkeyGroupMap)
+    }
+
+    @GetMapping("/ipsi-year")
+    fun ipsiYear(): ResponseEntity<ResponseData<Any>> {
+        return ResponseUtil.ok(mapOf("ipsiYear" to mathContentsIpsiReadUseCase.findAllIpsiYear()))
     }
 }
