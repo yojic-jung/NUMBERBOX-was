@@ -1,6 +1,8 @@
 package com.kamcci.numberbox.app.port.repository.docs
 
+import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
+import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
 
 interface MathDocsReadOrmPort {
     fun countGroupByUnitAndType(
@@ -15,5 +17,7 @@ interface MathDocsReadOrmPort {
         quesLv: List<Int>,
         countByType: Int, // 유형 별 문제수
         limit: Int,
-    ): List<Any>
+    ): List<MathInHouseDocsVo>
+
+    fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>
 }

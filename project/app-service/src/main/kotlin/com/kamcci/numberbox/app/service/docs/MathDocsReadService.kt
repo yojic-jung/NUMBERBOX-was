@@ -1,7 +1,11 @@
 package com.kamcci.numberbox.app.service.docs
 
+import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
+import com.kamcci.numberbox.app.domain.dto.docs.MathInHouseDocsReadDto
+import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
 import com.kamcci.numberbox.app.port.repository.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadUseCase
 
@@ -17,9 +21,9 @@ class MathDocsReadService(
     val lowLv = Pair(listOf(1, 2), listOf(3, 4))
     val midLv = Pair(listOf(2, 3, 4), listOf(1, 5))
     val highLv = Pair(listOf(4, 5), listOf(2, 3))
-    override fun makeInHouseDocs(unitIdAndTypeId: List<String>, count: Int, quesLevel: Int): List<Any> {
+    override fun makeInHouseDocs(readDto: MathInHouseDocsReadDto): List<MathInHouseDocsVo> {
         // 레벨 조건
-        val lvCond = when (quesLevel) {
+        val lvCond = when (readDto.quesLevel) {
             // 난이도 하 선택한 경우
             1, 2 -> lowLv
 
@@ -29,19 +33,26 @@ class MathDocsReadService(
             // 난이도 상 선택한 경우
             5 -> highLv
 
-            else -> throw IllegalArgumentException("난이도는 1부터 5까지만 설정 가능합니다. 사용자 설정 값 : $quesLevel")
+            else -> throw IllegalArgumentException("난이도는 1부터 5까지만 설정 가능합니다. 사용자 설정 값 : $readDto.quesLevel")
         }
 
         // 문제 조회
-        val mainContents = makeDocs(ContentsClassifyType.InHouse, unitIdAndTypeId, lvCond.first, count)
-        if (mainContents.size == count) {
+        val unitIdAndTypeId = readDto.unitIdAndTypeId.split(",").map { it.trim() }
+        val mainContents = makeDocs(ContentsClassifyType.InHouse, unitIdAndTypeId, lvCond.first, readDto.count)
+        if (mainContents.size == readDto.count) {
             return mainContents
 
         }
 
+
         // 문제 부족시 다른 난이도에서 추가
         val subContents =
-            makeDocs(ContentsClassifyType.InHouse, unitIdAndTypeId, lvCond.second, count - mainContents.size)
+            makeDocs(
+                ContentsClassifyType.InHouse,
+                unitIdAndTypeId,
+                lvCond.second,
+                readDto.count - mainContents.size
+            )
         return mainContents + subContents
     }
 
@@ -50,7 +61,7 @@ class MathDocsReadService(
         unitIdAndTypeId: List<String>,
         lvCond: List<Int>,
         count: Int
-    ): List<Any> {
+    ): List<MathInHouseDocsVo> {
         // 1. 각 유형별로 몇문씩 뽑아와야 하는지 기준 설정
         val conCntList =
             mathDocsReadOrmPort.countGroupByUnitAndType(unitIdAndTypeId, ContentsClassifyType.InHouse, lvCond)
@@ -74,4 +85,11 @@ class MathDocsReadService(
             count
         )
     }
+
+    override fun makeIpsiDocs(readDto: MathIpsiDocsReadDto) {
+        TODO("Not yet implemented")
+    }
+
+    override fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> =
+        mathDocsReadOrmPort.findAdditionalContents(readDto)
 }
