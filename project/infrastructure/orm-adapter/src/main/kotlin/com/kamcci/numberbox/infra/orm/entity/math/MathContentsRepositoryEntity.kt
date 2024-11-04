@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Table(name = "math_con_repo_info")
+@Table(name = "math_con_repo")
 class MathContentsRepositoryEntity {
     @EmbeddedId
     var id: MathContentsRepositoryDomain? = null
@@ -19,8 +19,8 @@ class MathContentsRepositoryEntity {
 
 @Embeddable
 class MathContentsRepositoryDomain(
-    @Column(name = "contents_no")
+    @Column(nullable = false)
     val contentsId: Long,
-    @Column(name = "user_uniq_id")
+    @Column(nullable = false)
     val memberId: UUID
 ) : Serializable

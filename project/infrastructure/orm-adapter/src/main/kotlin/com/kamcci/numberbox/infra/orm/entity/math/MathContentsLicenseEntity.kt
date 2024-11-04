@@ -9,7 +9,7 @@ import java.time.LocalDateTime
  * 수학문제 시용자 정의 저작권 정보
  */
 @Entity
-@Table(name = "math_contents_license")
+@Table(name = "math_con_license")
 class MathContentsLicenseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +48,6 @@ class MathContentsLicenseEntity {
     var sysUpdateDate: LocalDateTime? = null
 
     @ManyToOne
-    @JoinColumn(name = "contents_no", referencedColumnName = "contents_no")
+    @JoinColumn(name = "contents_id", referencedColumnName = "id")
     var mathContents: MathContentsEntity? = null
 }

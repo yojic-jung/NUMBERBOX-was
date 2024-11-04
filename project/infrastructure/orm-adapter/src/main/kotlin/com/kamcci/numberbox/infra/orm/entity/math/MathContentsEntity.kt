@@ -17,16 +17,16 @@ import java.util.*
 class MathContentsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "contents_no")
+    @Column(nullable = false)
     var id: Long = 0
 
-    @Column(name = "unit_uniq_no", length = 5, nullable = false)
+    @Column(length = 5, nullable = false)
     var unitId: Int? = null
 
-    @Column(name = "type_no", length = 5, nullable = false)
+    @Column(length = 5, nullable = false)
     var typeId: Int? = null
 
-    @Column(name = "user_uniq_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
+    @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     var memberId: UUID? = null
 
     // 문제 내용
@@ -115,7 +115,7 @@ class MathContentsEntity {
      * - 변형 문제의 경우 원본 문제 번호를 갖음
      * - 변형 문제 아닌 경우 0
      */
-    @Column(name = "org_contents_no", length = 11, nullable = false, updatable = false)
+    @Column(length = 11, nullable = false, updatable = false)
     var orgContentsId: Long = 0
 
     // 변형 문제 갯수
@@ -132,16 +132,16 @@ class MathContentsEntity {
 
     // 단원 정보
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "unit_uniq_no", insertable = false, updatable = false)
-    var mathUnitInfo: MathUnitInfoEntity? = null
+    @JoinColumn(name = "unit_id", insertable = false, updatable = false)
+    var mathUnitInfo: MathCategoryUnitEntity? = null
 
     // 유형 정보
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns(
-        JoinColumn(name = "unit_uniq_no", insertable = false, updatable = false),
-        JoinColumn(name = "type_no", insertable = false, updatable = false)
+        JoinColumn(name = "unit_id", insertable = false, updatable = false),
+        JoinColumn(name = "type_id", insertable = false, updatable = false)
     )
-    var mathTypeInfo: MathTypeInfoEntity? = null
+    var mathTypeInfo: MathCategoryTypeEntity? = null
 
     // 자체제작 수학문제 출처
     @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY)

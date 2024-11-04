@@ -6,10 +6,10 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "math_unit_info")
-class MathUnitInfoEntity {
+@Table(name = "math_category_unit")
+class MathCategoryUnitEntity {
     @Id
-    @Column(name = "unit_uniq_no")
+    @Column(nullable = false)
     var id: Int = 0
 
     /**

@@ -4,8 +4,8 @@ import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
-@Table(name = "math_type_info")
-class MathTypeInfoEntity {
+@Table(name = "math_category_type")
+class MathCategoryTypeEntity {
     @EmbeddedId
     var mathTypeDomain: MathTypeDomain? = null
 
@@ -18,8 +18,8 @@ class MathTypeInfoEntity {
 
 @Embeddable
 class MathTypeDomain(
-    @Column(name = "unit_uniq_no")
+    @Column(nullable = false)
     val unitId: Int,
-    @Column(name = "type_no")
+    @Column(nullable = false)
     val typeId: Int,
 ) : Serializable

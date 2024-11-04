@@ -10,15 +10,15 @@ import java.time.LocalDateTime
  * 유사문제 출처 정보
  */
 @Entity
-@Table(name = "math_contents_comp")
+@Table(name = "math_con_similar_src")
 class MathContentsSimilarSrcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seq_no", nullable = false)
+    @Column(nullable = false)
     var id: Long = 0
 
     // 수학문제 id
-    @Column(name = "contents_no", length = 11, nullable = false, updatable = false)
+    @Column(length = 11, nullable = false, updatable = false)
     var contentsId: Long? = null
 
     // 출처 - 교재
@@ -51,6 +51,6 @@ class MathContentsSimilarSrcEntity {
 
     // 수학문제
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contents_no", insertable = false, updatable = false)
+    @JoinColumn(name = "contents_id", insertable = false, updatable = false)
     var mathContents: MathContentsEntity? = null
 }

@@ -5,7 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 @Entity
-@Table(name = "math_con_like_info")
+@Table(name = "math_con_like")
 class MathContentsLikeEntity {
     @EmbeddedId
     var id: MathContentsLikeDomain? = null
@@ -13,8 +13,8 @@ class MathContentsLikeEntity {
 
 @Embeddable
 class MathContentsLikeDomain(
-    @Column(name = "contents_no")
+    @Column(nullable = false)
     val contentsId: Long,
-    @Column(name = "user_uniq_id")
+    @Column(nullable = false)
     val memberId: UUID
 ) : Serializable

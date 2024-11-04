@@ -11,11 +11,11 @@ import java.time.LocalDateTime
  * 입시 수학문제 출처 정보
  */
 @Entity
-@Table(name = "math_contents_ipsi")
+@Table(name = "math_con_ipsi_src")
 class MathContentsIpsiSrcEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seq_no")
+    @Column(nullable = false)
     var id: Long = 0
 
     // 출제 기관
@@ -58,6 +58,6 @@ class MathContentsIpsiSrcEntity {
 
     // 수학 문제
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contents_no", insertable = false, updatable = false)
+    @JoinColumn(name = "contents_id", insertable = false, updatable = false)
     var mathContents: MathContentsEntity? = null
 }
