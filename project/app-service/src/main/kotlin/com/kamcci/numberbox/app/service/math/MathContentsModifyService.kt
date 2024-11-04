@@ -55,7 +55,7 @@ class MathContentsModifyService(
             mathContentsModifyOrmPort.saveTransContents(orgContentsId, Release, contentsModifyDto)
 
         // 원본문제의 변형문제수 +1
-        val transConCnt = mathContentsReadOrmPort.findTransContCntById(orgContentsId)!!
+        val transConCnt = mathContentsReadOrmPort.readTransContCntById(orgContentsId)!!
         mathContentsModifyOrmPort.updateTransConCntById(orgContentsId, transConCnt + 1)
         return contentsId
     }

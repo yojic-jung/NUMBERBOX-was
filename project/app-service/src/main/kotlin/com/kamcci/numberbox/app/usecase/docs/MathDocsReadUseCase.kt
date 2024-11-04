@@ -17,6 +17,6 @@ interface MathDocsReadUseCase {
     fun makeIpsiDocs(readDto: MathIpsiDocsReadDto)
 
     // 추가 문제 조회
-    fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>
+    fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>
 
 }

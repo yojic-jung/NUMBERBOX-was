@@ -7,10 +7,10 @@ interface MemberFindUseCase {
     /**
      * 이메일 찾기
      */
-    fun findMyEmail(userName: String, phoneNumber: String): String?
+    fun readMyEmail(userName: String, phoneNumber: String): String?
 
     /**
      * 비밀번호 찾기
      */
-    fun findMyPassword(email: String)
+    fun readMyPassword(email: String)
 }

@@ -38,7 +38,7 @@ class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
             ).fetch()
     }
 
-    override fun findPartitionedByUnitAndType(
+    override fun readPartitionedByUnitAndType(
         unitIdAndTypeId: List<String>,
         contentsClassifyType: ContentsClassifyType,
         quesLv: List<Int>,
@@ -135,7 +135,7 @@ class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
         return resultList
     }
 
-    override fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> {
+    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> {
         val mathTypeDomain = MathTypeDomain(readDto.unitId, readDto.typeId)
         return queryFactory
             .select(

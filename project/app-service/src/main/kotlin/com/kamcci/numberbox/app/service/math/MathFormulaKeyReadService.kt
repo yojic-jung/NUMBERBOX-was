@@ -10,5 +10,5 @@ class MathFormulaKeyReadService(
     private val mathFormulaKeyReadOrmPort: MathFormulaKeyReadOrmPort
 ) : MathFormulaKeyReadUseCase {
 
-    override fun findAll(): List<MathFormulaKeyVo> = mathFormulaKeyReadOrmPort.findAll()
+    override fun readAll(): List<MathFormulaKeyVo> = mathFormulaKeyReadOrmPort.readAll()
 }

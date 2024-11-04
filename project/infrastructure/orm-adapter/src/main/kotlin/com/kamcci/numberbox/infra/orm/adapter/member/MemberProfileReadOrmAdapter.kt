@@ -12,7 +12,7 @@ import java.util.*
 
 @Repository
 class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
-    override fun findByMemberId(memberId: UUID): MemberProfileVo? {
+    override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return queryFactory
             .select(
                 Projections.constructor(
@@ -30,7 +30,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .fetchOne()
     }
 
-    override fun findByProfileId(profileId: Long): MemberProfileVo? {
+    override fun readByProfileId(profileId: Long): MemberProfileVo? {
         return queryFactory
             .select(
                 Projections.constructor(
@@ -48,7 +48,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .fetchOne()
     }
 
-    override fun findProfileIdByMemberId(memberId: UUID): Long? {
+    override fun readProfileIdByMemberId(memberId: UUID): Long? {
         return queryFactory
             .select(memberProfileEntity.id)
             .from(memberProfileEntity)
@@ -56,7 +56,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .fetchOne()
     }
 
-    override fun findProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
+    override fun readProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
         return queryFactory
             .select(
                 Projections.constructor(
@@ -72,7 +72,7 @@ class MemberProfileReadOrmAdapter : MemberProfileReadOrmPort, BaseRepository() {
             .fetchOne()
     }
 
-    override fun findByProfileIdList(profileId: List<Long>): List<MemberProfileVo> {
+    override fun readByProfileIdList(profileId: List<Long>): List<MemberProfileVo> {
         return queryFactory
             .select(
                 Projections.constructor(

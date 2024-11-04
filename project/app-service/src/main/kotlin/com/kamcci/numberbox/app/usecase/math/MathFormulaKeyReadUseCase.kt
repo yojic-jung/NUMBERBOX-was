@@ -7,5 +7,5 @@ import com.kamcci.numberbox.app.domain.vo.math.MathFormulaKeyVo
  */
 interface MathFormulaKeyReadUseCase {
     // 수식 기호 전체 조회
-    fun findAll(): List<MathFormulaKeyVo>
+    fun readAll(): List<MathFormulaKeyVo>
 }

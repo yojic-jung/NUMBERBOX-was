@@ -9,8 +9,8 @@ import java.util.*
 class MathContentsRepoReadService(
     private val mathContentsRepoReadOrmPort: MathContentsRepoReadOrmPort
 ) : MathContentsRepoReadUseCase {
-    override fun findContentsIdByMemberId(memberId: UUID): List<Long> =
-        mathContentsRepoReadOrmPort.findContentsIdByMemberId(memberId)
+    override fun readContentsIdByMemberId(memberId: UUID): List<Long> =
+        mathContentsRepoReadOrmPort.readContentsIdByMemberId(memberId)
 
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean =
         mathContentsRepoReadOrmPort.existByContentsIdAndMemberId(contentsId, memberId)

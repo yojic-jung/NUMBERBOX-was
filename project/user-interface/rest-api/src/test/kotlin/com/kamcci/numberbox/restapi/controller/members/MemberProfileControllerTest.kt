@@ -115,9 +115,9 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `내 프로필 보기 - 성공`() {
         val memberProfileVo = MemberProfileVo(1L, UUID.randomUUID(), "", "", "", ProfileType.Teacher)
         val list = listOf(memberProfileVo)
-        `when`(memberProfileReadUseCase.findByMemberId(any())).thenReturn(memberProfileVo)
-        `when`(memberProfileReadUseCase.findFollowingProfileByMemberId(any())).thenReturn(list)
-        `when`(memberProfileReadUseCase.findFollowerProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileReadUseCase.readByMemberId(any())).thenReturn(memberProfileVo)
+        `when`(memberProfileReadUseCase.readFollowingProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileReadUseCase.readFollowerProfileByMemberId(any())).thenReturn(list)
 
         // when
         val resultAction = getRequest(MY_PROFILE_URL)
@@ -128,7 +128,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
     @Test
     fun `다른 사람 프로필 보기 - 성공`() {
-        `when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(1L)
+        `when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(1L)
         `when`(memberFollowReadUseCase.isFollowing(any(), any())).thenReturn(true)
         `when`(memberFollowReadUseCase.countFollower(any())).thenReturn(1)
 
@@ -142,7 +142,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     @Test
     fun `다른 사람 프로필 보기 - 실패(프로필 미존재)`() {
         // given
-        `when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
+        `when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
 
         // when
         val resultAction = getRequest("$MY_PROFILE_URL/1")

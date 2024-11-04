@@ -22,7 +22,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
     fun `팔로잉 - 성공`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(1L)
+        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(1L)
 
         //when
         val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
@@ -35,7 +35,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
     fun `팔로잉 - 실패(미존재 계정)`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
+        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
 
         //when
         val resultAction = postRequest("$FOLLOWING_URL/2", reqBody)
@@ -48,7 +48,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
     fun `팔로잉 취소 - 성공`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
+        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
 
         //when
         val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
@@ -61,7 +61,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
     fun `팔로잉 취소 - 실패(프로필 미존재)`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        Mockito.`when`(memberProfileReadUseCase.findProfileIdByMemberId(any())).thenReturn(null)
+        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
 
         //when
         val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)

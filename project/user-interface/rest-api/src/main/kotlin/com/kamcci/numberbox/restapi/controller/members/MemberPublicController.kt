@@ -74,7 +74,7 @@ class MemberPublicController(
         @Valid
         @ModelAttribute req: EmailFindRequest
     ): ResponseEntity<ResponseData<Map<String, String?>>> {
-        return ResponseUtil.ok(mapOf("email" to memberFindUseCase.findMyEmail(req.userName, req.phoneNumber)))
+        return ResponseUtil.ok(mapOf("email" to memberFindUseCase.readMyEmail(req.userName, req.phoneNumber)))
     }
 
     /**
@@ -85,7 +85,7 @@ class MemberPublicController(
         @EmailCheck
         @RequestParam email: String
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
-        memberFindUseCase.findMyPassword(email)
+        memberFindUseCase.readMyPassword(email)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
 }

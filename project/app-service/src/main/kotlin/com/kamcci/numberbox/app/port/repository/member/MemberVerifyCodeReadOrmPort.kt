@@ -9,5 +9,5 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
 interface MemberVerifyCodeReadOrmPort {
     fun countByEmailAndCodeType(email: String, codeType: VerifyCodeType): Long
 
-    fun findByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo?
+    fun readByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo?
 }

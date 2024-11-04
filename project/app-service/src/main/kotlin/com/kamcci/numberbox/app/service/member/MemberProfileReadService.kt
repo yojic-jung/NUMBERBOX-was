@@ -14,40 +14,40 @@ class MemberProfileReadService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
     private val memberFollowReadOrmPort: MemberFollowReadOrmPort
 ) : MemberProfileReadUseCase {
-    override fun findByMemberId(memberId: UUID): MemberProfileVo? {
-        return memberProfileReadOrmPort.findByMemberId(memberId)
+    override fun readByMemberId(memberId: UUID): MemberProfileVo? {
+        return memberProfileReadOrmPort.readByMemberId(memberId)
     }
 
-    override fun findByProfileId(profileId: Long): MemberProfileVo? {
-        return memberProfileReadOrmPort.findByProfileId(profileId)
+    override fun readByProfileId(profileId: Long): MemberProfileVo? {
+        return memberProfileReadOrmPort.readByProfileId(profileId)
     }
 
-    override fun findProfileIdByMemberId(memberId: UUID): Long? {
-        return memberProfileReadOrmPort.findProfileIdByMemberId(memberId)
+    override fun readProfileIdByMemberId(memberId: UUID): Long? {
+        return memberProfileReadOrmPort.readProfileIdByMemberId(memberId)
     }
 
 
-    override fun findProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
-        return memberProfileReadOrmPort.findProfileImgByMemberId(memberId)
+    override fun readProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
+        return memberProfileReadOrmPort.readProfileImgByMemberId(memberId)
     }
 
-    override fun findFollowingProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
+    override fun readFollowingProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
         // 팔로잉 profileId 조회
-        val profileId = memberProfileReadOrmPort.findProfileIdByMemberId(memberId)
+        val profileId = memberProfileReadOrmPort.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("회원 프로필이 존재하지 않습니다.")
-        val followingProfileIdList = memberFollowReadOrmPort.findFollowingByFollower(profileId)
+        val followingProfileIdList = memberFollowReadOrmPort.readFollowingByFollower(profileId)
 
         // 프로필 조회
-        return memberProfileReadOrmPort.findByProfileIdList(followingProfileIdList)
+        return memberProfileReadOrmPort.readByProfileIdList(followingProfileIdList)
     }
 
-    override fun findFollowerProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
+    override fun readFollowerProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
         // 팔로워 profileId 조회
-        val profileId = memberProfileReadOrmPort.findProfileIdByMemberId(memberId)
+        val profileId = memberProfileReadOrmPort.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("회원 프로필이 존재하지 않습니다.")
-        val followerProfileIdList = memberFollowReadOrmPort.findFollowerByFollowing(profileId)
+        val followerProfileIdList = memberFollowReadOrmPort.readFollowerByFollowing(profileId)
 
         // 프로필 조회
-        return memberProfileReadOrmPort.findByProfileIdList(followerProfileIdList)
+        return memberProfileReadOrmPort.readByProfileIdList(followerProfileIdList)
     }
 }

@@ -22,15 +22,15 @@ import java.util.*
 class MathContentsReadOrmAdapter(
     private val mathContentsExpression: MathContentsExpression
 ) : MathContentsReadOrmPort, BaseRepository() {
-    override fun findById(contentsId: Long): MathContentsVo? =
+    override fun readById(contentsId: Long): MathContentsVo? =
         findBy(contentsId = contentsId, contentsIdList = null, profileId = null, pageReq = null)
             .fetchOne()
 
-    override fun findById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
+    override fun readById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
         findBy(contentsId = null, contentsIdList = contentsId, profileId = null, pageReq = pageReq)
             .fetch()
 
-    override fun findByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo> =
+    override fun readByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo> =
         findBy(contentsId = null, contentsIdList = null, profileId = profileId, pageReq = pageReq)
             .fetch()
 
@@ -80,7 +80,7 @@ class MathContentsReadOrmAdapter(
         return qry
     }
 
-    override fun findDetailByIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
+    override fun readDetailByIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
         return detailCommonQuery(memberId)
             .where(
                 mathContentsEntity.id.eq(id),
@@ -89,7 +89,7 @@ class MathContentsReadOrmAdapter(
             .fetchOne()
     }
 
-    override fun findDetailByMemberId(
+    override fun readDetailByMemberId(
         memberId: UUID,
         svcPosbSttsType: ContentsSvcPosbSttsType?,
         pageReq: PageRequest
@@ -113,7 +113,7 @@ class MathContentsReadOrmAdapter(
             .fetch()
     }
 
-    override fun findDetailByUnitId(
+    override fun readDetailByUnitId(
         memberId: UUID,
         unitId: List<Int>,
         pageReq: PageRequest
@@ -146,7 +146,7 @@ class MathContentsReadOrmAdapter(
             .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
     }
 
-    override fun findInHouseContentsById(contentsId: Long): MathInHouseContentsVo? {
+    override fun readInHouseContentsById(contentsId: Long): MathInHouseContentsVo? {
         return queryFactory
             .select(mathContentsExpression.ceMathInHouseContentsVo())
             .from(mathContentsEntity)
@@ -160,7 +160,7 @@ class MathContentsReadOrmAdapter(
             .fetchOne()
     }
 
-    override fun findIpsiContentsById(contentsId: Long): MathIpsiContentsVo? {
+    override fun readIpsiContentsById(contentsId: Long): MathIpsiContentsVo? {
         return queryFactory
             .select(mathContentsExpression.ceMathIpsiContentsVo())
             .from(mathContentsEntity)
@@ -174,7 +174,7 @@ class MathContentsReadOrmAdapter(
             .fetchOne()
     }
 
-    override fun findTransContCntById(id: Long): Int? {
+    override fun readTransContCntById(id: Long): Int? {
         return queryFactory
             .select(mathContentsEntity.transConCnt)
             .from(mathContentsEntity)
@@ -182,7 +182,7 @@ class MathContentsReadOrmAdapter(
             .fetchOne()
     }
 
-    override fun findContentsOnly(contentsId: Long, memberId: UUID): MathContentsOnlyVo? {
+    override fun readContentsOnly(contentsId: Long, memberId: UUID): MathContentsOnlyVo? {
         return queryFactory
             .select(mathContentsExpression.ceMathContentsOnlyVo(memberId))
             .from(mathContentsEntity)

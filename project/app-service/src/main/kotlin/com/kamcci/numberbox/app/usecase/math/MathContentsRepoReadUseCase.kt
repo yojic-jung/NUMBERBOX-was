@@ -7,7 +7,8 @@ import java.util.*
  */
 interface MathContentsRepoReadUseCase {
 
-    fun findContentsIdByMemberId(memberId: UUID): List<Long>
+    // 멤버 id로 컨텐츠 id 조회
+    fun readContentsIdByMemberId(memberId: UUID): List<Long>
 
     // 저장소 문제 존재 여부
     fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean

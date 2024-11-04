@@ -5,10 +5,10 @@ package com.kamcci.numberbox.app.usecase.member
  */
 interface MemberFollowReadUseCase {
     // 팔로워 프로필 id로 팔로잉 프로필 id 조회
-    fun findFollowingByFollower(profileId: Long): List<Long>
+    fun readFollowingByFollower(profileId: Long): List<Long>
 
     // 팔로잉 프로필 id로 팔로워 프로필 id 조회
-    fun findFollowerByFollowing(profileId: Long): List<Long>
+    fun readFollowerByFollowing(profileId: Long): List<Long>
 
     // 팔로워 수 조회
     fun countFollower(followingId: Long): Long

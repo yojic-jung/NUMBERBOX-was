@@ -29,7 +29,7 @@ class MemberProfileModifyService(
     @TXExecute
     override fun updateImgByMemberId(memberId: UUID, fileName: String, inpStream: InputStream): FileNameVo {
         // 1. 이미 등록된 프로필 이미지 정보 가져오기
-        val profileImgVo = memberProfileReadOrmPort.findProfileImgByMemberId(memberId)
+        val profileImgVo = memberProfileReadOrmPort.readProfileImgByMemberId(memberId)
 
         // 2. 프로필 이미지 파일 스토리지에 저장
         val fileNameDto = fileNameMaker.makeFileNameByType(fileName, FileType.ProfileIMG)

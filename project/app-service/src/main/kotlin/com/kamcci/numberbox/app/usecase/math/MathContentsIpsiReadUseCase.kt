@@ -6,5 +6,5 @@ package com.kamcci.numberbox.app.usecase.math
 interface MathContentsIpsiReadUseCase {
 
     // 제공 중인 입시문제의 출제년도 조회
-    fun findAllIpsiYear(): List<Int>
+    fun readAllIpsiYear(): List<Int>
 }

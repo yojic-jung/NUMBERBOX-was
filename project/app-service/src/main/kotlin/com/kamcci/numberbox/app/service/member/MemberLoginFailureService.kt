@@ -25,9 +25,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val id = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+        val id = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
         val failCount =
-            memberReadOrmPort.findFailCountById(id) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.readFailCountById(id) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount >= DISABLE_COUNT) {
@@ -41,7 +41,7 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
-        val userId = memberReadOrmPort.findIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+        val userId = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
         val lastFailTime: LocalDateTime =
             memberReadOrmPort.findLastFailTimeById(userId) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 

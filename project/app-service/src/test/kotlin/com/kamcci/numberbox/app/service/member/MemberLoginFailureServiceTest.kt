@@ -25,8 +25,8 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `실패 카운트 초과시 계정 비활성화 - 성공`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(any())).thenReturn(UUID.randomUUID())
-        Mockito.`when`(memberReadOrmPort.findFailCountById(any())).thenReturn(DISABLE_COUNT + 1)
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(any())).thenReturn(UUID.randomUUID())
+        Mockito.`when`(memberReadOrmPort.readFailCountById(any())).thenReturn(DISABLE_COUNT + 1)
 
         val isDisabled = memberLoginFailureService.disableUserIfFailCountOver(email)
 
@@ -36,8 +36,8 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `실패 카운트 미초과시 계정 비활성화 진행 안함 - 성공`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(any())).thenReturn(UUID.randomUUID())
-        Mockito.`when`(memberReadOrmPort.findFailCountById(any())).thenReturn(DISABLE_COUNT - 1)
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(any())).thenReturn(UUID.randomUUID())
+        Mockito.`when`(memberReadOrmPort.readFailCountById(any())).thenReturn(DISABLE_COUNT - 1)
 
         val isDisabled = memberLoginFailureService.disableUserIfFailCountOver(email)
 
@@ -47,7 +47,7 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `실패 카운트 초과시 계정 비활성화 - 실패`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(email)).thenReturn(null)
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(email)).thenReturn(null)
 
         assertThrows<BusinessValidException> {
             memberLoginFailureService.disableUserIfFailCountOver(email)
@@ -57,7 +57,7 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `게정 장금 시간 지나면 계정 활성화 - 성공`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(any())).thenReturn(UUID.randomUUID())
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(any())).thenReturn(UUID.randomUUID())
         Mockito.`when`(memberReadOrmPort.findLastFailTimeById(any())).thenReturn(
             LocalDateTime.now().minusMinutes(
                 MemberLoginFailureService.DISABLE_LOCK_TIME + 1L
@@ -72,7 +72,7 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `게정 장금 시간 안 지나면 계정 활성화 안함 - 성공`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(any())).thenReturn(UUID.randomUUID())
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(any())).thenReturn(UUID.randomUUID())
         Mockito.`when`(memberReadOrmPort.findLastFailTimeById(any())).thenReturn(LocalDateTime.now())
 
         val isAbled = memberLoginFailureService.ableUserIfDisableTimeOver(email)
@@ -83,7 +83,7 @@ class MemberLoginFailureServiceTest {
     @Test
     fun `게정 장금 시간 지나면 계정 활성화 - 실패(미존재 계정)`() {
         val email = "test"
-        Mockito.`when`(memberReadOrmPort.findIdByEmail(email)).thenReturn(null)
+        Mockito.`when`(memberReadOrmPort.readIdByEmail(email)).thenReturn(null)
 
         assertThrows<BusinessValidException> {
             memberLoginFailureService.ableUserIfDisableTimeOver(email)

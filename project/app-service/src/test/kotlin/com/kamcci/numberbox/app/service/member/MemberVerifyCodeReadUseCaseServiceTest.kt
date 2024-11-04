@@ -30,7 +30,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
 
     @Test
     fun `인증 코드 미존재 - 실패`() {
-        `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, signUpDto.verifyCodeType))
+        `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, signUpDto.verifyCodeType))
             .thenReturn(null)
 
         // when & then
@@ -46,7 +46,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(181)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp))
+        `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp))
             .thenReturn(memberEmailVerifyCodeVo)
 
         // when & then
@@ -62,7 +62,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
             verifyCode = "5c1d1a9a-3e12-488c-be48-88fdb92c2dd0",
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+        `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
             memberEmailVerifyCodeVo
         )
 
@@ -79,7 +79,7 @@ class MemberVerifyCodeReadUseCaseServiceTest {
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
-        `when`(memberVerifyCodeReadOrmPort.findByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
+        `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
             memberEmailVerifyCodeVo
         )
 

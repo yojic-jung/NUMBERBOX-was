@@ -9,5 +9,5 @@ interface MemberRoleReadOrmPort {
     /**
      * user 권한 조회
      */
-    fun findRoleByMemberId(memberId: UUID): List<String>
+    fun readRoleByMemberId(memberId: UUID): List<String>
 }

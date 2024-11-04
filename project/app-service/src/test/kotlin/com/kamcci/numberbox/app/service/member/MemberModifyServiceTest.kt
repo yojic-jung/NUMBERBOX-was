@@ -23,7 +23,7 @@ class MemberModifyServiceTest {
         val signUpDto = MemberSignUpDto("", "")
         val roleList = listOf("USER")
         `when`(memberReadOrmPort.existsByEmail(signUpDto.email)).thenReturn(false)
-        `when`(roleReadRepo.findRoleByMemberId(any())).thenReturn(roleList)
+        `when`(roleReadRepo.readRoleByMemberId(any())).thenReturn(roleList)
 
         // when & then
         assertDoesNotThrow {

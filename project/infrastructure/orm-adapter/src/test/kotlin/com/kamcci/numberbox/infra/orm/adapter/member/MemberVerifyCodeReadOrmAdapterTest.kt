@@ -20,7 +20,7 @@ class MemberVerifyCodeReadOrmAdapterTest(
 
     @Test
     fun `존재하는 이메일로 조회 - 성공`() {
-        val emailVerifyCodeVo = memberVerifyCodeReadRepo.findByEmailAndCodeType("dywlr@test.com", VerifyCodeType.SignUp)
+        val emailVerifyCodeVo = memberVerifyCodeReadRepo.readByEmailAndCodeType("dywlr@test.com", VerifyCodeType.SignUp)
 
         assertThat(emailVerifyCodeVo).isNotNull
         assertThat(emailVerifyCodeVo!!.verifyCode).isNotNull
@@ -29,7 +29,7 @@ class MemberVerifyCodeReadOrmAdapterTest(
     @Test
     fun `미존재 이메일로 조회 - 성공`() {
         val emailVerifyCodeVo =
-            memberVerifyCodeReadRepo.findByEmailAndCodeType("nonExsit@test.com", VerifyCodeType.SignUp)
+            memberVerifyCodeReadRepo.readByEmailAndCodeType("nonExsit@test.com", VerifyCodeType.SignUp)
 
         assertThat(emailVerifyCodeVo).isNull()
     }

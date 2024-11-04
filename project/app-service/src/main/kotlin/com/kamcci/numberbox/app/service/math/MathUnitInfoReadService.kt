@@ -9,5 +9,5 @@ import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
 class MathUnitInfoReadService(
     private val mathUnitInfoReadOrmPort: MathUnitInfoReadOrmPort
 ) : MathUnitInfoReadUseCase {
-    override fun findAll(): List<MathUnitInfoVo> = mathUnitInfoReadOrmPort.findAll()
+    override fun readAll(): List<MathUnitInfoVo> = mathUnitInfoReadOrmPort.readAll()
 }

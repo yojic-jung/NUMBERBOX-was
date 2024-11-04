@@ -8,7 +8,7 @@ import java.util.*
 
 @Repository
 class MemberRoleReadOrmAdapter : MemberRoleReadOrmPort, BaseRepository() {
-    override fun findRoleByMemberId(memberId: UUID): List<String> =
+    override fun readRoleByMemberId(memberId: UUID): List<String> =
         queryFactory.select(memberRoleEntity.roleName)
             .from(memberRoleEntity)
             .where(memberRoleEntity.member.id.eq(memberId))

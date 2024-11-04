@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MathUnitInfoReadOrmAdapter : MathUnitInfoReadOrmPort, BaseRepository() {
-    override fun findAll(): List<MathUnitInfoVo> {
+    override fun readAll(): List<MathUnitInfoVo> {
         return queryFactory
             .select(
                 Projections.constructor(

@@ -8,7 +8,7 @@ import java.util.*
 
 @Repository
 class MathContentsRepoReadOrmAdapter : MathContentsRepoReadOrmPort, BaseRepository() {
-    override fun findContentsIdByMemberId(memberId: UUID): List<Long> {
+    override fun readContentsIdByMemberId(memberId: UUID): List<Long> {
         return queryFactory
             .select(mathContentsRepositoryEntity.id.contentsId)
             .from(mathContentsRepositoryEntity)

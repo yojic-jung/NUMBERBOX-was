@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MemberFollowReadOrmAdapter : MemberFollowReadOrmPort, BaseRepository() {
-    override fun findFollowingByFollower(profileId: Long): List<Long> {
+    override fun readFollowingByFollower(profileId: Long): List<Long> {
         return queryFactory
             .select(memberFollowEntity.id.followingUserNo)
             .from(memberFollowEntity)
@@ -16,7 +16,7 @@ class MemberFollowReadOrmAdapter : MemberFollowReadOrmPort, BaseRepository() {
             .fetch()
     }
 
-    override fun findFollowerByFollowing(profileId: Long): List<Long> {
+    override fun readFollowerByFollowing(profileId: Long): List<Long> {
         return queryFactory
             .select(memberFollowEntity.id.followerUserNo)
             .from(memberFollowEntity)

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MathFormulaKeyReadOrmAdapter : MathFormulaKeyReadOrmPort, BaseRepository() {
-    override fun findAll(): List<MathFormulaKeyVo> = queryFactory
+    override fun readAll(): List<MathFormulaKeyVo> = queryFactory
         .select(
             Projections.constructor(
                 MathFormulaKeyVo::class.java,

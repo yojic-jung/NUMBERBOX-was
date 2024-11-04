@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.usecase.math.MathTypeInfoReadUseCase
 class MathTypeInfoReadService(
     private val mathTypeInfoReadOrmPort: MathTypeInfoReadOrmPort
 ) : MathTypeInfoReadUseCase {
-    override fun findByUnitId(unitId: Int) = mathTypeInfoReadOrmPort.findByUnitId(unitId)
+    override fun readByUnitId(unitId: Int) = mathTypeInfoReadOrmPort.readByUnitId(unitId)
 
-    override fun findByUnitId(unitIdList: List<Int>) = mathTypeInfoReadOrmPort.findByUnitId(unitIdList)
+    override fun readByUnitId(unitIdList: List<Int>) = mathTypeInfoReadOrmPort.readByUnitId(unitIdList)
 }

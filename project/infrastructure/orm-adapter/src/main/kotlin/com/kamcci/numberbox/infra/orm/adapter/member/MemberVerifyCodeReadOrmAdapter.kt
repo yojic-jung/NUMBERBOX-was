@@ -22,7 +22,7 @@ class MemberVerifyCodeReadOrmAdapter : MemberVerifyCodeReadOrmPort, BaseReposito
             .fetchFirst()
     }
 
-    override fun findByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo? {
+    override fun readByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo? {
         return queryFactory
             .select(
                 Projections.constructor(

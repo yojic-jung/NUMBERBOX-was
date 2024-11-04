@@ -77,7 +77,7 @@ class MathDocsReadService(
         }
 
         // 2. 문제 조회
-        return mathDocsReadOrmPort.findPartitionedByUnitAndType(
+        return mathDocsReadOrmPort.readPartitionedByUnitAndType(
             unitIdAndTypeId,
             contentsType,
             lvCond,
@@ -90,6 +90,6 @@ class MathDocsReadService(
         TODO("Not yet implemented")
     }
 
-    override fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> =
-        mathDocsReadOrmPort.findAdditionalContents(readDto)
+    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> =
+        mathDocsReadOrmPort.readAdditionalContents(readDto)
 }

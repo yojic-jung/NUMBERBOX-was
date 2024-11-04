@@ -15,5 +15,4 @@ interface MemberVerifyCodeSaveUseCase {
      */
 
     fun createVerifyCode(email: String, codeType: VerifyCodeType): String
-
 }

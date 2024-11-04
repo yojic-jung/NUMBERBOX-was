@@ -14,7 +14,7 @@ class FileNameMakeServiceTest {
         val length = 10
 
         // when
-        val randomString = fileNameMakeService.generateRandomString(length)
+        val randomString = fileNameMakeService.makeRandomString(length)
 
         // then
         // 1. 길이가 10인지 확인

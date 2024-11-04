@@ -22,7 +22,7 @@ class MemberReadOrmAdapterTest(
     @Test
     fun `존재하는 이메일로 id 조회 - 성공`() {
         // given & when
-        val memberId = memberReadRepo.findIdByEmail(EXIST_EMAIL)
+        val memberId = memberReadRepo.readIdByEmail(EXIST_EMAIL)
 
         // then
         assertThat(memberId).isNotNull
@@ -31,7 +31,7 @@ class MemberReadOrmAdapterTest(
     @Test
     fun `존재하지 않는 이메일로 id 조회 - 성공`() {
         // given & when
-        val memberId = memberReadRepo.findIdByEmail(NONE_EXIST_EMAIL)
+        val memberId = memberReadRepo.readIdByEmail(NONE_EXIST_EMAIL)
 
         // then
         assertThat(memberId).isNull()
@@ -42,7 +42,7 @@ class MemberReadOrmAdapterTest(
         // given & when
         val username = "홍길동"
         val phone = "01009870987"
-        val email = memberReadRepo.findEmailByUsernameAndPhone(username, phone)
+        val email = memberReadRepo.readEmailByUsernameAndPhone(username, phone)
 
         // then
         assertThat(email).isEqualTo("dywlr@test.com")
@@ -55,7 +55,7 @@ class MemberReadOrmAdapterTest(
         val memberId = UUID.fromString(EXIST_ID)
 
         // when
-        val failCount = memberReadRepo.findFailCountById(memberId)
+        val failCount = memberReadRepo.readFailCountById(memberId)
 
         // then
         assertThat(failCount).isNotNull
@@ -68,7 +68,7 @@ class MemberReadOrmAdapterTest(
         val memberId = UUID.fromString(NONE_EXIST_ID)
 
         // when
-        val failCount = memberReadRepo.findFailCountById(memberId)
+        val failCount = memberReadRepo.readFailCountById(memberId)
 
         // then
         assertThat(failCount).isNull()

@@ -7,7 +7,7 @@ import java.util.*
  */
 interface MathContentsRepoReadOrmPort {
     // 내 저장소 문제 id 목록 조회
-    fun findContentsIdByMemberId(memberId: UUID): List<Long>
+    fun readContentsIdByMemberId(memberId: UUID): List<Long>
 
     // 존재여부 파악
     fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean

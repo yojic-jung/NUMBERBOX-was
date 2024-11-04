@@ -7,7 +7,7 @@ interface FileNameMaker {
     /**
      * 임의 문자열 생성
      */
-    fun generateRandomString(length: Int): String
+    fun makeRandomString(length: Int): String
 
     /**
      * 파일 이름 및 저장 경로 생성

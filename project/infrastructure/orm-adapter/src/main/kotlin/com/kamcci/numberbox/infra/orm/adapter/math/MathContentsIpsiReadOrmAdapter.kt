@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MathContentsIpsiReadOrmAdapter : MathContentsIpsiReadOrmPort, BaseRepository() {
-    override fun findAllIpsiYear(): List<Int> {
+    override fun readAllIpsiYear(): List<Int> {
         return queryFactory
             .selectDistinct(mathContentsIpsiSrcEntity.impYear)
             .from(mathContentsIpsiSrcEntity)

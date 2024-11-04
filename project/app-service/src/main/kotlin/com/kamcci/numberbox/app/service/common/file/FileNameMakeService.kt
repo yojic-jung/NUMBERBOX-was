@@ -12,7 +12,7 @@ class FileNameMakeService : FileNameMaker {
         const val FILE_NAME_LENGTH = 10
     }
 
-    override fun generateRandomString(length: Int): String {
+    override fun makeRandomString(length: Int): String {
         val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9') // 대문자, 소문자 알파벳, 숫자
         return (1..length)
             .map { chars.random() }  // chars에서 무작위로 선택
@@ -22,7 +22,7 @@ class FileNameMakeService : FileNameMaker {
     override fun makeFileNameByType(fileName: String, fileType: FileType): FileNameVo {
         val now = LocalDateTime.now()
         val currentTime = System.currentTimeMillis()
-        val randomString = generateRandomString(FILE_NAME_LENGTH)
+        val randomString = makeRandomString(FILE_NAME_LENGTH)
 
         val dotIndex = fileName.lastIndexOf('.')
         val fileExtension = if (dotIndex != -1 && dotIndex < fileName.length - 1) {

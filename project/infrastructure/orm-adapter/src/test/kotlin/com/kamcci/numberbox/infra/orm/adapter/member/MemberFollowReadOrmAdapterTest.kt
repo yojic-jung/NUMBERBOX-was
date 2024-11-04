@@ -16,7 +16,7 @@ class MemberFollowReadOrmAdapterTest(
         val followerId = 4L
 
         // when
-        val followingList = memberFollowReadOrmAdapter.findFollowingByFollower(followerId)
+        val followingList = memberFollowReadOrmAdapter.readFollowingByFollower(followerId)
 
         // then
         assertThat(followingList.size).isGreaterThan(0)
@@ -28,7 +28,7 @@ class MemberFollowReadOrmAdapterTest(
         val followingId = 3L
 
         // when
-        val followerList = memberFollowReadOrmAdapter.findFollowerByFollowing(followingId)
+        val followerList = memberFollowReadOrmAdapter.readFollowerByFollowing(followingId)
 
         // then
         assertThat(followerList.size).isGreaterThan(0)

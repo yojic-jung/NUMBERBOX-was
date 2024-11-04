@@ -8,6 +8,6 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsIpsiReadUseCase
 class MathContentsIpsiReadService(
     private val mathContentsIpsiReadOrmPort: MathContentsIpsiReadOrmPort
 ) : MathContentsIpsiReadUseCase {
-    override fun findAllIpsiYear(): List<Int> =
-        mathContentsIpsiReadOrmPort.findAllIpsiYear()
+    override fun readAllIpsiYear(): List<Int> =
+        mathContentsIpsiReadOrmPort.readAllIpsiYear()
 }

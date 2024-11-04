@@ -11,7 +11,7 @@ interface MathDocsReadOrmPort {
         quesLv: List<Int>
     ): List<Long>
 
-    fun findPartitionedByUnitAndType(
+    fun readPartitionedByUnitAndType(
         unitIdAndTypeId: List<String>,
         contentsClassifyType: ContentsClassifyType,
         quesLv: List<Int>,
@@ -19,5 +19,5 @@ interface MathDocsReadOrmPort {
         limit: Int,
     ): List<MathInHouseDocsVo>
 
-    fun findAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>
+    fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>
 }

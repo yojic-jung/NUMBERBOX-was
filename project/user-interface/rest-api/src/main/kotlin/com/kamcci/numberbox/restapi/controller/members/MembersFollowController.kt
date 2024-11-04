@@ -27,7 +27,7 @@ class MembersFollowController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 하기
-        val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
+        val myProfileId = memberProfileReadUseCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
         memberFollowModifyUseCase.following(profileId, myProfileId)
 
@@ -45,7 +45,7 @@ class MembersFollowController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 취소
-        val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
+        val myProfileId = memberProfileReadUseCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
         memberFollowModifyUseCase.cancel(profileId, myProfileId)
 

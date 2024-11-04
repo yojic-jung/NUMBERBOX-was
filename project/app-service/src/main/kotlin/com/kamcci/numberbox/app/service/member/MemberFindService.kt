@@ -27,12 +27,12 @@ class MemberFindService(
     }
 
     @TXExecute
-    override fun findMyEmail(userName: String, phoneNumber: String): String? {
-        return memberReadOrmPort.findEmailByUsernameAndPhone(userName, phoneNumber)
+    override fun readMyEmail(userName: String, phoneNumber: String): String? {
+        return memberReadOrmPort.readEmailByUsernameAndPhone(userName, phoneNumber)
     }
 
     @TXExecute
-    override fun findMyPassword(email: String) {
+    override fun readMyPassword(email: String) {
         memberReadOrmPort.existsByEmail(email).let {
             if (!it) throw BusinessValidException("해당 계정이 존재하지 않습니다.")
         }

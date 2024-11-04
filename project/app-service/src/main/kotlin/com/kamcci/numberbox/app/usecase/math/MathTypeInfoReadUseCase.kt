@@ -7,8 +7,8 @@ import com.kamcci.numberbox.app.domain.vo.math.MathTypeInfoVo
  */
 interface MathTypeInfoReadUseCase {
     // 단원 하위 유형 조회
-    fun findByUnitId(unitId: Int): List<MathTypeInfoVo>
+    fun readByUnitId(unitId: Int): List<MathTypeInfoVo>
 
     // 단원 하위 유형 조회
-    fun findByUnitId(unitIdList: List<Int>): List<MathTypeInfoVo>
+    fun readByUnitId(unitIdList: List<Int>): List<MathTypeInfoVo>
 }

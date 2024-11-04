@@ -8,11 +8,11 @@ import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
 class MemberFollowReadService(
     private val memberFollowReadOrmPort: MemberFollowReadOrmPort
 ) : MemberFollowReadUseCase {
-    override fun findFollowingByFollower(profileId: Long): List<Long> =
-        memberFollowReadOrmPort.findFollowingByFollower(profileId)
+    override fun readFollowingByFollower(profileId: Long): List<Long> =
+        memberFollowReadOrmPort.readFollowingByFollower(profileId)
 
-    override fun findFollowerByFollowing(profileId: Long): List<Long> =
-        memberFollowReadOrmPort.findFollowerByFollowing(profileId)
+    override fun readFollowerByFollowing(profileId: Long): List<Long> =
+        memberFollowReadOrmPort.readFollowerByFollowing(profileId)
 
     override fun countFollower(followingId: Long): Long =
         memberFollowReadOrmPort.countFollower(followingId)

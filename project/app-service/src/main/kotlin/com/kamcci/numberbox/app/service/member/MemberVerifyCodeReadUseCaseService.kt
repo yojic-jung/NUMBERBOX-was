@@ -20,7 +20,7 @@ class MemberVerifyCodeReadUseCaseService(
 
     override fun validate(codeDto: MemberVerifyCodeDto) {
         // 1. 인증 코드 존재 여부 조회
-        val verifyCodeVo = memberVerifyCodeReadOrmPort.findByEmailAndCodeType(codeDto.email, codeDto.verifyCodeType)
+        val verifyCodeVo = memberVerifyCodeReadOrmPort.readByEmailAndCodeType(codeDto.email, codeDto.verifyCodeType)
             ?: throw BusinessValidException("인증 코드가 존재하지 않습니다.")
 
         // 2. 인증 코드 만료여부 체크

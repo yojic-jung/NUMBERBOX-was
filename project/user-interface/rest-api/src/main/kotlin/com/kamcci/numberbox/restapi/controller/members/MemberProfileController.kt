@@ -69,13 +69,13 @@ class MemberProfileController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
-        val myProfile = memberProfileReadUseCase.findByMemberId(memberId)
+        val myProfile = memberProfileReadUseCase.readByMemberId(memberId)
 
         // 2. 팔로잉 프로필 조회
-        val followingProfile = memberProfileReadUseCase.findFollowingProfileByMemberId(memberId)
+        val followingProfile = memberProfileReadUseCase.readFollowingProfileByMemberId(memberId)
 
         // 3. 팔로워 프로필 조회
-        val followerProfile = memberProfileReadUseCase.findFollowerProfileByMemberId(memberId)
+        val followerProfile = memberProfileReadUseCase.readFollowerProfileByMemberId(memberId)
         return ResponseUtil.ok(
             mapOf(
                 "myProfile" to myProfile,
@@ -95,10 +95,10 @@ class MemberProfileController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
-        val profile = memberProfileReadUseCase.findByProfileId(profileId)
+        val profile = memberProfileReadUseCase.readByProfileId(profileId)
 
         // 2. 팔로우 여부 조회
-        val myProfileId = memberProfileReadUseCase.findProfileIdByMemberId(memberId)
+        val myProfileId = memberProfileReadUseCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
         val isMyFollower = memberFollowReadUseCase.isFollowing(profileId, myProfileId)
 

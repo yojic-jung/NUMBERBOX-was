@@ -9,19 +9,19 @@ import java.util.*
 interface MemberReadOrmPort {
 
     // 회원 id 조회
-    fun findIdByEmail(email: String): UUID?
+    fun readIdByEmail(email: String): UUID?
 
     // 이메일 조회
-    fun findEmailByUsernameAndPhone(userName: String, phoneNumber: String): String?
+    fun readEmailByUsernameAndPhone(userName: String, phoneNumber: String): String?
 
     // 이메일 존재 여부
     fun existEmail(email: String): Boolean
 
     // 비밀번호 조회
-    fun findPasswordByMemberId(memberId: UUID): String?
+    fun readPasswordByMemberId(memberId: UUID): String?
 
     // 로그인 실패 카운트 조회
-    fun findFailCountById(id: UUID): Int?
+    fun readFailCountById(id: UUID): Int?
 
     // 마지막 로그인 실패 시간 조회
     fun findLastFailTimeById(id: UUID): LocalDateTime?

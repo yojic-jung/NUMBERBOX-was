@@ -25,7 +25,7 @@ class MemberModifyService(
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
         // 이전 비밀번호 일치 여부 확인
-        val dbPassword = memberReadOrmPort.findPasswordByMemberId(updtDto.memberId) ?: return false
+        val dbPassword = memberReadOrmPort.readPasswordByMemberId(updtDto.memberId) ?: return false
         val isPasswordEqual = memberPasswordEncoder.matches(updtDto.previousPassword, dbPassword)
         if (!isPasswordEqual) return false
 
@@ -36,7 +36,7 @@ class MemberModifyService(
 
     @TXExecute
     override fun confirmPassword(confirmDto: MemberPasswdConfirmDto): Boolean {
-        val encodedPassword = memberReadOrmPort.findPasswordByMemberId(confirmDto.memberId) ?: return false
+        val encodedPassword = memberReadOrmPort.readPasswordByMemberId(confirmDto.memberId) ?: return false
         return memberPasswordEncoder.matches(confirmDto.password, encodedPassword)
     }
 
@@ -62,7 +62,7 @@ class MemberModifyService(
 
         // 4. 권한 설정
         roleSaveRepo.saveUserRole(id)
-        val roleList = roleReadRepo.findRoleByMemberId(id)
+        val roleList = roleReadRepo.readRoleByMemberId(id)
         return MemberSignUpResultVo(id, signUpDto.email, roleList)
     }
 

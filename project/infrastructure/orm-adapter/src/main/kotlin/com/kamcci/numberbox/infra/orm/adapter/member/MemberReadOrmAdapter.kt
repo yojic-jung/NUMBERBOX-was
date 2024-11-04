@@ -9,14 +9,14 @@ import java.util.*
 
 @Repository
 class MemberReadOrmAdapter : MemberReadOrmPort, BaseRepository() {
-    override fun findIdByEmail(email: String) =
+    override fun readIdByEmail(email: String) =
         queryFactory
             .select(memberEntity.id)
             .from(memberEntity)
             .where(memberEntity.email.eq(email))
             .fetchOne()
 
-    override fun findEmailByUsernameAndPhone(userName: String, phoneNumber: String): String? =
+    override fun readEmailByUsernameAndPhone(userName: String, phoneNumber: String): String? =
         queryFactory
             .select(memberEntity.email)
             .from(memberEntity)
@@ -35,14 +35,14 @@ class MemberReadOrmAdapter : MemberReadOrmPort, BaseRepository() {
             .where(memberEntity.email.eq(email))
             .fetchOne() != null
 
-    override fun findPasswordByMemberId(memberId: UUID): String? =
+    override fun readPasswordByMemberId(memberId: UUID): String? =
         queryFactory
             .select(memberEntity.password)
             .from(memberEntity)
             .where(memberEntity.id.eq(memberId))
             .fetchOne()
 
-    override fun findFailCountById(id: UUID) =
+    override fun readFailCountById(id: UUID) =
         queryFactory
             .select(memberEntity.failCount)
             .from(memberEntity)

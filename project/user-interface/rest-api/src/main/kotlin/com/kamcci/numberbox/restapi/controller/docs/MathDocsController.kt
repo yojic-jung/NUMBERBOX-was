@@ -41,7 +41,7 @@ class MathDocsController(
         @ModelAttribute @Valid
         readDto: MathDocsAdditionalReadDto
     ): ResponseEntity<ResponseData<Any>> {
-        val additionalContents = mathDocsReadUseCase.findAdditionalContents(readDto)
+        val additionalContents = mathDocsReadUseCase.readAdditionalContents(readDto)
         return ResponseUtil.ok(mapOf("docs" to additionalContents))
     }
 

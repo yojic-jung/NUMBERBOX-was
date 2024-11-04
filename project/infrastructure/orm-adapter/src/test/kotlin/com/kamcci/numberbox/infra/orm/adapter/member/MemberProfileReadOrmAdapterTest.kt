@@ -17,7 +17,7 @@ class MemberProfileReadOrmAdapterTest(
         val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
 
         // when
-        val profile = memberProfileReadOrmAdapter.findByMemberId(memberId)
+        val profile = memberProfileReadOrmAdapter.readByMemberId(memberId)
 
         // then
         assertThat(profile?.id).isEqualTo(1L)
@@ -29,7 +29,7 @@ class MemberProfileReadOrmAdapterTest(
         val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
 
         // when
-        val profile = memberProfileReadOrmAdapter.findByMemberId(memberId)
+        val profile = memberProfileReadOrmAdapter.readByMemberId(memberId)
 
         // then
         assertThat(profile?.id).isEqualTo(1L)
@@ -41,7 +41,7 @@ class MemberProfileReadOrmAdapterTest(
         val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
 
         // when
-        val profileId = memberProfileReadOrmAdapter.findProfileIdByMemberId(memberId)
+        val profileId = memberProfileReadOrmAdapter.readProfileIdByMemberId(memberId)
 
         // then
         assertThat(profileId).isEqualTo(1L)
@@ -55,7 +55,7 @@ class MemberProfileReadOrmAdapterTest(
         val name = "testImg.png"
 
         // when
-        val profileImg = memberProfileReadOrmAdapter.findProfileImgByMemberId(memberId)
+        val profileImg = memberProfileReadOrmAdapter.readProfileImgByMemberId(memberId)
 
         // then
         assertThat(profileImg?.profileImgPath).isEqualTo(path)
@@ -68,7 +68,7 @@ class MemberProfileReadOrmAdapterTest(
         val profileIds = listOf(1L, 2L)
 
         // when
-        val profiles = memberProfileReadOrmAdapter.findByProfileIdList(profileIds)
+        val profiles = memberProfileReadOrmAdapter.readByProfileIdList(profileIds)
 
         // then
         assertThat(profiles.size).isEqualTo(2)

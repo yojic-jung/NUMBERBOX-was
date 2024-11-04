@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MathTypeInfoReadOrmAdapter : MathTypeInfoReadOrmPort, BaseRepository() {
-    override fun findByUnitId(unitId: Int): List<MathTypeInfoVo> {
+    override fun readByUnitId(unitId: Int): List<MathTypeInfoVo> {
         return queryFactory
             .select(
                 Projections.constructor(
@@ -26,7 +26,7 @@ class MathTypeInfoReadOrmAdapter : MathTypeInfoReadOrmPort, BaseRepository() {
             .fetch()
     }
 
-    override fun findByUnitId(unitIdList: List<Int>): List<MathTypeInfoVo> {
+    override fun readByUnitId(unitIdList: List<Int>): List<MathTypeInfoVo> {
         return queryFactory
             .select(
                 Projections.constructor(

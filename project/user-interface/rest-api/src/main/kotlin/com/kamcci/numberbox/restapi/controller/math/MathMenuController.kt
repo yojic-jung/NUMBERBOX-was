@@ -23,7 +23,7 @@ class MathMenuController(
 ) {
     @GetMapping("/unit")
     fun unitInfo(): ResponseEntity<ResponseData<Any>> {
-        val mathUnitList = mathUnitInfoReadUseCase.findAll()
+        val mathUnitList = mathUnitInfoReadUseCase.readAll()
         val unitMap = extractUnitMap(mathUnitList)
         return ResponseUtil.ok(unitMap)
     }
@@ -33,19 +33,19 @@ class MathMenuController(
         @RequestParam("unitId") unitId: String
     ): ResponseEntity<ResponseData<Any>> {
         val unitIdList = unitId.split(",").map { it.trim().toInt() }
-        val mathTypeList = mathTypeInfoReadUseCase.findByUnitId(unitIdList)
+        val mathTypeList = mathTypeInfoReadUseCase.readByUnitId(unitIdList)
         return ResponseUtil.ok(mapOf("mathTypeList" to mathTypeList))
     }
 
     @GetMapping("/shortCutKey")
     fun shortCutKey(): ResponseEntity<ResponseData<Any>> {
-        val shortcutKeyList = mathFormulaKeyReadUseCase.findAll()
+        val shortcutKeyList = mathFormulaKeyReadUseCase.readAll()
         val shortcutkeyGroupMap = shortcutKeyList.groupBy { it.classification }
         return ResponseUtil.ok(mapOf("shortCutKey" to shortcutKeyList) + shortcutkeyGroupMap)
     }
 
     @GetMapping("/ipsi-year")
     fun ipsiYear(): ResponseEntity<ResponseData<Any>> {
-        return ResponseUtil.ok(mapOf("ipsiYear" to mathContentsIpsiReadUseCase.findAllIpsiYear()))
+        return ResponseUtil.ok(mapOf("ipsiYear" to mathContentsIpsiReadUseCase.readAllIpsiYear()))
     }
 }
