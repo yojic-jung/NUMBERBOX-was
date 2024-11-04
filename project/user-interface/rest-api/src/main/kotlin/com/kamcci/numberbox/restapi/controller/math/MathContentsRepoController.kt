@@ -18,7 +18,7 @@ class MathContentsRepoController(
 ) {
     // 저장소에 문제 저장
     @PostMapping("")
-    fun putRepo(
+    fun createRepo(
         @UserId userId: UUID,
         @RequestBody @Valid req: ContentsIdRequest
     ): ResponseEntity<ResponseData<Any>> {

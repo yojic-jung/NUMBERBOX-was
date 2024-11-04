@@ -44,7 +44,7 @@ class MathContentsController(
 
     // 사용자 제작 문제 등록
     @PostMapping("/user-custom")
-    fun makeUserCustomContents(
+    fun createUserCustomContents(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConLicenseCreateRequest
@@ -94,7 +94,7 @@ class MathContentsController(
 
     // 변형문제 등록
     @PostMapping("/trans")
-    fun makeTransContents(
+    fun createransContents(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConTransCreateRequest
@@ -141,8 +141,8 @@ class MathContentsController(
     }
 
     // 문제 문법 등록
-    @PutMapping("/grammar")
-    fun putMathGrammer(
+    @PostMapping("/grammar")
+    fun createMathGrammer(
         @UserId memberId: UUID,
         @RequestBody
         @Valid modifyReq: MathContestGrammarModifyRequest
@@ -215,7 +215,7 @@ class MathContentsController(
 
     // 나의 문제
     @GetMapping("/my")
-    fun myContents(
+    fun readMyContents(
         @UserId memberId: UUID,
         @ModelAttribute
         @Valid req: ValidPageRequest
@@ -229,7 +229,7 @@ class MathContentsController(
 
     // 사용자 문제
     @GetMapping("/user/{profileId}")
-    fun userContents(
+    fun readUserContents(
         @PathVariable profileId: Long,
         @ModelAttribute
         @Valid req: ValidPageRequest
@@ -252,7 +252,7 @@ class MathContentsController(
 
     // 문제 조회
     @GetMapping("/list")
-    fun read(
+    fun readList(
         @UserId memberId: UUID,
         @ModelAttribute
         @Valid req: MathContentsSearchRequest
@@ -270,7 +270,7 @@ class MathContentsController(
 
     // 내 저장소 문제 조회
     @GetMapping("/repo")
-    fun myRepoContents(
+    fun readMyRepoContents(
         @UserId memberId: UUID,
         @ModelAttribute @Valid req: ValidPageRequest
     ): ResponseEntity<ResponseData<Any>> {

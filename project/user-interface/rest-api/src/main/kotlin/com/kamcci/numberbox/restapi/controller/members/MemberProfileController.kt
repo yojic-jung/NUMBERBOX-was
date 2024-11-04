@@ -24,8 +24,8 @@ class MemberProfileController(
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
 ) {
     // 프로필 등록
-    @PostMapping("")
-    fun profileRegister(
+    @PutMapping("")
+    fun updateProfile(
         @UserId memberId: UUID,
         @RequestBody @Valid
         profileImgReq: ProfileTypeUpdtRequest
@@ -36,8 +36,8 @@ class MemberProfileController(
 
 
     // 프로필 이미지 등록
-    @PostMapping("/img")
-    fun profileImgRegister(
+    @PutMapping("/img")
+    fun updateProfileImg(
         @UserId memberId: UUID,
         @ModelAttribute @Valid
         profileImgReq: ProfileImgUpdtRequest
@@ -53,7 +53,7 @@ class MemberProfileController(
 
     // 닉네임 변경
     @PutMapping("/nickname")
-    fun modifyNickname(
+    fun updateNickname(
         @UserId memberId: UUID,
         @RequestBody @Valid
         profileNicknameReq: ProfileNicknameUpdtRequest
@@ -65,7 +65,7 @@ class MemberProfileController(
 
     // 내 프로필 보기
     @GetMapping("")
-    fun myProfile(
+    fun readMyProfile(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
@@ -89,7 +89,7 @@ class MemberProfileController(
 
     // 다른 사람 프로필 보기
     @GetMapping("/{profileId}")
-    fun profile(
+    fun readUserProfile(
         @Positive(message = "프로필 아이디는 양수만 가능합니다.")
         @PathVariable profileId: Long,
         @UserId memberId: UUID

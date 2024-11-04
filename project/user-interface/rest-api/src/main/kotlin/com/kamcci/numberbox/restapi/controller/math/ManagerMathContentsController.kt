@@ -26,7 +26,7 @@ class ManagerMathContentsController(
 ) {
     // 자체제작 문제 등록
     @PostMapping("/in-house")
-    fun makeInHouseContents(
+    fun createInHouseContents(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConSimilarSrcCreateRequest
@@ -42,7 +42,7 @@ class ManagerMathContentsController(
 
     // 입시 수학문제
     @PostMapping("/ipsi")
-    fun makeManagerContents(
+    fun createManagerContents(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConIpsiSrcCreateRequest

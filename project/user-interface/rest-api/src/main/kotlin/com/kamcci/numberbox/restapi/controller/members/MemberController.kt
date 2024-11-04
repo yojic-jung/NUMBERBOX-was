@@ -23,7 +23,7 @@ class MemberController(
 ) {
     // 내 이메일
     @GetMapping("/email")
-    fun email(@UserEmail email: String): ResponseEntity<ResponseData<Map<String, Any?>>> {
+    fun readEmail(@UserEmail email: String): ResponseEntity<ResponseData<Map<String, Any?>>> {
         return ResponseUtil.ok(mapOf("email" to email))
     }
 
