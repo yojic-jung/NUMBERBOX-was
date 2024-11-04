@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathInHouseDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 
 /**
  * 학습지 제작
@@ -14,7 +15,7 @@ interface MathDocsReadUseCase {
     fun makeInHouseDocs(readDto: MathInHouseDocsReadDto): List<MathInHouseDocsVo>
 
     // 입시 수학문제 제작
-    fun makeIpsiDocs(readDto: MathIpsiDocsReadDto)
+    fun makeIpsiDocs(readDto: MathIpsiDocsReadDto): List<MathIpsiDocsVo>
 
     // 추가 문제 조회
     fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo>

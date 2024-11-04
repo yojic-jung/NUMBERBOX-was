@@ -1,23 +1,28 @@
 package com.kamcci.numberbox.infra.orm.adapter.docs
 
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
+import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.app.port.repository.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.MathTypeDomain
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsIpsiSrcEntity.mathContentsIpsiSrcEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathTypeInfoEntity.mathTypeInfoEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathUnitInfoEntity.mathUnitInfoEntity
-import com.querydsl.core.types.Projections
+import com.kamcci.numberbox.infra.orm.util.docs.MathDocsExpression
 import com.querydsl.core.types.dsl.Expressions
 import org.springframework.stereotype.Repository
 import java.sql.Timestamp
 
 @Repository
-class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
+class MathDocsReadOrmAdapter(
+    private val mathDocsExpression: MathDocsExpression
+) : MathDocsReadOrmPort, BaseRepository() {
     override fun countGroupByUnitAndType(
         unitIdAndTypeId: List<String>,
         contentsClassifyType: ContentsClassifyType,
@@ -38,9 +43,8 @@ class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
             ).fetch()
     }
 
-    override fun readPartitionedByUnitAndType(
+    override fun readAllInHouseDocsVoBy(
         unitIdAndTypeId: List<String>,
-        contentsClassifyType: ContentsClassifyType,
         quesLv: List<Int>,
         countByType: Int,
         limit: Int
@@ -91,7 +95,7 @@ class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
         """,
             Any::class.java
         )
-        mysqlQuery.setParameter("contentsClassify", contentsClassifyType)
+        mysqlQuery.setParameter("contentsClassify", ContentsClassifyType.InHouse)
         mysqlQuery.setParameter("svcPosbStts", ContentsSvcPosbSttsType.Release.id)
         mysqlQuery.setParameter("quesLv", quesLv)
         mysqlQuery.setParameter("unitIdAndTypeId", unitIdAndTypeId)
@@ -135,40 +139,41 @@ class MathDocsReadOrmAdapter : MathDocsReadOrmPort, BaseRepository() {
         return resultList
     }
 
+    override fun readAllIpsiDocsVoBy(
+        readDto: MathIpsiDocsReadDto
+    ): List<MathIpsiDocsVo> {
+        return queryFactory
+            .select(mathDocsExpression.ceMathIpsiDocsVo())
+            .from(mathContentsEntity)
+            .innerJoin(mathUnitInfoEntity)
+            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
+            .innerJoin(mathTypeInfoEntity)
+            .on(
+                mathContentsEntity.unitId.eq(mathTypeInfoEntity.mathTypeDomain.unitId),
+                mathContentsEntity.typeId.eq(mathTypeInfoEntity.mathTypeDomain.typeId),
+            )
+            .innerJoin(mathContentsEntity.mathContentsIpsiSrc, mathContentsIpsiSrcEntity)
+            .where(
+                mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
+                mathContentsEntity.contentsClassify.eq(ContentsClassifyType.Ipsi),
+                // 검색 조건
+                Expressions.stringTemplate(
+                    "CONCAT({0}, '-', {1})",
+                    mathContentsEntity.typeId,
+                    mathContentsEntity.unitId
+                ).`in`(readDto.unitIdAndTypeId),
+                mathContentsEntity.quesLevel.`in`(readDto.quesLevel),
+                mathContentsIpsiSrcEntity.wrongRatio.between(readDto.wrongRatioMin, readDto.wrongRatioMax),
+                mathContentsIpsiSrcEntity.impYear.between(readDto.ipsiYearStrt, readDto.ipsiYearEnd)
+            )
+            .limit(readDto.count)
+            .fetch()
+    }
+
     override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> {
         val mathTypeDomain = MathTypeDomain(readDto.unitId, readDto.typeId)
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MathInHouseDocsVo::class.java,
-                    mathContentsEntity.id,
-                    mathContentsEntity.unitId,
-                    mathContentsEntity.typeId,
-                    mathContentsEntity.contents,
-                    mathContentsEntity.contentsImg,
-                    mathContentsEntity.imgPath,
-                    mathContentsEntity.solution,
-                    mathContentsEntity.solutionImg,
-                    mathContentsEntity.solutionImgPath,
-                    mathContentsEntity.fifNo,
-                    mathContentsEntity.secNo,
-                    mathContentsEntity.thrNo,
-                    mathContentsEntity.fourNo,
-                    mathContentsEntity.fifNo,
-                    mathContentsEntity.multiChoiceType,
-                    mathContentsEntity.answer,
-                    mathContentsEntity.choiceAnswer,
-                    mathContentsEntity.quesLevel,
-                    mathContentsEntity.ansExistStts,
-                    mathContentsEntity.contentsClassify,
-                    mathUnitInfoEntity.subject,
-                    mathUnitInfoEntity.firUnit,
-                    mathUnitInfoEntity.secUnit,
-                    mathUnitInfoEntity.thrUnit,
-                    mathTypeInfoEntity.quesType,
-                    mathContentsEntity.sysCreateDate
-                )
-            )
+            .select(mathDocsExpression.ceMathInHouseDocsVo())
             .from(mathContentsEntity)
             .innerJoin(mathUnitInfoEntity)
             .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))

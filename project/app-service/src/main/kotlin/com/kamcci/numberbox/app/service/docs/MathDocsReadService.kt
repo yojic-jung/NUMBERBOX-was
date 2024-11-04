@@ -38,26 +38,17 @@ class MathDocsReadService(
 
         // 문제 조회
         val unitIdAndTypeId = readDto.unitIdAndTypeId.split(",").map { it.trim() }
-        val mainContents = makeDocs(ContentsClassifyType.InHouse, unitIdAndTypeId, lvCond.first, readDto.count)
+        val mainContents = makeDocs(unitIdAndTypeId, lvCond.first, readDto.count)
         if (mainContents.size == readDto.count) {
             return mainContents
-
         }
 
-
         // 문제 부족시 다른 난이도에서 추가
-        val subContents =
-            makeDocs(
-                ContentsClassifyType.InHouse,
-                unitIdAndTypeId,
-                lvCond.second,
-                readDto.count - mainContents.size
-            )
+        val subContents = makeDocs(unitIdAndTypeId, lvCond.second, readDto.count - mainContents.size)
         return mainContents + subContents
     }
 
     private fun makeDocs(
-        contentsType: ContentsClassifyType,
         unitIdAndTypeId: List<String>,
         lvCond: List<Int>,
         count: Int
@@ -77,19 +68,17 @@ class MathDocsReadService(
         }
 
         // 2. 문제 조회
-        return mathDocsReadOrmPort.readPartitionedByUnitAndType(
+        return mathDocsReadOrmPort.readAllInHouseDocsVoBy(
             unitIdAndTypeId,
-            contentsType,
             lvCond,
             perN,
             count
         )
     }
 
-    override fun makeIpsiDocs(readDto: MathIpsiDocsReadDto) {
-        TODO("Not yet implemented")
-    }
+    override fun makeIpsiDocs(readDto: MathIpsiDocsReadDto) =
+        mathDocsReadOrmPort.readAllIpsiDocsVoBy(readDto)
 
-    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> =
+    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto) =
         mathDocsReadOrmPort.readAdditionalContents(readDto)
 }
