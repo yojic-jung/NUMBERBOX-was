@@ -8,6 +8,7 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
+import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -22,6 +23,7 @@ class MemberProfileController(
     private val memberProfileReadUseCase: MemberProfileReadUseCase,
     private val memberProfileModifyUseCase: MemberProfileModifyUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
+    private val memberMapper: MemberMapper
 ) {
     // 프로필 등록
     @PutMapping("")
@@ -70,19 +72,23 @@ class MemberProfileController(
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
         val myProfile = memberProfileReadUseCase.readByMemberId(memberId)
+        val myProfileRs = memberMapper.toProfileResponse(myProfile)
 
         // 2. 팔로잉 프로필 조회
         val followingProfile = memberProfileReadUseCase.readFollowingProfileByMemberId(memberId)
+        val followingProfileRs = memberMapper.toProfileResponse(followingProfile)
 
         // 3. 팔로워 프로필 조회
         val followerProfile = memberProfileReadUseCase.readFollowerProfileByMemberId(memberId)
+        val followerProfileRs = memberMapper.toProfileResponse(followerProfile)
+
         return ResponseUtil.ok(
             mapOf(
-                "myProfile" to myProfile,
-                "followingProfile" to followingProfile,
-                "followingCnt" to followingProfile.size,
-                "followerProfile" to followerProfile,
-                "followerCnt" to followerProfile.size,
+                "myProfile" to myProfileRs,
+                "followingProfile" to followingProfileRs,
+                "followingCnt" to followingProfileRs.size,
+                "followerProfile" to followerProfileRs,
+                "followerCnt" to followerProfileRs.size,
             )
         )
     }

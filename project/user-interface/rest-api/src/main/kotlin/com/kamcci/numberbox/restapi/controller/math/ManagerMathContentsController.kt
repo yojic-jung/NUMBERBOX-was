@@ -4,7 +4,7 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
 import com.kamcci.numberbox.restapi.dto.request.math.MathConIpsiSrcCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathConSimilarSrcCreateRequest
-import com.kamcci.numberbox.restapi.mapper.mapper.MathContentsMapper
+import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid

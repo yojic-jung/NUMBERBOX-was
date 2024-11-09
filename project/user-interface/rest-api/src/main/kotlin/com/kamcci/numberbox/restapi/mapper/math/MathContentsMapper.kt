@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.mapper.mapper
+package com.kamcci.numberbox.restapi.mapper.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsModifyRequest

@@ -15,7 +15,8 @@ import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
 import com.kamcci.numberbox.restapi.dto.request.math.*
-import com.kamcci.numberbox.restapi.mapper.mapper.MathContentsMapper
+import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
+import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.math.MathUnitUtil.getUnitIdList
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -36,6 +37,8 @@ class MathContentsController(
     private val mathContentsModifyUseCase: MathContentsModifyUseCase,
     private val mathConGrammarModifyUseCase: MathContentsGrammarModifyUseCase,
     private val mathContentsMapper: MathContentsMapper,
+    // 매퍼
+    private val memberMapper: MemberMapper
 ) {
     companion object {
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
@@ -239,6 +242,7 @@ class MathContentsController(
         // 프로필 조회
         val profile =
             memberProfileReadUseCase.readByProfileId(profileId) ?: throw BusinessValidException(NOT_EXIST_MEMBER)
+        val profileRes = memberMapper.toProfileResponse(profile)
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
@@ -252,7 +256,7 @@ class MathContentsController(
 
         return ResponseUtil.ok(
             mapOf(
-                "profile" to profile,
+                "profile" to profileRes,
                 "contents" to res,
             )
         )
