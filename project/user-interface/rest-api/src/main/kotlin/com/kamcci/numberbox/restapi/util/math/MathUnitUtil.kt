@@ -1,18 +1,18 @@
 package com.kamcci.numberbox.restapi.util.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.domain.vo.math.MathUnitInfoVo
+import com.kamcci.numberbox.app.domain.vo.math.MathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import com.kamcci.numberbox.restapi.dto.response.math.MathUnitGroupResponse
 
 object MathUnitUtil {
     // 단원 그룹별 추출
     fun extractUnitList(
-        mathUnitList: List<MathUnitInfoVo>,
+        mathUnitList: List<MathCategoryUnitVo>,
         // MathUnitInfoVo 인풋으로 받아 속성을 반환하는 함수인자
-        id: (MathUnitInfoVo) -> Int,
-        parentVal: (MathUnitInfoVo) -> String,
-        mainVal: (MathUnitInfoVo) -> String,
+        id: (MathCategoryUnitVo) -> Int,
+        parentVal: (MathCategoryUnitVo) -> String,
+        mainVal: (MathCategoryUnitVo) -> String,
     ): List<MathUnitGroupResponse> {
         val resultList: MutableList<MathUnitGroupResponse> = mutableListOf()
 
@@ -27,7 +27,7 @@ object MathUnitUtil {
     }
 
     // 전체 단원 정보 반환
-    fun extractUnitMap(mathUnitList: List<MathUnitInfoVo>): Map<String, List<MathUnitGroupResponse>> {
+    fun extractUnitMap(mathUnitList: List<MathCategoryUnitVo>): Map<String, List<MathUnitGroupResponse>> {
         // 학년 추출
         val subjectList = extractUnitList(mathUnitList, { it.id }, { it.id.toString() }, { it.subject })
 
@@ -50,7 +50,7 @@ object MathUnitUtil {
 
     // 같은 depth에 존재하는 단원 id 추출
     fun getUnitIdList(
-        unitInfoList: List<MathUnitInfoVo>,
+        unitInfoList: List<MathCategoryUnitVo>,
         searchType: MathContentsSearchRequest.SearchType,
         unitId: Int
     ): List<Int> {

@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.vo.math
 /**
  * 수학 유형 정보
  */
-data class MathTypeInfoVo(
+data class MathCategoryTypeVo(
     // 단원 id
     val unitId: Int,
     // 유형 id

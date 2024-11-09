@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.modules.auth.control.dto.AuthResponse
 import com.kamcci.modules.auth.control.exception.BadAuthRequestException
 import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 
 @WebMvcUnitTest
@@ -36,7 +36,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.BAD_AUTH_REQUEST.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
     @Test
@@ -51,7 +51,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.USER_NOT_FOUND.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.UNAUTHORIZED.value())
     }
 
     @Test
@@ -67,7 +67,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 
 
@@ -84,7 +84,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.PASSWORD_MISS_MATCH.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 
     @Test
@@ -100,7 +100,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.ABLE_USER.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 
     @Test
@@ -116,7 +116,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.DISABLE_USER.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.FORBIDDEN.value())
     }
 
     @Test
@@ -132,6 +132,6 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
 
         // then
         val errMsg = result.body as ResponseErrMsg
-        assertThat(errMsg.status).isEqualTo(AuthResponse.AUTH_SERVER_ERROR.statusCode)
+        assertThat(errMsg.status).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value())
     }
 }

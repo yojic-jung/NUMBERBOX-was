@@ -10,6 +10,8 @@ import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.app.port.repository.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.MathTypeDomain
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsIpsiSrcEntity.mathContentsIpsiSrcEntity
 import com.kamcci.numberbox.infra.orm.util.docs.MathDocsExpression
@@ -51,9 +53,9 @@ class MathDocsReadOrmAdapter(
         val mysqlQuery = em.createNativeQuery(
             """
             SELECT 
-               CAST(A.contents_no AS UNSIGNED) AS contentsId, 
-                A.unit_uniq_no AS unitId, 
-                A.type_no AS typeId, 
+               CAST(A.id AS UNSIGNED) AS contentsId, 
+                A.unit_id ,
+                A.type_id, 
                 A.contents, 
                 A.contents_img, 
                 A.img_path, 
@@ -79,15 +81,15 @@ class MathDocsReadOrmAdapter(
                 A.sys_create_date
             FROM (
                 SELECT *, 
-                       ROW_NUMBER() OVER (PARTITION BY unit_uniq_no, type_no ORDER BY RAND()) AS row_num
+                       ROW_NUMBER() OVER (PARTITION BY unit_id, type_id ORDER BY RAND()) AS row_num
                 FROM math_contents 
                 WHERE contents_classify = :contentsClassify
                   AND svc_posb_stts = :svcPosbStts
                   AND ques_level IN (:quesLv)
-                  AND CONCAT(type_no, '-',unit_uniq_no ) IN (:unitIdAndTypeId)
+                  AND CONCAT(type_id, '-',unit_id ) IN (:unitIdAndTypeId)
             ) AS A
-            JOIN math_unit_info AS B ON A.unit_uniq_no = B.unit_uniq_no
-            JOIN math_type_info AS C ON A.unit_uniq_no = C.unit_uniq_no AND A.type_no = C.type_no
+            JOIN math_category_unit AS B ON A.unit_id = B.id
+            JOIN math_category_type AS C ON A.unit_id = C.unit_id AND A.type_id = C.type_id
             WHERE A.row_num <= :countByType
             LIMIT :limit
         """,
@@ -143,12 +145,12 @@ class MathDocsReadOrmAdapter(
         return queryFactory
             .select(mathDocsExpression.ceMathIpsiDocsVo())
             .from(mathContentsEntity)
-            .innerJoin(mathUnitInfoEntity)
-            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
-            .innerJoin(mathTypeInfoEntity)
+            .innerJoin(mathCategoryUnitEntity)
+            .on(mathContentsEntity.unitId.eq(mathCategoryUnitEntity.id))
+            .innerJoin(mathCategoryTypeEntity)
             .on(
-                mathContentsEntity.unitId.eq(mathTypeInfoEntity.mathTypeDomain.unitId),
-                mathContentsEntity.typeId.eq(mathTypeInfoEntity.mathTypeDomain.typeId),
+                mathContentsEntity.unitId.eq(mathCategoryTypeEntity.mathTypeDomain.unitId),
+                mathContentsEntity.typeId.eq(mathCategoryTypeEntity.mathTypeDomain.typeId),
             )
             .innerJoin(mathContentsEntity.mathContentsIpsiSrc, mathContentsIpsiSrcEntity)
             .where(
@@ -173,17 +175,17 @@ class MathDocsReadOrmAdapter(
         return queryFactory
             .select(mathDocsExpression.ceMathInHouseDocsVo())
             .from(mathContentsEntity)
-            .innerJoin(mathUnitInfoEntity)
-            .on(mathContentsEntity.unitId.eq(mathUnitInfoEntity.id))
-            .innerJoin(mathTypeInfoEntity)
+            .innerJoin(mathCategoryUnitEntity)
+            .on(mathContentsEntity.unitId.eq(mathCategoryUnitEntity.id))
+            .innerJoin(mathCategoryTypeEntity)
             .on(
-                mathContentsEntity.unitId.eq(mathTypeInfoEntity.mathTypeDomain.unitId),
-                mathContentsEntity.typeId.eq(mathTypeInfoEntity.mathTypeDomain.typeId),
+                mathContentsEntity.unitId.eq(mathCategoryTypeEntity.mathTypeDomain.unitId),
+                mathContentsEntity.typeId.eq(mathCategoryTypeEntity.mathTypeDomain.typeId),
             )
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
                 mathContentsEntity.contentsClassify.eq(readDto.contentsClassifyType),
-                mathTypeInfoEntity.mathTypeDomain.eq(mathTypeDomain)
+                mathCategoryTypeEntity.mathTypeDomain.eq(mathTypeDomain)
             )
             .orderBy(mathContentsEntity.id.desc())
             .fetch()

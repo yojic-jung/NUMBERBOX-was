@@ -20,10 +20,10 @@ class MathContentsEntity {
     @Column(nullable = false)
     var id: Long = 0
 
-    @Column(length = 5, nullable = false)
+    @Column(name = "unit_id", length = 5, nullable = false)
     var unitId: Int? = null
 
-    @Column(length = 5, nullable = false)
+    @Column(name = "type_id", length = 5, nullable = false)
     var typeId: Int? = null
 
     @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)

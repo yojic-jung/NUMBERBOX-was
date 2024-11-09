@@ -230,6 +230,8 @@ class MathContentsController(
     // 사용자 문제
     @GetMapping("/user/{profileId}")
     fun readUserContents(
+        @UserId
+        myMemberId: UUID,
         @PathVariable profileId: Long,
         @ModelAttribute
         @Valid req: ValidPageRequest
@@ -240,7 +242,13 @@ class MathContentsController(
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.readByProfileId(profileId, pageReq)
+        val res =
+            mathContentsReadUseCase.readDetailByMemberId(
+                profile.memberId,
+                myMemberId,
+                ContentsSvcPosbSttsType.Release,
+                pageReq
+            )
 
         return ResponseUtil.ok(
             mapOf(

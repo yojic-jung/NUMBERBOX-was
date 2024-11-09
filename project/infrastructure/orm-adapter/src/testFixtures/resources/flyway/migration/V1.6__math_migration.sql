@@ -51,4 +51,8 @@ ALTER TABLE math_con_repo CHANGE user_uniq_id member_id binary(16) NOT NULL;
 ALTER TABLE math_category_unit CHANGE unit_uniq_no id INT NOT NULL;
 -- math_category_type 칼럼명 변경
 ALTER TABLE math_category_type CHANGE unit_uniq_no unit_id INT NOT NULL;
-ALTER TABLE math_category_type CHANGE type_no type_id binary(16) NOT NULL;
+ALTER TABLE math_category_type CHANGE type_no type_id int NOT NULL;
+-- math_docs_paper 칼럼명 변경
+ALTER TABLE math_docs_paper CHANGE docs_no id int AUTO_INCREMENT NOT NULL;
+ALTER TABLE math_docs_paper CHANGE contents_no_list contents_id_list varchar(700) NOT NULL;
+ALTER TABLE math_docs_paper CHANGE user_uniq_id member_id binary(16) NOT NULL;

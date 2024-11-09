@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/math/docs")
-class MathDocsController(
+class MathDocsReadController(
     private val mathDocsReadUseCase: MathDocsReadUseCase
 ) {
     @GetMapping("/in-house")

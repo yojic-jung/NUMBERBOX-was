@@ -6,6 +6,7 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsLikeModifyUseCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -28,12 +29,13 @@ class MathContentsLikeController(
     }
 
     // 문제 좋아요 취소
-    @DeleteMapping("")
+    @DeleteMapping("/{contentsId}")
     fun likeCancelContents(
         @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
+        @ContentsCheck
+        @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
+        val modifyDto = MathContentsLikeModifyDto(contentsId, userId)
         mathConLikeModifyUseCase.delete(modifyDto)
         return ResponseUtil.ok(true)
     }

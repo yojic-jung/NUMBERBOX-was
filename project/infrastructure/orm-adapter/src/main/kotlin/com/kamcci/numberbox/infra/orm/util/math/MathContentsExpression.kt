@@ -1,13 +1,13 @@
 package com.kamcci.numberbox.infra.orm.util.math
 
 import com.kamcci.numberbox.app.domain.vo.math.*
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsIpsiSrcEntity.mathContentsIpsiSrcEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsLicenseEntity.mathContentsLicenseEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsLikeEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsRepositoryEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsSimilarSrcEntity.mathContentsSimilarSrcEntity
-import com.kamcci.numberbox.infra.orm.entity.math.QMathUnitInfoEntity.mathUnitInfoEntity
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.querydsl.core.types.ConstructorExpression
 import com.querydsl.core.types.Projections
@@ -57,10 +57,10 @@ class MathContentsExpression {
             memberProfileEntity.nickname,
             memberProfileEntity.profileImgName,
             memberProfileEntity.profileImgPath,
-            mathUnitInfoEntity.subject,
-            mathUnitInfoEntity.firUnit,
-            mathUnitInfoEntity.secUnit,
-            mathUnitInfoEntity.thrUnit,
+            mathCategoryUnitEntity.subject,
+            mathCategoryUnitEntity.firUnit,
+            mathCategoryUnitEntity.secUnit,
+            mathCategoryUnitEntity.thrUnit,
         )
 
     fun ceMathInHouseContentsVo(): ConstructorExpression<MathInHouseContentsVo> =
@@ -102,10 +102,10 @@ class MathContentsExpression {
             memberProfileEntity.nickname,
             memberProfileEntity.profileImgName,
             memberProfileEntity.profileImgPath,
-            mathUnitInfoEntity.subject,
-            mathUnitInfoEntity.firUnit,
-            mathUnitInfoEntity.secUnit,
-            mathUnitInfoEntity.thrUnit,
+            mathCategoryUnitEntity.subject,
+            mathCategoryUnitEntity.firUnit,
+            mathCategoryUnitEntity.secUnit,
+            mathCategoryUnitEntity.thrUnit,
         )
 
     fun ceMathIpsiContentsVo(): ConstructorExpression<MathIpsiContentsVo> =
@@ -149,10 +149,10 @@ class MathContentsExpression {
             memberProfileEntity.nickname,
             memberProfileEntity.profileImgName,
             memberProfileEntity.profileImgPath,
-            mathUnitInfoEntity.subject,
-            mathUnitInfoEntity.firUnit,
-            mathUnitInfoEntity.secUnit,
-            mathUnitInfoEntity.thrUnit,
+            mathCategoryUnitEntity.subject,
+            mathCategoryUnitEntity.firUnit,
+            mathCategoryUnitEntity.secUnit,
+            mathCategoryUnitEntity.thrUnit,
         )
 
     fun ceMathContentsDetailVo(memberId: UUID?): ConstructorExpression<MathContentsDetailVo> =
@@ -193,10 +193,10 @@ class MathContentsExpression {
             memberProfileEntity.nickname,
             memberProfileEntity.profileImgName,
             memberProfileEntity.profileImgPath,
-            mathUnitInfoEntity.subject,
-            mathUnitInfoEntity.firUnit,
-            mathUnitInfoEntity.secUnit,
-            mathUnitInfoEntity.thrUnit,
+            mathCategoryUnitEntity.subject,
+            mathCategoryUnitEntity.firUnit,
+            mathCategoryUnitEntity.secUnit,
+            mathCategoryUnitEntity.thrUnit,
             JPAExpressions
                 .selectOne()
                 .from(QMathContentsRepositoryEntity.mathContentsRepositoryEntity)
@@ -248,10 +248,10 @@ class MathContentsExpression {
             memberProfileEntity.nickname,
             memberProfileEntity.profileImgName,
             memberProfileEntity.profileImgPath,
-            mathUnitInfoEntity.subject,
-            mathUnitInfoEntity.firUnit,
-            mathUnitInfoEntity.secUnit,
-            mathUnitInfoEntity.thrUnit,
+            mathCategoryUnitEntity.subject,
+            mathCategoryUnitEntity.firUnit,
+            mathCategoryUnitEntity.secUnit,
+            mathCategoryUnitEntity.thrUnit,
             JPAExpressions
                 .selectOne()
                 .from(QMathContentsRepositoryEntity.mathContentsRepositoryEntity)

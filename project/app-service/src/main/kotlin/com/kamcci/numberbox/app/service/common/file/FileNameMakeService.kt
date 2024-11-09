@@ -35,7 +35,7 @@ class FileNameMakeService : FileNameMaker {
         val rootPath = fileType.path
         // depth1 폴더
         val depth1Path = "${fileType.actionId}${now.year}${now.monthValue}"
-        // 신규 파일 이름(파일이름간 중복 제거 목적)
+        // 신규 파일 이름(파일 이름간 중복 제거 목적)
         val newFileName = "${currentTime}_${randomString}.${fileExtension}"
 
         // 파일 경로와 이름 반환

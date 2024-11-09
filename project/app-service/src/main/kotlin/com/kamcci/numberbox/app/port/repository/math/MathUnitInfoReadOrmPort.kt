@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.app.port.repository.math
 
-import com.kamcci.numberbox.app.domain.vo.math.MathUnitInfoVo
+import com.kamcci.numberbox.app.domain.vo.math.MathCategoryUnitVo
 
 interface MathUnitInfoReadOrmPort {
     // 단원 정보 전체 조회
-    fun readAll(): List<MathUnitInfoVo>
+    fun readAll(): List<MathCategoryUnitVo>
 }

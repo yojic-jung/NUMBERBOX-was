@@ -2,10 +2,10 @@ package com.kamcci.numberbox.infra.orm.util.docs
 
 import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsIpsiSrcEntity.mathContentsIpsiSrcEntity
-import com.kamcci.numberbox.infra.orm.entity.math.QMathTypeInfoEntity.mathTypeInfoEntity
-import com.kamcci.numberbox.infra.orm.entity.math.QMathUnitInfoEntity.mathUnitInfoEntity
 import com.querydsl.core.types.Projections
 import org.springframework.stereotype.Component
 
@@ -33,11 +33,11 @@ class MathDocsExpression {
         mathContentsEntity.quesLevel,
         mathContentsEntity.ansExistStts,
         mathContentsEntity.contentsClassify,
-        mathUnitInfoEntity.subject,
-        mathUnitInfoEntity.firUnit,
-        mathUnitInfoEntity.secUnit,
-        mathUnitInfoEntity.thrUnit,
-        mathTypeInfoEntity.quesType,
+        mathCategoryUnitEntity.subject,
+        mathCategoryUnitEntity.firUnit,
+        mathCategoryUnitEntity.secUnit,
+        mathCategoryUnitEntity.thrUnit,
+        mathCategoryTypeEntity.quesType,
         mathContentsEntity.sysCreateDate,
         mathContentsIpsiSrcEntity.impYear,
         mathContentsIpsiSrcEntity.impMonth,
@@ -68,11 +68,11 @@ class MathDocsExpression {
         mathContentsEntity.quesLevel,
         mathContentsEntity.ansExistStts,
         mathContentsEntity.contentsClassify,
-        mathUnitInfoEntity.subject,
-        mathUnitInfoEntity.firUnit,
-        mathUnitInfoEntity.secUnit,
-        mathUnitInfoEntity.thrUnit,
-        mathTypeInfoEntity.quesType,
+        mathCategoryUnitEntity.subject,
+        mathCategoryUnitEntity.firUnit,
+        mathCategoryUnitEntity.secUnit,
+        mathCategoryUnitEntity.thrUnit,
+        mathCategoryTypeEntity.quesType,
         mathContentsEntity.sysCreateDate
     )
 

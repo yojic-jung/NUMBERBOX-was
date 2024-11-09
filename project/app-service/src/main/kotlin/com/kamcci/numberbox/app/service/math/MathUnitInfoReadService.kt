@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.domain.vo.math.MathUnitInfoVo
+import com.kamcci.numberbox.app.domain.vo.math.MathCategoryUnitVo
 import com.kamcci.numberbox.app.port.repository.math.MathUnitInfoReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
 
@@ -9,5 +9,5 @@ import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
 class MathUnitInfoReadService(
     private val mathUnitInfoReadOrmPort: MathUnitInfoReadOrmPort
 ) : MathUnitInfoReadUseCase {
-    override fun readAll(): List<MathUnitInfoVo> = mathUnitInfoReadOrmPort.readAll()
+    override fun readAll(): List<MathCategoryUnitVo> = mathUnitInfoReadOrmPort.readAll()
 }

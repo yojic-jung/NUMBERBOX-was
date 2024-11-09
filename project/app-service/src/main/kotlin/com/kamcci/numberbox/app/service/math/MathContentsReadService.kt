@@ -23,9 +23,6 @@ class MathContentsReadService(
     override fun readById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
         mathContentsReadOrmPort.readById(contentsId, pageReq)
 
-    override fun readByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo> =
-        mathContentsReadOrmPort.readByProfileId(profileId, pageReq)
-
     override fun readDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? =
         mathContentsReadOrmPort.readDetailByIdAndMemberId(id, memberId)
 
@@ -35,6 +32,14 @@ class MathContentsReadService(
         pageReq: PageRequest
     ): List<MathContentsDetailVo> =
         mathContentsReadOrmPort.readDetailByMemberId(memberId, svcPosbSttsType, pageReq)
+
+    override fun readDetailByMemberId(
+        memberId: UUID,
+        myMemberId: UUID,
+        svcPosbSttsType: ContentsSvcPosbSttsType?,
+        pageReq: PageRequest
+    ): List<MathContentsDetailVo> =
+        mathContentsReadOrmPort.readDetailByMemberId(memberId, myMemberId, svcPosbSttsType, pageReq)
 
     override fun readInHouseContentsById(contentsId: Long): MathInHouseContentsVo? =
         mathContentsReadOrmPort.readInHouseContentsById(contentsId)

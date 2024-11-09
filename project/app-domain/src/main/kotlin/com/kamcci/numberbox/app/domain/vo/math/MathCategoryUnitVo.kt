@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.vo.math
 /**
  * 수학 단원 정보
  */
-data class MathUnitInfoVo(
+data class MathCategoryUnitVo(
     val id: Int,
     // 학년
     val subject: String,

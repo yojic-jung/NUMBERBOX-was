@@ -15,10 +15,6 @@ interface MathContentsReadUseCase {
     // 문제 id로 조회
     fun readById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo>
 
-    // 사용자 프로필 id로 조회
-    fun readByProfileId(profileId: Long, pageReq: PageRequest): List<MathContentsVo>
-
-
     // 문제 id와 제작자 id로 조회
     fun readDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo?
 
@@ -31,6 +27,21 @@ interface MathContentsReadUseCase {
      */
     fun readDetailByMemberId(
         memberId: UUID,
+        svcPosbSttsType: ContentsSvcPosbSttsType?,
+        pageReq: PageRequest
+    ): List<MathContentsDetailVo>
+
+    /**
+     * 수학 문제 조회
+     *
+     * @param memberId          문제 제작자
+     * @param myMemberId        나의 id(좋아요, 저장소 정보 파악 목적)
+     * @param svcPosbSttsType   서비스 가능 상태(null인 경우 구분 없이 전체)
+     * @param pageReq           페이징 조건
+     */
+    fun readDetailByMemberId(
+        memberId: UUID,
+        myMemberId: UUID,
         svcPosbSttsType: ContentsSvcPosbSttsType?,
         pageReq: PageRequest
     ): List<MathContentsDetailVo>

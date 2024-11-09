@@ -1,45 +1,45 @@
 package com.kamcci.numberbox.infra.orm.adapter.math
 
-import com.kamcci.numberbox.app.domain.vo.math.MathTypeInfoVo
+import com.kamcci.numberbox.app.domain.vo.math.MathCategoryTypeVo
 import com.kamcci.numberbox.app.port.repository.math.MathTypeInfoReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.entity.math.QMathTypeInfoEntity.mathTypeInfoEntity
+import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
 import com.querydsl.core.types.Projections
 import org.springframework.stereotype.Repository
 
 @Repository
 class MathTypeInfoReadOrmAdapter : MathTypeInfoReadOrmPort, BaseRepository() {
-    override fun readByUnitId(unitId: Int): List<MathTypeInfoVo> {
+    override fun readByUnitId(unitId: Int): List<MathCategoryTypeVo> {
         return queryFactory
             .select(
                 Projections.constructor(
-                    MathTypeInfoVo::class.java,
-                    mathTypeInfoEntity.mathTypeDomain.unitId,
-                    mathTypeInfoEntity.mathTypeDomain.typeId,
-                    mathTypeInfoEntity.quesType,
-                    mathTypeInfoEntity.typeOrder,
+                    MathCategoryTypeVo::class.java,
+                    mathCategoryTypeEntity.mathTypeDomain.unitId,
+                    mathCategoryTypeEntity.mathTypeDomain.typeId,
+                    mathCategoryTypeEntity.quesType,
+                    mathCategoryTypeEntity.typeOrder,
                 )
             )
-            .from(mathTypeInfoEntity)
-            .where(mathTypeInfoEntity.mathTypeDomain.unitId.eq(unitId))
-            .orderBy(mathTypeInfoEntity.typeOrder.asc())
+            .from(mathCategoryTypeEntity)
+            .where(mathCategoryTypeEntity.mathTypeDomain.unitId.eq(unitId))
+            .orderBy(mathCategoryTypeEntity.typeOrder.asc())
             .fetch()
     }
 
-    override fun readByUnitId(unitIdList: List<Int>): List<MathTypeInfoVo> {
+    override fun readByUnitId(unitIdList: List<Int>): List<MathCategoryTypeVo> {
         return queryFactory
             .select(
                 Projections.constructor(
-                    MathTypeInfoVo::class.java,
-                    mathTypeInfoEntity.mathTypeDomain.unitId,
-                    mathTypeInfoEntity.mathTypeDomain.typeId,
-                    mathTypeInfoEntity.quesType,
-                    mathTypeInfoEntity.typeOrder,
+                    MathCategoryTypeVo::class.java,
+                    mathCategoryTypeEntity.mathTypeDomain.unitId,
+                    mathCategoryTypeEntity.mathTypeDomain.typeId,
+                    mathCategoryTypeEntity.quesType,
+                    mathCategoryTypeEntity.typeOrder,
                 )
             )
-            .from(mathTypeInfoEntity)
-            .where(mathTypeInfoEntity.mathTypeDomain.unitId.`in`(unitIdList))
-            .orderBy(mathTypeInfoEntity.typeOrder.asc())
+            .from(mathCategoryTypeEntity)
+            .where(mathCategoryTypeEntity.mathTypeDomain.unitId.`in`(unitIdList))
+            .orderBy(mathCategoryTypeEntity.typeOrder.asc())
             .fetch()
     }
 }

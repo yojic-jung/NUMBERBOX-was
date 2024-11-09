@@ -18,7 +18,7 @@ class MathContentsSimilarSrcEntity {
     var id: Long = 0
 
     // 수학문제 id
-    @Column(length = 11, nullable = false, updatable = false)
+    @Column(name = "contents_id", length = 11, nullable = false, updatable = false)
     var contentsId: Long? = null
 
     // 출처 - 교재

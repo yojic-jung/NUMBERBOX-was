@@ -6,6 +6,7 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsRepoModifyUseCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -28,12 +29,13 @@ class MathContentsRepoController(
     }
 
     // 저장소에서 삭제
-    @DeleteMapping("")
+    @DeleteMapping("/{contentsId}")
     fun deleteRepo(
         @UserId userId: UUID,
-        @RequestBody @Valid req: ContentsIdRequest
+        @ContentsCheck
+        @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsRepoModifyDto(req.contentsId, userId)
+        val modifyDto = MathContentsRepoModifyDto(contentsId, userId)
         mathConRepoModifyUseCase.delete(modifyDto)
         return ResponseUtil.ok(true)
     }
