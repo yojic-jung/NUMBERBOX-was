@@ -22,7 +22,7 @@ include(":project:app-service")
 
 // project-adapter
 include(":project:infrastructure")
-include(":project:infrastructure:orm-adapter")
+include(":project:infrastructure:orm-jpa-adapter")
 include(":project:infrastructure:storage-adapter")
 include(":project:infrastructure:email-adapter")
 

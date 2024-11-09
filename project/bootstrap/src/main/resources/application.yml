@@ -4,9 +4,9 @@ spring:
     group:
       local:
         - rest-api
-        - orm-adapter
-        - orm-adapter-local
-        - orm-adapter-env
+        - orm-jpa-adapter
+        - orm-jpa-adapter-local
+        - orm-jpa-adapter-env
         - mail-sender-local
         - mail-sender-env
         - storage
