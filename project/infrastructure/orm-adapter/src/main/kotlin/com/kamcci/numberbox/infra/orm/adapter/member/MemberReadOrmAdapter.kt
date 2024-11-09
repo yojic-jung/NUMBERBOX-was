@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberPrivateEntity.memberPrivateEntity

@@ -7,7 +7,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
-import com.kamcci.numberbox.app.port.repository.docs.MathDocsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.MathTypeDomain
 import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity

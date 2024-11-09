@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
-import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeSaveOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.MemberVerifyCodeEntity
 import com.kamcci.numberbox.infra.orm.factory.member.MemberVerifyCodeFactory.makeSaveEntity

@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
-import com.kamcci.numberbox.app.port.repository.member.MemberFollowReadOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberFollowReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import java.util.*
 

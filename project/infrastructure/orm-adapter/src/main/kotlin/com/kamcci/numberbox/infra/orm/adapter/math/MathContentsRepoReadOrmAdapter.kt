@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.math
 
-import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsRepositoryEntity.mathContentsRepositoryEntity
 import org.springframework.stereotype.Repository

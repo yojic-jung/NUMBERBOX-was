@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.repository.member.MemberFollowReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberFollowReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
 
 @UseCase

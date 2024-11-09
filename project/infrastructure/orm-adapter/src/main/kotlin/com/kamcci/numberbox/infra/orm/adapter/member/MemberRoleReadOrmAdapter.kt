@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.port.repository.member.MemberRoleReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberRoleReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberRoleEntity.memberRoleEntity
 import org.springframework.stereotype.Repository

@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.port.repository.member.MemberRoleSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberRoleSaveOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.factory.member.MemberRoleFactory

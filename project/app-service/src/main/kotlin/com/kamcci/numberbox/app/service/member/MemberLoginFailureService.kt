@@ -3,9 +3,9 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberRoleModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberRoleModifyOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
 import java.time.LocalDateTime
 

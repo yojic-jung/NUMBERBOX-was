@@ -7,7 +7,7 @@ import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.port.repository.cs.CsErrorReportModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.cs.CsErrorReportModifyOrmPort
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportModifyUseCase

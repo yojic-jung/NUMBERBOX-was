@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.repository.member.*
+import com.kamcci.numberbox.app.port.orm.member.*
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
 
 @UseCase

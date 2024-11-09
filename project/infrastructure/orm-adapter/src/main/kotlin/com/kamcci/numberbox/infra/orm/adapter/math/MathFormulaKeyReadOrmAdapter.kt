@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.adapter.math
 
 import com.kamcci.numberbox.app.domain.vo.math.MathFormulaKeyVo
-import com.kamcci.numberbox.app.port.repository.math.MathFormulaKeyReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathFormulaKeyReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.QMathFormulaKeyEntity.mathFormulaKeyEntity
 import com.querydsl.core.types.Projections

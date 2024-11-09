@@ -8,8 +8,8 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.repository.member.MemberModifyOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberFindUseCase
 
 @UseCase

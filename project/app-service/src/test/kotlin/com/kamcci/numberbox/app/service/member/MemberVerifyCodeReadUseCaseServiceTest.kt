@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
-import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

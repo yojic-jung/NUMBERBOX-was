@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
-import com.kamcci.numberbox.app.port.repository.member.MemberPrivateModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberPrivateModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberPrivateEntity.memberPrivateEntity
 import org.springframework.stereotype.Repository

@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

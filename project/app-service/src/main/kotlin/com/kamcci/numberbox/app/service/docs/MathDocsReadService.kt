@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
-import com.kamcci.numberbox.app.port.repository.docs.MathDocsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadUseCase
 
 @UseCase

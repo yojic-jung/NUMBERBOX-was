@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileSaveOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.factory.member.MemberProfileFactory
 import org.springframework.stereotype.Repository

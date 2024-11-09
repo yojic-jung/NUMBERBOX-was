@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.adapter.member
 
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.querydsl.core.types.Projections

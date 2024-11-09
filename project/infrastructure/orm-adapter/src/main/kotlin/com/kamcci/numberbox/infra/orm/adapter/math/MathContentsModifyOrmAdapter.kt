@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
-import com.kamcci.numberbox.app.port.repository.math.MathContentsModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.MathContentsEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity

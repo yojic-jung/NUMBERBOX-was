@@ -7,7 +7,7 @@ import com.kamcci.numberbox.app.domain.vo.math.MathContentsDetailVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
-import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
 import java.util.*
 

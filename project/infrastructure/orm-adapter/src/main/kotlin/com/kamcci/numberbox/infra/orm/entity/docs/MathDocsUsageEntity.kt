@@ -10,28 +10,33 @@ import java.util.*
  * 수학 학습지 제작 사용량
  */
 @Entity
-@Table(name = "math_docs_paper")
+@Table(name = "math_docs_usage")
 class MathDocsUsageEntity {
-    // 사용자들이 학습지를 얼마나 만드는지 체크하기 위한 엔티티, 추후 삭제해도 됨
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var docsNo: Int = 0
+    @Column(nullable = false)
+    var id: Long = 0
 
     @Column(length = 700, nullable = false)
-    var contentsNoList: String? = null
+    var contentsIdList: String? = null
 
-    @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
-    var userUniqId: UUID? = null
+    // 학습지 제작자 id
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
+    var memberId: UUID? = null
 
+    // 학년
     @Column(length = 7, nullable = true)
     var docsGrade: String? = null
 
+    // 학습지 제목
     @Column(length = 20, nullable = true)
     var docsTitle: String? = null
 
+    // 학습지 부제목
     @Column(length = 50, nullable = true)
     var docsSubTitle: String? = null
 
+    // 출제자
     @Column(length = 20, nullable = true)
     var docsOwner: String? = null
 

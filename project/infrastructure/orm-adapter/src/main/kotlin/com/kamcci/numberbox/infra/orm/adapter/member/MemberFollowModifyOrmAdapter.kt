@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.adapter.member
 
-import com.kamcci.numberbox.app.port.repository.member.MemberFollowModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberFollowModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.FollowUserDomain
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberFollowEntity.memberFollowEntity

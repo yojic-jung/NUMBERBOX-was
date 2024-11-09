@@ -2,8 +2,8 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.port.repository.member.MemberReadOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberRoleReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberRoleReadOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

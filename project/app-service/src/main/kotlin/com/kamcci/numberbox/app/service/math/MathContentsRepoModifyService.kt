@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoModifyOrmPort
-import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoModifyUseCase
 
 @UseCase

@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.adapter.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.member.QMemberProfileEntity.memberProfileEntity
 import org.springframework.stereotype.Repository

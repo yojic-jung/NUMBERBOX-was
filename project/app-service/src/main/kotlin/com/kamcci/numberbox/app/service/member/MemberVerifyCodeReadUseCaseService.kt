@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
 import java.time.Duration
 import java.time.LocalDateTime

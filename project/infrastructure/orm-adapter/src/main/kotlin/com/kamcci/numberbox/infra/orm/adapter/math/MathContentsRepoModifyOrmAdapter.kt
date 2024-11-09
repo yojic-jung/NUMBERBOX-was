@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.adapter.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
-import com.kamcci.numberbox.app.port.repository.math.MathContentsRepoModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoModifyOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.MathContentsRepositoryDomain
 import com.kamcci.numberbox.infra.orm.entity.math.MathContentsRepositoryEntity

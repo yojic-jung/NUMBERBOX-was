@@ -6,8 +6,8 @@ import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileModifyOrmPort
-import com.kamcci.numberbox.app.port.repository.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
 import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase

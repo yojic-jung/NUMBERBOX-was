@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.domain.system_construction.Aliases
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
-import com.kamcci.numberbox.app.port.repository.member.MemberVerifyCodeSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeSaveOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeSaveUseCase
 import java.util.*
 

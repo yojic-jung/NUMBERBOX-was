@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.*
-import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.infra.orm.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.entity.math.QMathContentsEntity.mathContentsEntity

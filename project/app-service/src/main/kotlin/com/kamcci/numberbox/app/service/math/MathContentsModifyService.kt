@@ -9,8 +9,8 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.repository.math.MathContentsModifyOrmPort
-import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
 import java.util.*
 

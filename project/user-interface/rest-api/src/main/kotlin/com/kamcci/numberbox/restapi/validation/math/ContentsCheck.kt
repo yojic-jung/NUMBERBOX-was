@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.math
 
-import com.kamcci.numberbox.app.port.repository.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
