@@ -5,26 +5,17 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEntity.memberProfileEntity
-import com.querydsl.core.types.Projections
-import com.querydsl.core.types.dsl.Expressions
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.member.MemberProfileExpression
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MemberProfileReadRepository : MemberProfileReadOrmPort, BaseRepository() {
+class MemberProfileReadRepository(
+    private val memberProfileExpression: MemberProfileExpression
+) : MemberProfileReadOrmPort, BaseRepository() {
     override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MemberProfileVo::class.java,
-                    memberProfileEntity.id,
-                    Expressions.constant(memberId),
-                    memberProfileEntity.nickname,
-                    memberProfileEntity.profileImgName,
-                    memberProfileEntity.profileImgPath,
-                    memberProfileEntity.profileType,
-                )
-            )
+            .select(memberProfileExpression.ceMemberProfileVo())
             .from(memberProfileEntity)
             .where(memberProfileEntity.memberId.eq(memberId))
             .fetchOne()
@@ -32,17 +23,7 @@ class MemberProfileReadRepository : MemberProfileReadOrmPort, BaseRepository() {
 
     override fun readByProfileId(profileId: Long): MemberProfileVo? {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MemberProfileVo::class.java,
-                    memberProfileEntity.id,
-                    memberProfileEntity.memberId,
-                    memberProfileEntity.nickname,
-                    memberProfileEntity.profileImgName,
-                    memberProfileEntity.profileImgPath,
-                    memberProfileEntity.profileType,
-                )
-            )
+            .select(memberProfileExpression.ceMemberProfileVo())
             .from(memberProfileEntity)
             .where(memberProfileEntity.id.eq(profileId))
             .fetchOne()
@@ -58,15 +39,7 @@ class MemberProfileReadRepository : MemberProfileReadOrmPort, BaseRepository() {
 
     override fun readProfileImgByMemberId(memberId: UUID): MemberProfileImgVo? {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MemberProfileImgVo::class.java,
-                    memberProfileEntity.id,
-                    Expressions.constant(memberId),
-                    memberProfileEntity.profileImgPath,
-                    memberProfileEntity.profileImgName,
-                )
-            )
+            .select(memberProfileExpression.ceMemberProfileImgVo(memberId))
             .from(memberProfileEntity)
             .where(memberProfileEntity.memberId.eq(memberId))
             .fetchOne()
@@ -74,17 +47,7 @@ class MemberProfileReadRepository : MemberProfileReadOrmPort, BaseRepository() {
 
     override fun readByProfileIdList(profileId: List<Long>): List<MemberProfileVo> {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MemberProfileVo::class.java,
-                    memberProfileEntity.id,
-                    memberProfileEntity.memberId,
-                    memberProfileEntity.nickname,
-                    memberProfileEntity.profileImgName,
-                    memberProfileEntity.profileImgPath,
-                    memberProfileEntity.profileType,
-                )
-            )
+            .select(memberProfileExpression.ceMemberProfileVo())
             .from(memberProfileEntity)
             .where(memberProfileEntity.id.`in`(profileId))
             .fetch()

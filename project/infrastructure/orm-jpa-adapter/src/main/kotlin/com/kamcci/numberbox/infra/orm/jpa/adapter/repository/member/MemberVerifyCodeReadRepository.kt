@@ -1,15 +1,17 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
+import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeVo
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberVerifyCodeEntity.memberVerifyCodeEntity
-import com.querydsl.core.types.Projections
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.member.MemberVerifyCodeExpression
 import org.springframework.stereotype.Repository
 
 @Repository
-class MemberVerifyCodeReadRepository : MemberVerifyCodeReadOrmPort, BaseRepository() {
+class MemberVerifyCodeReadRepository(
+    private val memberVerifyCodeExpression: MemberVerifyCodeExpression
+) : MemberVerifyCodeReadOrmPort, BaseRepository() {
 
     override fun countByEmailAndCodeType(email: String, codeType: VerifyCodeType): Long {
         return queryFactory
@@ -22,15 +24,9 @@ class MemberVerifyCodeReadRepository : MemberVerifyCodeReadOrmPort, BaseReposito
             .fetchFirst()
     }
 
-    override fun readByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberEmailVerifyCodeVo? {
+    override fun readByEmailAndCodeType(email: String, codeType: VerifyCodeType): MemberVerifyCodeVo? {
         return queryFactory
-            .select(
-                Projections.constructor(
-                    MemberEmailVerifyCodeVo::class.java,
-                    memberVerifyCodeEntity.verifyCode,
-                    memberVerifyCodeEntity.sysCreateTime
-                )
-            )
+            .select(memberVerifyCodeExpression.ceMemberVerifyCodeVo())
             .from(memberVerifyCodeEntity)
             .where(
                 memberVerifyCodeEntity.email.eq(email),

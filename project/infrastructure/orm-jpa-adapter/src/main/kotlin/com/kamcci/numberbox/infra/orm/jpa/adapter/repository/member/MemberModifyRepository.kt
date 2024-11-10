@@ -27,11 +27,6 @@ class MemberModifyRepository : MemberModifyOrmPort, BaseRepository() {
             .execute() > 0
     }
 
-
-    override fun drop(memberId: UUID) {
-        TODO("Not yet implemented")
-    }
-
     override fun updateFailCountById(userId: UUID, failCount: Int): Boolean {
         return queryFactory
             .update(memberEntity)

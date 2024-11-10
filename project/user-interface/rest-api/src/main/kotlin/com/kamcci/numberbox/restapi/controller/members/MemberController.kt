@@ -6,7 +6,6 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdConfirmRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
-import com.kamcci.numberbox.restapi.dto.request.member.MemberVerifyCodeRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -52,13 +51,13 @@ class MemberController(
     }
 
     // 탈퇴
-    @PostMapping("/drop")
-    fun dropAccount(
-        @UserId memberId: UUID,
-        @RequestBody @Valid verifyCodeRequest: MemberVerifyCodeRequest
-    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        val dropDto = memberMapper.toDropDto(memberId, verifyCodeRequest)
-        val isSuccess = memberModifyUseCase.drop(dropDto)
-        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
-    }
+//    @PostMapping("/drop")
+//    fun dropAccount(
+//        @UserId memberId: UUID,
+//        @RequestBody @Valid verifyCodeRequest: MemberVerifyCodeRequest
+//    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
+//        val dropDto = memberMapper.toDropDto(memberId, verifyCodeRequest)
+//        val isSuccess = memberModifyUseCase.drop(dropDto)
+//        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
+//    }
 }

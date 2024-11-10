@@ -1,6 +1,9 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.dto.member.*
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
@@ -64,12 +67,6 @@ class MemberModifyService(
         roleSaveRepo.saveUserRole(id)
         val roleList = roleReadRepo.readRoleByMemberId(id)
         return MemberSignUpResultVo(id, signUpDto.email, roleList)
-    }
-
-    @TXExecute
-    override fun drop(dropDto: MemberDropDto): Boolean {
-        // 1. 인증코드 확인
-        TODO("Not yet implemented")
     }
 
     // 10글자 랜덤 알파벳 닉네임 생성

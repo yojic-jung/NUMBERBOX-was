@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.domain.vo.member.MemberEmailVerifyCodeVo
+import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeVo
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -42,12 +42,12 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     @Test
     fun `인증 검증 코드 만료 시간 지남 - 실패`() {
         // given
-        val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
+        val memberVerifyCodeVo = MemberVerifyCodeVo(
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(181)
         )
         `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp))
-            .thenReturn(memberEmailVerifyCodeVo)
+            .thenReturn(memberVerifyCodeVo)
 
         // when & then
         assertThrows<BusinessValidException> {
@@ -58,12 +58,12 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     @Test
     fun `인증 코드 불일치 - 실패`() {
         // given
-        val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
+        val memberVerifyCodeVo = MemberVerifyCodeVo(
             verifyCode = "5c1d1a9a-3e12-488c-be48-88fdb92c2dd0",
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
         `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
-            memberEmailVerifyCodeVo
+            memberVerifyCodeVo
         )
 
         // when & then
@@ -75,12 +75,12 @@ class MemberVerifyCodeReadUseCaseServiceTest {
     @Test
     fun `인증 유효성 검사 - 성공`() {
         // given
-        val memberEmailVerifyCodeVo = MemberEmailVerifyCodeVo(
+        val memberVerifyCodeVo = MemberVerifyCodeVo(
             verifyCode = VERIFY_CODE,
             sysCreateTime = LocalDateTime.now().minusSeconds(180)
         )
         `when`(memberVerifyCodeReadOrmPort.readByEmailAndCodeType(signUpDto.email, VerifyCodeType.SignUp)).thenReturn(
-            memberEmailVerifyCodeVo
+            memberVerifyCodeVo
         )
 
         // when & then

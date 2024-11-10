@@ -1,6 +1,9 @@
 package com.kamcci.numberbox.app.usecase.member
 
-import com.kamcci.numberbox.app.domain.dto.member.*
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 
 /**
@@ -22,8 +25,4 @@ interface MemberModifyUseCase {
      */
     fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo
 
-    /**
-     * 회원 탈퇴
-     */
-    fun drop(dropDto: MemberDropDto): Boolean
 }
