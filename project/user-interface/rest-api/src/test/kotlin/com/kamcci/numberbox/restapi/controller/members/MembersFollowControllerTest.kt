@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
@@ -15,7 +16,7 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
     lateinit var memberProfileReadUseCase: MemberProfileReadUseCase
 
     companion object {
-        const val FOLLOWING_URL = "/member/follow"
+        const val FOLLOWING_URL = "/member/following"
     }
 
     @Test
@@ -42,19 +43,20 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, BusinessValidException::class)
     }
 
     @Test
     fun `팔로잉 취소 - 성공`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
+        Mockito.`when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(1)
 
         //when
         val resultAction = delRequest("$FOLLOWING_URL/2", reqBody)
 
         // then
-        assert4xx(resultAction)
+        assert2xx(resultAction)
     }
 
     @Test
@@ -68,5 +70,6 @@ class MembersFollowControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, BusinessValidException::class)
     }
 }

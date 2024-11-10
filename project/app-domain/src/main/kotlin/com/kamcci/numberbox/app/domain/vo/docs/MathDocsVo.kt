@@ -5,9 +5,9 @@ import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import java.time.LocalDateTime
 
 /**
- * 자체제작 수학문제 학습지
+ * 학습지용 수학문제
  */
-data class MathInHouseDocsVo(
+data class MathDocsVo(
     // 수학문제 id
     val contentsId: Long,
     // 단원 id

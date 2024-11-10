@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.util.docs
 
-import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
@@ -47,7 +47,7 @@ class MathDocsExpression {
     )
 
     fun ceMathInHouseDocsVo() = Projections.constructor(
-        MathInHouseDocsVo::class.java,
+        MathDocsVo::class.java,
         mathContentsEntity.id,
         mathContentsEntity.unitId,
         mathContentsEntity.typeId,

@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.hibernate.exception.ConstraintViolationException

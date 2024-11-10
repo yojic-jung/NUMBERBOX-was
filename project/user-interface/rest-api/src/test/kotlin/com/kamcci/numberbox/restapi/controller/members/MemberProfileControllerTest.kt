@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
@@ -11,8 +12,11 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.method.annotation.HandlerMethodValidationException
 import java.util.*
 
 @WebMvcUnitTest
@@ -40,7 +44,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         `when`(memberProfileModifyUseCase.updateProfileTypeByMemberId(any(), any())).thenReturn(true)
 
         //when
-        val resultAction = postRequest(PROFILE_REG_URL, reqBody)
+        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
 
         // then
         assert2xx(resultAction)
@@ -52,10 +56,11 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val reqBody = mapOf("profileType" to "123")
 
         //when
-        val resultAction = postRequest(PROFILE_REG_URL, reqBody)
+        val resultAction = putRequest(PROFILE_REG_URL, reqBody)
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HttpMessageNotReadableException::class)
     }
 
 
@@ -66,7 +71,13 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
         // when
         val resultActions =
-            mockMvc.perform(multipart(PROFILE_IMG_URL).file(file))
+            mockMvc.perform(
+                multipart(PROFILE_IMG_URL)
+                    .file(file)
+                    .with { request ->
+                        request.method = "PUT"
+                        request
+                    })
 
         // then
         assert2xx(resultActions)
@@ -79,11 +90,19 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
         val file = MockMultipartFile("noName", "originalFilename", "image/jpeg", "12345".toByteArray())
 
         // when
-        val resultActions =
-            mockMvc.perform(multipart(PROFILE_IMG_URL).file(file))
+        val resultAction =
+            mockMvc.perform(
+                multipart(PROFILE_IMG_URL)
+                    .file(file)
+                    .with { request ->
+                        request.method = "PUT"
+                        request
+                    }
+            )
 
         // then
-        assert4xx(resultActions)
+        assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -108,6 +127,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
 
@@ -149,6 +169,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, BusinessValidException::class)
     }
 
     @Test
@@ -158,5 +179,6 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HandlerMethodValidationException::class)
     }
 }

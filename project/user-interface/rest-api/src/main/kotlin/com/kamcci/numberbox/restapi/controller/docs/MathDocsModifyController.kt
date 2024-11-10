@@ -1,15 +1,13 @@
 package com.kamcci.numberbox.restapi.controller.docs
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPapaerCreateDto
+import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperCreateDto
+import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperUpdtDto
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperModifyUseCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -21,8 +19,17 @@ class MathDocsModifyController(
     fun create(
         @UserId
         memberId: UUID,
-        @RequestBody reqBody: MathDocsPapaerCreateDto
+        @RequestBody reqBody: MathDocsPaperCreateDto
     ): ResponseEntity<ResponseData<Any>> {
         return ResponseUtil.ok(mapOf("docsId" to mathDocsPaperModifyUseCase.create(memberId, reqBody)))
+    }
+
+    @PutMapping
+    fun update(
+        @UserId
+        memberId: UUID,
+        @RequestBody reqBody: MathDocsPaperUpdtDto
+    ): ResponseEntity<ResponseData<Any>> {
+        return ResponseUtil.ok(mapOf("docsId" to mathDocsPaperModifyUseCase.update(memberId, reqBody)))
     }
 }

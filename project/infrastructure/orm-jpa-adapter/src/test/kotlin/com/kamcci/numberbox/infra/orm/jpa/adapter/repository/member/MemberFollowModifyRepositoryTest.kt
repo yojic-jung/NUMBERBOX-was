@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.FollowUserDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberFollowEntity
 import jakarta.persistence.EntityManager

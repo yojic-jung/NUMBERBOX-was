@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.MethodArgumentNotValidException
 import java.util.*
 
 @WebMvcUnitTest
@@ -49,6 +50,7 @@ class MemberPrivateControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
 }

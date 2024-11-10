@@ -3,7 +3,8 @@ package com.kamcci.numberbox.app.domain.dto.docs
 /**
  * 수학 학습지 제작 사용 기록
  */
-data class MathDocsUsageCreateDto(
+data class MathDocsUsageUpdtDto(
+    val id: Long,
     // 수학 문제 id
     val contentsIdList: List<Long>,
     // 학년

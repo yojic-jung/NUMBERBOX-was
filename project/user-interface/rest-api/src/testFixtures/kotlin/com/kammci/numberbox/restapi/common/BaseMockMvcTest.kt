@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import kotlin.reflect.KClass
 
 open class BaseMockMvcTest {
     @Autowired
@@ -83,4 +84,17 @@ open class BaseMockMvcTest {
     fun assert4xx(resultActions: ResultActions) {
         resultActions.andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
+
+    // 예외 타입 체크
+    fun <T : Throwable> assertException(
+        resultActions: ResultActions,
+        expectedException: KClass<T>,
+    ) {
+        resultActions.andExpect { result ->
+            val exception = result.resolvedException // 발생한 예외 추출
+            assert(expectedException.isInstance(exception))
+        }
+    }
+
+
 }

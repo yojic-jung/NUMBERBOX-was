@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
+import org.springframework.http.converter.HttpMessageNotReadableException
 
 @WebMvcUnitTest
 class MemberControllerTest : BaseMockMvcTest() {
@@ -35,9 +35,9 @@ class MemberControllerTest : BaseMockMvcTest() {
     fun `비밀번호 변경 - 실패(비밀번호 불일치)`() {
         // given
         val req = mapOf(
-            "verifyCode" to UUID.randomUUID(),
+            "previousPassword" to "asdfaf",
             "password" to "abcdefgh1234!",
-            "passwordConfirm" to "abcdefgh1234!",
+            "passwordConfirm" to "abcdefgh!",
         )
 
         // when
@@ -45,6 +45,7 @@ class MemberControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HttpMessageNotReadableException::class)
     }
 
 

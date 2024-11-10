@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberReadUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
@@ -8,12 +9,15 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @WebMvcUnitTest
 class MemberPublicControllerTest : BaseMockMvcTest() {
     companion object {
         private const val CREATE_VERIFY_CODE_URL = "/public/member/signup/verifyCode"
-        private const val SIGNUP_URL = "/public/member/signUp"
+        private const val SIGNUP_URL = "/public/member/signup"
 
         private const val FIND_EMAIL_URL = "/public/member/findEmail"
         private const val FIND_PASSWD_URL = "/public/member/findPassword"
@@ -60,6 +64,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, BusinessValidException::class)
     }
 
     @Test
@@ -77,6 +82,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -94,6 +100,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HttpMessageNotReadableException::class)
     }
 
     @Test
@@ -111,6 +118,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HttpMessageNotReadableException::class)
     }
 
 
@@ -135,6 +143,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -158,6 +167,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -181,6 +191,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -196,6 +207,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -226,6 +238,7 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
@@ -241,18 +254,20 @@ class MemberPublicControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
     fun `비밀번호 찾기 - 실패(유효하지 않은 이메일)`() {
         // given
-        val reqBody = mapOf("email" to "email")
+        val queryString = mapOf("email" to "email")
 
         //when
-        val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
+        val resultAction = getRequest(FIND_PASSWD_URL, queryString)
 
         // then
         assert4xx(resultAction)
+        assertException(resultAction, HandlerMethodValidationException::class)
     }
 
     @Test

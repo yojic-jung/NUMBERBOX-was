@@ -1,12 +1,14 @@
 package com.kamcci.numberbox.app.domain.dto.docs
 
-import com.kamcci.numberbox.app.domain.enumeration.docs.DocsErrStatusType
+import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 
 /**
  * 학습지 생성 dto
  */
-data class MathDocsPapaerCreateDto(
-    val contentsIdList: String,
+data class MathDocsPaperUpdtDto(
+    val id: Long,
+    // 수학문제 id
+    val contentsIdList: List<Long>,
     // 학년
     val docsGrade: String,
     // 학습지 제목
@@ -16,5 +18,5 @@ data class MathDocsPapaerCreateDto(
     // 출제자
     val docsOwner: String,
     // 학습지 에러 타입
-    val docsErrStts: DocsErrStatusType,
+    val docsErrStts: DocsStatusType,
 )

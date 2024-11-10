@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberVerifyCodeEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat

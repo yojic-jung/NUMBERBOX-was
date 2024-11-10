@@ -1,6 +1,8 @@
-package com.kamcci.numberbox.infra.orm.annotation
+package com.kamcci.numberbox.infra.orm.jpa.adapter.annotation
 
+import com.kamcci.numberbox.infra.orm.jpa.adapter.config.MysqlTCExtension
 import com.kamcci.numberbox.infra.orm.jpa.adapter.config.QueryDslConfig
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
@@ -11,7 +13,8 @@ import org.springframework.test.context.ActiveProfiles
  * Desc. 멱등성을 보장함
  */
 @DataJpaTest
+@ExtendWith(value = [MysqlTCExtension::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(value = [QueryDslConfig::class])
-@ActiveProfiles("orm-jpa-adapter-local-test")
-annotation class LocalDBJpaTest
+@ActiveProfiles("orm-jpa-adapter-tc-test")
+annotation class TcDBJpaTest

@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.entity.docs
 
+import com.kamcci.numberbox.infra.orm.jpa.adapter.converter.docs.ContentsIdListConverter
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -17,8 +18,9 @@ class MathDocsUsageEntity {
     @Column(nullable = false)
     var id: Long = 0
 
+    @Convert(converter = ContentsIdListConverter::class)
     @Column(length = 700, nullable = false)
-    var contentsIdList: String? = null
+    var contentsIdList: MutableList<Long> = mutableListOf()
 
     // 학습지 제작자 id
     @Column(columnDefinition = "BINARY(16)", nullable = false)
@@ -42,10 +44,10 @@ class MathDocsUsageEntity {
 
     @Column(updatable = false)
     @CreationTimestamp
-    var sysCreateDate: LocalDateTime? = null
+    var sysCreateDate: LocalDateTime? = LocalDateTime.now()
 
     @Column
     @UpdateTimestamp
-    var sysUpdateDate: LocalDateTime? = null
+    var sysUpdateDate: LocalDateTime? = LocalDateTime.now()
 
 }

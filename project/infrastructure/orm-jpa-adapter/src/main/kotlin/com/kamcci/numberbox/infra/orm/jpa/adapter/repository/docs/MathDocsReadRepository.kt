@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
-import com.kamcci.numberbox.app.domain.vo.docs.MathInHouseDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
@@ -48,7 +48,7 @@ class MathDocsReadRepository(
         quesLv: List<Int>,
         countByType: Int,
         limit: Int
-    ): List<MathInHouseDocsVo> {
+    ): List<MathDocsVo> {
         // 결과를 매핑할 DTO 정의 (예: ResultDTO)
         val mysqlQuery = em.createNativeQuery(
             """
@@ -106,7 +106,7 @@ class MathDocsReadRepository(
             for (idx in 0..result.size - 1) {
                 println("$idx : ${result[idx]}")
             }
-            MathInHouseDocsVo(
+            MathDocsVo(
                 contentsId = result[0] as Long,
                 unitId = result[1] as Int,
                 typeId = result[2] as Int,
@@ -137,6 +137,25 @@ class MathDocsReadRepository(
         }
 
         return resultList
+    }
+
+    override fun readDocsByContentsIdList(idList: List<Long>): List<MathDocsVo> {
+        return queryFactory
+            .select(mathDocsExpression.ceMathInHouseDocsVo())
+            .from(mathContentsEntity)
+            .innerJoin(mathCategoryUnitEntity)
+            .on(mathContentsEntity.unitId.eq(mathCategoryUnitEntity.id))
+            .innerJoin(mathCategoryTypeEntity)
+            .on(
+                mathContentsEntity.unitId.eq(mathCategoryTypeEntity.mathTypeDomain.unitId),
+                mathContentsEntity.typeId.eq(mathCategoryTypeEntity.mathTypeDomain.typeId),
+            )
+            .where(
+                mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
+                mathContentsEntity.id.`in`(idList)
+            )
+            .orderBy(mathContentsEntity.id.desc())
+            .fetch()
     }
 
     override fun readAllIpsiDocsVoBy(
@@ -170,7 +189,7 @@ class MathDocsReadRepository(
             .fetch()
     }
 
-    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathInHouseDocsVo> {
+    override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathDocsVo> {
         val mathTypeDomain = MathTypeDomain(readDto.unitId, readDto.typeId)
         return queryFactory
             .select(mathDocsExpression.ceMathInHouseDocsVo())

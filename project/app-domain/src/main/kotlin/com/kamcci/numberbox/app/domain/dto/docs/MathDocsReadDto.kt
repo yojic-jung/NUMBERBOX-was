@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.app.domain.dto.docs
 
 /**
- * 자체제작 수학문제 검색 쿼리
+ * 학습지용 수학문제 검색 쿼리
  */
-data class MathInHouseDocsReadDto(
+data class MathDocsReadDto(
     // 단원id+유형id ('단원id-유형id' 형식)
     val unitIdAndTypeId: String,
     // 난이도

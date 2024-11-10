@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

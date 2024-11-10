@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.entity.docs
 
-import com.kamcci.numberbox.app.domain.enumeration.docs.DocsErrStatusType
+import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
+import com.kamcci.numberbox.infra.orm.jpa.adapter.converter.docs.ContentsIdListConverter
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -18,8 +19,10 @@ class MathDocsPaperEntity {
     @Column(nullable = false)
     var id: Long = 0
 
+    // 수학문제 id list
+    @Convert(converter = ContentsIdListConverter::class)
     @Column(name = "contents_id_list", length = 700, nullable = false)
-    var contentsIdList: String? = null
+    var contentsIdList: MutableList<Long> = mutableListOf()
 
     // 학습지 소유자 id
     @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
@@ -41,14 +44,9 @@ class MathDocsPaperEntity {
     @Column(length = 20)
     var docsOwner: String? = null
 
-    /*
-     * 0: 정상
-     * 1: 사용자가 직접 오류 신고한 경우
-     * 2: 오류 신고한 학습지 삭제한 경우 또는 학습지 생성 도중 에러 발생하여 생성되지 않아 사용자가 신고한 경우(오류 해결 후 삭제 처리)
-     * 3: 나의 제작문제로 학습지 생성한 경우(나의 학습지에서 사용자에 보이지 않고, 배치로 삭제)
-     */
+    // 학습지 타입
     @Column(length = 1, nullable = false)
-    var docsErrStts: DocsErrStatusType? = DocsErrStatusType.None
+    var docsStts: DocsStatusType? = DocsStatusType.None
 
     @Column(updatable = false)
     @CreationTimestamp

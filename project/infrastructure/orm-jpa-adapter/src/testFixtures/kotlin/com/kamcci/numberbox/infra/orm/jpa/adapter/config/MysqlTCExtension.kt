@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.orm.config
+package com.kamcci.numberbox.infra.orm.jpa.adapter.config
 
 import org.junit.jupiter.api.extension.Extension
 import org.testcontainers.containers.MySQLContainer

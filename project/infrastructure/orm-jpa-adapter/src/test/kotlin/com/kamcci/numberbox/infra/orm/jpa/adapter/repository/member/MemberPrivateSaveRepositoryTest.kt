@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
-import com.kamcci.numberbox.infra.orm.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberPrivateEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat

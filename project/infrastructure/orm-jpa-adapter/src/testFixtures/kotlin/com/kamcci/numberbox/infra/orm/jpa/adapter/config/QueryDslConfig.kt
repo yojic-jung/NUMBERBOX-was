@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.orm.config
+package com.kamcci.numberbox.infra.orm.jpa.adapter.config
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import jakarta.persistence.EntityManager
