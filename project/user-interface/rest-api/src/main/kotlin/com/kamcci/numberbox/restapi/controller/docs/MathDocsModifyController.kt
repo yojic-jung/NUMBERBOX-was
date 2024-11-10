@@ -29,7 +29,8 @@ class MathDocsModifyController(
         @UserId
         memberId: UUID,
         @RequestBody reqBody: MathDocsPaperUpdtDto
-    ): ResponseEntity<ResponseData<Any>> {
-        return ResponseUtil.ok(mapOf("docsId" to mathDocsPaperModifyUseCase.update(memberId, reqBody)))
+    ): ResponseEntity<ResponseData<String>> {
+        mathDocsPaperModifyUseCase.update(memberId, reqBody)
+        return ResponseUtil.ok()
     }
 }

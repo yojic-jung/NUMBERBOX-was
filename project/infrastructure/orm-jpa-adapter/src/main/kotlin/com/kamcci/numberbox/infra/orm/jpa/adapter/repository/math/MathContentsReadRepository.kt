@@ -65,7 +65,7 @@ class MathContentsReadRepository(
         // 페이징 조건 추가
         if (pageReq != null) {
             qry.offset(pageReq.getOffset())
-                .limit(pageReq.volume)
+                .limit(pageReq.pageVolume)
                 .orderBy(mathContentsEntity.sysCreateDate.desc())
         }
 
@@ -102,7 +102,7 @@ class MathContentsReadRepository(
                 svcPosbSttsCondition
             )
             .offset(pageReq.getOffset())
-            .limit(pageReq.volume)
+            .limit(pageReq.pageVolume)
             .orderBy(mathContentsEntity.sysCreateDate.desc())
             .fetch()
     }
@@ -127,7 +127,7 @@ class MathContentsReadRepository(
                 svcPosbSttsCondition
             )
             .offset(pageReq.getOffset())
-            .limit(pageReq.volume)
+            .limit(pageReq.pageVolume)
             .orderBy(mathContentsEntity.sysCreateDate.desc())
             .fetch()
     }
@@ -148,7 +148,7 @@ class MathContentsReadRepository(
                     ),
             )
             .offset(pageReq.getOffset())
-            .limit(pageReq.volume)
+            .limit(pageReq.pageVolume)
             .orderBy(mathContentsEntity.quesLevel.desc())
             .fetch()
     }

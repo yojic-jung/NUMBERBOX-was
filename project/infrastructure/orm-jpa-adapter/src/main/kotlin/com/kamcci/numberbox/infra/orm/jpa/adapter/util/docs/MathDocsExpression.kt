@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.util.docs
 
+import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
@@ -76,4 +77,39 @@ class MathDocsExpression {
         mathContentsEntity.sysCreateDate
     )
 
+
+    fun ceMathAllTypeDocsVo() = Projections.constructor(
+        MathAllTypeDocsVo::class.java,
+        mathContentsEntity.id,
+        mathContentsEntity.unitId,
+        mathContentsEntity.typeId,
+        mathContentsEntity.contents,
+        mathContentsEntity.contentsImg,
+        mathContentsEntity.imgPath,
+        mathContentsEntity.solution,
+        mathContentsEntity.solutionImg,
+        mathContentsEntity.solutionImgPath,
+        mathContentsEntity.fifNo,
+        mathContentsEntity.secNo,
+        mathContentsEntity.thrNo,
+        mathContentsEntity.fourNo,
+        mathContentsEntity.fifNo,
+        mathContentsEntity.multiChoiceType,
+        mathContentsEntity.answer,
+        mathContentsEntity.choiceAnswer,
+        mathContentsEntity.quesLevel,
+        mathContentsEntity.ansExistStts,
+        mathContentsEntity.contentsClassify,
+        mathCategoryUnitEntity.subject,
+        mathCategoryUnitEntity.firUnit,
+        mathCategoryUnitEntity.secUnit,
+        mathCategoryUnitEntity.thrUnit,
+        mathCategoryTypeEntity.quesType,
+        mathContentsEntity.sysCreateDate,
+        mathContentsIpsiSrcEntity.impYear,
+        mathContentsIpsiSrcEntity.impMonth,
+        mathContentsIpsiSrcEntity.oddQuesNum,
+        mathContentsIpsiSrcEntity.wrongRatio,
+        mathContentsIpsiSrcEntity.paperType,
+    )
 }

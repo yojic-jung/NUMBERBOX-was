@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
+import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
@@ -139,9 +140,9 @@ class MathDocsReadRepository(
         return resultList
     }
 
-    override fun readDocsByContentsIdList(idList: List<Long>): List<MathDocsVo> {
+    override fun readDocsByContentsIdList(idList: List<Long>): List<MathAllTypeDocsVo> {
         return queryFactory
-            .select(mathDocsExpression.ceMathInHouseDocsVo())
+            .select(mathDocsExpression.ceMathAllTypeDocsVo())
             .from(mathContentsEntity)
             .innerJoin(mathCategoryUnitEntity)
             .on(mathContentsEntity.unitId.eq(mathCategoryUnitEntity.id))
@@ -150,6 +151,7 @@ class MathDocsReadRepository(
                 mathContentsEntity.unitId.eq(mathCategoryTypeEntity.mathTypeDomain.unitId),
                 mathContentsEntity.typeId.eq(mathCategoryTypeEntity.mathTypeDomain.typeId),
             )
+            .leftJoin(mathContentsEntity.mathContentsIpsiSrc, mathContentsIpsiSrcEntity)
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
                 mathContentsEntity.id.`in`(idList)

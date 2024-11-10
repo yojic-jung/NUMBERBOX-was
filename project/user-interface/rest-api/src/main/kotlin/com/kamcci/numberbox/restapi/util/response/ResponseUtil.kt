@@ -14,6 +14,11 @@ object ResponseUtil {
     /**
      * 성공 응답
      */
+    fun ok(): ResponseEntity<ResponseData<String>> {
+        val responseData = ResponseData(data = "ok")
+        return ResponseEntity(responseData, HttpStatus.valueOf(responseData.status))
+    }
+
     fun <T> ok(data: T): ResponseEntity<ResponseData<T>> {
         val responseData = ResponseData(data = data)
         return ResponseEntity(responseData, HttpStatus.valueOf(responseData.status))

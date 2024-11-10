@@ -56,6 +56,7 @@ ALTER TABLE math_docs_paper CHANGE docs_no id int AUTO_INCREMENT NOT NULL;
 ALTER TABLE math_docs_paper CHANGE contents_no_list contents_id_list varchar(700) NOT NULL;
 ALTER TABLE math_docs_paper CHANGE user_uniq_id member_id binary(16) NOT NULL;
 ALTER TABLE math_docs_paper CHANGE docs_err_stts docs_stts int NOT NULL;
+ALTER TABLE math_docs_paper ADD sys_delete_date datetime;
 -- math_docs_usage 칼럼명 변경
 ALTER TABLE math_docs_usage CHANGE docs_no id int AUTO_INCREMENT NOT NULL;
 ALTER TABLE math_docs_usage CHANGE contents_no_list contents_id_list varchar(700) NOT NULL;

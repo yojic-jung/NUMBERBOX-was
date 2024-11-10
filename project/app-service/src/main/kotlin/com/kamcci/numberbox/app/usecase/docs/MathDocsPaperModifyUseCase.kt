@@ -12,5 +12,8 @@ interface MathDocsPaperModifyUseCase {
     fun create(memberId: UUID, createDto: MathDocsPaperCreateDto): Long
 
     // 학습지 정보 수정
-    fun update(memberId: UUID, updtDto: MathDocsPaperUpdtDto): Long
+    fun update(memberId: UUID, updtDto: MathDocsPaperUpdtDto)
+
+    // 학습지 삭제
+    fun delete(docsId: Long, memberId: UUID)
 }

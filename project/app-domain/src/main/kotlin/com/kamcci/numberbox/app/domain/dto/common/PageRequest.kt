@@ -1,9 +1,8 @@
 package com.kamcci.numberbox.app.domain.dto.common
 
 interface PageRequest {
-    val num: Long
-    val volume: Long
+    val pageNum: Long
+    val pageVolume: Long
 
-    fun getOffset() = num * volume
-
+    fun getOffset() = pageNum * pageVolume
 }

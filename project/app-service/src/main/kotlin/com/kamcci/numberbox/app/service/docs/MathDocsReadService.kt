@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperReadOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
@@ -78,10 +79,9 @@ class MathDocsReadService(
         )
     }
 
-    override fun readDocsByDocsPaperId(contentsIdList: List<Long>): List<MathDocsVo> {
+    override fun readDocsByDocsPaperId(contentsIdList: List<Long>): List<MathAllTypeDocsVo> {
         return mathDocsReadOrmPort.readDocsByContentsIdList(contentsIdList)
     }
-
 
     override fun makeIpsiDocs(readDto: MathIpsiDocsReadDto) =
         mathDocsReadOrmPort.readAllIpsiDocsVoBy(readDto)

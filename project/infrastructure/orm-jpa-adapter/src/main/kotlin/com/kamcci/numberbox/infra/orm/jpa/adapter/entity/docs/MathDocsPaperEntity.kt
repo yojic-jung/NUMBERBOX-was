@@ -55,4 +55,7 @@ class MathDocsPaperEntity {
     @Column
     @UpdateTimestamp
     var sysUpdateDate: LocalDateTime? = null
+
+    @Column
+    var sysDeleteDate: LocalDateTime? = null
 }
