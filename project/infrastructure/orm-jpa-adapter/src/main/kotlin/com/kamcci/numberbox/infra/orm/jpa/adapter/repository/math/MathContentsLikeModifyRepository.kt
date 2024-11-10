@@ -11,8 +11,9 @@ import org.springframework.stereotype.Repository
 @Repository
 class MathContentsLikeModifyRepository : MathContentsLikeModifyOrmPort, BaseRepository() {
     override fun save(modifyDto: MathContentsLikeModifyDto): Boolean {
-        val entity =
-            MathContentsLikeEntity().apply { id = MathContentsLikeDomain(modifyDto.contentsId, modifyDto.memberId) }
+        val entity = MathContentsLikeEntity().apply {
+            id = MathContentsLikeDomain(modifyDto.contentsId, modifyDto.memberId)
+        }
         em.persist(entity)
         return em.contains(entity)
     }

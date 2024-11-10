@@ -30,7 +30,7 @@ import java.util.*
 class MathContentsController(
     // 문제 조회 목적
     private val memberProfileReadUseCase: MemberProfileReadUseCase,
-    private val mathUnitInfoReadUseCase: MathUnitInfoReadUseCase,
+    private val mathCategoryUnitReadUseCase: MathCategoryUnitReadUseCase,
     private val mathContentsReadUseCase: MathContentsReadUseCase,
     private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
     // 문제 제작 목적
@@ -270,7 +270,7 @@ class MathContentsController(
         @Valid req: MathContentsSearchRequest
     ): ResponseEntity<ResponseData<Any>> {
         // 검색할 단원 id 추출
-        val unitInfoList = mathUnitInfoReadUseCase.readAll()
+        val unitInfoList = mathCategoryUnitReadUseCase.readAll()
         val unitIdList: List<Int> = getUnitIdList(unitInfoList, req.searchType, req.unitId)
 
         // 문제 조회

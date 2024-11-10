@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.restapi.controller.math
 
+import com.kamcci.numberbox.app.usecase.math.MathCategoryTypeReadUseCase
+import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsIpsiReadUseCase
 import com.kamcci.numberbox.app.usecase.math.MathFormulaKeyReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathTypeInfoReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathUnitInfoReadUseCase
 import com.kamcci.numberbox.restapi.util.math.MathUnitUtil.extractUnitMap
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -16,24 +16,24 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/math/menu")
 class MathMenuController(
-    private val mathUnitInfoReadUseCase: MathUnitInfoReadUseCase,
-    private val mathTypeInfoReadUseCase: MathTypeInfoReadUseCase,
+    private val mathCategoryUnitReadUseCase: MathCategoryUnitReadUseCase,
+    private val mathCategoryTypeReadUseCase: MathCategoryTypeReadUseCase,
     private val mathContentsIpsiReadUseCase: MathContentsIpsiReadUseCase,
     private val mathFormulaKeyReadUseCase: MathFormulaKeyReadUseCase
 ) {
     @GetMapping("/unit")
-    fun readUnitInfo(): ResponseEntity<ResponseData<Any>> {
-        val mathUnitList = mathUnitInfoReadUseCase.readAll()
+    fun readUnitCategory(): ResponseEntity<ResponseData<Any>> {
+        val mathUnitList = mathCategoryUnitReadUseCase.readAll()
         val unitMap = extractUnitMap(mathUnitList)
         return ResponseUtil.ok(unitMap)
     }
 
     @GetMapping("/type")
-    fun readTypeInfo(
+    fun readTypeCategory(
         @RequestParam("unitId") unitId: String
     ): ResponseEntity<ResponseData<Any>> {
         val unitIdList = unitId.split(",").map { it.trim().toInt() }
-        val mathTypeList = mathTypeInfoReadUseCase.readByUnitId(unitIdList)
+        val mathTypeList = mathCategoryTypeReadUseCase.readByUnitId(unitIdList)
         return ResponseUtil.ok(mapOf("mathTypeList" to mathTypeList))
     }
 

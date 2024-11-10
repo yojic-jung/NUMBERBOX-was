@@ -18,5 +18,5 @@ data class MathDocsPaperUpdtDto(
     // 출제자
     val docsOwner: String,
     // 학습지 에러 타입
-    val docsErrStts: DocsStatusType,
+    val docsStts: DocsStatusType,
 )

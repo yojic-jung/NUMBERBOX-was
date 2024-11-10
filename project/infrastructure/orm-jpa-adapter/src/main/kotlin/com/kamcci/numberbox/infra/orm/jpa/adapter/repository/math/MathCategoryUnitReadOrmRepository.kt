@@ -1,14 +1,14 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.vo.math.MathCategoryUnitVo
-import com.kamcci.numberbox.app.port.orm.math.MathUnitInfoReadOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathCategoryUnitReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.querydsl.core.types.Projections
 import org.springframework.stereotype.Repository
 
 @Repository
-class MathUnitInfoReadOrmRepository : MathUnitInfoReadOrmPort, BaseRepository() {
+class MathCategoryUnitReadOrmRepository : MathCategoryUnitReadOrmPort, BaseRepository() {
     override fun readAll(): List<MathCategoryUnitVo> {
         return queryFactory
             .select(
