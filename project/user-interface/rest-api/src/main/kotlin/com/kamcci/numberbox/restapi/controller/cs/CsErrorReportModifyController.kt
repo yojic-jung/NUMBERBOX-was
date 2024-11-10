@@ -7,6 +7,7 @@ import com.kamcci.numberbox.restapi.mapper.cs.CsErrorReportMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,6 +17,7 @@ import java.util.*
 /**
  * 고객센터 - 변경
  */
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/cs/error")
 class CsErrorReportModifyController(

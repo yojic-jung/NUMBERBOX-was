@@ -11,9 +11,11 @@ import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")
 class MemberController(

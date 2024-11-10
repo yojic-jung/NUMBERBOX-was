@@ -6,12 +6,14 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/like-repo/content")
 class MathContentsLikeRepoController(

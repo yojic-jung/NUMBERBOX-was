@@ -9,6 +9,7 @@ import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,6 +19,7 @@ import java.util.*
 /**
  * 관리자 수학문제
  */
+@PreAuthorize("hasRole('MANAGER')")
 @RestController
 @RequestMapping("/manger/math/content")
 class ManagerMathContentsController(
@@ -40,7 +42,7 @@ class ManagerMathContentsController(
         return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }
 
-    // 입시 수학문제
+    // 입시 수학문제 등록
     @PostMapping("/ipsi")
     fun createManagerContents(
         @UserId memberId: UUID,

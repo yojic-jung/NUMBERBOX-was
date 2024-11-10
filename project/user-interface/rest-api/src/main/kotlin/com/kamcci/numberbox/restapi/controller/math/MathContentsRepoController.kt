@@ -9,9 +9,11 @@ import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+@PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/repo/content")
 class MathContentsRepoController(

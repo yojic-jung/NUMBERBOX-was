@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
 }
-group = "com.hexagonal"
+group = "com.kamcci"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -23,9 +23,9 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":project:app-domain"))
 
+    // spring
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-
     // 트랜잭션
     implementation("org.springframework:spring-tx:6.1.4")
 

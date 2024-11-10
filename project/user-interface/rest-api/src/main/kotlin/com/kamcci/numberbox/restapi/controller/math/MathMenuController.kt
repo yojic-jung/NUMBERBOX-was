@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/math/menu")
+@RequestMapping("/public/math/menu")
 class MathMenuController(
     private val mathCategoryUnitReadUseCase: MathCategoryUnitReadUseCase,
     private val mathCategoryTypeReadUseCase: MathCategoryTypeReadUseCase,
