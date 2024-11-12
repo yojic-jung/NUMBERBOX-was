@@ -61,3 +61,18 @@ ALTER TABLE math_docs_paper ADD sys_delete_date datetime;
 ALTER TABLE math_docs_usage CHANGE docs_no id int AUTO_INCREMENT NOT NULL;
 ALTER TABLE math_docs_usage CHANGE contents_no_list contents_id_list varchar(700) NOT NULL;
 ALTER TABLE math_docs_usage CHANGE user_uniq_id member_id binary(16) NOT NULL;
+-- math_resource_menu 칼럼명 변경
+ALTER TABLE math_resource_menu CHANGE seq_no id int AUTO_INCREMENT NOT NULL;
+ALTER TABLE math_resource_menu CHANGE main_cate_no main_cate_id int NOT NULL;
+ALTER TABLE math_resource_menu CHANGE mid_cate_no mid_cate_id int NOT NULL;
+-- math_resource 칼럼명 변경
+ALTER TABLE math_resource CHANGE resource_no id int AUTO_INCREMENT NOT NULL;
+ALTER TABLE math_resource CHANGE user_uniq_id member_id BINARY(16) NOT NULL;
+-- math_resource_cate 칼럼명 변경
+ALTER TABLE math_resource_cate CHANGE seq_no id int AUTO_INCREMENT NOT NULL;
+ALTER TABLE math_resource_cate CHANGE resource_no resource_id int NOT NULL;
+ALTER TABLE math_resource_cate CHANGE main_cate_no main_cate_id int NOT NULL;
+ALTER TABLE math_resource_cate CHANGE mid_cate_no mid_cate_id int NOT NULL;
+-- math_resource_img 칼럼명 변경
+ALTER TABLE math_resource_img CHANGE slide_img_no id int AUTO_INCREMENT NOT NULL;
+ALTER TABLE math_resource_img CHANGE resource_no resource_id int NOT NULL;
