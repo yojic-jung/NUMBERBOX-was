@@ -48,7 +48,7 @@ class CsErrorReportModifyService(
     private fun uploadImgFile(imgName: String?, img: InputStream?): FileNameVo? {
         return if (imgName != null && img != null) {
             val fileNameVO = fileNameMaker.makeFileNameByType(imgName, FileType.CsErrIMG)
-            fileStoragePort.upload("${fileNameVO.path}/${fileNameVO.name}", img)
+            fileStoragePort.upload(fileNameVO.path, fileNameVO.name, img)
             fileNameVO
         } else null
     }
