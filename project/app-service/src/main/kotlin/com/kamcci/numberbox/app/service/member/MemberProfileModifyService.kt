@@ -33,7 +33,7 @@ class MemberProfileModifyService(
 
         // 2. 프로필 이미지 파일 스토리지에 저장
         val fileNameDto = fileNameMaker.makeFileNameByType(fileName, FileType.ProfileIMG)
-        fileStoragePort.upload("${fileNameDto.path}/${fileNameDto.name}", inpStream)
+        fileStoragePort.upload(fileNameDto.path, fileNameDto.name, inpStream)
 
         // 3. 프로필 이미지 파일 정보 DB에 저장
         val imgUpdtDto = MemberProfileImgUpdtDto(memberId, fileNameDto.path, fileNameDto.name)

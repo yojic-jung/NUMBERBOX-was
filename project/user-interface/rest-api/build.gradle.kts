@@ -47,6 +47,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
+    // ppt
+    implementation("org.apache.poi:poi-ooxml:5.2.5")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 

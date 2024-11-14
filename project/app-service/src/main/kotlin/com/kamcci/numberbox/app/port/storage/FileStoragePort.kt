@@ -8,12 +8,8 @@ import java.io.InputStream
 interface FileStoragePort {
     /**
      *  파일 업로드
-     *
-     *  반환맵 키 값
-     *  name : 파일 이름
-     *  path : 파일 경로
      */
-    fun upload(fileName: String, inpStream: InputStream)
+    fun upload(filePath: String, fileName: String, inpStream: InputStream)
 
     // 파일 삭제
     fun delete(fileName: String)

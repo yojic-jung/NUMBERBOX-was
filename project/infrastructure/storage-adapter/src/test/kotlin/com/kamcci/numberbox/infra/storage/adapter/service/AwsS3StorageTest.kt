@@ -11,15 +11,17 @@ import java.io.File
 @ActiveProfiles("storage", "storage-env")
 class AwsS3StorageTest {
     @Autowired
-    lateinit var awsS3UploadStorage: AwsS3StorageAdapter
+    lateinit var awsS3UploadStorage: AwsS3Storage
 
     @Test
     fun `파일 객체 `() {
         // File 객체 생성
-        val file = File("src/test/resources/dummy/test.txt")
+        val path = "src/test/resources/dummy"
+        val name = "test.txt"
+        val file = File("$path/$name")
 
         // S3에 업로드
-        val fileUrl = awsS3UploadStorage.upload(file.name, file.inputStream())
+        val fileUrl = awsS3UploadStorage.upload(path, name, file.inputStream())
 
         // then
         assertThat(fileUrl).isNotNull()

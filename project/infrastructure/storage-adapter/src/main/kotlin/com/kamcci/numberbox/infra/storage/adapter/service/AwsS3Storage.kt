@@ -10,19 +10,20 @@ import org.springframework.stereotype.Service
 import java.io.InputStream
 
 @Service
-class AwsS3StorageAdapter(
+class AwsS3Storage(
     private val awsS3Property: AwsS3Property,
     private val s3Client: AmazonS3Client,
     private val environment: Environment,
 ) : FileStoragePort {
-    override fun upload(fileName: String, inpStream: InputStream) {
+    override fun upload(filePath: String, fileName: String, inpStream: InputStream) {
         // s3 저장 요청 객체 생성
-        val putRequest =
-            PutObjectRequest(awsS3Property.bucket, fileName, inpStream, null)
-                .withCannedAcl(CannedAccessControlList.PublicRead)
-
-        // 스토리지에 저장
-        s3Client.putObject(putRequest)
+        inpStream.use {
+            val putRequest =
+                PutObjectRequest(awsS3Property.bucket, "${filePath}/${fileName}", it, null)
+                    .withCannedAcl(CannedAccessControlList.PublicRead)
+            // 스토리지에 저장
+            s3Client.putObject(putRequest)
+        }
     }
 
     override fun delete(fileName: String) {
