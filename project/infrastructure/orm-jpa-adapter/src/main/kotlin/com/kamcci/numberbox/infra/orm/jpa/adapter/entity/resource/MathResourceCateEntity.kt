@@ -20,6 +20,6 @@ class MathResourceCateEntity {
     var midCateId: Int = 0
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resource_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "resource_id", referencedColumnName = "id", updatable = false)
     var mathResource: MathResourceEntity? = null
 }

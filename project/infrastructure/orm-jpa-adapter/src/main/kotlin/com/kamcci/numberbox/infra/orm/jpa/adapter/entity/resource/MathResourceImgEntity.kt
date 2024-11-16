@@ -19,6 +19,6 @@ class MathResourceImgEntity {
     var imgName: String? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resource_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "resource_id", referencedColumnName = "id", updatable = false)
     var mathResource: MathResourceEntity? = null
 }
