@@ -94,13 +94,16 @@ class MathResourceController(
         @ModelAttribute @Valid
         request: MathResourceUpdateRequest
     ): ResponseEntity<ResponseData<String>> {
+        // 이전 파일 등록 정보 호출
+
+
         // ppt 슬라이드 이미지 추출
         val slideImgList = if (request.pptFile != null) {
             FileConvertUtil.pptToImg(request.pptFile)
         } else listOf()
 
         val updateDto = MathResourceUpdateDto(
-            memberId = memberId,
+            resourceId = request.resourceId,
             title = request.title,
             mainCateId = request.mainCateId,
             midCateId = request.midCateId,
@@ -111,7 +114,10 @@ class MathResourceController(
             imgFileOriginalName = request.imgFile?.originalFilename,
             imgFile = request.imgFile?.inputStream,
         )
-        mathResourceModifyUseCase.update(updateDto)
+
+        // todo 파일 수정사항 발생시 이전 파일 삭제
+        val fileModifyStatusVo = mathResourceModifyUseCase.update(updateDto)
+
         return ResponseUtil.ok()
     }
 }

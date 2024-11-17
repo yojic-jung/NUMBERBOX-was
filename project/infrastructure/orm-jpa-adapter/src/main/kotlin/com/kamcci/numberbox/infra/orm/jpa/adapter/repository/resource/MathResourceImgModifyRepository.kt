@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceImgModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceImgEntity.mathResourceImgEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource.MathResourceImgFactory
 import org.springframework.stereotype.Repository
 
@@ -15,5 +16,12 @@ class MathResourceImgModifyRepository : MathResourceImgModifyOrmPort, BaseReposi
         for (imgEntity in imgEntityList) {
             em.persist(imgEntity)
         }
+    }
+
+    override fun deleteByResourceId(resourceId: Long): Long {
+        return queryFactory
+            .delete(mathResourceImgEntity)
+            .where(mathResourceImgEntity.mathResource.id.eq(resourceId))
+            .execute()
     }
 }

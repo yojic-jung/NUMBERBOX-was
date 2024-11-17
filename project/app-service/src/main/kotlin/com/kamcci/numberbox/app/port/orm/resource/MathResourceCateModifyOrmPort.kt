@@ -6,4 +6,7 @@ package com.kamcci.numberbox.app.port.orm.resource
 interface MathResourceCateModifyOrmPort {
     // 영속화
     fun create(resourceId: Long, cateList: List<String>)
+
+    // 삭제
+    fun deleteByResourceId(resourceId: Long): Long
 }

@@ -1,13 +1,12 @@
 package com.kamcci.numberbox.app.domain.dto.resource
 
 import java.io.InputStream
-import java.util.*
 
 /**
  * 수학 학습 자료 수정용
  */
 data class MathResourceUpdateDto(
-    val memberId: UUID,
+    val resourceId: Long,
     // 제목
     val title: String,
     // 대표 카테고리

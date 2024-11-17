@@ -5,7 +5,7 @@ import java.util.*
 /**
  * MathResourceEntity 영속화 목적 dto
  */
-data class MathResourceSaveDto(
+data class MathResourceCreateOrmDto(
     // 등록자 memberId
     val memberId: UUID,
     // 학습 자료 제목

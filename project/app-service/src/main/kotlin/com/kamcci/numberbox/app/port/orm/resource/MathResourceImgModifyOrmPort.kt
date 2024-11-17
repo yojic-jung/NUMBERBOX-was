@@ -9,4 +9,7 @@ interface MathResourceImgModifyOrmPort {
 
     // 영속화
     fun create(resourceId: Long, imgList: List<FileNameVo>)
+
+    // 삭제
+    fun deleteByResourceId(resourceId: Long): Long
 }

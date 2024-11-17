@@ -1,11 +1,15 @@
 package com.kamcci.numberbox.app.port.orm.resource
 
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceSaveDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateOrmDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdtOrmDto
 
 /**
  * 학습 자료 영속화
  */
 interface MathResourceModifyOrmPort {
-    // 영속화
-    fun create(saveDto: MathResourceSaveDto): Long
+    // 등록
+    fun create(createDto: MathResourceCreateOrmDto): Long
+
+    // 수정
+    fun update(updateDto: MathResourceUpdtOrmDto)
 }

@@ -11,7 +11,6 @@ plugins {
 rootProject.name = 'NUMBERBOX-was'
 
 include(":project")
-include(":project:app")
 
 // project-bootstrap
 include(":project:bootstrap")
