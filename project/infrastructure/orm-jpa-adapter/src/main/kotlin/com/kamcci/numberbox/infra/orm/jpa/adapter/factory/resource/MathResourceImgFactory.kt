@@ -5,7 +5,10 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEn
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceImgEntity
 
 object MathResourceImgFactory {
-    fun getSaveEntity(resourceEntity: MathResourceEntity, imgList: List<FileNameVo>): List<MathResourceImgEntity> {
+    fun getSaveEntity(
+        resourceEntity: MathResourceEntity,
+        imgList: List<FileNameVo>
+    ): MutableList<MathResourceImgEntity> {
         val saveEntityList: MutableList<MathResourceImgEntity> = mutableListOf()
         for (img in imgList) {
             saveEntityList.add(
@@ -18,6 +21,24 @@ object MathResourceImgFactory {
             )
         }
         return saveEntityList
+    }
+
+    fun getUpdateEntity(
+        originEntity: MathResourceEntity,
+        imgList: List<FileNameVo>
+    ): MutableList<MathResourceImgEntity> {
+        val updateEntityList: MutableList<MathResourceImgEntity> = mutableListOf()
+        for (img in imgList) {
+            updateEntityList.add(
+                MathResourceImgEntity()
+                    .apply {
+                        mathResource = originEntity
+                        imgPath = img.path
+                        imgName = img.name
+                    }
+            )
+        }
+        return updateEntityList
     }
 
 }

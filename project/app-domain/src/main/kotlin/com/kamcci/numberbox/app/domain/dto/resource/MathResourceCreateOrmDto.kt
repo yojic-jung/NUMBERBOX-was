@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.app.domain.dto.resource
 
+import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import java.util.*
 
 /**
@@ -18,4 +19,8 @@ data class MathResourceCreateOrmDto(
     val imgPath: String,
     // 대표 이미지명
     val imgName: String,
+    // 카테고리
+    val cateList: List<String>,
+    // 슬라이드
+    val imgList: List<FileNameVo>
 )
