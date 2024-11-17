@@ -2,6 +2,8 @@ package com.kamcci.numberbox.app.domain.enumeration.port.storage
 
 /**
  * 파일 구분 타입
+ *
+ * - actionId + path의 길이가 22글자 넘으면 안됨(db 제약조건)
  */
 enum class FileType(val actionId: Int, val title: String, val path: String) {
     CsErrIMG(8, "cs 문의사항 이미지", "csError"),

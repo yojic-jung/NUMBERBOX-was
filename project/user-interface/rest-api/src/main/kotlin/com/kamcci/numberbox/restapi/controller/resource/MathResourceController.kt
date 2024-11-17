@@ -4,6 +4,8 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
+import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
+import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
@@ -14,6 +16,7 @@ import com.kamcci.numberbox.restapi.util.file.FileConvertUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -24,7 +27,8 @@ import java.util.*
 class MathResourceController(
     private val mathResourceMenuReadUseCase: MathResourceMenuReadUseCase,
     private val mathResourceReadUseCase: MathResourceReadUseCase,
-    private val mathResourceModifyUseCase: MathResourceModifyUseCase
+    private val mathResourceModifyUseCase: MathResourceModifyUseCase,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
     @GetMapping("/{mainCateId}")
     fun read(
@@ -95,7 +99,7 @@ class MathResourceController(
         request: MathResourceUpdateRequest
     ): ResponseEntity<ResponseData<String>> {
         // 이전 파일 등록 정보 호출
-
+        val previousFile = mathResourceReadUseCase.readFileById(request.resourceId)
 
         // ppt 슬라이드 이미지 추출
         val slideImgList = if (request.pptFile != null) {
@@ -115,8 +119,28 @@ class MathResourceController(
             imgFile = request.imgFile?.inputStream,
         )
 
-        // todo 파일 수정사항 발생시 이전 파일 삭제
+        // 학습자료 수정
         val fileModifyStatusVo = mathResourceModifyUseCase.update(updateDto)
+
+        // 대표 이미지 수정시 이전 이미지 삭제
+        val deleteImgList: MutableList<FileDeleteCreateDto> = mutableListOf()
+        if (fileModifyStatusVo.isPptModified) {
+            val prevImg = FileDeleteCreateDto(GarbageFileType.S3, previousFile.imgPath, previousFile.imgName)
+            deleteImgList.add(prevImg)
+        }
+
+        // ppt파일 수정시 이전 ppt파일 및 슬라이드 이미지 삭제
+        if (fileModifyStatusVo.isImgModified) {
+            val prevPpt = FileDeleteCreateDto(GarbageFileType.S3, previousFile.pptPath, previousFile.pptName)
+            deleteImgList.add(prevPpt)
+            previousFile.imgList.forEach {
+                val prevSlideImg = FileDeleteCreateDto(GarbageFileType.S3, it.imgPath, it.imgName)
+                deleteImgList.add(prevSlideImg)
+            }
+        }
+
+        // 삭제 대상 유휴 파일 저장
+        eventPublisher.publishEvent(deleteImgList)
 
         return ResponseUtil.ok()
     }

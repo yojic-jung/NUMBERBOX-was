@@ -13,6 +13,7 @@ class MathResourceModifyRepository : MathResourceModifyOrmPort, BaseRepository()
     override fun create(createDto: MathResourceCreateOrmDto): Long {
         val saveEntity = MathResourceFactory.getSaveEntity(createDto)
         em.persist(saveEntity)
+        
         return saveEntity.id
     }
 

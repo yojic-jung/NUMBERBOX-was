@@ -2,6 +2,7 @@ package com.kamcci.numberbox.app.port.orm.resource
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceDetailVo
+import com.kamcci.numberbox.app.domain.vo.resource.MathResourceFileVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceVo
 import java.util.*
 
@@ -20,4 +21,7 @@ interface MathResourceReadOrmPort {
 
     // memberId로 전체 카운트 조회
     fun countByMemberId(memberId: UUID): Long
+
+    // memberId로 학습 자료 파일 조회
+    fun readFileById(resourceId: Long): MathResourceFileVo
 }

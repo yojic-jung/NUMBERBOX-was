@@ -1,10 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.resource
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceCateVo
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceDetailVo
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceImgVo
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceVo
+import com.kamcci.numberbox.app.domain.vo.resource.*
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceCateEntity.mathResourceCateEntity
@@ -55,7 +52,7 @@ class MathResourceReadRepository(
             .where(mathResourceCateEntity.mathResource.id.`in`(resourceIds))
             .fetch()
 
-        // 수학 자료 카테고리
+        // ppt 슬라이드 이미지
         val resourceImg = queryFactory
             .selectFrom(mathResourceImgEntity)
             .where(mathResourceImgEntity.mathResource.id.`in`(resourceIds))
@@ -97,4 +94,33 @@ class MathResourceReadRepository(
             .innerJoin(mathResourceEntity.mathResourceCate, mathResourceCateEntity)
             .where(mathResourceCateEntity.mathResource.memberId.eq(memberId))
             .fetchFirst()
+
+    override fun readFileById(resourceId: Long): MathResourceFileVo {
+        // 수학 자료
+        val resourceEntity =
+            queryFactory
+                .selectFrom(mathResourceEntity)
+                .where(mathResourceEntity.id.eq(resourceId))
+                .orderBy(mathResourceEntity.id.desc())
+                .fetchOne() ?: throw IllegalArgumentException("해당 학습자료가 존재하지 않습니다.")
+
+        // ppt 슬라이드 이미지
+        val resourceImg = queryFactory
+            .selectFrom(mathResourceImgEntity)
+            .where(mathResourceImgEntity.mathResource.id.eq(resourceId))
+            .fetch()
+
+        // Vo로 변환
+        val imgList = resourceImg.filter { it.mathResource!!.id == resourceEntity.id }
+            .map { MathResourceImgVo(it.imgPath!!, it.imgName!!) }
+
+        return MathResourceFileVo(
+            id = resourceEntity.id,
+            imgPath = resourceEntity.imgPath!!,
+            imgName = resourceEntity.imgName!!,
+            pptPath = resourceEntity.pptPath!!,
+            pptName = resourceEntity.pptName!!,
+            imgList = imgList,
+        )
+    }
 }
