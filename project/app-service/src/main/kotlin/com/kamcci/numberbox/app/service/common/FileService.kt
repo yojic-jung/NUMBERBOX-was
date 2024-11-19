@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.common.file
+package com.kamcci.numberbox.app.service.common
 
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
@@ -13,6 +13,7 @@ class FileService(
     private val fileStoragePort: FileStoragePort,
 ) : FileUseCase {
     companion object {
+        const val COMPANY_NAME = "N-Soohak"
         const val FILE_NAME_LENGTH = 10
     }
 
@@ -53,7 +54,7 @@ class FileService(
         // depth1 폴더
         val depth1Path = "${fileType.actionId}${now.year}${now.monthValue}"
         // 신규 파일 이름(파일 이름간 중복 제거 목적)
-        val newFileName = "${currentTime}_${randomString}.${fileExtension}"
+        val newFileName = "${COMPANY_NAME}_${fileType.newName}_${currentTime}_${randomString}.${fileExtension}"
 
         // 파일 경로와 이름 반환
         return FileNameVo(name = newFileName, path = "${rootPath}/${depth1Path}")

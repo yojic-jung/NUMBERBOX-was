@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.app.service.common
 
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
-import com.kamcci.numberbox.app.service.common.file.FileService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

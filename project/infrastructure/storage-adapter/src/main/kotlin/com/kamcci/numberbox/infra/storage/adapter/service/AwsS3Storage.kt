@@ -23,9 +23,8 @@ class AwsS3Storage(
         // s3 저장 요청 객체 생성
         uploadDto.inputStream.use {
             val putRequest =
-                PutObjectRequest(awsS3Property.bucket, uploadDto.name, it, null)
+                PutObjectRequest(awsS3Property.bucket, uploadDto.name, it, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead)
-                    .withMetadata(metadata)
             // 스토리지에 저장
             s3Client.putObject(putRequest)
         }

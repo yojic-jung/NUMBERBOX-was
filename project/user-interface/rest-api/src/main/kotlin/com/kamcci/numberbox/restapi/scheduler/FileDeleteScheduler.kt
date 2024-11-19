@@ -14,8 +14,8 @@ class FileDeleteScheduler(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    // 삭제 대상 파일 제거(매일 06시) todo test
-    @Scheduled(cron = "00 00 06 * * *")
+    // 삭제 대상 파일 제거(매일 06시)
+    @Scheduled(cron = "00 10 06 * * *")
     fun deleteS3GarbageFile() {
         // 삭제 대상 s3 이미지 조회
         val deleteTargetFile = sysGarbageFileReadUseCase.readAllByType(GarbageFileType.S3)
