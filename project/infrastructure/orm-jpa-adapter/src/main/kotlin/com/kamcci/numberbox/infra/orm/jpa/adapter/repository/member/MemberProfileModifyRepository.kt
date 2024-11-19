@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtOrmDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
@@ -19,7 +19,7 @@ class MemberProfileModifyRepository : MemberProfileModifyOrmPort, BaseRepository
             .execute()
     }
 
-    override fun updateImgByMemberId(profileImgUpdtDto: MemberProfileImgUpdtDto): Long {
+    override fun updateImgByMemberId(profileImgUpdtDto: MemberProfileImgUpdtOrmDto): Long {
         return queryFactory
             .update(memberProfileEntity)
             .set(memberProfileEntity.profileImgPath, profileImgUpdtDto.profileImgPath)

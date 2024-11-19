@@ -2,25 +2,30 @@ package com.kamcci.numberbox.infra.storage.adapter.service
 
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
+import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
-import java.io.InputStream
+
 
 @Service
 class AwsS3Storage(
     private val awsS3Property: AwsS3Property,
     private val s3Client: AmazonS3Client,
-    private val environment: Environment,
 ) : FileStoragePort {
-    override fun upload(filePath: String, fileName: String, inpStream: InputStream) {
+    override fun upload(uploadDto: FileUploadDto) {
+        val metadata = ObjectMetadata()
+        metadata.contentLength = uploadDto.size
+        if (!uploadDto.contentType.isNullOrEmpty()) metadata.contentType = uploadDto.contentType
+
         // s3 저장 요청 객체 생성
-        inpStream.use {
+        uploadDto.inputStream.use {
             val putRequest =
-                PutObjectRequest(awsS3Property.bucket, "${filePath}/${fileName}", it, null)
+                PutObjectRequest(awsS3Property.bucket, uploadDto.name, it, null)
                     .withCannedAcl(CannedAccessControlList.PublicRead)
+                    .withMetadata(metadata)
             // 스토리지에 저장
             s3Client.putObject(putRequest)
         }

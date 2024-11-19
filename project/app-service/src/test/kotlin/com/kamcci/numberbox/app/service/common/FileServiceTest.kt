@@ -1,12 +1,30 @@
-package com.kamcci.numberbox.app.service.common.file
+package com.kamcci.numberbox.app.service.common
 
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import com.kamcci.numberbox.app.service.common.file.FileService
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
-class FileNameMakeServiceTest {
-    private val fileNameMakeService = FileNameMakeService()
+class FileServiceTest {
+    private val fileNameMakeService = FileService(mock())
+
+    companion object {
+        const val MAX_FILE_NAME_SIZE = 30
+    }
+
+    @Test
+    fun `파일명 30글자 이하 - 성공`() {
+        // given
+        FileType.entries.forEach {
+            // when
+            val fileNameVo = fileNameMakeService.makeFileNameByType("tmp.heic", it)
+
+            assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_SIZE)
+        }
+    }
 
     @Test
     fun `알파벳과 숫자로만 이루어진 랜덤 문자열 생성 - 성공`() {

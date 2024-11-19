@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtOrmDto
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
@@ -11,10 +12,8 @@ import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
-import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
-import java.io.InputStream
 import java.util.*
 
 @UseCase
@@ -22,8 +21,7 @@ class MemberProfileModifyService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
     private val memberProfileModifyOrmPort: MemberProfileModifyOrmPort,
     private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
-    private val fileStoragePort: FileStoragePort,
-    private val fileNameMaker: FileNameMaker
+    private val fileUseCase: FileUseCase
 ) : MemberProfileModifyUseCase {
     @TXExecute
     override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Boolean {
@@ -31,16 +29,15 @@ class MemberProfileModifyService(
     }
 
     @TXExecute
-    override fun updateImgByMemberId(memberId: UUID, fileName: String, inpStream: InputStream): FileNameVo {
+    override fun updateImgByMemberId(updateDto: MemberProfileImgUpdtDto): FileNameVo {
         // 1. 이미 등록된 프로필 이미지 정보 가져오기
-        val prevImgVo = memberProfileReadOrmPort.readProfileImgByMemberId(memberId)
+        val prevImgVo = memberProfileReadOrmPort.readProfileImgByMemberId(updateDto.memberId)
 
         // 2. 프로필 이미지 파일 스토리지에 저장
-        val fileNameDto = fileNameMaker.makeFileNameByType(fileName, FileType.ProfileIMG)
-        fileStoragePort.upload(fileNameDto.path, fileNameDto.name, inpStream)
+        val fileNameVo = fileUseCase.upload(updateDto.imgFile, FileType.ProfileIMG)
 
         // 3. 프로필 이미지 파일 정보 DB에 저장
-        val imgUpdtDto = MemberProfileImgUpdtDto(memberId, fileNameDto.path, fileNameDto.name)
+        val imgUpdtDto = MemberProfileImgUpdtOrmDto(updateDto.memberId, fileNameVo.path, fileNameVo.name)
         memberProfileModifyOrmPort.updateImgByMemberId(imgUpdtDto)
 
         // 4. 삭제 대상 이미지 저장(추후 스케줄러를 통해 일괄 삭제됨)
@@ -49,7 +46,7 @@ class MemberProfileModifyService(
         if (!fileName.isNullOrEmpty() && !filePath.isNullOrEmpty()) {
             sysGarbageFileModifyOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, filePath, fileName))
         }
-        return fileNameDto
+        return fileNameVo
     }
 
     @TXExecute

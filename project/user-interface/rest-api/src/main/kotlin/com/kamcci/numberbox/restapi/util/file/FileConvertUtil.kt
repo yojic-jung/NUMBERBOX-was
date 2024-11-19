@@ -1,21 +1,21 @@
 package com.kamcci.numberbox.restapi.util.file
 
+import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import org.apache.poi.xslf.usermodel.XMLSlideShow
 import org.springframework.web.multipart.MultipartFile
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 import javax.imageio.ImageIO
 
 object FileConvertUtil {
-    fun pptToImg(multipartFile: MultipartFile): List<InputStream> {
+    fun pptToImg(multipartFile: MultipartFile): List<FileUploadDto> {
         val slideShow = XMLSlideShow(multipartFile.inputStream)
         val slides = slideShow.slides
         val imageFormat = "png"
-        val imgList: MutableList<InputStream> = mutableListOf()
+        val imgList: MutableList<FileUploadDto> = mutableListOf()
 
-        for (slide in slides) {
+        for ((idx, slide) in slides.withIndex()) {
             // 슬라이드를 BufferedImage로 변환
             val image = BufferedImage(1280, 720, BufferedImage.TYPE_INT_ARGB) // 필요한 해상도 설정
             val graphics = image.createGraphics()
@@ -29,7 +29,14 @@ object FileConvertUtil {
             outputStream.close()
 
             val inputStream = ByteArrayInputStream(imageBytes)
-            imgList.add(inputStream)
+            imgList.add(
+                FileUploadDto(
+                    "slide_$idx.$imageFormat", // 고유한 파일 이름을 슬라이드 인덱스로 설정
+                    "image/$imageFormat", // contentType을 명시적으로 설정
+                    imageBytes.size.toLong(),
+                    inputStream
+                )
+            )
         }
         slideShow.close()
 

@@ -50,10 +50,10 @@ class MathResourceEntity {
     var sysUpdateDate: LocalDateTime? = null
 
     // 등록 카테고리 정보
-    @OneToMany(mappedBy = "mathResource", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mathResource", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     var mathResourceCate: MutableList<MathResourceCateEntity> = mutableListOf()
 
     // 등록 슬라이드(미리보기) 이미지 정보
-    @OneToMany(mappedBy = "mathResource", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mathResource", fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     var mathResourceImg: MutableList<MathResourceImgEntity> = mutableListOf()
 }

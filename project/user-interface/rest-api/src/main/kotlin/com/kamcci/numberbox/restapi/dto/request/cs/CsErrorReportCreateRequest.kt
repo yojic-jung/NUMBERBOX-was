@@ -3,6 +3,7 @@ package com.kamcci.numberbox.restapi.dto.request.cs
 import com.kamcci.numberbox.app.domain.enumeration.cs.BrowserType
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
+import com.kamcci.numberbox.restapi.validation.file.ImgFileCheck
 import org.springframework.web.multipart.MultipartFile
 
 /**
@@ -20,9 +21,12 @@ data class CsErrorReportCreateRequest(
     // 사용자 브라우저
     val clientBrowser: BrowserType,
     // 참고 이미지1
+    @field:ImgFileCheck
     val firstImgFile: MultipartFile?,
     // 참고 이미지2
+    @field:ImgFileCheck
     val secondImgFile: MultipartFile?,
     // 참고 이미지3
+    @field:ImgFileCheck
     val thirdImgFile: MultipartFile?,
 )

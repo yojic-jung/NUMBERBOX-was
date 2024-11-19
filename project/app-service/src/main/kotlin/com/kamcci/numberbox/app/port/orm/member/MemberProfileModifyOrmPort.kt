@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.port.orm.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtOrmDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import java.util.*
 
@@ -12,7 +12,7 @@ interface MemberProfileModifyOrmPort {
     fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Long
 
     // 프로필 이미지 변경
-    fun updateImgByMemberId(profileImgUpdtDto: MemberProfileImgUpdtDto): Long
+    fun updateImgByMemberId(profileImgUpdtDto: MemberProfileImgUpdtOrmDto): Long
 
     // 닉네임 변경
     fun updateNicknameByMemberId(memberId: UUID, nickname: String): Long

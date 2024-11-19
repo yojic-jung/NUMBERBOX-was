@@ -9,6 +9,7 @@ import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
+import com.kamcci.numberbox.restapi.mapper.member.MemberProfileImgMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -25,9 +26,12 @@ class MemberProfileController(
     private val memberProfileReadUseCase: MemberProfileReadUseCase,
     private val memberProfileModifyUseCase: MemberProfileModifyUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
-    private val memberMapper: MemberMapper
+    private val memberMapper: MemberMapper,
+    private val memberProfileImgMapper: MemberProfileImgMapper
 ) {
-    // 프로필 등록
+    /**
+     * 프로필 등록
+     */
     @PutMapping("")
     fun updateProfile(
         @UserId memberId: UUID,
@@ -39,23 +43,23 @@ class MemberProfileController(
     }
 
 
-    // 프로필 이미지 등록
+    /**
+     * 프로필 이미지 등록
+     */
     @PutMapping("/img")
     fun updateProfileImg(
         @UserId memberId: UUID,
         @ModelAttribute @Valid
-        profileImgReq: ProfileImgUpdtRequest
+        req: ProfileImgUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        // 프로필 이미지 변경
-        val fileNameVo = memberProfileModifyUseCase.updateImgByMemberId(
-            memberId,
-            profileImgReq.imgFile.originalFilename!!,
-            profileImgReq.imgFile.inputStream
-        )
+        val updateDto = memberProfileImgMapper.toDto(memberId, req)
+        val fileNameVo = memberProfileModifyUseCase.updateImgByMemberId(updateDto)
         return ResponseUtil.ok(mapOf("fileNameVo" to fileNameVo))
     }
 
-    // 닉네임 변경
+    /**
+     * 닉네임 변경
+     */
     @PutMapping("/nickname")
     fun updateNickname(
         @UserId memberId: UUID,
@@ -67,7 +71,9 @@ class MemberProfileController(
         return ResponseUtil.ok(mapOf("isUpdated" to isUpdated))
     }
 
-    // 내 프로필 보기
+    /**
+     * 내 프로필 보기
+     */
     @GetMapping("")
     fun readMyProfile(
         @UserId memberId: UUID
@@ -95,7 +101,9 @@ class MemberProfileController(
         )
     }
 
-    // 다른 사람 프로필 보기
+    /**
+     * 다른 사람 프로필 보기
+     */
     @GetMapping("/{profileId}")
     fun readUserProfile(
         @Positive(message = "프로필 아이디는 양수만 가능합니다.")

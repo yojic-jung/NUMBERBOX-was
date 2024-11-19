@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.vo.resource.*
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceCateEntity.mathResourceCateEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceEntity.mathResourceEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceImgEntity.mathResourceImgEntity
@@ -25,6 +26,7 @@ class MathResourceReadRepository(
             .limit(pageReq.pageVolume)
             .fetch()
 
+
     override fun countByMainCateId(mainCateId: Int): Long =
         queryFactory
             .select(mathResourceEntity.id.count())
@@ -32,6 +34,18 @@ class MathResourceReadRepository(
             .innerJoin(mathResourceEntity.mathResourceCate, mathResourceCateEntity)
             .where(mathResourceCateEntity.mainCateId.eq(mainCateId))
             .fetchFirst()
+
+    override fun readById(id: Long): MathResourceDetailVo {
+        val resources = queryFactory
+            .select(mathResourceEntity)
+            .from(mathResourceEntity)
+            .where(mathResourceEntity.id.eq(id))
+            .fetch()
+        val resourceIds = resources.map { it.id }
+
+        return resourceDatailList(resources, resourceIds)[0]
+    }
+
 
     override fun readByMemberId(memberId: UUID, pageReq: PageRequest): List<MathResourceDetailVo> {
         // 수학 자료
@@ -46,6 +60,13 @@ class MathResourceReadRepository(
 
         val resourceIds = resources.map { it.id }
 
+        return resourceDatailList(resources, resourceIds)
+    }
+
+    private fun resourceDatailList(
+        resources: List<MathResourceEntity>,
+        resourceIds: List<Long>
+    ): MutableList<MathResourceDetailVo> {
         // 수학 자료 카테고리
         val resourceCate = queryFactory
             .selectFrom(mathResourceCateEntity)

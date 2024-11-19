@@ -16,6 +16,9 @@ interface MathResourceReadOrmPort {
     // 대분류 id로 전체 카운트 조회
     fun countByMainCateId(mainCateId: Int): Long
 
+    // id로 조회
+    fun readById(id: Long): MathResourceDetailVo
+
     // memberId로 조회
     fun readByMemberId(memberId: UUID, pageReq: PageRequest): List<MathResourceDetailVo>
 

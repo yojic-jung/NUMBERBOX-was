@@ -1,15 +1,32 @@
 package com.kamcci.numberbox.app.service.common.file
 
+import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
+import com.kamcci.numberbox.app.port.storage.FileStoragePort
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import java.time.LocalDateTime
 
 @UseCase
-class FileNameMakeService : FileNameMaker {
+class FileService(
+    private val fileStoragePort: FileStoragePort,
+) : FileUseCase {
     companion object {
         const val FILE_NAME_LENGTH = 10
+    }
+
+    override fun upload(uploadDto: FileUploadDto, fileType: FileType): FileNameVo {
+        val fileNameVo = makeFileNameByType(uploadDto.name, fileType)
+        val slideImgUploadDto = FileUploadDto(
+            "${fileNameVo.path}/${fileNameVo.name}",
+            uploadDto.contentType,
+            uploadDto.size,
+            uploadDto.inputStream,
+        )
+        // 새 파일 업로드
+        fileStoragePort.upload(slideImgUploadDto)
+        return fileNameVo
     }
 
     override fun makeRandomString(length: Int): String {

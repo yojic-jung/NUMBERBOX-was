@@ -21,16 +21,19 @@ import java.util.*
 @RestController
 @RequestMapping("/cs/error")
 class CsErrorReportModifyController(
+    private val csErrorReportMapper: CsErrorReportMapper,
     private val csErrorReportModifyUseCase: CsErrorReportModifyUseCase
 ) {
-    // 고객센터 신고하기
+    /**
+     * 고객센터 신고하기
+     */
     @PostMapping
     fun create(
         @UserId
         memberId: UUID,
         @ModelAttribute reqBody: CsErrorReportCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val createDto = CsErrorReportMapper.toCreateDto(memberId, reqBody)
+        val createDto = csErrorReportMapper.toDto(memberId, reqBody)
         return ResponseUtil.ok(mapOf("csErrorReportId" to csErrorReportModifyUseCase.createReport(createDto)))
     }
 }

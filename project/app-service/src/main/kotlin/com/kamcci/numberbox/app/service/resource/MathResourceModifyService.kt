@@ -5,49 +5,40 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateOrmDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdtOrmDto
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
-import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType.PptImage
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType.PptResource
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceCateModifyOrmPort
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceImgModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
-import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
+import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
-import java.io.InputStream
 
 @UseCase
 class MathResourceModifyService(
-    private val fileNameMaker: FileNameMaker,
-    private val fileStoragePort: FileStoragePort,
+    private val fileUseCase: FileUseCase,
     private val mathResourceReadOrmPort: MathResourceReadOrmPort,
     private val mathResourceModifyOrmPort: MathResourceModifyOrmPort,
-    private val mathResourceCateModifyOrmPort: MathResourceCateModifyOrmPort,
-    private val mathResourceImgModifyOrmPort: MathResourceImgModifyOrmPort,
+    private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
 ) : MathResourceModifyUseCase {
     @TXExecute
     override fun create(createDto: MathResourceCreateDto): Long {
         // 1. ppt 파일 업로드
-        val pptFileNameVo = fileNameMaker.makeFileNameByType(createDto.pptFileOriginalName, PptResource)
-        fileStoragePort.upload(pptFileNameVo.path, pptFileNameVo.name, createDto.pptFile)
+        val pptFileNameVo = fileUseCase.upload(createDto.pptFile, PptResource)
 
         // 2. ppt 슬라이드 이미지 업로드
         val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
-        for (inpStream in createDto.slideImgList) {
-            val imgFileNameVo = fileNameMaker.makeFileNameByType("tmpImgName.png", PptImage)
-            fileStoragePort.upload(imgFileNameVo.path, imgFileNameVo.name, inpStream)
+        for (slideImg in createDto.slideImgList) {
+            val imgFileNameVo = fileUseCase.upload(slideImg, PptImage)
             slideImgNameList.add(imgFileNameVo)
         }
 
         // 3. 대표 이미지 존재시 업로드
-        val imgFileNameVo = if (!createDto.imgFileOriginalName.isNullOrEmpty()) {
-            val imgFileNameVo = fileNameMaker.makeFileNameByType(createDto.imgFileOriginalName!!, PptImage)
-            fileStoragePort.upload(imgFileNameVo.path, imgFileNameVo.name, createDto.imgFile!!)
+        val imgFileNameVo = if (createDto.imgFile != null) {
+            val imgFileNameVo = fileUseCase.upload(createDto.imgFile!!, PptImage)
             imgFileNameVo
         } else null
 
@@ -60,12 +51,12 @@ class MathResourceModifyService(
             pptPageCnt = slideImgNameList.size,
             imgPath = imgFileNameVo?.path ?: slideImgNameList[0].path,
             imgName = imgFileNameVo?.name ?: slideImgNameList[0].name,
+            cateList = createDto.cateList,
+            imgList = slideImgNameList
         )
 
-        // 5. 학습자료 영속화 todo 영속화 한번에 진행
+        // 5. 학습자료 영속화
         val resourceId = mathResourceModifyOrmPort.create(resourceSaveDto)
-        mathResourceCateModifyOrmPort.create(resourceId, createDto.cateList)
-        mathResourceImgModifyOrmPort.create(resourceId, slideImgNameList)
         return resourceId
     }
 
@@ -81,7 +72,7 @@ class MathResourceModifyService(
             deletePrevFile(prevFile.pptPath, prevFile.pptName, deleteImgList)
 
             // 신규 파일 업로드
-            uploadNewFile(updateDto.pptFile!!, updateDto.pptFileOriginalName!!, PptResource)
+            fileUseCase.upload(updateDto.pptFile!!, PptResource)
         } else null
 
         // 2. ppt 슬라이드 이미지 업로드
@@ -94,18 +85,18 @@ class MathResourceModifyService(
 
             for (inpStream in updateDto.slideImgList) {
                 // 신규 파일 업로드
-                val imgFileNameVo = uploadNewFile(inpStream, "_.png", PptImage)
+                val imgFileNameVo = fileUseCase.upload(inpStream, PptImage)
                 slideImgNameList.add(imgFileNameVo)
             }
         }
 
         // 3. 대표 이미지 존재시 업로드
-        val imgFileNameVo = if (!updateDto.imgFileOriginalName.isNullOrEmpty()) {
+        val imgFileNameVo = if (updateDto.imgFile != null) {
             // 이전 파일 삭제 대상에 추가
             deletePrevFile(prevFile.imgPath, prevFile.imgName, deleteImgList)
 
             // 신규 파일 업로드
-            uploadNewFile(updateDto.imgFile!!, updateDto.imgFileOriginalName!!, PptImage)
+            fileUseCase.upload(updateDto.imgFile!!, PptImage)
         } else null
 
         // 4. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
@@ -117,31 +108,17 @@ class MathResourceModifyService(
             pptPageCnt = if (slideImgNameList.isEmpty()) null else slideImgNameList.size,
             imgPath = imgFileNameVo?.path,
             imgName = imgFileNameVo?.name,
+            cateList = updateDto.cateList,
+            imgList = slideImgNameList
         )
 
-        // 5. 학습자료 수정  todo 영속화 한번에 진행
+        // 5. 학습자료 수정
         mathResourceModifyOrmPort.update(updateOrmDto)
 
-        // 카테고리 수정
-        mathResourceCateModifyOrmPort.deleteByResourceId(updateDto.resourceId)
-        mathResourceCateModifyOrmPort.create(updateDto.resourceId, updateDto.cateList)
-
-        // 이미지 수정
-        if (slideImgNameList.isNotEmpty()) {
-            mathResourceImgModifyOrmPort.deleteByResourceId(updateDto.resourceId)
-            mathResourceImgModifyOrmPort.create(updateDto.resourceId, slideImgNameList)
+        // 이전 이미지 삭제
+        deleteImgList.forEach {
+            sysGarbageFileModifyOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, it.path, it.name))
         }
-    }
-
-    private fun uploadNewFile(
-        uploadFile: InputStream,
-        uploadFileName: String,
-        fileType: FileType,
-    ): FileNameVo {
-        // 새 파일 업로드
-        val fileNameVo = fileNameMaker.makeFileNameByType(uploadFileName, fileType)
-        fileStoragePort.upload(fileNameVo.path, fileNameVo.name, uploadFile)
-        return fileNameVo
     }
 
     private fun deletePrevFile(

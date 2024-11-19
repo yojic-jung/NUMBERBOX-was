@@ -1,12 +1,12 @@
 package com.kamcci.numberbox.app.domain.dto.member
 
-import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import java.util.*
 
 /**
  * 사용자 프로필 이미지 수정 dto
  */
-data class MemberProfileImgUpdtDto(
+data class MemberProfileImgUpdtOrmDto(
     val memberId: UUID,
-    val imgFile: FileUploadDto,
+    val profileImgPath: String,
+    val profileImgName: String,
 )

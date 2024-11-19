@@ -19,6 +19,9 @@ class MathResourceReadService(
     override fun countByMainCateId(mainCateId: Int): Long =
         mathResourceReadOrmPort.countByMainCateId(mainCateId)
 
+    override fun readById(id: Long): MathResourceDetailVo =
+        mathResourceReadOrmPort.readById(id)
+
     override fun readByMemberId(memberId: UUID, pageReq: PageRequest): List<MathResourceDetailVo> =
         mathResourceReadOrmPort.readByMemberId(memberId, pageReq)
 

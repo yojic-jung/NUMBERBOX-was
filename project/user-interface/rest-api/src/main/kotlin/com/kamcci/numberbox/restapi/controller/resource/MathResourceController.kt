@@ -2,21 +2,16 @@ package com.kamcci.numberbox.restapi.controller.resource
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
-import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
-import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
 import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
-import com.kamcci.numberbox.restapi.util.file.FileConvertUtil
+import com.kamcci.numberbox.restapi.mapper.resource.MathResourceMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -28,8 +23,11 @@ class MathResourceController(
     private val mathResourceMenuReadUseCase: MathResourceMenuReadUseCase,
     private val mathResourceReadUseCase: MathResourceReadUseCase,
     private val mathResourceModifyUseCase: MathResourceModifyUseCase,
-    private val eventPublisher: ApplicationEventPublisher
+    private val mathResourceMapper: MathResourceMapper
 ) {
+    /**
+     * 조회 - 카테고리 id로
+     */
     @GetMapping("/{mainCateId}")
     fun read(
         @PathVariable
@@ -42,6 +40,9 @@ class MathResourceController(
         return ResponseUtil.ok(rs)
     }
 
+    /**
+     * 조회 - 나의 학습 자료
+     */
     @GetMapping("/my")
     fun read(
         @UserId
@@ -64,6 +65,9 @@ class MathResourceController(
         )
     }
 
+    /**
+     * 등록
+     */
     @PostMapping
     fun save(
         @UserId
@@ -71,77 +75,26 @@ class MathResourceController(
         @ModelAttribute @Valid
         request: MathResourceCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        // ppt 슬라이드 이미지 추출
-        val slideImgList = FileConvertUtil.pptToImg(request.pptFile)
-
         // 학습 자료 영속화
-        val createDto = MathResourceCreateDto(
-            memberId = memberId,
-            title = request.title,
-            mainCateId = request.mainCateId,
-            midCateId = request.midCateId,
-            cateList = request.cateList,
-            pptFileOriginalName = request.pptFile.originalFilename ?: "tmp.ppt",
-            pptFile = request.pptFile.inputStream,
-            slideImgList = slideImgList,
-            imgFileOriginalName = request.imgFile?.originalFilename,
-            imgFile = request.imgFile?.inputStream,
-        )
+        val createDto = mathResourceMapper.toDto(memberId, request)
         val resourceId = mathResourceModifyUseCase.create(createDto)
         return ResponseUtil.ok(resourceId)
     }
 
+    /**
+     * 수정
+     */
     @PutMapping
     fun update(
         @UserId
         memberId: UUID,
         @ModelAttribute @Valid
         request: MathResourceUpdateRequest
-    ): ResponseEntity<ResponseData<String>> {
-        // 이전 파일 등록 정보 호출
-        val previousFile = mathResourceReadUseCase.readFileById(request.resourceId)
+    ): ResponseEntity<ResponseData<Any>> {
+        val updateDto = mathResourceMapper.toDto(memberId, request)
+        mathResourceModifyUseCase.update(updateDto)
 
-        // ppt 슬라이드 이미지 추출
-        val slideImgList = if (request.pptFile != null) {
-            FileConvertUtil.pptToImg(request.pptFile)
-        } else listOf()
-
-        val updateDto = MathResourceUpdateDto(
-            resourceId = request.resourceId,
-            title = request.title,
-            mainCateId = request.mainCateId,
-            midCateId = request.midCateId,
-            cateList = request.cateList,
-            pptFileOriginalName = request.pptFile?.originalFilename,
-            pptFile = request.pptFile?.inputStream,
-            slideImgList = slideImgList,
-            imgFileOriginalName = request.imgFile?.originalFilename,
-            imgFile = request.imgFile?.inputStream,
-        )
-
-        // 학습자료 수정
-        val fileModifyStatusVo = mathResourceModifyUseCase.update(updateDto)
-
-        // 대표 이미지 수정시 이전 이미지 삭제
-        val deleteImgList: MutableList<FileDeleteCreateDto> = mutableListOf()
-        if (fileModifyStatusVo.isPptModified) {
-            val prevImg = FileDeleteCreateDto(GarbageFileType.S3, previousFile.imgPath, previousFile.imgName)
-            deleteImgList.add(prevImg)
-        }
-
-        // ppt파일 수정시 이전 ppt파일 및 슬라이드 이미지 삭제
-        if (fileModifyStatusVo.isImgModified) {
-            val prevPpt = FileDeleteCreateDto(GarbageFileType.S3, previousFile.pptPath, previousFile.pptName)
-            deleteImgList.add(prevPpt)
-            previousFile.imgList.forEach {
-                val prevSlideImg = FileDeleteCreateDto(GarbageFileType.S3, it.imgPath, it.imgName)
-                deleteImgList.add(prevSlideImg)
-            }
-        }
-
-        // 삭제 대상 유휴 파일 저장
-        eventPublisher.publishEvent(deleteImgList)
-
-        return ResponseUtil.ok()
+        val updatedVo = mathResourceReadUseCase.readById(updateDto.resourceId)
+        return ResponseUtil.ok(updatedVo)
     }
 }

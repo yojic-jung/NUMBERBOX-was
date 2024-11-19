@@ -5,30 +5,32 @@ import com.kamcci.numberbox.app.domain.dto.cs.CsErrorReportSaveDto
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
 import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
-import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType.CsErrIMG
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.port.orm.cs.CsErrorReportModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperModifyOrmPort
-import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.usecase.common.file.FileNameMaker
+import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportModifyUseCase
-import java.io.InputStream
 
 @UseCase
 class CsErrorReportModifyService(
-    private val fileNameMaker: FileNameMaker,
-    private val fileStoragePort: FileStoragePort,
+    private val fileUseCase: FileUseCase,
     private val csErrorReportModifyOrmPort: CsErrorReportModifyOrmPort,
     private val mathDocsPaperModifyOrmPort: MathDocsPaperModifyOrmPort,
+    private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
 ) : CsErrorReportModifyUseCase {
     @TXExecute
     override fun createReport(createDto: CsErrorReportCreateDto): Long {
         // 이미지 업로드(최대 세장)
-        val firImgNameVo = uploadImgFile(createDto.firstImgName, createDto.firstImg)
-        val secImgVo = uploadImgFile(createDto.secondImgName, createDto.secondImg)
-        val thrImgVo = uploadImgFile(createDto.thirdImgName, createDto.thirdImg)
+        val firImgNameVo =
+            if (createDto.firstImgFile != null) fileUseCase.upload(createDto.firstImgFile!!, CsErrIMG) else null
+        val secImgVo =
+            if (createDto.secondImgFile != null) fileUseCase.upload(createDto.secondImgFile!!, CsErrIMG) else null
+        val thrImgVo =
+            if (createDto.thirdImgFile != null) fileUseCase.upload(createDto.thirdImgFile!!, CsErrIMG) else null
 
         // 학습지 에러인 경우
         if (createDto.errType == CSErrorType.MathDocs) {
@@ -45,13 +47,6 @@ class CsErrorReportModifyService(
         return csErrorReportModifyOrmPort.create(saveDto)
     }
 
-    private fun uploadImgFile(imgName: String?, img: InputStream?): FileNameVo? {
-        return if (imgName != null && img != null) {
-            val fileNameVO = fileNameMaker.makeFileNameByType(imgName, FileType.CsErrIMG)
-            fileStoragePort.upload(fileNameVO.path, fileNameVO.name, img)
-            fileNameVO
-        } else null
-    }
 
     private fun toSaveDto(
         createDto: CsErrorReportCreateDto,
