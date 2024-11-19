@@ -8,6 +8,7 @@ import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType.PptImage
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType.PptResource
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
@@ -16,6 +17,7 @@ import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
+import java.util.*
 
 @UseCase
 class MathResourceModifyService(
@@ -24,6 +26,10 @@ class MathResourceModifyService(
     private val mathResourceModifyOrmPort: MathResourceModifyOrmPort,
     private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
 ) : MathResourceModifyUseCase {
+    companion object {
+        const val NOT_MY_CONTENTS = "존재하지 않거나 자신의 컨텐츠가 아닙니다."
+    }
+
     @TXExecute
     override fun create(createDto: MathResourceCreateDto): Long {
         // 1. ppt 파일 업로드
@@ -128,5 +134,12 @@ class MathResourceModifyService(
     ) {
         val prevImg = FileDeleteCreateDto(GarbageFileType.S3, prevImgPath, prevImgName)
         deleteImgList.add(prevImg)
+    }
+
+    @TXExecute
+    override fun deleteByIdAndMemberId(id: Long, memberId: UUID) {
+        mathResourceModifyOrmPort.deleteByIdAndMemberId(id, memberId).let {
+            if (it != 1L) throw BusinessValidException(NOT_MY_CONTENTS)
+        }
     }
 }

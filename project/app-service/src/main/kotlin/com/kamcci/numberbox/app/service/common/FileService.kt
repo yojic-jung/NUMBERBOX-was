@@ -7,6 +7,7 @@ import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import java.time.LocalDateTime
+import java.util.*
 
 @UseCase
 class FileService(
@@ -14,7 +15,6 @@ class FileService(
 ) : FileUseCase {
     companion object {
         const val COMPANY_NAME = "N-Soohak"
-        const val FILE_NAME_LENGTH = 10
     }
 
     override fun upload(uploadDto: FileUploadDto, fileType: FileType): FileNameVo {
@@ -30,17 +30,10 @@ class FileService(
         return fileNameVo
     }
 
-    override fun makeRandomString(length: Int): String {
-        val chars = ('A'..'Z') + ('a'..'z') + ('0'..'9') // 대문자, 소문자 알파벳, 숫자
-        return (1..length)
-            .map { chars.random() }  // chars에서 무작위로 선택
-            .joinToString("")
-    }
 
     override fun makeFileNameByType(fileName: String, fileType: FileType): FileNameVo {
         val now = LocalDateTime.now()
-        val currentTime = System.currentTimeMillis()
-        val randomString = makeRandomString(FILE_NAME_LENGTH)
+        val uuid = UUID.randomUUID()
 
         val dotIndex = fileName.lastIndexOf('.')
         val fileExtension = if (dotIndex != -1 && dotIndex < fileName.length - 1) {
@@ -52,11 +45,12 @@ class FileService(
         // 최상위 폴더 경로
         val rootPath = fileType.path
         // depth1 폴더
-        val depth1Path = "${fileType.actionId}${now.year}${now.monthValue}"
+        val subPath = "${now.year}/${now.monthValue}"
         // 신규 파일 이름(파일 이름간 중복 제거 목적)
-        val newFileName = "${COMPANY_NAME}_${fileType.newName}_${currentTime}_${randomString}.${fileExtension}"
+        val newFileName =
+            "${COMPANY_NAME}_${fileType.newName}_${now.year}_${now.monthValue}_${now.dayOfMonth}_${uuid}.${fileExtension}"
 
         // 파일 경로와 이름 반환
-        return FileNameVo(name = newFileName, path = "${rootPath}/${depth1Path}")
+        return FileNameVo(name = newFileName, path = "${rootPath}/${subPath}")
     }
 }

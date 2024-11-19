@@ -3,7 +3,6 @@ package com.kamcci.numberbox.app.service.common
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
@@ -23,22 +22,6 @@ class FileServiceTest {
 
             assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_SIZE)
         }
-    }
-
-    @Test
-    fun `알파벳과 숫자로만 이루어진 랜덤 문자열 생성 - 성공`() {
-        // given
-        val length = 10
-
-        // when
-        val randomString = fileNameMakeService.makeRandomString(length)
-
-        // then
-        // 1. 길이가 10인지 확인
-        assertEquals(length, randomString.length)
-
-        // 2. 알파벳과 숫자로만 이루어져 있는지 확인
-        assertTrue(randomString.matches(Regex("^[a-zA-Z0-9]+$")))
     }
 
     @Test

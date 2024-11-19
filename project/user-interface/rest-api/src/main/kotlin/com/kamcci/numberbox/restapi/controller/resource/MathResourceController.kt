@@ -97,4 +97,18 @@ class MathResourceController(
         val updatedVo = mathResourceReadUseCase.readById(updateDto.resourceId)
         return ResponseUtil.ok(updatedVo)
     }
+
+    /**
+     * 삭제
+     */
+    @DeleteMapping("{resourceId}")
+    fun delete(
+        @UserId
+        memberId: UUID,
+        @PathVariable
+        resourceId: Long
+    ): ResponseEntity<ResponseData<String>> {
+        mathResourceModifyUseCase.deleteByIdAndMemberId(resourceId, memberId)
+        return ResponseUtil.ok()
+    }
 }

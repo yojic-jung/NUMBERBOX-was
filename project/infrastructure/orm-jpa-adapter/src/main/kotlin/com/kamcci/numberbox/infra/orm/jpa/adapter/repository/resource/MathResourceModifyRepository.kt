@@ -5,10 +5,12 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdtOrmDto
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceEntity.mathResourceEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource.MathResourceCateFactory
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource.MathResourceFactory
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource.MathResourceImgFactory
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 class MathResourceModifyRepository : MathResourceModifyOrmPort, BaseRepository() {
@@ -47,5 +49,14 @@ class MathResourceModifyRepository : MathResourceModifyOrmPort, BaseRepository()
         // 영속화
         em.persist(updateEntity)
     }
+
+    override fun deleteByIdAndMemberId(id: Long, memberId: UUID): Long =
+        queryFactory
+            .delete(mathResourceEntity)
+            .where(
+                mathResourceEntity.id.eq(id),
+                mathResourceEntity.memberId.eq(memberId)
+            )
+            .execute()
 
 }
