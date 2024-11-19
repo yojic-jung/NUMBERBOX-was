@@ -8,6 +8,7 @@ class PasswordMessageTemplate : EmailMessageTemplate {
     override val title: String
         get() = "[N명의수학] 임시 비밀번호 안내"
 
+    // 스케줄러를 통해 초기화 되니 변경사항 발생시 스케줄로도 함께 수정
     override fun getContent(code: String) = "<div>" +
             "안녕하세요. N명의수학입니다.<br/>" +
             "요청하신 회원님의 임시 비밀번호는 다음과 같습니다." +
