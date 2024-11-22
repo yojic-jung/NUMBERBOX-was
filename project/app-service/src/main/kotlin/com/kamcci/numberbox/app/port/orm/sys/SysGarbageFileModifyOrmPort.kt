@@ -13,8 +13,8 @@ interface SysGarbageFileModifyOrmPort {
     fun create(createDtoList: List<FileDeleteCreateDto>)
 
     // 삭제
-    fun deleteById(id: Long)
+    fun deleteById(id: List<Long>)
 
     // 파일 삭제 실패 카운트 변경
-    fun updateFailCntById(id: Long, failCnt: Int)
+    fun incrementFailCntById(id: List<Long>)
 }

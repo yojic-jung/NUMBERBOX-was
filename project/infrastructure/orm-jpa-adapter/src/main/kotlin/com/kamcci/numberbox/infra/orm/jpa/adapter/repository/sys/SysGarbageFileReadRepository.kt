@@ -12,11 +12,12 @@ import org.springframework.stereotype.Repository
 class SysGarbageFileReadRepository(
     private val sysGarbageFileExpression: SysGarbageFileExpression
 ) : SysGarbageFileReadOrmPort, BaseRepository() {
-    override fun readAllByType(type: GarbageFileType): List<SysGarbageFileVo> {
+    override fun readAllByType(type: GarbageFileType, limit: Long): List<SysGarbageFileVo> {
         return queryFactory
             .select(sysGarbageFileExpression.ceSysGarbageFileVo())
             .from(sysGarbageFileEntity)
             .where(sysGarbageFileEntity.type.eq(type))
+            .limit(limit)
             .fetch()
     }
 }

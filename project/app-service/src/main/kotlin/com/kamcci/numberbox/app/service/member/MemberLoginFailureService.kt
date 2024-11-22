@@ -43,7 +43,7 @@ class MemberLoginFailureService(
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
         val userId = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
         val lastFailTime: LocalDateTime =
-            memberReadOrmPort.findLastFailTimeById(userId) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.readLastFailTimeById(userId) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
 
         val isAfterLockTime = lastFailTime.plusMinutes(DISABLE_LOCK_TIME).isBefore(LocalDateTime.now())
 

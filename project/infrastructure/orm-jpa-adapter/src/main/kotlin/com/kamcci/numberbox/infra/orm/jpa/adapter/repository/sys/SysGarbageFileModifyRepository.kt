@@ -23,19 +23,19 @@ class SysGarbageFileModifyRepository : SysGarbageFileModifyOrmPort, BaseReposito
         }
     }
 
-    override fun deleteById(id: Long) {
+    override fun deleteById(id: List<Long>) {
         queryFactory
             .delete(sysGarbageFileEntity)
-            .where(sysGarbageFileEntity.id.eq(id))
+            .where(sysGarbageFileEntity.id.`in`(id))
             .execute()
     }
 
-    override fun updateFailCntById(id: Long, failCnt: Int) {
+    override fun incrementFailCntById(id: List<Long>) {
         queryFactory
             .update(sysGarbageFileEntity)
-            .set(sysGarbageFileEntity.failCnt, failCnt)
+            .set(sysGarbageFileEntity.failCnt, sysGarbageFileEntity.failCnt.add(1))
             .set(sysGarbageFileEntity.sysUpdateDate, LocalDateTime.now())
-            .where(sysGarbageFileEntity.id.eq(id))
+            .where(sysGarbageFileEntity.id.`in`(id))
             .execute()
     }
 }

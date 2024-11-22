@@ -1,8 +1,14 @@
 package com.kamcci.numberbox.restapi.mapper.member
 
-import com.kamcci.numberbox.app.domain.dto.member.*
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
-import com.kamcci.numberbox.restapi.dto.request.member.*
+import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
+import com.kamcci.numberbox.restapi.dto.request.member.MemberPhoneUpdtRequest
+import com.kamcci.numberbox.restapi.dto.request.member.MemberPrivateSignupRequest
+import com.kamcci.numberbox.restapi.dto.request.member.MemberSignupRequest
 import com.kamcci.numberbox.restapi.dto.response.member.MemberProfileResponse
 import org.mapstruct.Mapper
 import java.util.*
@@ -16,8 +22,6 @@ interface MemberMapper {
     fun toPasswdUpdtDto(memberId: UUID, req: MemberPasswdUpdtRequest): MemberPasswdUpdtDto
 
     fun toPhoneUpdtDto(memberId: UUID, req: MemberPhoneUpdtRequest): MemberPhoneUpdtDto
-
-    fun toDropDto(memberId: UUID, req: MemberVerifyCodeRequest): MemberDropDto
 
     fun toProfileResponse(profileVo: MemberProfileVo?): MemberProfileResponse?
 

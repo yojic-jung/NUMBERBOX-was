@@ -36,4 +36,10 @@ class MemberProfileModifyRepository : MemberProfileModifyOrmPort, BaseRepository
             .execute()
     }
 
+    override fun updateHwpDownCntByMemberId(hwpDownCnt: Int): Long {
+        return queryFactory
+            .update(memberProfileEntity)
+            .set(memberProfileEntity.hwpDownCnt, hwpDownCnt)
+            .execute()
+    }
 }

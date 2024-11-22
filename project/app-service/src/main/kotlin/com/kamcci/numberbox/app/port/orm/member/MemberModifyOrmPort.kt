@@ -15,6 +15,11 @@ interface MemberModifyOrmPort {
     /**
      * 비밀번호 변경
      */
+    fun updatePassword(memberId: List<UUID>, password: String?): Boolean
+
+    /**
+     * 비밀번호 변경
+     */
     fun updatePassword(email: String, password: String): Boolean
 
     /**

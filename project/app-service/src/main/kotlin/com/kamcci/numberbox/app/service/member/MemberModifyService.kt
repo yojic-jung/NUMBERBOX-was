@@ -11,6 +11,7 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.*
 import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
+import java.util.*
 
 @UseCase
 class MemberModifyService(
@@ -75,5 +76,35 @@ class MemberModifyService(
         return (1..10)
             .map { chars.random() }
             .joinToString("")
+    }
+
+    @TXExecute
+    override fun drop() {
+        // 회원 탈퇴 요청 대상자 조회(관리자, 매니저 제외)
+
+        // 1. 파일 삭제
+
+        // 2. 개인 정보 파기
+
+        // 3. 팔로우 및 팔로잉 삭제
+
+        // 4. 사용자 프로필 탈퇴 회원으로 전환
+
+        // 5. 사용자 제작 문제 삭제 - 변형문제는 바로 삭제
+        // contents_classify = Deleted으로 변환
+
+        // 5. 학습 자료 삭제
+
+        // 6. 좋아요 및 저장소 삭제
+
+        // 7. 학습지 생성내역 삭제
+
+        // 8. 최종 탈퇴 처리(human_status=3(탈퇴회원), enabled=false)
+    }
+
+    @TXExecute
+    override fun updateTmpPassword(id: List<UUID>) {
+        // 로그인시 암호화를 거치기 때문에 null로 선언된 사용자들은 로그인 불가(반드시 새롭게 임시 비밀번호 발급 받아야함)
+        memberModifyOrmPort.updatePassword(id, null)
     }
 }

@@ -24,8 +24,13 @@ interface MemberReadOrmPort {
     fun readFailCountById(id: UUID): Int?
 
     // 마지막 로그인 실패 시간 조회
-    fun findLastFailTimeById(id: UUID): LocalDateTime?
+    fun readLastFailTimeById(id: UUID): LocalDateTime?
 
     // 이메일 존재여부 조회
     fun existsByEmail(email: String): Boolean
+
+    /**
+     * 임시 비밀번호 발급자 id 조회
+     */
+    fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID>
 }

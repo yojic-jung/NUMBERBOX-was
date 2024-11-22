@@ -10,6 +10,6 @@ import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadUseCase
 class SysGarbageFileReadService(
     private val sysGarbageFileReadOrmPort: SysGarbageFileReadOrmPort
 ) : SysGarbageFileReadUseCase {
-    override fun readAllByType(type: GarbageFileType): List<SysGarbageFileVo> =
-        sysGarbageFileReadOrmPort.readAllByType(type)
+    override fun readAllByType(type: GarbageFileType, limit: Long): List<SysGarbageFileVo> =
+        sysGarbageFileReadOrmPort.readAllByType(type, limit)
 }

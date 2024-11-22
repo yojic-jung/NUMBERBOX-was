@@ -81,7 +81,7 @@ class MemberReadRepositoryTest(
         val memberId = UUID.fromString(NONE_EXIST_ID)
 
         // when
-        val lastFailTime = memberReadRepo.findLastFailTimeById(memberId)
+        val lastFailTime = memberReadRepo.readLastFailTimeById(memberId)
 
         // then
         assertThat(lastFailTime).isNull()
@@ -93,7 +93,7 @@ class MemberReadRepositoryTest(
         val memberId = UUID.fromString(NONE_EXIST_ID)
 
         // when
-        val lastFailTime = memberReadRepo.findLastFailTimeById(memberId)
+        val lastFailTime = memberReadRepo.readLastFailTimeById(memberId)
 
         // then
         assertThat(lastFailTime).isNull()

@@ -10,5 +10,5 @@ interface SysGarbageFileReadOrmPort {
     /**
      * 삭제 대상 파일 조회
      */
-    fun readAllByType(type: GarbageFileType): List<SysGarbageFileVo>
+    fun readAllByType(type: GarbageFileType, limit: Long): List<SysGarbageFileVo>
 }

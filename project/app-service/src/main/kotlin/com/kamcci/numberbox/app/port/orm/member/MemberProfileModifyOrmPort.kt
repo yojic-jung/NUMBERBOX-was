@@ -16,4 +16,7 @@ interface MemberProfileModifyOrmPort {
 
     // 닉네임 변경
     fun updateNicknameByMemberId(memberId: UUID, nickname: String): Long
+
+    // 한글 파일 일일 다운로드 제한 횟수 변경
+    fun updateHwpDownCntByMemberId(hwpDownCnt: Int): Long
 }

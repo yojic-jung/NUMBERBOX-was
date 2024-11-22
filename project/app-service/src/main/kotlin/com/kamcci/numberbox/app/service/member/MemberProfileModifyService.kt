@@ -53,4 +53,9 @@ class MemberProfileModifyService(
     override fun updateNicknameByMemberId(memberId: UUID, nickname: String): Boolean {
         return memberProfileModifyOrmPort.updateNicknameByMemberId(memberId, nickname) > 0
     }
+
+    @TXExecute
+    override fun updateHwpDownCnt(hwpDownCnt: Int): Long {
+        return memberProfileModifyOrmPort.updateHwpDownCntByMemberId(hwpDownCnt)
+    }
 }

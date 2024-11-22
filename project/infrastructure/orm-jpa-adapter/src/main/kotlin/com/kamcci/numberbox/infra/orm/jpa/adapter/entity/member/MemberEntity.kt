@@ -31,11 +31,14 @@ class MemberEntity {
     @Column(name = "email", nullable = false)
     var email: String = ""
 
-    @Column(name = "password", nullable = false)
-    var password: String = ""
+    @Column(name = "password")
+    var password: String? = null
 
     /*
-     * 0 : 일반 계정 1 : 휴먼계정 2 : 탈퇴 요청 3 : 탈퇴 계정(유령계정)
+     * 0 : 일반 계정
+     * 1 : 휴먼계정
+     * 2 : 탈퇴 요청
+     * 3 : 탈퇴 계정(유령계정)
      */
     @Column(name = "human_status", nullable = false)
     var humanStatus: Int = 0
@@ -52,8 +55,8 @@ class MemberEntity {
 
     // 0 : 일반계정
     // 1 : 임시 비밀번호 발급계정(임시 비밀번호 발급계정 비밀번호 수정 안하는 경우 새로운 비밀번호로 수정(스케쥴러로 구현))
-    @Column(name = "tmp_password", nullable = false)
-    var tmpPassword: Boolean = false
+    @Column(name = "is_tmp_password", nullable = false)
+    var isTmpPassword: Boolean = false
 
     @Column(name = "last_login_date", nullable = false)
     var lastLoginTime: LocalDateTime = LocalDateTime.now()

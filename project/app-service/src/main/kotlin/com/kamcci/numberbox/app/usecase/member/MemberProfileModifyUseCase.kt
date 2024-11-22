@@ -17,4 +17,7 @@ interface MemberProfileModifyUseCase {
 
     // 닉네임 변경
     fun updateNicknameByMemberId(memberId: UUID, nickname: String): Boolean
+
+    // 한글 파일 일일 다운로드 제한 횟수 변경
+    fun updateHwpDownCnt(hwpDownCnt: Int): Long
 }

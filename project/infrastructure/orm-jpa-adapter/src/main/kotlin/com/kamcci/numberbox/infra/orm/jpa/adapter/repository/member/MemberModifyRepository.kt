@@ -18,6 +18,15 @@ class MemberModifyRepository : MemberModifyOrmPort, BaseRepository() {
             .execute() > 0
     }
 
+    override fun updatePassword(memberId: List<UUID>, password: String?): Boolean {
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.password, password)
+            .set(memberEntity.sysUpdateTime, LocalDateTime.now())
+            .where(memberEntity.id.`in`(memberId))
+            .execute() > 0
+    }
+
     override fun updatePassword(email: String, password: String): Boolean {
         return queryFactory
             .update(memberEntity)

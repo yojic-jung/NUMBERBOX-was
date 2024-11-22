@@ -49,7 +49,7 @@ class MemberReadRepository : MemberReadOrmPort, BaseRepository() {
             .where(memberEntity.id.eq(id))
             .fetchOne()
 
-    override fun findLastFailTimeById(id: UUID) =
+    override fun readLastFailTimeById(id: UUID) =
         queryFactory
             .select(memberEntity.lastFailTime)
             .from(memberEntity)
@@ -62,4 +62,12 @@ class MemberReadRepository : MemberReadOrmPort, BaseRepository() {
             .from(memberEntity)
             .where(memberEntity.email.eq(email))
             .fetchFirst() != null
+
+    override fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID> =
+        queryFactory
+            .select(memberEntity.id)
+            .from(memberEntity)
+            .limit(limit)
+            .where(memberEntity.isTmpPassword.eq(isTrue))
+            .fetch()
 }
