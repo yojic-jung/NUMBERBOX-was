@@ -8,7 +8,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.util.math.MathCategoryExpressi
 import org.springframework.stereotype.Repository
 
 @Repository
-class MathCategoryUnitReadOrmRepository(
+class MathCategoryUnitReadRepository(
     private val mathCategoryExpression: MathCategoryExpression
 ) : MathCategoryUnitReadOrmPort, BaseRepository() {
     override fun readAll(): List<MathCategoryUnitVo> {
