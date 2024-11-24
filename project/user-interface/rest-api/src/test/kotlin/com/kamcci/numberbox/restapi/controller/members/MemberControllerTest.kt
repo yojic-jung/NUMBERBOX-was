@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import com.kammci.numberbox.restapi.resolver.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
@@ -15,7 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 class MemberControllerTest : BaseMockMvcTest() {
 
     @Autowired
-    lateinit var memberModifyUseCase: MemberModifyUseCase
+    lateinit var memberWriteUseCase: MemberWriteUseCase
 
     companion object {
         private const val EMAIl_URL = "/member/email"
@@ -57,7 +57,7 @@ class MemberControllerTest : BaseMockMvcTest() {
             "password" to "abcdefgh1234!",
             "passwordConfirm" to "abcdefgh1234!",
         )
-        `when`(memberModifyUseCase.updatePassword(any())).thenReturn(true)
+        `when`(memberWriteUseCase.updatePassword(any())).thenReturn(true)
 
         // when
         val resultAction = putRequest(PASSWORD_URL, req)

@@ -10,11 +10,11 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.*
-import com.kamcci.numberbox.app.usecase.member.MemberModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
 import java.util.*
 
 @UseCase
-class MemberModifyService(
+class MemberWriteService(
     private val memberModifyOrmPort: MemberModifyOrmPort,
     private val memberReadOrmPort: MemberReadOrmPort,
     // 비밀번호 인코더
@@ -25,7 +25,7 @@ class MemberModifyService(
     private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort,
     private val profileModifyOrmPort: MemberProfileModifyOrmPort,
     private val privateModifyRepo: MemberPrivateModifyOrmPort,
-) : MemberModifyUseCase {
+) : MemberWriteUseCase {
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
         // 이전 비밀번호 일치 여부 확인

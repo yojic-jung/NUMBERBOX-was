@@ -12,7 +12,7 @@ class MemberControllerConfig {
     fun memberFollowReadUseCase(): MemberFollowReadUseCase = mock()
 
     @Bean
-    fun memberFollowModifyUseCase(): MemberFollowModifyUseCase = mock()
+    fun memberFollowModifyUseCase(): MemberFollowWriteUseCase = mock()
 
     @Bean
     fun memberFindUseCase(): MemberFindUseCase = mock()
@@ -21,25 +21,25 @@ class MemberControllerConfig {
     fun memberLoginFailureUsecase(): MemberLoginFailureUsecase = mock()
 
     @Bean
-    fun memberModifyUseCase(): MemberModifyUseCase = mock()
+    fun memberModifyUseCase(): MemberWriteUseCase = mock()
 
     @Bean
     fun memberMapper(): MemberMapper = mock()
 
     @Bean
-    fun memberPrivateModifyUseCase(): MemberPrivateModifyUseCase = mock()
+    fun memberPrivateModifyUseCase(): MemberPrivateWriteUseCase = mock()
 
     @Bean
     fun memberProfileReadUseCase(): MemberProfileReadUseCase = mock()
 
     @Bean
-    fun memberProfileModifyUseCase(): MemberProfileModifyUseCase = mock()
+    fun memberProfileModifyUseCase(): MemberProfileWriteUseCase = mock()
 
     @Bean
     fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadUseCase = mock()
 
     @Bean
-    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeModifyUseCase = mock()
+    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeWriteUseCase = mock()
 
     @Bean
     fun memberReadUseCase(): MemberReadUseCase = mock()

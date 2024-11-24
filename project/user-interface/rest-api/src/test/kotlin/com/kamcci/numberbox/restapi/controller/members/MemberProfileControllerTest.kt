@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
@@ -29,7 +29,7 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     }
 
     @Autowired
-    lateinit var memberProfileModifyUseCase: MemberProfileModifyUseCase
+    lateinit var memberProfileWriteUseCase: MemberProfileWriteUseCase
 
     @Autowired
     lateinit var memberProfileReadUseCase: MemberProfileReadUseCase

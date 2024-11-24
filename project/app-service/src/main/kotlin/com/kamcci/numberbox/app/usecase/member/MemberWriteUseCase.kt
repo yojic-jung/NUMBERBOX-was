@@ -10,7 +10,7 @@ import java.util.*
 /**
  * 사용자 정보 변경
  */
-interface MemberModifyUseCase {
+interface MemberWriteUseCase {
     /**
      * 비밀번호 변경
      */

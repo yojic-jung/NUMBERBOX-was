@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/public/member")
 class MemberPublicController(
-    private val memberModifyUseCase: MemberModifyUseCase,
+    private val memberWriteUseCase: MemberWriteUseCase,
     private val memberReadUseCase: MemberReadUseCase,
-    private val memberVerifyCodeModifyUseCase: MemberVerifyCodeModifyUseCase,
+    private val memberVerifyCodeWriteUseCase: MemberVerifyCodeWriteUseCase,
     private val memberFindUseCase: MemberFindUseCase,
     private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
     private val tokenResponseService: TokenResponseService,
@@ -40,7 +40,7 @@ class MemberPublicController(
         if (isExist) throw BusinessValidException("해당 이메일이 이미 존재합니다.")
 
         // 인증 코드 생성
-        memberVerifyCodeModifyUseCase.createVerifyCode(req.email, req.codeType)
+        memberVerifyCodeWriteUseCase.createVerifyCode(req.email, req.codeType)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
 
@@ -59,7 +59,7 @@ class MemberPublicController(
         memberVerifyCodeReadUseCase.validate(codeDto)
 
         // 2. 회원가입
-        val resultVo = memberModifyUseCase.signup(memberSignUpDto, memberPrivateSignupDto)
+        val resultVo = memberWriteUseCase.signup(memberSignUpDto, memberPrivateSignupDto)
 
         // 성공시 인증 토큰 반환
         tokenResponseService.responseAuthToken(resultVo.email, resultVo.uuid, resultVo.roles)

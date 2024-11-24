@@ -7,7 +7,7 @@ import java.util.*
 /**
  * 수학 학습 자료 - 변경
  */
-interface MathResourceModifyUseCase {
+interface MathResourceWriteUseCase {
     /**
      * 등록
      */

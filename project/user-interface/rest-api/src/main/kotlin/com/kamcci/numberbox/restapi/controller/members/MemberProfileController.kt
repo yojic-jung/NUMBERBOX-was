@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
@@ -27,7 +27,7 @@ import java.util.*
 @RequestMapping("/member/profile")
 class MemberProfileController(
     private val memberProfileReadUseCase: MemberProfileReadUseCase,
-    private val memberProfileModifyUseCase: MemberProfileModifyUseCase,
+    private val memberProfileWriteUseCase: MemberProfileWriteUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
     private val memberMapper: MemberMapper,
     private val fileUseCase: FileUseCase,
@@ -41,7 +41,7 @@ class MemberProfileController(
         @RequestBody @Valid
         profileImgReq: ProfileTypeUpdtRequest
     ): ResponseEntity<ResponseData<String>> {
-        memberProfileModifyUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
+        memberProfileWriteUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
         return ResponseUtil.ok()
     }
 
@@ -60,7 +60,7 @@ class MemberProfileController(
         val updateDto = MemberProfileImgUpdtDto(memberId, fileNameVo.path, fileNameVo.name)
 
         //  프로필 저장
-        memberProfileModifyUseCase.updateImgByMemberId(updateDto)
+        memberProfileWriteUseCase.updateImgByMemberId(updateDto)
         return ResponseUtil.ok(mapOf("fileNameVo" to fileNameVo))
     }
 
@@ -73,7 +73,7 @@ class MemberProfileController(
         @RequestBody @Valid
         profileNicknameReq: ProfileNicknameUpdtRequest
     ): ResponseEntity<ResponseData<String>> {
-        memberProfileModifyUseCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
+        memberProfileWriteUseCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
         return ResponseUtil.ok()
     }
 

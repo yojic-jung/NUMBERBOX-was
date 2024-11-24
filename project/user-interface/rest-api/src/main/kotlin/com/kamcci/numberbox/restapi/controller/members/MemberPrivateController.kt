@@ -5,7 +5,7 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.usecase.member.MemberPrivateModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPhoneUpdtRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -23,7 +23,7 @@ import java.util.*
 @RestController
 @RequestMapping("/member")
 class MemberPrivateController(
-    private val memberPrivateModifyUseCase: MemberPrivateModifyUseCase,
+    private val memberPrivateWriteUseCase: MemberPrivateWriteUseCase,
     private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
 ) {
     // 휴대폰 번호 변경
@@ -40,7 +40,7 @@ class MemberPrivateController(
 
         // 2. 휴대폰 번호 변경
         val updtDto = MemberPhoneUpdtDto(memberId, req.phoneNumber)
-        val isSuccess = memberPrivateModifyUseCase.updatePhoneNumber(updtDto)
+        val isSuccess = memberPrivateWriteUseCase.updatePhoneNumber(updtDto)
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 }

@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.usecase.member
 /**
  * 팔로잉 및 팔로워 조회
  */
-interface MemberFollowModifyUseCase {
+interface MemberFollowWriteUseCase {
     /**
      * 팔로잉
      *

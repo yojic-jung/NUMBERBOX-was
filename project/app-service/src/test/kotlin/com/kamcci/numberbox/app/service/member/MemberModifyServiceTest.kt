@@ -14,8 +14,8 @@ import org.mockito.kotlin.any
 class MemberModifyServiceTest {
     private val memberReadOrmPort: MemberReadOrmPort = mock()
     private val roleReadRepo: MemberRoleReadOrmPort = mock()
-    private val memberModifyService: MemberModifyService =
-        MemberModifyService(mock(), memberReadOrmPort, mock(), mock(), mock(), roleReadRepo, mock(), mock())
+    private val memberModifyService: MemberWriteService =
+        MemberWriteService(mock(), memberReadOrmPort, mock(), mock(), mock(), roleReadRepo, mock(), mock())
 
     @Test
     fun `회원가입 - 성공`() {

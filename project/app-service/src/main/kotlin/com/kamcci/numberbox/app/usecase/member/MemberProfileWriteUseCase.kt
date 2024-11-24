@@ -7,7 +7,7 @@ import java.util.*
 /**
  * 프로필 변경
  */
-interface MemberProfileModifyUseCase {
+interface MemberProfileWriteUseCase {
     // 프로필 타입 변경
     fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType)
 

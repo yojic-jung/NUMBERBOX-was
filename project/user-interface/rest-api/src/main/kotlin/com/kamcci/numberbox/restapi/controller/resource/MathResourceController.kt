@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadUseCase
-import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
@@ -29,7 +29,7 @@ class MathResourceController(
     private val fileUseCase: FileUseCase,
     private val mathResourceMenuReadUseCase: MathResourceMenuReadUseCase,
     private val mathResourceReadUseCase: MathResourceReadUseCase,
-    private val mathResourceModifyUseCase: MathResourceModifyUseCase,
+    private val mathResourceWriteUseCase: MathResourceWriteUseCase,
 ) {
     /**
      * 조회 - 카테고리 id로
@@ -110,7 +110,7 @@ class MathResourceController(
             imgList = slideImgNameList
         )
         // 학습 자료 영속화
-        val resourceId = mathResourceModifyUseCase.create(createDto)
+        val resourceId = mathResourceWriteUseCase.create(createDto)
         return ResponseUtil.ok(resourceId)
     }
 
@@ -157,7 +157,7 @@ class MathResourceController(
         )
 
         // 학습 자료 수정
-        mathResourceModifyUseCase.update(updateDto)
+        mathResourceWriteUseCase.update(updateDto)
 
         // 수정된 학습 자료 반환
         val updatedVo = mathResourceReadUseCase.readById(updateDto.resourceId)
@@ -174,7 +174,7 @@ class MathResourceController(
         @PathVariable
         resourceId: Long
     ): ResponseEntity<ResponseData<String>> {
-        mathResourceModifyUseCase.deleteByIdAndMemberId(resourceId, memberId)
+        mathResourceWriteUseCase.deleteByIdAndMemberId(resourceId, memberId)
         return ResponseUtil.ok()
     }
 }

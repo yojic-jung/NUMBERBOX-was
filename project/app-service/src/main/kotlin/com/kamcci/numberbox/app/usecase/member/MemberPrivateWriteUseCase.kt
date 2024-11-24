@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 /**
  * 사용자 정보 변경
  */
-interface MemberPrivateModifyUseCase {
+interface MemberPrivateWriteUseCase {
     /**
      * 휴대폰 번호 변경
      */

@@ -9,16 +9,16 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeSaveOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteUseCase
 import java.util.*
 
 @UseCase
-class MemberVerifyCodeModifyService(
+class MemberVerifyCodeWriteService(
     private val memberVerifyCodeSaveOrmPort: MemberVerifyCodeSaveOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     @Aliases("emailVerify")
     private val emailMessageTemplate: EmailMessageTemplate
-) : MemberVerifyCodeModifyUseCase {
+) : MemberVerifyCodeWriteUseCase {
     @TXExecute
     override fun createVerifyCode(email: String, codeType: VerifyCodeType): String {
         // 인증 코드 uuid 생성

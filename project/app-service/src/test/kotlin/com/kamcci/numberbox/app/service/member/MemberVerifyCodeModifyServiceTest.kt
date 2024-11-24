@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 class MemberVerifyCodeModifyServiceTest {
-    private val memberVerifyCodeSaveService = MemberVerifyCodeModifyService(mock(), mock(), mock())
+    private val memberVerifyCodeSaveService = MemberVerifyCodeWriteService(mock(), mock(), mock())
 
     @Test
     fun `인증코드 생성 - 성공`() {

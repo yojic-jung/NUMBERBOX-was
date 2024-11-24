@@ -4,12 +4,12 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberPrivateModifyOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberPrivateModifyUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteUseCase
 
 @UseCase
-class MemberPrivateModifyService(
+class MemberPrivateWriteService(
     private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort,
-) : MemberPrivateModifyUseCase {
+) : MemberPrivateWriteUseCase {
     @TXExecute
     override fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean {
         return memberPrivateModifyOrmPort.updatePhoneNumber(phoneUpdtDto)
