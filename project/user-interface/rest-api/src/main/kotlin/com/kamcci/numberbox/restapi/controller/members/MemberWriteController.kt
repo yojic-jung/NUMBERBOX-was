@@ -18,16 +18,10 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")
-class MemberController(
+class MemberWriteController(
     private val memberWriteUseCase: MemberWriteUseCase,
     private val memberMapper: MemberMapper,
 ) {
-    // 내 이메일
-    @GetMapping("/email")
-    fun readEmail(@UserEmail email: String): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        return ResponseUtil.ok(mapOf("email" to email))
-    }
-
     // 비밀번호 변경
     @PutMapping("/password")
     fun updatePassword(
@@ -41,7 +35,7 @@ class MemberController(
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 
-    // 비밀번호 확인
+    // 비밀번호 확인(변경 작업 없지만 개인정보 post로 받음)
     @PostMapping("/password-confirm")
     fun confirmPassword(
         @UserId memberId: UUID,
@@ -52,6 +46,7 @@ class MemberController(
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 
+    // todo
     // 탈퇴
 //    @PostMapping("/drop")
 //    fun dropAccount(

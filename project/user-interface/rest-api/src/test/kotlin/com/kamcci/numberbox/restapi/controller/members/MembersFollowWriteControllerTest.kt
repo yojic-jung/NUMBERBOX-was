@@ -11,7 +11,7 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class MembersFollowControllerTest : BaseMockMvcTest() {
+class MembersFollowWriteControllerTest : BaseMockMvcTest() {
     @Autowired
     lateinit var memberProfileReadUseCase: MemberProfileReadUseCase
 

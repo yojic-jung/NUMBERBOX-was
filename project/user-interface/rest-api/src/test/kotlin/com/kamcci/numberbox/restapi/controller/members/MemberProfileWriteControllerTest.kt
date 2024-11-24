@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -20,7 +20,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import java.util.*
 
 @WebMvcUnitTest
-class MemberProfileControllerTest : BaseMockMvcTest() {
+class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     companion object {
         const val PROFILE_REG_URL = "/member/profile"
         const val PROFILE_IMG_URL = "/member/profile/img"

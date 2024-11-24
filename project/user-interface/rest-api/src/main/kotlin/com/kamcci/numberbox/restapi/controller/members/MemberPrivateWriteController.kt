@@ -22,7 +22,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")
-class MemberPrivateController(
+class MemberPrivateWriteController(
     private val memberPrivateWriteUseCase: MemberPrivateWriteUseCase,
     private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
 ) {

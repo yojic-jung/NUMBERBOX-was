@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import java.util.*
 
 @WebMvcUnitTest
-class MemberPrivateControllerTest : BaseMockMvcTest() {
+class MemberPrivateWriteControllerTest : BaseMockMvcTest() {
     @Autowired
     lateinit var memberPrivateWriteUseCase: MemberPrivateWriteUseCase
 

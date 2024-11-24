@@ -22,7 +22,7 @@ import java.util.*
 @PreAuthorize("hasRole('MANAGER')")
 @RestController
 @RequestMapping("/manger/math/content")
-class ManagerMathContentsController(
+class ManagerContentsWriteController(
     private val mathContentsWriteUseCase: MathContentsWriteUseCase,
     private val mathContentsMapper: MathContentsMapper
 ) {

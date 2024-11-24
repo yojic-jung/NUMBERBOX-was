@@ -14,7 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @WebMvcUnitTest
-class MemberPublicControllerTest : BaseMockMvcTest() {
+class MemberFindControllerTest : BaseMockMvcTest() {
     companion object {
         private const val CREATE_VERIFY_CODE_URL = "/public/member/signup/verifyCode"
         private const val SIGNUP_URL = "/public/member/signup"

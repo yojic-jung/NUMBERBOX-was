@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.HttpMessageNotReadableException
 
 @WebMvcUnitTest
-class MemberControllerTest : BaseMockMvcTest() {
+class MemberWriteControllerTest : BaseMockMvcTest() {
 
     @Autowired
     lateinit var memberWriteUseCase: MemberWriteUseCase

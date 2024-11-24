@@ -4,25 +4,28 @@ import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.member.*
-import com.kamcci.numberbox.restapi.dto.request.member.EmailFindRequest
+import com.kamcci.numberbox.app.usecase.member.MemberReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
 import com.kamcci.numberbox.restapi.dto.request.member.EmailRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberSignupRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
-import com.kamcci.numberbox.restapi.validation.member.EmailCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/public/member")
-class MemberPublicController(
+class MemberSignUpController(
     private val memberWriteUseCase: MemberWriteUseCase,
     private val memberReadUseCase: MemberReadUseCase,
     private val memberVerifyCodeWriteUseCase: MemberVerifyCodeWriteUseCase,
-    private val memberFindUseCase: MemberFindUseCase,
     private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
     private val tokenResponseService: TokenResponseService,
     private val memberMapper: MemberMapper,
@@ -66,26 +69,4 @@ class MemberPublicController(
         return ResponseUtil.ok(mapOf("resultVo" to resultVo))
     }
 
-    /**
-     * 이메일 찾기
-     */
-    @GetMapping("/findEmail")
-    fun findEmail(
-        @Valid
-        @ModelAttribute req: EmailFindRequest
-    ): ResponseEntity<ResponseData<Map<String, String?>>> {
-        return ResponseUtil.ok(mapOf("email" to memberFindUseCase.readMyEmail(req.userName, req.phoneNumber)))
-    }
-
-    /**
-     * 비밀번호 찾기
-     */
-    @GetMapping("/findPassword")
-    fun findPassword(
-        @EmailCheck
-        @RequestParam email: String
-    ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
-        memberFindUseCase.readMyPassword(email)
-        return ResponseUtil.ok(mapOf("isSuccess" to true))
-    }
 }

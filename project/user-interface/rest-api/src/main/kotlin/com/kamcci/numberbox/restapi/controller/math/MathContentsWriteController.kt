@@ -1,0 +1,151 @@
+package com.kamcci.numberbox.restapi.controller.math
+
+import com.kamcci.modules.auth.control.annotation.UserId
+import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsWriteUseCase
+import com.kamcci.numberbox.restapi.dto.request.math.*
+import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
+import com.kamcci.numberbox.restapi.util.response.ResponseData
+import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.*
+import java.util.*
+
+@PreAuthorize("hasRole('USER')")
+@RestController
+@RequestMapping("/math/content")
+class MathContentsWriteController(
+    private val mathContentsReadUseCase: MathContentsReadUseCase,
+    // 문제 제작 목적
+    private val mathContentsWriteUseCase: MathContentsWriteUseCase,
+    private val mathConGrammarModifyUseCase: MathContentsGrammarWriteUseCase,
+    private val mathContentsMapper: MathContentsMapper,
+) {
+
+    // 사용자 제작 문제 등록
+    @PostMapping("/user-custom")
+    fun createUserCustomContents(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid createReq: MathConLicenseCreateRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // request to dto 변환
+        val contents = mathContentsMapper.toContents(memberId, createReq.contents)
+
+        // 수학문제 생성
+        val contentsId = mathContentsWriteUseCase.createUserCustomContents(contents, createReq.license)
+
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(
+            mapOf(
+                "contents" to mathContentsReadUseCase.readDetailByContentsIdAndMemberId(
+                    contentsId,
+                    memberId
+                )
+            )
+        )
+    }
+
+    // 사용자 제작 문제 수정
+    @PutMapping("/user-custom")
+    fun updateUserCustomContents(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid createReq: MathConLicenseUpdtRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // request to dto 변환
+        val contents = mathContentsMapper.toContents(memberId, createReq.contents)
+
+        // 수학문제 생성
+        mathContentsWriteUseCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license).let {
+            if (!it) throw BusinessValidException("수학문제가 수정 되지 않았습니다.")
+        }
+
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(
+            mapOf(
+                "contents" to mathContentsReadUseCase.readDetailByContentsIdAndMemberId(
+                    createReq.contentsId,
+                    memberId
+                )
+            )
+        )
+    }
+
+    // 변형문제 등록
+    @PostMapping("/trans")
+    fun createransContents(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid createReq: MathConTransCreateRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // request to dto 변환
+        val contents = mathContentsMapper.toContents(memberId, createReq.contents)
+
+        // 수학문제 생성
+        val contentsId = mathContentsWriteUseCase.createTransContents(createReq.orgContentsId, contents)
+
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(
+            mapOf(
+                "contents" to mathContentsReadUseCase.readDetailByContentsIdAndMemberId(
+                    contentsId,
+                    memberId
+                )
+            )
+        )
+    }
+
+    // 변형문제 수정
+    @PutMapping("/trans")
+    fun updateTransContents(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid createReq: MathConTransUpdtRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // request to dto 변환
+        val contents = mathContentsMapper.toContents(memberId, createReq.contents)
+
+        // 수학문제 생성
+        mathContentsWriteUseCase.updateTransContents(createReq.contentsId, contents)
+
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(
+            mapOf(
+                "contents" to mathContentsReadUseCase.readDetailByContentsIdAndMemberId(
+                    createReq.contentsId,
+                    memberId
+                )
+            )
+        )
+    }
+
+    // 문제 문법 등록
+    @PostMapping("/grammar")
+    fun createMathGrammer(
+        @UserId memberId: UUID,
+        @RequestBody
+        @Valid modifyReq: MathContestGrammarModifyRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문법 등록
+        mathConGrammarModifyUseCase.createGrammar(modifyReq.contentsId, modifyReq.grammar)
+        // 생성된 문제 정보 반환
+        return ResponseUtil.ok(mapOf("success" to true))
+    }
+
+    // 문제 삭제
+    @DeleteMapping("/{contentsId}")
+    fun deleteContents(
+        @UserId memberId: UUID,
+        @PathVariable contentsId: Long
+    ): ResponseEntity<ResponseData<Any>> {
+        // 문제 삭제
+        val res = mathContentsWriteUseCase.delete(contentsId, memberId)
+        return ResponseUtil.ok(mapOf("contents" to res))
+    }
+
+}

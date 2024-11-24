@@ -1,18 +1,15 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadUseCase
-import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
-import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toPptSlide
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -25,52 +22,11 @@ import java.util.*
 
 @RequestMapping("/math/resource")
 @RestController
-class MathResourceController(
+class MathResourceWriteController(
     private val fileUseCase: FileUseCase,
-    private val mathResourceMenuReadUseCase: MathResourceMenuReadUseCase,
     private val mathResourceReadUseCase: MathResourceReadUseCase,
     private val mathResourceWriteUseCase: MathResourceWriteUseCase,
 ) {
-    /**
-     * 조회 - 카테고리 id로
-     */
-    @GetMapping("/{mainCateId}")
-    fun read(
-        @PathVariable
-        mainCateId: Int,
-        @ModelAttribute
-        pageReq: PageRequestImpl
-    ): ResponseEntity<ResponseData<Any>> {
-        val contents = mathResourceReadUseCase.readByMainCateId(mainCateId, pageReq)
-        val rs = paginate(contents, pageReq) { mathResourceReadUseCase.countByMainCateId(mainCateId) }
-        return ResponseUtil.ok(rs)
-    }
-
-    /**
-     * 조회 - 나의 학습 자료
-     */
-    @GetMapping("/my")
-    fun read(
-        @UserId
-        memberId: UUID,
-        @ModelAttribute
-        pageReq: PageRequestImpl
-    ): ResponseEntity<ResponseData<Any>> {
-        // 컨텐츠
-        val contents = mathResourceReadUseCase.readByMemberId(memberId, pageReq)
-        val rs = paginate(contents, pageReq) { mathResourceReadUseCase.countByMemberId(memberId) }
-
-        // 카테고리 메뉴
-        val menuList = mathResourceMenuReadUseCase.readAll()
-
-        return ResponseUtil.ok(
-            mapOf(
-                "resource" to rs,
-                "menu" to menuList
-            )
-        )
-    }
-
     /**
      * 등록
      */

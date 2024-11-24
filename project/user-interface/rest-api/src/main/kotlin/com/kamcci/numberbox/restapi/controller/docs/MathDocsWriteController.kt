@@ -14,7 +14,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/docs")
-class MathDocsModifyController(
+class MathDocsWriteController(
     private val mathDocsPaperWriteUseCase: MathDocsPaperWriteUseCase
 ) {
     @PostMapping
@@ -33,6 +33,18 @@ class MathDocsModifyController(
         @RequestBody reqBody: MathDocsPaperUpdtDto
     ): ResponseEntity<ResponseData<String>> {
         mathDocsPaperWriteUseCase.update(memberId, reqBody)
+        return ResponseUtil.ok()
+    }
+
+
+    @DeleteMapping("/{docsId}")
+    fun deleteDocs(
+        @UserId
+        memberId: UUID,
+        @PathVariable
+        docsId: Long
+    ): ResponseEntity<ResponseData<String>> {
+        mathDocsPaperWriteUseCase.delete(docsId, memberId)
         return ResponseUtil.ok()
     }
 }

@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteUseCase
+import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteUseCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -15,30 +15,31 @@ import java.util.*
 
 @PreAuthorize("hasRole('USER')")
 @RestController
-@RequestMapping("/math/like/content")
-class MathContentsLikeController(
-    private val mathConLikeModifyUseCase: MathContentsLikeWriteUseCase,
+@RequestMapping("/math/repo/content")
+class MathContentsRepoWriteController(
+    private val mathConRepoModifyUseCase: MathContentsRepoWriteUseCase,
 ) {
-    // 문제 좋아요
+    // 저장소에 문제 저장
     @PostMapping("")
-    fun likeContents(
+    fun createRepo(
         @UserId userId: UUID,
         @RequestBody @Valid req: ContentsIdRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsLikeModifyDto(req.contentsId, userId)
-        mathConLikeModifyUseCase.save(modifyDto)
+        val modifyDto = MathContentsRepoModifyDto(req.contentsId, userId)
+        mathConRepoModifyUseCase.save(modifyDto)
         return ResponseUtil.ok(true)
     }
 
-    // 문제 좋아요 취소
+    // 저장소에서 삭제
     @DeleteMapping("/{contentsId}")
-    fun likeCancelContents(
+    fun deleteRepo(
         @UserId userId: UUID,
         @ContentsCheck
         @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
-        val modifyDto = MathContentsLikeModifyDto(contentsId, userId)
-        mathConLikeModifyUseCase.delete(modifyDto)
+        val modifyDto = MathContentsRepoModifyDto(contentsId, userId)
+        mathConRepoModifyUseCase.delete(modifyDto)
         return ResponseUtil.ok(true)
     }
+
 }

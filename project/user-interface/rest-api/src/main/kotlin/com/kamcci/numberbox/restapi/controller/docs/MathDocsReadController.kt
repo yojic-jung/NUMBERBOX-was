@@ -83,15 +83,4 @@ class MathDocsReadController(
         return ResponseUtil.ok(rs)
     }
 
-    @DeleteMapping("/{docsId}")
-    fun deleteDocs(
-        @UserId
-        memberId: UUID,
-        @PathVariable
-        docsId: Long
-    ): ResponseEntity<ResponseData<String>> {
-        mathDocsPaperWriteUseCase.delete(docsId, memberId)
-        return ResponseUtil.ok()
-    }
-
 }

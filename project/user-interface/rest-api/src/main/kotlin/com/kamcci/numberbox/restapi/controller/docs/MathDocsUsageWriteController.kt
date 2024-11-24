@@ -16,7 +16,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/docs/usage")
-class MathDocsUsageModifyController(
+class MathDocsUsageWriteController(
     private val mathDocsUsageWriteUseCase: MathDocsUsageWriteUseCase
 ) {
     @PostMapping

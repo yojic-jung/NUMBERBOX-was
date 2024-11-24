@@ -16,7 +16,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/like-repo/content")
-class MathContentsLikeRepoController(
+class MathContentsLikeReadController(
     private val mathConRepoReadUseCase: MathContentsRepoReadUseCase,
     private val mathConLikeReadUseCase: MathContentsLikeReadUseCase,
 ) {

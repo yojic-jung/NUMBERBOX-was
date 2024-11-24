@@ -2,8 +2,8 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.member.MemberFollowWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFollowWriteUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -15,7 +15,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member/following")
-class MembersFollowController(
+class MembersFollowWriteController(
     private val memberFollowWriteUseCase: MemberFollowWriteUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
     private val memberProfileReadUseCase: MemberProfileReadUseCase

@@ -25,7 +25,7 @@ import java.util.*
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/cs/error")
-class CsErrorReportModifyController(
+class CsErrorReportWriteController(
     private val fileUseCase: FileUseCase,
     private val csErrorReportWriteUseCase: CsErrorReportWriteUseCase
 ) {

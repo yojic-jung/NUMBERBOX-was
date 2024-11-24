@@ -11,11 +11,11 @@ import org.springframework.test.context.ContextConfiguration
 @WebMvcTest(
     value = [
         LoginFailureController::class,
-        MemberController::class,
-        MemberPrivateController::class,
-        MemberProfileController::class,
-        MemberPublicController::class,
-        MembersFollowController::class,
+        MemberWriteController::class,
+        MemberPrivateWriteController::class,
+        MemberProfileWriteController::class,
+        MemberFindController::class,
+        MembersFollowWriteController::class,
     ]
 )
 annotation class WebMvcUnitTest
