@@ -6,8 +6,8 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperModifyUseCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteUseCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadUseCase
 import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -24,7 +24,7 @@ import java.util.*
 class MathDocsReadController(
     private val mathDocsReadUseCase: MathDocsReadUseCase,
     private val mathDocsPaperReadUseCase: MathDocsPaperReadUseCase,
-    private val mathDocsPaperModifyUseCase: MathDocsPaperModifyUseCase
+    private val mathDocsPaperWriteUseCase: MathDocsPaperWriteUseCase
 ) {
     @GetMapping("/in-house")
     fun makeInHouseDocs(
@@ -90,7 +90,7 @@ class MathDocsReadController(
         @PathVariable
         docsId: Long
     ): ResponseEntity<ResponseData<String>> {
-        mathDocsPaperModifyUseCase.delete(docsId, memberId)
+        mathDocsPaperWriteUseCase.delete(docsId, memberId)
         return ResponseUtil.ok()
     }
 

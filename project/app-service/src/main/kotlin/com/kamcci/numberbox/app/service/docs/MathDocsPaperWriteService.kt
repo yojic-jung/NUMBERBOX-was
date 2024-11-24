@@ -6,13 +6,13 @@ import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperModifyOrmPort
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperModifyUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteUseCase
 import java.util.*
 
 @UseCase
-class MathDocsPaperModifyService(
+class MathDocsPaperWriteService(
     private val mathDocsPaperModifyOrmPort: MathDocsPaperModifyOrmPort
-) : MathDocsPaperModifyUseCase {
+) : MathDocsPaperWriteUseCase {
     companion object {
         const val NOT_MY_DOCS = "자신이 제작한 학습지가 아닙니다."
     }

@@ -13,11 +13,11 @@ import org.mockito.Mockito.`when`
 import java.time.LocalDateTime
 import java.util.*
 
-class MemberVerifyCodeReadUseCaseServiceTest {
+class MemberVerifyCodeReadServiceTest {
 
     private val memberVerifyCodeReadOrmPort: MemberVerifyCodeReadOrmPort = mock()
     private val memberVerifyCodeReadUseCase =
-        MemberVerifyCodeReadUseCaseService(memberVerifyCodeReadOrmPort)
+        MemberVerifyCodeReadService(memberVerifyCodeReadOrmPort)
 
     companion object {
         const val EMAIL = "test@test.com"

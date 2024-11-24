@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @UseCase
-class MemberVerifyCodeReadUseCaseService(
+class MemberVerifyCodeReadService(
     private val memberVerifyCodeReadOrmPort: MemberVerifyCodeReadOrmPort,
 ) : MemberVerifyCodeReadUseCase {
     companion object {

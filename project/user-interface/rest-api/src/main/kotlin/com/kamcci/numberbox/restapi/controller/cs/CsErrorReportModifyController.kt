@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.cs.CsErrorReportModifyUseCase
+import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteUseCase
 import com.kamcci.numberbox.restapi.dto.request.cs.CsErrorReportCreateRequest
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -27,7 +27,7 @@ import java.util.*
 @RequestMapping("/cs/error")
 class CsErrorReportModifyController(
     private val fileUseCase: FileUseCase,
-    private val csErrorReportModifyUseCase: CsErrorReportModifyUseCase
+    private val csErrorReportWriteUseCase: CsErrorReportWriteUseCase
 ) {
     /**
      * 고객센터 신고하기
@@ -50,7 +50,7 @@ class CsErrorReportModifyController(
             else null
 
         val createDto = toCreateDto(memberId, reqBody, firImgNameVo, secImgVo, thrImgVo)
-        return ResponseUtil.ok(mapOf("csErrorReportId" to csErrorReportModifyUseCase.createReport(createDto)))
+        return ResponseUtil.ok(mapOf("csErrorReportId" to csErrorReportWriteUseCase.createReport(createDto)))
     }
 
     private fun toCreateDto(
