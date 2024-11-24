@@ -8,6 +8,9 @@ import java.util.*
  * 프로필 변경
  */
 interface MemberProfileModifyOrmPort {
+    // 프로필 등록
+    fun save(uuid: UUID, nickName: String): Long
+
     // 프로필 타입 변경
     fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Long
 

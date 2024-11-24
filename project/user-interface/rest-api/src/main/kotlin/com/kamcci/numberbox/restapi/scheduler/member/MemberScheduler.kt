@@ -36,6 +36,10 @@ class MemberScheduler(
          * 2. 휴먼 계정 처리
          * 3. 제작 컨텐츠 비공개 처리
          */
+
+        // 회원 탈퇴 요청 대상자 조회(관리자, 매니저 제외)
+
+//        memberModifyUseCase.drop()
     }
 
     // 일일 학습지 다운로드 횟수 초기화
@@ -47,7 +51,7 @@ class MemberScheduler(
     // 만료된 리프레시 토큰 삭제
     @Scheduled(cron = "00 00 00 * * *")
     fun deleteExpiredRefreshToken() {
-        // todo 리프레시 토큰 갱신 기능 구현후
+        // todo
     }
 
 }

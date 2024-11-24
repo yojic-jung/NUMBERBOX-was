@@ -5,11 +5,18 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEntity.memberProfileEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberProfileFactory
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
 class MemberProfileModifyRepository : MemberProfileModifyOrmPort, BaseRepository() {
+
+    override fun save(uuid: UUID, nickName: String): Long {
+        val memberProfileEntity = MemberProfileFactory.getSaveEntity(uuid, nickName)
+        em.persist(memberProfileEntity)
+        return memberProfileEntity.id
+    }
 
     override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType): Long {
         return queryFactory

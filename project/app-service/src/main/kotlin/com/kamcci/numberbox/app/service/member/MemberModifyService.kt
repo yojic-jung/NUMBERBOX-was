@@ -23,8 +23,9 @@ class MemberModifyService(
     private val memberSaveRepo: MemberSaveOrmPort,
     private val roleSaveRepo: MemberRoleSaveOrmPort,
     private val roleReadRepo: MemberRoleReadOrmPort,
-    private val profileSaveRepo: MemberProfileSaveOrmPort,
-    private val privateSaveRepo: MemberPrivateSaveOrmPort,
+    private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort,
+    private val profileModifyOrmPort: MemberProfileModifyOrmPort,
+    private val privateModifyRepo: MemberPrivateModifyOrmPort,
 ) : MemberModifyUseCase {
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
@@ -57,11 +58,11 @@ class MemberModifyService(
 
         // 2. 프로필 설정
         val nickName = makeNickname()
-        profileSaveRepo.save(id, nickName)
+        profileModifyOrmPort.save(id, nickName)
 
         // 3. 개인정보 설정(존재시에만 설정) - 개인정보 없이도 가입 가능(추후 본인인증을 통해 등록 가능)
         privateSignUpDto?.let {
-            privateSaveRepo.save(id, it)
+            privateModifyRepo.save(id, it)
         }
 
         // 4. 권한 설정
@@ -79,9 +80,7 @@ class MemberModifyService(
     }
 
     @TXExecute
-    override fun drop() {
-        // 회원 탈퇴 요청 대상자 조회(관리자, 매니저 제외)
-
+    override fun drop(memberId: UUID) {
         // 1. 파일 삭제
 
         // 2. 개인 정보 파기
