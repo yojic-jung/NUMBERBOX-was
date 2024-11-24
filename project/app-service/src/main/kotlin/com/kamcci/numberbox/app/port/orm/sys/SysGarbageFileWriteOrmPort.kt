@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
 /**
  * 삭제 대상 유휴 파일 - 변경
  */
-interface SysGarbageFileModifyOrmPort {
+interface SysGarbageFileWriteOrmPort {
     // 삭제 대상 파일 저장
     fun create(createDto: FileDeleteCreateDto): Long
 

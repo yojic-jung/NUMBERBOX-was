@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.sys
 
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
-import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.sys.QSysGarbageFileEntity.sysGarbageFileEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.sys.SysGarbageFileFactory
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-class SysGarbageFileModifyRepository : SysGarbageFileModifyOrmPort, BaseRepository() {
+class SysGarbageFileWriteRepository : SysGarbageFileWriteOrmPort, BaseRepository() {
     override fun create(createDto: FileDeleteCreateDto): Long {
         val saveEntity = SysGarbageFileFactory.getSaveEntity(createDto)
         em.persist(saveEntity)

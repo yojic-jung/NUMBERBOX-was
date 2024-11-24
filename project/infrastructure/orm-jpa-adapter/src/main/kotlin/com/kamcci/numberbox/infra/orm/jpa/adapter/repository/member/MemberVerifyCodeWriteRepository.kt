@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
-import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberVerifyCodeEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberVerifyCodeFactory.makeSaveEntity
@@ -9,7 +9,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberVerifyCod
 import org.springframework.stereotype.Repository
 
 @Repository
-class MemberVerifyCodeSaveRepository : MemberVerifyCodeSaveOrmPort, BaseRepository() {
+class MemberVerifyCodeWriteRepository : MemberVerifyCodeWriteOrmPort, BaseRepository() {
 
     override fun save(memberVerifyCodeSaveDto: MemberVerifyCodeSaveDto): Boolean {
         val emailCodeEntity = em.find(MemberVerifyCodeEntity::class.java, memberVerifyCodeSaveDto.email)

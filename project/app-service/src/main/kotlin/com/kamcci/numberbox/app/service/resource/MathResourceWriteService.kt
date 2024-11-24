@@ -7,17 +7,17 @@ import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
-import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.resource.MathResourceWriteOrmPort
+import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
 import java.util.*
 
 @UseCase
 class MathResourceWriteService(
     private val mathResourceReadOrmPort: MathResourceReadOrmPort,
-    private val mathResourceModifyOrmPort: MathResourceModifyOrmPort,
-    private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
+    private val mathResourceWriteOrmPort: MathResourceWriteOrmPort,
+    private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
 ) : MathResourceWriteUseCase {
     companion object {
         const val NOT_MY_CONTENTS = "존재하지 않거나 자신의 컨텐츠가 아닙니다."
@@ -25,7 +25,7 @@ class MathResourceWriteService(
 
     @TXExecute
     override fun create(createDto: MathResourceCreateDto): Long {
-        return mathResourceModifyOrmPort.create(createDto)
+        return mathResourceWriteOrmPort.create(createDto)
     }
 
     @TXExecute
@@ -53,11 +53,11 @@ class MathResourceWriteService(
         }
 
         // 5. 학습자료 수정
-        mathResourceModifyOrmPort.update(updateDto)
+        mathResourceWriteOrmPort.update(updateDto)
 
         // 이전 이미지 삭제
         deleteImgList.forEach {
-            sysGarbageFileModifyOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, it.path, it.name))
+            sysGarbageFileWriteOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, it.path, it.name))
         }
     }
 
@@ -72,7 +72,7 @@ class MathResourceWriteService(
 
     @TXExecute
     override fun deleteByIdAndMemberId(id: Long, memberId: UUID) {
-        mathResourceModifyOrmPort.deleteByIdAndMemberId(id, memberId).let {
+        mathResourceWriteOrmPort.deleteByIdAndMemberId(id, memberId).let {
             if (it != 1L) throw BusinessValidException(NOT_MY_CONTENTS)
         }
     }

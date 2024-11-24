@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
-import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
 import java.util.*
@@ -17,7 +17,7 @@ import java.util.*
 class MemberProfileWriteService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
     private val memberProfileModifyOrmPort: MemberProfileModifyOrmPort,
-    private val sysGarbageFileModifyOrmPort: SysGarbageFileModifyOrmPort,
+    private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
     private val fileUseCase: FileUseCase
 ) : MemberProfileWriteUseCase {
     @TXExecute
@@ -37,7 +37,7 @@ class MemberProfileWriteService(
         val filePath = prevImgVo?.profileImgPath
         val fileName = prevImgVo?.profileImgName
         if (!fileName.isNullOrEmpty() && !filePath.isNullOrEmpty()) {
-            sysGarbageFileModifyOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, filePath, fileName))
+            sysGarbageFileWriteOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, filePath, fileName))
         }
     }
 

@@ -7,7 +7,7 @@ import java.util.*
 /**
  * 학습 자료 영속화
  */
-interface MathResourceModifyOrmPort {
+interface MathResourceWriteOrmPort {
     // 등록
     fun create(createDto: MathResourceCreateDto): Long
 

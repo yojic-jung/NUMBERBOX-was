@@ -8,13 +8,13 @@ import com.kamcci.numberbox.app.domain.system_construction.Aliases
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
-import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeSaveOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteUseCase
 import java.util.*
 
 @UseCase
 class MemberVerifyCodeWriteService(
-    private val memberVerifyCodeSaveOrmPort: MemberVerifyCodeSaveOrmPort,
+    private val memberVerifyCodeWriteOrmPort: MemberVerifyCodeWriteOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     @Aliases("emailVerify")
     private val emailMessageTemplate: EmailMessageTemplate
@@ -30,7 +30,7 @@ class MemberVerifyCodeWriteService(
         memberVerifyCodeEmailPort.send(message, emailMessageTemplate)
 
         // 검증 코드 저장
-        memberVerifyCodeSaveOrmPort.save(emailCodeSaveDto)
+        memberVerifyCodeWriteOrmPort.save(emailCodeSaveDto)
         return code
     }
 }
