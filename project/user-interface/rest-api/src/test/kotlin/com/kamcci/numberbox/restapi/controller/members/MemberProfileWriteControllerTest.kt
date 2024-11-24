@@ -3,9 +3,9 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -29,13 +29,13 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Autowired
-    lateinit var memberProfileWriteUseCase: MemberProfileWriteUseCase
+    lateinit var memberProfileWriteCase: MemberProfileWriteCase
 
     @Autowired
-    lateinit var memberProfileReadUseCase: MemberProfileReadUseCase
+    lateinit var memberProfileReadCase: MemberProfileReadCase
 
     @Autowired
-    lateinit var memberFollowReadUseCase: MemberFollowReadUseCase
+    lateinit var memberFollowReadCase: MemberFollowReadCase
 
     @Test
     fun `프로필 등록 - 성공`() {
@@ -134,9 +134,9 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     fun `내 프로필 보기 - 성공`() {
         val memberProfileVo = MemberProfileVo(1L, UUID.randomUUID(), "", "", "", ProfileType.Teacher)
         val list = listOf(memberProfileVo)
-        `when`(memberProfileReadUseCase.readByMemberId(any())).thenReturn(memberProfileVo)
-        `when`(memberProfileReadUseCase.readFollowingProfileByMemberId(any())).thenReturn(list)
-        `when`(memberProfileReadUseCase.readFollowerProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileReadCase.readByMemberId(any())).thenReturn(memberProfileVo)
+        `when`(memberProfileReadCase.readFollowingProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileReadCase.readFollowerProfileByMemberId(any())).thenReturn(list)
 
         // when
         val resultAction = getRequest(MY_PROFILE_URL)
@@ -147,9 +147,9 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
 
     @Test
     fun `다른 사람 프로필 보기 - 성공`() {
-        `when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(1L)
-        `when`(memberFollowReadUseCase.isFollowing(any(), any())).thenReturn(true)
-        `when`(memberFollowReadUseCase.countFollower(any())).thenReturn(1)
+        `when`(memberProfileReadCase.readProfileIdByMemberId(any())).thenReturn(1L)
+        `when`(memberFollowReadCase.isFollowing(any(), any())).thenReturn(true)
+        `when`(memberFollowReadCase.countFollower(any())).thenReturn(1)
 
         // when
         val resultAction = getRequest("$MY_PROFILE_URL/1")
@@ -161,7 +161,7 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `다른 사람 프로필 보기 - 실패(프로필 미존재)`() {
         // given
-        `when`(memberProfileReadUseCase.readProfileIdByMemberId(any())).thenReturn(null)
+        `when`(memberProfileReadCase.readProfileIdByMemberId(any())).thenReturn(null)
 
         // when
         val resultAction = getRequest("$MY_PROFILE_URL/1")

@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -13,7 +13,7 @@ import java.util.*
 @WebMvcUnitTest
 class MemberPrivateWriteControllerTest : BaseMockMvcTest() {
     @Autowired
-    lateinit var memberPrivateWriteUseCase: MemberPrivateWriteUseCase
+    lateinit var memberPrivateWriteCase: MemberPrivateWriteCase
 
     companion object {
         const val UPDATE_PHONE_URL = "/member/phone"
@@ -27,7 +27,7 @@ class MemberPrivateWriteControllerTest : BaseMockMvcTest() {
             "verifyCode" to verifyCode,
             "phoneNumber" to "01012345678"
         )
-        `when`(memberPrivateWriteUseCase.updatePhoneNumber(any())).thenReturn(true)
+        `when`(memberPrivateWriteCase.updatePhoneNumber(any())).thenReturn(true)
 
         //when
         val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)

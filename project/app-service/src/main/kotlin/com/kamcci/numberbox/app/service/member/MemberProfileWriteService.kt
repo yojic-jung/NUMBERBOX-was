@@ -10,7 +10,7 @@ import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import java.util.*
 
 @UseCase
@@ -19,7 +19,7 @@ class MemberProfileWriteService(
     private val memberProfileWriteOrmPort: MemberProfileWriteOrmPort,
     private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
     private val fileUseCase: FileUseCase
-) : MemberProfileWriteUseCase {
+) : MemberProfileWriteCase {
     @TXExecute
     override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType) {
         memberProfileWriteOrmPort.updateProfileTypeByMemberId(memberId, profileType)

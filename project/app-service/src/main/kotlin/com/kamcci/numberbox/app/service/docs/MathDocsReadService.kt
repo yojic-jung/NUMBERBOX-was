@@ -9,13 +9,13 @@ import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperReadOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
-import com.kamcci.numberbox.app.usecase.docs.MathDocsReadUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 
 @UseCase
 class MathDocsReadService(
     private val mathDocsReadOrmPort: MathDocsReadOrmPort,
     private val mathDocsPaperReadOrmPort: MathDocsPaperReadOrmPort
-) : MathDocsReadUseCase {
+) : MathDocsReadCase {
 
     // 각 유형별로 몇 문제씩 뽑아와야할지 기준
     private val cntStandards: List<Int> = listOf(1, 2, 3, 4, 5, 10, 15, 20, 30, 50, 100)

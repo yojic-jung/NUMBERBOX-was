@@ -10,7 +10,7 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.*
-import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import java.util.*
 
 @UseCase
@@ -25,7 +25,7 @@ class MemberWriteService(
     private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort,
     private val profileModifyOrmPort: MemberProfileWriteOrmPort,
     private val privateModifyRepo: MemberPrivateWriteOrmPort,
-) : MemberWriteUseCase {
+) : MemberWriteCase {
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
         // 이전 비밀번호 일치 여부 확인
@@ -80,24 +80,26 @@ class MemberWriteService(
 
     @TXExecute
     override fun drop(memberId: UUID) {
-        // 1. 파일 삭제
-
-        // 2. 개인 정보 파기
-
-        // 3. 팔로우 및 팔로잉 삭제
-
-        // 4. 사용자 프로필 탈퇴 회원으로 전환
-
+        // 1. 개인 정보 파기
+        memberPrivateWriteOrmPort.updatePrivateToNull(memberId)
         // 5. 사용자 제작 문제 삭제 - 변형문제는 바로 삭제
         // contents_classify = Deleted으로 변환
 
-        // 5. 학습 자료 삭제
-
-        // 6. 좋아요 및 저장소 삭제
-
         // 7. 학습지 생성내역 삭제
 
+        // 5. 학습 자료 삭제
+
+        // 3. 팔로우 및 팔로잉 삭제
+        // 6. 좋아요 및 저장소 삭제
+
+
+        // 1. 파일 삭제
+
+
+        // 4. 사용자 프로필 탈퇴 회원으로 전환
         // 8. 최종 탈퇴 처리(human_status=3(탈퇴회원), enabled=false)
+
+
     }
 
     @TXExecute

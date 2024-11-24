@@ -6,8 +6,8 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
-import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
@@ -24,8 +24,8 @@ import java.util.*
 @RestController
 class MathResourceWriteController(
     private val fileUseCase: FileUseCase,
-    private val mathResourceReadUseCase: MathResourceReadUseCase,
-    private val mathResourceWriteUseCase: MathResourceWriteUseCase,
+    private val mathResourceReadCase: MathResourceReadCase,
+    private val mathResourceWriteCase: MathResourceWriteCase,
 ) {
     /**
      * 등록
@@ -66,7 +66,7 @@ class MathResourceWriteController(
             imgList = slideImgNameList
         )
         // 학습 자료 영속화
-        val resourceId = mathResourceWriteUseCase.create(createDto)
+        val resourceId = mathResourceWriteCase.create(createDto)
         return ResponseUtil.ok(resourceId)
     }
 
@@ -113,10 +113,10 @@ class MathResourceWriteController(
         )
 
         // 학습 자료 수정
-        mathResourceWriteUseCase.update(updateDto)
+        mathResourceWriteCase.update(updateDto)
 
         // 수정된 학습 자료 반환
-        val updatedVo = mathResourceReadUseCase.readById(updateDto.resourceId)
+        val updatedVo = mathResourceReadCase.readById(updateDto.resourceId)
         return ResponseUtil.ok(updatedVo)
     }
 
@@ -130,7 +130,7 @@ class MathResourceWriteController(
         @PathVariable
         resourceId: Long
     ): ResponseEntity<ResponseData<String>> {
-        mathResourceWriteUseCase.deleteByIdAndMemberId(resourceId, memberId)
+        mathResourceWriteCase.deleteByIdAndMemberId(resourceId, memberId)
         return ResponseUtil.ok()
     }
 }

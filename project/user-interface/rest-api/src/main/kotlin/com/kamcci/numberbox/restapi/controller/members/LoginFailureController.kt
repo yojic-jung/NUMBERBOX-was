@@ -5,7 +5,7 @@ import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
+import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import com.kamcci.numberbox.restapi.exception.code.RestApi100ErrCodeType
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.servlet.http.HttpServletRequest
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 class LoginFailureController(
-    private val memberLoginFailureUsecase: MemberLoginFailureUsecase
+    private val memberLoginFailureUsecase: MemberLoginFailureUseCase
 ) {
 
     @PostMapping("/login/fail")

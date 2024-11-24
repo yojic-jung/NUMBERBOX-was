@@ -12,6 +12,6 @@ interface MemberPrivateWriteOrmPort {
     fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean
 
     // 개인정보 파기
-    fun updatePrivateInfoToNull(memberId: UUID): Long
+    fun updatePrivateToNull(memberId: UUID): Long
 
 }

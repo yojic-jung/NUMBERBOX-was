@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
-import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdConfirmRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
@@ -19,7 +19,7 @@ import java.util.*
 @RestController
 @RequestMapping("/member")
 class MemberWriteController(
-    private val memberWriteUseCase: MemberWriteUseCase,
+    private val memberWriteCase: MemberWriteCase,
     private val memberMapper: MemberMapper,
 ) {
     // 비밀번호 변경
@@ -30,7 +30,7 @@ class MemberWriteController(
         @RequestBody @Valid req: MemberPasswdUpdtRequest
     ): ResponseEntity<ResponseData<Any>> {
         val updtDto = memberMapper.toPasswdUpdtDto(memberId, req)
-        val isSuccess = memberWriteUseCase.updatePassword(updtDto)
+        val isSuccess = memberWriteCase.updatePassword(updtDto)
 
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
@@ -42,7 +42,7 @@ class MemberWriteController(
         @RequestBody @Valid req: MemberPasswdConfirmRequest
     ): ResponseEntity<ResponseData<Any>> {
         val confirmDto = MemberPasswdConfirmDto(memberId, req.password)
-        val isSuccess = memberWriteUseCase.confirmPassword(confirmDto)
+        val isSuccess = memberWriteCase.confirmPassword(confirmDto)
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 

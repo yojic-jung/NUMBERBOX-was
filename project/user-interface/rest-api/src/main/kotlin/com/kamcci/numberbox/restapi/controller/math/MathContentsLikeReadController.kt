@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
@@ -17,8 +17,8 @@ import java.util.*
 @RestController
 @RequestMapping("/math/like-repo/content")
 class MathContentsLikeReadController(
-    private val mathConRepoReadUseCase: MathContentsRepoReadUseCase,
-    private val mathConLikeReadUseCase: MathContentsLikeReadUseCase,
+    private val mathConRepoReadUseCase: MathContentsRepoReadCase,
+    private val mathConLikeReadUseCase: MathContentsLikeReadCase,
 ) {
     // 저장소에 문제 저장
     @GetMapping("/{contentsId}")

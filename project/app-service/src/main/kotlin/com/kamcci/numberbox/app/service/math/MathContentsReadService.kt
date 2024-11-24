@@ -8,13 +8,13 @@ import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
 import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import java.util.*
 
 @UseCase
 class MathContentsReadService(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort
-) : MathContentsReadUseCase {
+) : MathContentsReadCase {
 
     override fun readById(contentsId: Long): MathContentsVo? =
         mathContentsReadOrmPort.readById(contentsId)

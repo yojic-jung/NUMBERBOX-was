@@ -7,13 +7,13 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.cs.CsErrorReportWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperWriteOrmPort
-import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteUseCase
+import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase
 
 @UseCase
 class CsErrorReportWriteService(
     private val csErrorReportWriteOrmPort: CsErrorReportWriteOrmPort,
     private val mathDocsPaperWriteOrmPort: MathDocsPaperWriteOrmPort,
-) : CsErrorReportWriteUseCase {
+) : CsErrorReportWriteCase {
     @TXExecute
     override fun createReport(createDto: CsErrorReportCreateDto): Long {
         // 학습지 에러인 경우

@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
@@ -12,7 +12,7 @@ import java.util.*
 @UseCase
 class MemberVerifyCodeReadService(
     private val memberVerifyCodeReadOrmPort: MemberVerifyCodeReadOrmPort,
-) : MemberVerifyCodeReadUseCase {
+) : MemberVerifyCodeReadCase {
     companion object {
         // 인증 코드 유효 시간
         private const val EMAIL_CODE_EXPIRE_TIME = 180

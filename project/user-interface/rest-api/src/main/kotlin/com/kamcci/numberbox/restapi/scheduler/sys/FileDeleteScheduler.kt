@@ -2,8 +2,8 @@ package com.kamcci.numberbox.restapi.scheduler.sys
 
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadUseCase
-import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteUseCase
+import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadCase
+import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteCase
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 class FileDeleteScheduler(
     private val fileStoragePort: FileStoragePort,
-    private val sysGarbageFileReadUseCase: SysGarbageFileReadUseCase,
-    private val sysGarbageFileWriteUseCase: SysGarbageFileWriteUseCase
+    private val sysGarbageFileReadCase: SysGarbageFileReadCase,
+    private val sysGarbageFileWriteCase: SysGarbageFileWriteCase
 ) {
     companion object {
         const val BATCH_SIZE = 500L
@@ -26,7 +26,7 @@ class FileDeleteScheduler(
         log.info("유휴 파일 삭제 배치 시작")
         while (true) {
             // 삭제 대상 s3 이미지 조회
-            val deleteTargetFile = sysGarbageFileReadUseCase.readAllByType(GarbageFileType.S3, BATCH_SIZE)
+            val deleteTargetFile = sysGarbageFileReadCase.readAllByType(GarbageFileType.S3, BATCH_SIZE)
 
             val successIdList: MutableList<Long> = mutableListOf()
             val failIdList: MutableList<Long> = mutableListOf()
@@ -42,9 +42,9 @@ class FileDeleteScheduler(
             }
 
             // 성공건 db에서 삭제
-            sysGarbageFileWriteUseCase.deleteById(successIdList)
+            sysGarbageFileWriteCase.deleteById(successIdList)
             // 실패건 failCnt+1
-            sysGarbageFileWriteUseCase.incrementFailCntById(failIdList)
+            sysGarbageFileWriteCase.incrementFailCntById(failIdList)
 
             // 더이상 조회할 데이터 없다면 종료
             if (deleteTargetFile.size < BATCH_SIZE) break

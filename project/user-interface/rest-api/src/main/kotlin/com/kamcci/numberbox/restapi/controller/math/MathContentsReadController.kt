@@ -11,10 +11,10 @@ import com.kamcci.numberbox.app.domain.vo.math.MathContentsOnlyVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
-import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadUseCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
+import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.dto.request.common.ValidPageRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
@@ -31,10 +31,10 @@ import java.util.*
 @RestController
 @RequestMapping("/math/content")
 class MathContentsReadController(
-    private val memberProfileReadUseCase: MemberProfileReadUseCase,
-    private val mathCategoryUnitReadUseCase: MathCategoryUnitReadUseCase,
-    private val mathContentsReadUseCase: MathContentsReadUseCase,
-    private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
+    private val memberProfileReadCase: MemberProfileReadCase,
+    private val mathCategoryUnitReadCase: MathCategoryUnitReadCase,
+    private val mathContentsReadCase: MathContentsReadCase,
+    private val mathContentsRepoReadCase: MathContentsRepoReadCase,
     // 매퍼
     private val memberMapper: MemberMapper
 ) {
@@ -55,16 +55,16 @@ class MathContentsReadController(
         val res =
             when {
                 // 문제만 조회
-                contentsOnly != null && contentsOnly -> mathContentsReadUseCase.readContentsOnly(contentsId, memberId)
+                contentsOnly != null && contentsOnly -> mathContentsReadCase.readContentsOnly(contentsId, memberId)
 
                 // 자체제작 문제는 유사문제 정보
-                contentsClassify == InHouse -> mathContentsReadUseCase.readInHouseContentsById(contentsId)
+                contentsClassify == InHouse -> mathContentsReadCase.readInHouseContentsById(contentsId)
 
                 // 입시 문제는 입시 출처 정보
-                contentsClassify == Ipsi -> mathContentsReadUseCase.readIpsiContentsById(contentsId)
+                contentsClassify == Ipsi -> mathContentsReadCase.readIpsiContentsById(contentsId)
 
                 // 그외는 라이선스 정보
-                else -> mathContentsReadUseCase.readById(contentsId)
+                else -> mathContentsReadCase.readById(contentsId)
             } ?: throw BusinessValidException(NOT_EXIST_CONTENTS)
 
         // 나의 제작문제인지 판별
@@ -112,7 +112,7 @@ class MathContentsReadController(
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
+        val res = mathContentsReadCase.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
 
         return ResponseUtil.ok(mapOf("contents" to res))
     }
@@ -128,13 +128,13 @@ class MathContentsReadController(
     ): ResponseEntity<ResponseData<Any>> {
         // 프로필 조회
         val profile =
-            memberProfileReadUseCase.readByProfileId(profileId) ?: throw BusinessValidException(NOT_EXIST_MEMBER)
+            memberProfileReadCase.readByProfileId(profileId) ?: throw BusinessValidException(NOT_EXIST_MEMBER)
         val profileRes = memberMapper.toProfileResponse(profile)
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
         val res =
-            mathContentsReadUseCase.readDetailByMemberId(
+            mathContentsReadCase.readDetailByMemberId(
                 profile.memberId,
                 myMemberId,
                 ContentsSvcPosbSttsType.Release,
@@ -157,12 +157,12 @@ class MathContentsReadController(
         @Valid req: MathContentsSearchRequest
     ): ResponseEntity<ResponseData<Any>> {
         // 검색할 단원 id 추출
-        val unitInfoList = mathCategoryUnitReadUseCase.readAll()
+        val unitInfoList = mathCategoryUnitReadCase.readAll()
         val unitIdList: List<Int> = getUnitIdList(unitInfoList, req.searchType, req.unitId)
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.readDetailByUnitId(memberId, unitIdList, pageReq)
+        val res = mathContentsReadCase.readDetailByUnitId(memberId, unitIdList, pageReq)
 
         return ResponseUtil.ok(mapOf("contents" to res))
     }
@@ -174,11 +174,11 @@ class MathContentsReadController(
         @ModelAttribute @Valid req: ValidPageRequest
     ): ResponseEntity<ResponseData<Any>> {
         // 저장소에 등록된 문제 id 목록 조회
-        val contentsIdList = mathContentsRepoReadUseCase.readContentsIdByMemberId(memberId)
+        val contentsIdList = mathContentsRepoReadCase.readContentsIdByMemberId(memberId)
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
-        val res = mathContentsReadUseCase.readById(contentsIdList, pageReq)
+        val res = mathContentsReadCase.readById(contentsIdList, pageReq)
         return ResponseUtil.ok(mapOf("contents" to res))
     }
 

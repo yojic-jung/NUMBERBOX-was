@@ -10,7 +10,7 @@ import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberFindUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFindReadCase
 
 @UseCase
 class MemberFindService(
@@ -20,7 +20,7 @@ class MemberFindService(
     private val passwordEncoder: MemberPasswordEncoder,
     @Aliases("password")
     private val emailMessageTemplate: EmailMessageTemplate
-) : MemberFindUseCase {
+) : MemberFindReadCase {
 
     companion object {
         const val TMP_PASSWD_LENGTH = 40

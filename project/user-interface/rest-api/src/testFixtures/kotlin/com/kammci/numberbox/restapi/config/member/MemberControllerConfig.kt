@@ -9,38 +9,38 @@ import org.springframework.context.annotation.Bean
 @TestConfiguration
 class MemberControllerConfig {
     @Bean
-    fun memberFollowReadUseCase(): MemberFollowReadUseCase = mock()
+    fun memberFollowReadUseCase(): MemberFollowReadCase = mock()
 
     @Bean
-    fun memberFollowModifyUseCase(): MemberFollowWriteUseCase = mock()
+    fun memberFollowModifyUseCase(): MemberFollowWriteCase = mock()
 
     @Bean
-    fun memberFindUseCase(): MemberFindUseCase = mock()
+    fun memberFindUseCase(): MemberFindReadCase = mock()
 
     @Bean
-    fun memberLoginFailureUsecase(): MemberLoginFailureUsecase = mock()
+    fun memberLoginFailureUsecase(): MemberLoginFailureUseCase = mock()
 
     @Bean
-    fun memberModifyUseCase(): MemberWriteUseCase = mock()
+    fun memberModifyUseCase(): MemberWriteCase = mock()
 
     @Bean
     fun memberMapper(): MemberMapper = mock()
 
     @Bean
-    fun memberPrivateModifyUseCase(): MemberPrivateWriteUseCase = mock()
+    fun memberPrivateModifyUseCase(): MemberPrivateWriteCase = mock()
 
     @Bean
-    fun memberProfileReadUseCase(): MemberProfileReadUseCase = mock()
+    fun memberProfileReadUseCase(): MemberProfileReadCase = mock()
 
     @Bean
-    fun memberProfileModifyUseCase(): MemberProfileWriteUseCase = mock()
+    fun memberProfileModifyUseCase(): MemberProfileWriteCase = mock()
 
     @Bean
-    fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadUseCase = mock()
+    fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadCase = mock()
 
     @Bean
-    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeWriteUseCase = mock()
+    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeWriteCase = mock()
 
     @Bean
-    fun memberReadUseCase(): MemberReadUseCase = mock()
+    fun memberReadUseCase(): MemberReadCase = mock()
 }

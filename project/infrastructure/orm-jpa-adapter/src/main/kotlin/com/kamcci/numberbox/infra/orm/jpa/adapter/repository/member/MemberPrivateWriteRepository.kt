@@ -27,7 +27,7 @@ class MemberPrivateWriteRepository : MemberPrivateWriteOrmPort, BaseRepository()
             .execute() > 0
     }
 
-    override fun updatePrivateInfoToNull(memberId: UUID): Long {
+    override fun updatePrivateToNull(memberId: UUID): Long {
         return queryFactory
             .update(memberPrivateEntity)
             .set(memberPrivateEntity.userName, null as String?)

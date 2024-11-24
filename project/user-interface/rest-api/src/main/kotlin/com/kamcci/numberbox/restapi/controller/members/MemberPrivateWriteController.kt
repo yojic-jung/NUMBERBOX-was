@@ -5,8 +5,8 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPhoneUpdtRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -23,8 +23,8 @@ import java.util.*
 @RestController
 @RequestMapping("/member")
 class MemberPrivateWriteController(
-    private val memberPrivateWriteUseCase: MemberPrivateWriteUseCase,
-    private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
+    private val memberPrivateWriteCase: MemberPrivateWriteCase,
+    private val memberVerifyCodeReadCase: MemberVerifyCodeReadCase,
 ) {
     // 휴대폰 번호 변경
     @PutMapping("/phone")
@@ -36,11 +36,11 @@ class MemberPrivateWriteController(
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 인증코드 검증
         val codeDto = MemberVerifyCodeDto(email, req.verifyCode, VerifyCodeType.PhoneNumber)
-        memberVerifyCodeReadUseCase.validate(codeDto)
+        memberVerifyCodeReadCase.validate(codeDto)
 
         // 2. 휴대폰 번호 변경
         val updtDto = MemberPhoneUpdtDto(memberId, req.phoneNumber)
-        val isSuccess = memberPrivateWriteUseCase.updatePhoneNumber(updtDto)
+        val isSuccess = memberPrivateWriteCase.updatePhoneNumber(updtDto)
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 }

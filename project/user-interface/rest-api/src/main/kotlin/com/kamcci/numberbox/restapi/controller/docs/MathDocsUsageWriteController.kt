@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.docs
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsUsageCreateDto
-import com.kamcci.numberbox.app.usecase.docs.MathDocsUsageWriteUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsUsageWriteCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
@@ -17,7 +17,7 @@ import java.util.*
 @RestController
 @RequestMapping("/math/docs/usage")
 class MathDocsUsageWriteController(
-    private val mathDocsUsageWriteUseCase: MathDocsUsageWriteUseCase
+    private val mathDocsUsageWriteCase: MathDocsUsageWriteCase
 ) {
     @PostMapping
     fun create(
@@ -25,7 +25,7 @@ class MathDocsUsageWriteController(
         memberId: UUID,
         @RequestBody reqBody: MathDocsUsageCreateDto
     ): ResponseEntity<ResponseData<Any>> {
-        val docsUsageId = mathDocsUsageWriteUseCase.create(memberId, reqBody)
+        val docsUsageId = mathDocsUsageWriteCase.create(memberId, reqBody)
         return ResponseUtil.ok(mapOf("docsUsageId" to docsUsageId))
     }
 

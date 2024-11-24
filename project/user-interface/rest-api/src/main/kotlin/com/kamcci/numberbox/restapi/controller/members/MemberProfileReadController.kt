@@ -3,9 +3,9 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -22,9 +22,9 @@ import java.util.*
 @RestController
 @RequestMapping("/member/profile")
 class MemberProfileReadController(
-    private val memberProfileReadUseCase: MemberProfileReadUseCase,
-    private val memberProfileWriteUseCase: MemberProfileWriteUseCase,
-    private val memberFollowReadUseCase: MemberFollowReadUseCase,
+    private val memberProfileReadCase: MemberProfileReadCase,
+    private val memberProfileWriteCase: MemberProfileWriteCase,
+    private val memberFollowReadCase: MemberFollowReadCase,
     private val memberMapper: MemberMapper,
     private val fileUseCase: FileUseCase,
 ) {
@@ -36,15 +36,15 @@ class MemberProfileReadController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
-        val myProfile = memberProfileReadUseCase.readByMemberId(memberId)
+        val myProfile = memberProfileReadCase.readByMemberId(memberId)
         val myProfileRs = memberMapper.toProfileResponse(myProfile)
 
         // 2. 팔로잉 프로필 조회
-        val followingProfile = memberProfileReadUseCase.readFollowingProfileByMemberId(memberId)
+        val followingProfile = memberProfileReadCase.readFollowingProfileByMemberId(memberId)
         val followingProfileRs = memberMapper.toProfileResponse(followingProfile)
 
         // 3. 팔로워 프로필 조회
-        val followerProfile = memberProfileReadUseCase.readFollowerProfileByMemberId(memberId)
+        val followerProfile = memberProfileReadCase.readFollowerProfileByMemberId(memberId)
         val followerProfileRs = memberMapper.toProfileResponse(followerProfile)
 
         return ResponseUtil.ok(
@@ -68,15 +68,15 @@ class MemberProfileReadController(
         @UserId memberId: UUID
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
-        val profile = memberProfileReadUseCase.readByProfileId(profileId)
+        val profile = memberProfileReadCase.readByProfileId(profileId)
 
         // 2. 팔로우 여부 조회
-        val myProfileId = memberProfileReadUseCase.readProfileIdByMemberId(memberId)
+        val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
-        val isMyFollower = memberFollowReadUseCase.isFollowing(profileId, myProfileId)
+        val isMyFollower = memberFollowReadCase.isFollowing(profileId, myProfileId)
 
         // 3. 팔로워 수 조회
-        val followerCount = memberFollowReadUseCase.countFollower(profileId)
+        val followerCount = memberFollowReadCase.countFollower(profileId)
         return ResponseUtil.ok(
             mapOf(
                 "profile" to profile,

@@ -4,15 +4,15 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteUseCase
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteCase
 
 @UseCase
 class MathContentsRepoWriteService(
     private val mathConRepoReadOrmPort: MathContentsRepoReadOrmPort,
     private val mathConRepoModifyOrmPort: MathContentsRepoWriteOrmPort
-) : MathContentsRepoWriteUseCase {
+) : MathContentsRepoWriteCase {
     companion object {
         // 예외 메시지
         const val ALREADY_EXIST = "이미 저장소 목록에 존재합니다."

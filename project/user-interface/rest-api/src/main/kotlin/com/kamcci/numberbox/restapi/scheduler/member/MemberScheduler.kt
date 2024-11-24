@@ -1,16 +1,16 @@
 package com.kamcci.numberbox.restapi.scheduler.member
 
-import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
 class MemberScheduler(
-    private val memberReadUseCase: MemberReadUseCase,
-    private val memberWriteUseCase: MemberWriteUseCase,
-    private val memberProfileWriteUseCase: MemberProfileWriteUseCase
+    private val memberReadCase: MemberReadCase,
+    private val memberWriteCase: MemberWriteCase,
+    private val memberProfileWriteCase: MemberProfileWriteCase
 ) {
     companion object {
         const val BATCH_SIZE = 500L
@@ -21,8 +21,8 @@ class MemberScheduler(
     fun tmpPasswordChange() {
         // 임시 비밀번호 발급시 메일로 06시에 초기화된다고 공지함
         while (true) {
-            val memberIds = memberReadUseCase.readByIsTmpPassword(true, BATCH_SIZE)
-            memberWriteUseCase.updateTmpPassword(memberIds)
+            val memberIds = memberReadCase.readByIsTmpPassword(true, BATCH_SIZE)
+            memberWriteCase.updateTmpPassword(memberIds)
 
             if (memberIds.size < BATCH_SIZE) break
         }
@@ -45,7 +45,7 @@ class MemberScheduler(
     // 일일 학습지 다운로드 횟수 초기화
     @Scheduled(cron = "00 00 00 * * *")
     fun initHwpDownCnt() {
-        memberProfileWriteUseCase.updateHwpDownCnt(0)
+        memberProfileWriteCase.updateHwpDownCnt(0)
     }
 
     // 만료된 리프레시 토큰 삭제

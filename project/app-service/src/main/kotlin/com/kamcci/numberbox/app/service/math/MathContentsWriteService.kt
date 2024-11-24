@@ -9,16 +9,16 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsWriteUseCase
+import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase
 import java.util.*
 
 @UseCase
 class MathContentsWriteService(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort,
     private val mathContentsWriteOrmPort: MathContentsWriteOrmPort,
-) : MathContentsWriteUseCase {
+) : MathContentsWriteCase {
     companion object {
         const val NOT_EXIST_CONTENTS = "해당 수학문제가 존재하지 않습니다."
     }

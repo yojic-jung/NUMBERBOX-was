@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.member.MemberReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
     }
 
     @Autowired
-    lateinit var memberReadUseCase: MemberReadUseCase
+    lateinit var memberReadCase: MemberReadCase
 
     @Test
     fun `회원가입 목적 인증 코드 생성 요청 - 성공`() {
@@ -41,7 +41,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
             "email" to EMAIL,
             "codeType" to VerifyCodeType.SignUp
         )
-        `when`(memberReadUseCase.existEmail(any())).thenReturn(false)
+        `when`(memberReadCase.existEmail(any())).thenReturn(false)
 
         //when
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
@@ -57,7 +57,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
             "email" to EMAIL,
             "codeType" to VerifyCodeType.SignUp
         )
-        `when`(memberReadUseCase.existEmail(any())).thenReturn(true)
+        `when`(memberReadCase.existEmail(any())).thenReturn(true)
 
         //when
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)

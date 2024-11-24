@@ -10,7 +10,7 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
-import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteUseCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteCase
 import java.util.*
 
 @UseCase
@@ -18,7 +18,7 @@ class MathResourceWriteService(
     private val mathResourceReadOrmPort: MathResourceReadOrmPort,
     private val mathResourceWriteOrmPort: MathResourceWriteOrmPort,
     private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
-) : MathResourceWriteUseCase {
+) : MathResourceWriteCase {
     companion object {
         const val NOT_MY_CONTENTS = "존재하지 않거나 자신의 컨텐츠가 아닙니다."
     }

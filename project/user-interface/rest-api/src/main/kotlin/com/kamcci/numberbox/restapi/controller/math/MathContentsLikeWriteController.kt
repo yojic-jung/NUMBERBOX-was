@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -17,7 +17,7 @@ import java.util.*
 @RestController
 @RequestMapping("/math/like/content")
 class MathContentsLikeWriteController(
-    private val mathConLikeModifyUseCase: MathContentsLikeWriteUseCase,
+    private val mathConLikeModifyUseCase: MathContentsLikeWriteCase,
 ) {
     // 문제 좋아요
     @PostMapping("")

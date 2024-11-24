@@ -6,13 +6,13 @@ import com.kamcci.numberbox.app.domain.vo.resource.MathResourceDetailVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceFileVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceVo
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
-import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
+import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import java.util.*
 
 @UseCase
 class MathResourceReadService(
     private val mathResourceReadOrmPort: MathResourceReadOrmPort
-) : MathResourceReadUseCase {
+) : MathResourceReadCase {
     override fun readByMainCateId(mainCateId: Int, pageReq: PageRequest): List<MathResourceVo> =
         mathResourceReadOrmPort.readByMainCateId(mainCateId, pageReq)
 

@@ -6,14 +6,14 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.port.orm.member.MemberFollowReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import java.util.*
 
 @UseCase
 class MemberProfileReadService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
     private val memberFollowReadOrmPort: MemberFollowReadOrmPort
-) : MemberProfileReadUseCase {
+) : MemberProfileReadCase {
     override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return memberProfileReadOrmPort.readByMemberId(memberId)
     }

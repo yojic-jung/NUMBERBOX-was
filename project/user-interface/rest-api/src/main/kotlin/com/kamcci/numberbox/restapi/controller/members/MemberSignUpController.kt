@@ -4,10 +4,10 @@ import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.usecase.member.MemberReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteCase
+import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.EmailRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberSignupRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/public/member")
 class MemberSignUpController(
-    private val memberWriteUseCase: MemberWriteUseCase,
-    private val memberReadUseCase: MemberReadUseCase,
-    private val memberVerifyCodeWriteUseCase: MemberVerifyCodeWriteUseCase,
-    private val memberVerifyCodeReadUseCase: MemberVerifyCodeReadUseCase,
+    private val memberWriteCase: MemberWriteCase,
+    private val memberReadCase: MemberReadCase,
+    private val memberVerifyCodeWriteCase: MemberVerifyCodeWriteCase,
+    private val memberVerifyCodeReadCase: MemberVerifyCodeReadCase,
     private val tokenResponseService: TokenResponseService,
     private val memberMapper: MemberMapper,
 ) {
@@ -39,11 +39,11 @@ class MemberSignUpController(
         @RequestBody req: EmailRequest
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
         // 이메일 중복 체크
-        val isExist = memberReadUseCase.existEmail(req.email)
+        val isExist = memberReadCase.existEmail(req.email)
         if (isExist) throw BusinessValidException("해당 이메일이 이미 존재합니다.")
 
         // 인증 코드 생성
-        memberVerifyCodeWriteUseCase.createVerifyCode(req.email, req.codeType)
+        memberVerifyCodeWriteCase.createVerifyCode(req.email, req.codeType)
         return ResponseUtil.ok(mapOf("isSuccess" to true))
     }
 
@@ -59,10 +59,10 @@ class MemberSignUpController(
 
         // 1. 인증코드 검증
         val codeDto = MemberVerifyCodeDto(req.email, req.emailVerifyCode, VerifyCodeType.SignUp)
-        memberVerifyCodeReadUseCase.validate(codeDto)
+        memberVerifyCodeReadCase.validate(codeDto)
 
         // 2. 회원가입
-        val resultVo = memberWriteUseCase.signup(memberSignUpDto, memberPrivateSignupDto)
+        val resultVo = memberWriteCase.signup(memberSignUpDto, memberPrivateSignupDto)
 
         // 성공시 인증 토큰 반환
         tokenResponseService.responseAuthToken(resultVo.email, resultVo.uuid, resultVo.roles)

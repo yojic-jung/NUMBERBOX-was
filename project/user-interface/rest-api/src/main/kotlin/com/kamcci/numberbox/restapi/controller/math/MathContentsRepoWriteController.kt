@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -17,7 +17,7 @@ import java.util.*
 @RestController
 @RequestMapping("/math/repo/content")
 class MathContentsRepoWriteController(
-    private val mathConRepoModifyUseCase: MathContentsRepoWriteUseCase,
+    private val mathConRepoModifyUseCase: MathContentsRepoWriteCase,
 ) {
     // 저장소에 문제 저장
     @PostMapping("")

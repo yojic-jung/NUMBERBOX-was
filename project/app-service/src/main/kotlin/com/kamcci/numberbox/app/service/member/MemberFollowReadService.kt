@@ -2,12 +2,12 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberFollowReadOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 
 @UseCase
 class MemberFollowReadService(
     private val memberFollowReadOrmPort: MemberFollowReadOrmPort
-) : MemberFollowReadUseCase {
+) : MemberFollowReadCase {
     override fun readFollowingByFollower(profileId: Long): List<Long> =
         memberFollowReadOrmPort.readFollowingByFollower(profileId)
 

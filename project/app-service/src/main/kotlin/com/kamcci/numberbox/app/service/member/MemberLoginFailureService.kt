@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
+import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import java.time.LocalDateTime
 
 @UseCase
@@ -14,7 +14,7 @@ class MemberLoginFailureService(
     private val memberReadOrmPort: MemberReadOrmPort,
     private val memberModifyOrmPort: MemberModifyOrmPort,
     private val membersRoleModifyRepository: MemberRoleWriteOrmPort
-) : MemberLoginFailureUsecase {
+) : MemberLoginFailureUseCase {
     companion object {
         // 계정 비활성화 실패 카운트 기준
         const val DISABLE_COUNT = 4

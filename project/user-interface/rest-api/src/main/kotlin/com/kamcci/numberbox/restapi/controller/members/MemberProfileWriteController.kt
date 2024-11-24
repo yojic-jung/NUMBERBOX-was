@@ -4,9 +4,9 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
@@ -24,9 +24,9 @@ import java.util.*
 @RestController
 @RequestMapping("/member/profile")
 class MemberProfileWriteController(
-    private val memberProfileReadUseCase: MemberProfileReadUseCase,
-    private val memberProfileWriteUseCase: MemberProfileWriteUseCase,
-    private val memberFollowReadUseCase: MemberFollowReadUseCase,
+    private val memberProfileReadCase: MemberProfileReadCase,
+    private val memberProfileWriteCase: MemberProfileWriteCase,
+    private val memberFollowReadCase: MemberFollowReadCase,
     private val memberMapper: MemberMapper,
     private val fileUseCase: FileUseCase,
 ) {
@@ -39,7 +39,7 @@ class MemberProfileWriteController(
         @RequestBody @Valid
         profileImgReq: ProfileTypeUpdtRequest
     ): ResponseEntity<ResponseData<String>> {
-        memberProfileWriteUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
+        memberProfileWriteCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
         return ResponseUtil.ok()
     }
 
@@ -58,7 +58,7 @@ class MemberProfileWriteController(
         val updateDto = MemberProfileImgUpdtDto(memberId, fileNameVo.path, fileNameVo.name)
 
         //  프로필 저장
-        memberProfileWriteUseCase.updateImgByMemberId(updateDto)
+        memberProfileWriteCase.updateImgByMemberId(updateDto)
         return ResponseUtil.ok(mapOf("fileNameVo" to fileNameVo))
     }
 
@@ -71,7 +71,7 @@ class MemberProfileWriteController(
         @RequestBody @Valid
         profileNicknameReq: ProfileNicknameUpdtRequest
     ): ResponseEntity<ResponseData<String>> {
-        memberProfileWriteUseCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
+        memberProfileWriteCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
         return ResponseUtil.ok()
     }
 

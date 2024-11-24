@@ -4,13 +4,13 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsPaperVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperReadOrmPort
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
 import java.util.*
 
 @UseCase
 class MathDocsPaperReadService(
     private val mathDocsPaperReadOrmPort: MathDocsPaperReadOrmPort
-) : MathDocsPaperReadUseCase {
+) : MathDocsPaperReadCase {
     override fun readByIdAndMemberId(id: Long, memberId: UUID): MathDocsPaperVo? =
         mathDocsPaperReadOrmPort.readByIdAndMemberId(id, memberId)
 

@@ -4,7 +4,7 @@ import com.kamcci.modules.auth.control.exception.BadAuthRequestException
 import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
-import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
+import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import com.kamcci.numberbox.restapi.util.response.ResponseErrMsg
 import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kammci.numberbox.restapi.common.BaseMockMvcTest
@@ -22,7 +22,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
     lateinit var loginFailureController: LoginFailureController
 
     @Autowired
-    lateinit var memberLoginFailureUsecase: MemberLoginFailureUsecase
+    lateinit var memberLoginFailureUsecase: MemberLoginFailureUseCase
 
     @Test
     fun `로그인 실패 콜백 - 요청 형식 오류`() {

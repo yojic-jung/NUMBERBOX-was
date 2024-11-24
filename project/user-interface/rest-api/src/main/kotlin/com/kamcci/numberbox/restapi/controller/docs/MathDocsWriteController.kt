@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.docs
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperCreateDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperUpdtDto
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteUseCase
+import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping("/math/docs")
 class MathDocsWriteController(
-    private val mathDocsPaperWriteUseCase: MathDocsPaperWriteUseCase
+    private val mathDocsPaperWriteCase: MathDocsPaperWriteCase
 ) {
     @PostMapping
     fun create(
@@ -23,7 +23,7 @@ class MathDocsWriteController(
         memberId: UUID,
         @RequestBody reqBody: MathDocsPaperCreateDto
     ): ResponseEntity<ResponseData<Any>> {
-        return ResponseUtil.ok(mapOf("docsId" to mathDocsPaperWriteUseCase.create(memberId, reqBody)))
+        return ResponseUtil.ok(mapOf("docsId" to mathDocsPaperWriteCase.create(memberId, reqBody)))
     }
 
     @PutMapping
@@ -32,7 +32,7 @@ class MathDocsWriteController(
         memberId: UUID,
         @RequestBody reqBody: MathDocsPaperUpdtDto
     ): ResponseEntity<ResponseData<String>> {
-        mathDocsPaperWriteUseCase.update(memberId, reqBody)
+        mathDocsPaperWriteCase.update(memberId, reqBody)
         return ResponseUtil.ok()
     }
 
@@ -44,7 +44,7 @@ class MathDocsWriteController(
         @PathVariable
         docsId: Long
     ): ResponseEntity<ResponseData<String>> {
-        mathDocsPaperWriteUseCase.delete(docsId, memberId)
+        mathDocsPaperWriteCase.delete(docsId, memberId)
         return ResponseUtil.ok()
     }
 }

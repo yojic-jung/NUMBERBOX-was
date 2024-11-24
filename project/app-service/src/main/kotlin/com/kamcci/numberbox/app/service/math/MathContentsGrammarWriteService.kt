@@ -3,12 +3,12 @@ package com.kamcci.numberbox.app.service.math
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsGrammarWriteOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteCase
 
 @UseCase
 class MathContentsGrammarWriteService(
     private val mathConGrammarModifyOrmPort: MathContentsGrammarWriteOrmPort
-) : MathContentsGrammarWriteUseCase {
+) : MathContentsGrammarWriteCase {
 
     @TXExecute
     override fun createGrammar(contentsId: Long, grammar: String) {
