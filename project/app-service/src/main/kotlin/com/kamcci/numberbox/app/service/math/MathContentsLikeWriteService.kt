@@ -4,14 +4,14 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteUseCase
 
 @UseCase
 class MathContentsLikeWriteService(
     private val mathConLikeReadOrmPort: MathContentsLikeReadOrmPort,
-    private val mathConLikeModifyPort: MathContentsLikeModifyOrmPort
+    private val mathConLikeModifyPort: MathContentsLikeWriteOrmPort
 ) : MathContentsLikeWriteUseCase {
     companion object {
         // 예외 메시지

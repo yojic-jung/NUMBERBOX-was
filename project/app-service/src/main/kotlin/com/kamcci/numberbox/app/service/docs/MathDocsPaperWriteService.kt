@@ -5,13 +5,13 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperUpdtDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperWriteOrmPort
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteUseCase
 import java.util.*
 
 @UseCase
 class MathDocsPaperWriteService(
-    private val mathDocsPaperModifyOrmPort: MathDocsPaperModifyOrmPort
+    private val mathDocsPaperWriteOrmPort: MathDocsPaperWriteOrmPort
 ) : MathDocsPaperWriteUseCase {
     companion object {
         const val NOT_MY_DOCS = "자신이 제작한 학습지가 아닙니다."
@@ -19,18 +19,18 @@ class MathDocsPaperWriteService(
 
     @TXExecute
     override fun create(memberId: UUID, createDto: MathDocsPaperCreateDto): Long =
-        mathDocsPaperModifyOrmPort.create(memberId, createDto)
+        mathDocsPaperWriteOrmPort.create(memberId, createDto)
 
     @TXExecute
     override fun update(memberId: UUID, updtDto: MathDocsPaperUpdtDto) {
-        if (mathDocsPaperModifyOrmPort.update(memberId, updtDto) == 0L) {
+        if (mathDocsPaperWriteOrmPort.update(memberId, updtDto) == 0L) {
             throw BusinessValidException(NOT_MY_DOCS)
         }
     }
 
     @TXExecute
     override fun delete(docsId: Long, memberId: UUID) {
-        if (mathDocsPaperModifyOrmPort.delete(docsId, memberId) == 0L) {
+        if (mathDocsPaperWriteOrmPort.delete(docsId, memberId) == 0L) {
             throw BusinessValidException(NOT_MY_DOCS)
         }
     }

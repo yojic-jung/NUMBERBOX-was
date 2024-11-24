@@ -6,7 +6,7 @@ import java.util.*
 /**
  * 학습지 제작 기능 사용량 - 변경
  */
-interface MathDocsUsageModifyOrmPort {
+interface MathDocsUsageWriteOrmPort {
     // 학습지 제작 기능 사용 생성
     fun create(memberId: UUID, createDto: MathDocsUsageCreateDto): Long
 

@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
 /**
  * 문제 저장소 - 변경
  */
-interface MathContentsRepoModifyOrmPort {
+interface MathContentsRepoWriteOrmPort {
     // 저장소에 저장
     fun save(modifyDto: MathContentsRepoModifyDto): Boolean
 

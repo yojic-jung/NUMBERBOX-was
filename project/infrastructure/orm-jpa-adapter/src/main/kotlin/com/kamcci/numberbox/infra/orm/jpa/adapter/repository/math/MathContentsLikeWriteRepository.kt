@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsLikeDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsLikeEntity
@@ -9,7 +9,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsLikeE
 import org.springframework.stereotype.Repository
 
 @Repository
-class MathContentsLikeModifyRepository : MathContentsLikeModifyOrmPort, BaseRepository() {
+class MathContentsLikeWriteRepository : MathContentsLikeWriteOrmPort, BaseRepository() {
     override fun save(modifyDto: MathContentsLikeModifyDto): Boolean {
         val entity = MathContentsLikeEntity().apply {
             id = MathContentsLikeDomain(modifyDto.contentsId, modifyDto.memberId)

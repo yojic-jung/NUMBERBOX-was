@@ -8,7 +8,7 @@ import java.util.*
 /**
  * 학습지 정보 변경
  */
-interface MathDocsPaperModifyOrmPort {
+interface MathDocsPaperWriteOrmPort {
     // 학습지 정보 생성
     fun create(memberId: UUID, createDto: MathDocsPaperCreateDto): Long
 

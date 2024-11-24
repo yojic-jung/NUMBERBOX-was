@@ -9,7 +9,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteUseCase
 import java.util.*
@@ -17,7 +17,7 @@ import java.util.*
 @UseCase
 class MathContentsWriteService(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort,
-    private val mathContentsModifyOrmPort: MathContentsModifyOrmPort,
+    private val mathContentsWriteOrmPort: MathContentsWriteOrmPort,
 ) : MathContentsWriteUseCase {
     companion object {
         const val NOT_EXIST_CONTENTS = "해당 수학문제가 존재하지 않습니다."
@@ -30,7 +30,7 @@ class MathContentsWriteService(
         licenseCreateDto: MathConLicenseModifyDto
     ): Long {
         // 수학문제 저장 및 저작권(사용자 수학문제는 즉시 출시)
-        return mathContentsModifyOrmPort.saveWithLicense(Release, contentsModifyDto, licenseCreateDto)
+        return mathContentsWriteOrmPort.saveWithLicense(Release, contentsModifyDto, licenseCreateDto)
     }
 
     // 자체 수학문제 등록
@@ -40,7 +40,7 @@ class MathContentsWriteService(
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
         // 수학문제 및 유사문제 출처 저장(자체제작 문제는 검수 진행하므로 미출시)
-        val contentsId = mathContentsModifyOrmPort.saveWithSimilarSrc(NotRelease, contentsModifyDto, similarSrcDto)
+        val contentsId = mathContentsWriteOrmPort.saveWithSimilarSrc(NotRelease, contentsModifyDto, similarSrcDto)
         return contentsId
     }
 
@@ -52,11 +52,11 @@ class MathContentsWriteService(
 
         // 수학문제 저장
         val contentsId =
-            mathContentsModifyOrmPort.saveTransContents(orgContentsId, Release, contentsModifyDto)
+            mathContentsWriteOrmPort.saveTransContents(orgContentsId, Release, contentsModifyDto)
 
         // 원본문제의 변형문제수 +1
         val transConCnt = mathContentsReadOrmPort.readTransContCntById(orgContentsId)!!
-        mathContentsModifyOrmPort.updateTransConCntById(orgContentsId, transConCnt + 1)
+        mathContentsWriteOrmPort.updateTransConCntById(orgContentsId, transConCnt + 1)
         return contentsId
     }
 
@@ -67,7 +67,7 @@ class MathContentsWriteService(
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
         // 수학문제 및 입시 출처 정보 저장(입시 문제는 즉시 출시)
-        val contentsId = mathContentsModifyOrmPort.saveWithIpsiSrc(Release, contentsModifyDto, ipsiSrcCreateDto)
+        val contentsId = mathContentsWriteOrmPort.saveWithIpsiSrc(Release, contentsModifyDto, ipsiSrcCreateDto)
         return contentsId
     }
 
@@ -78,7 +78,7 @@ class MathContentsWriteService(
         licenseCreateDto: MathConLicenseModifyDto
     ): Boolean {
         // 수학문제 저장 및 저작권(사용자 수학문제는 즉시 출시)
-        return mathContentsModifyOrmPort.updateWithLicense(contentsId, Release, contentsModifyDto, licenseCreateDto) > 0
+        return mathContentsWriteOrmPort.updateWithLicense(contentsId, Release, contentsModifyDto, licenseCreateDto) > 0
     }
 
     @TXExecute
@@ -88,7 +88,7 @@ class MathContentsWriteService(
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Boolean {
         // 수학문제 및 유사문제 출처 저장(자체제작 문제는 검수 진행하므로 미출시)
-        return mathContentsModifyOrmPort.updateWithSimilarSrc(contentsId, Release, contentsModifyDto, similarSrcDto) > 0
+        return mathContentsWriteOrmPort.updateWithSimilarSrc(contentsId, Release, contentsModifyDto, similarSrcDto) > 0
     }
 
     @TXExecute
@@ -98,7 +98,7 @@ class MathContentsWriteService(
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Boolean {
         // 수학문제 및 입시 출처 정보 저장(입시 문제는 즉시 출시)
-        return mathContentsModifyOrmPort.updateWithIpsiSrc(contentsId, Release, contentsModifyDto, ipsiSrcCreateDto) > 0
+        return mathContentsWriteOrmPort.updateWithIpsiSrc(contentsId, Release, contentsModifyDto, ipsiSrcCreateDto) > 0
     }
 
     @TXExecute
@@ -107,12 +107,12 @@ class MathContentsWriteService(
         contentsModifyDto: MathContentsModifyDto
     ): Boolean {
         // 수학문제 저장
-        return mathContentsModifyOrmPort.updateTransContents(contentsId, Release, contentsModifyDto) > 0
+        return mathContentsWriteOrmPort.updateTransContents(contentsId, Release, contentsModifyDto) > 0
     }
 
     @TXExecute
     override fun delete(contentsId: Long, memberId: UUID) {
         // 수학문제 출시 상태 미출시로 변경
-        mathContentsModifyOrmPort.updateSvcPosbStts(contentsId, memberId, NotRelease)
+        mathContentsWriteOrmPort.updateSvcPosbStts(contentsId, memberId, NotRelease)
     }
 }

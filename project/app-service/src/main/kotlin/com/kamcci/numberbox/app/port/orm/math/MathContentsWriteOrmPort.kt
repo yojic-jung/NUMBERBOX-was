@@ -10,7 +10,7 @@ import java.util.*
 /**
  * 수학문제 - 변경
  */
-interface MathContentsModifyOrmPort {
+interface MathContentsWriteOrmPort {
     /**
      * 수학문제 및 저작권 저장
      * @param   svcPosbSttsType     출시 타입

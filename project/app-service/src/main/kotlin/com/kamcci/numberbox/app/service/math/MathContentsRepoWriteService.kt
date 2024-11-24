@@ -4,14 +4,14 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteUseCase
 
 @UseCase
 class MathContentsRepoWriteService(
     private val mathConRepoReadOrmPort: MathContentsRepoReadOrmPort,
-    private val mathConRepoModifyOrmPort: MathContentsRepoModifyOrmPort
+    private val mathConRepoModifyOrmPort: MathContentsRepoWriteOrmPort
 ) : MathContentsRepoWriteUseCase {
     companion object {
         // 예외 메시지

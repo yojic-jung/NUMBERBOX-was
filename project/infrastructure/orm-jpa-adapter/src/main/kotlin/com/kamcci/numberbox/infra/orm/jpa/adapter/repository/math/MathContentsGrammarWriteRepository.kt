@@ -1,12 +1,12 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
-import com.kamcci.numberbox.app.port.orm.math.MathContentsGrammarModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsGrammarWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsGrammarEntity
 import org.springframework.stereotype.Repository
 
 @Repository
-class MathContentsGrammarModifyRepository : MathContentsGrammarModifyOrmPort, BaseRepository() {
+class MathContentsGrammarWriteRepository : MathContentsGrammarWriteOrmPort, BaseRepository() {
 
     override fun createGrammar(contentsId: Long, grammar: String) {
         val existEntity = em.find(MathContentsGrammarEntity::class.java, contentsId)

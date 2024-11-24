@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
-import com.kamcci.numberbox.app.port.orm.math.MathContentsModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsEntity.mathContentsEntity
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MathContentsModifyRepository : MathContentsModifyOrmPort, BaseRepository() {
+class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
     override fun saveWithLicense(
         svcPosbSttsType: ContentsSvcPosbSttsType,
         contentsModifyDto: MathContentsModifyDto,
