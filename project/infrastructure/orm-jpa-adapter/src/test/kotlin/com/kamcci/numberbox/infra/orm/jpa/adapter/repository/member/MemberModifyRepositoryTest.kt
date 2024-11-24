@@ -4,7 +4,9 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
+import org.hibernate.exception.ConstraintViolationException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -17,6 +19,35 @@ class MemberModifyRepositoryTest(
     @Autowired
     private val memberModifyRepository: MemberModifyRepository
 ) {
+
+    @Test
+    fun `멤버 영속화 성공 - 성공`() {
+        // given
+        val email = "nonExsit@test123.com"
+        val password = "testPW"
+
+        // when
+        val memberId = memberModifyRepository.save(email, password)
+        em.flush()
+
+        // then
+        assertThat(memberId).isNotNull
+    }
+
+    @Test
+    fun `중복 이메일 멤버 영속화 - 실패`() {
+        // given
+        val duplicateEmail = "test@test.com"
+        val password = "testPW"
+
+        // when
+        assertThrows<ConstraintViolationException> {
+            memberModifyRepository.save(duplicateEmail, password)
+            em.flush()
+        }
+
+    }
+
     @Test
     fun `멤버 id로 비밀번호 변경 - 성공`() {
         // given

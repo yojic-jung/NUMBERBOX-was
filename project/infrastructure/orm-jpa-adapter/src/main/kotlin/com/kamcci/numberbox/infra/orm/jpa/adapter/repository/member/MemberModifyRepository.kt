@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -9,6 +10,15 @@ import java.util.*
 
 @Repository
 class MemberModifyRepository : MemberModifyOrmPort, BaseRepository() {
+    override fun save(email: String, password: String): UUID {
+        val memberEntity = MemberEntity().apply {
+            this.email = email
+            this.password = password
+        }
+        em.persist(memberEntity)
+        return memberEntity.id!!
+    }
+
     override fun updatePassword(memberId: UUID, password: String): Boolean {
         return queryFactory
             .update(memberEntity)

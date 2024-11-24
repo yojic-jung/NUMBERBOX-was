@@ -2,7 +2,6 @@ package com.kamcci.numberbox.restapi.config.member
 
 import com.kamcci.numberbox.app.usecase.member.*
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
-import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -40,7 +39,7 @@ class MemberControllerConfig {
     fun memberVerifyCodeReadUseCase(): MemberVerifyCodeReadUseCase = mock()
 
     @Bean
-    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeSaveUseCase = mock()
+    fun memberVerifyCodeSaveUseCase(): MemberVerifyCodeModifyUseCase = mock()
 
     @Bean
     fun memberReadUseCase(): MemberReadUseCase = mock()

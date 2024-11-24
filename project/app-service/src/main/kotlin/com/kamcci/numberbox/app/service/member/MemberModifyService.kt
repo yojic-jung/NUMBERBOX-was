@@ -20,7 +20,6 @@ class MemberModifyService(
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
     // 회원가입 영속화 repository
-    private val memberSaveRepo: MemberSaveOrmPort,
     private val roleSaveRepo: MemberRoleSaveOrmPort,
     private val roleReadRepo: MemberRoleReadOrmPort,
     private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort,
@@ -54,7 +53,7 @@ class MemberModifyService(
         // [회원가입 진행]
         // 1. 계정 가입
         val encodedPassword = memberPasswordEncoder.encode(signUpDto.password)
-        val id = memberSaveRepo.save(signUpDto.email, encodedPassword)
+        val id = memberModifyOrmPort.save(signUpDto.email, encodedPassword)
 
         // 2. 프로필 설정
         val nickName = makeNickname()

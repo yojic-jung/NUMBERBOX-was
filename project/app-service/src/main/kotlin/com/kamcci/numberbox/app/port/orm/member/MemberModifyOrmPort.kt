@@ -7,6 +7,12 @@ import java.util.*
  * 회원 변경
  */
 interface MemberModifyOrmPort {
+
+    /**
+     * 회원 등록
+     */
+    fun save(email: String, password: String): UUID
+
     /**
      * 비밀번호 변경
      */

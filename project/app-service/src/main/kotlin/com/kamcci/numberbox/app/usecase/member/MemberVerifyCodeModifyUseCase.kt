@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 /**
  * 인증 코드 생성
  */
-interface MemberVerifyCodeSaveUseCase {
+interface MemberVerifyCodeModifyUseCase {
     /**
      * 회원 인증 코드 생성
      *
