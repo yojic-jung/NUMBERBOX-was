@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MemberProfileModifyRepositoryTest(
+class MemberProfileWriteRepositoryTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired

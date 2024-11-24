@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MemberVerifyCodeSaveRepositoryTest(
+class MemberVerifyCodeWriteRepositoryTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired

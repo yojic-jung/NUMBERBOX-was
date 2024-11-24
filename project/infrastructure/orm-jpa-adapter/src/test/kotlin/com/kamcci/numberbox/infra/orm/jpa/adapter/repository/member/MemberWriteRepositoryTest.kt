@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 @TcDBJpaTest
-class MemberModifyRepositoryTest(
+class MemberWriteRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MemberRoleModifyRepositoryTest(
+class MemberRoleWriteRepositoryTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired

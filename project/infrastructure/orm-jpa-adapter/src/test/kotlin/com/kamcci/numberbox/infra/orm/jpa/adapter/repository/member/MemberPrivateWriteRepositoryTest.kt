@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MemberPrivateModifyRepositoryTest(
+class MemberPrivateWriteRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired

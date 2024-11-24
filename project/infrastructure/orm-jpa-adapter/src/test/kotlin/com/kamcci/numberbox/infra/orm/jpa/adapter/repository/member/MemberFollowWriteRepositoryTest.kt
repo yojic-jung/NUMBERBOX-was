@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MemberFollowModifyRepositoryTest(
+class MemberFollowWriteRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired
