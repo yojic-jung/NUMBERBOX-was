@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
-import com.kamcci.numberbox.app.port.orm.member.MemberPrivateModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberPrivateWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberPrivateEntity
 import jakarta.persistence.EntityManager
@@ -19,7 +19,7 @@ class MemberPrivateModifyRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired
-    private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort
+    private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort
 ) {
     private lateinit var privateSignUpDto: MemberPrivateSignUpDto
 
@@ -34,7 +34,7 @@ class MemberPrivateModifyRepositoryTest(
         val memberId = UUID.fromString("10ca3122-cda8-ea4d-9bc7-037cb86fdb20")
 
         // when
-        val savedMemberId = memberPrivateModifyOrmPort.save(memberId, privateSignUpDto)
+        val savedMemberId = memberPrivateWriteOrmPort.save(memberId, privateSignUpDto)
         em.flush()
         em.clear()
 
@@ -53,7 +53,7 @@ class MemberPrivateModifyRepositoryTest(
 
         // when
         assertThrows<ConstraintViolationException> {
-            memberPrivateModifyOrmPort.save(memberId, privateSignUpDto)
+            memberPrivateWriteOrmPort.save(memberId, privateSignUpDto)
             em.flush()
         }
     }
@@ -65,7 +65,7 @@ class MemberPrivateModifyRepositoryTest(
         val phoneUpdtDto = MemberPhoneUpdtDto(memberId, "01098769876")
 
         // when
-        memberPrivateModifyOrmPort.updatePhoneNumber(phoneUpdtDto)
+        memberPrivateWriteOrmPort.updatePhoneNumber(phoneUpdtDto)
         em.flush()
         em.clear()
 

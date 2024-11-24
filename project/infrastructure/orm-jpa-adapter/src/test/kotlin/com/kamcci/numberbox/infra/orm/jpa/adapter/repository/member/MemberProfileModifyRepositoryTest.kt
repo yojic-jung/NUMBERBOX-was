@@ -16,7 +16,7 @@ class MemberProfileModifyRepositoryTest(
     @Autowired
     private val entityManager: EntityManager,
     @Autowired
-    private val memberProfileModifyRepository: MemberProfileModifyRepository
+    private val memberProfileModifyRepository: MemberProfileWriteRepository
 ) {
 
     @Test

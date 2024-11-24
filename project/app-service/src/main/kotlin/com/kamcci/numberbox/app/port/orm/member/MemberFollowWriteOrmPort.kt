@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.port.orm.member
 /**
  * 팔로잉 및 팔로워 조회
  */
-interface MemberFollowModifyOrmPort {
+interface MemberFollowWriteOrmPort {
     // 팔로잉
     fun save(followingId: Long, followerId: Long): Boolean
 

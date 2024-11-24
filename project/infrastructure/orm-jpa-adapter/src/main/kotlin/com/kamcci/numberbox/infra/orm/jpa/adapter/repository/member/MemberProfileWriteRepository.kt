@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
-import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberProfileFactory
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MemberProfileModifyRepository : MemberProfileModifyOrmPort, BaseRepository() {
+class MemberProfileWriteRepository : MemberProfileWriteOrmPort, BaseRepository() {
 
     override fun save(uuid: UUID, nickName: String): Long {
         val memberProfileEntity = MemberProfileFactory.getSaveEntity(uuid, nickName)

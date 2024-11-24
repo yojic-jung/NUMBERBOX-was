@@ -13,7 +13,7 @@ class MemberFollowModifyRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired
-    private val memberFollowModifyRepository: MemberFollowModifyRepository
+    private val memberFollowModifyRepository: MemberFollowWriteRepository
 ) {
     @Test
     fun `팔로우 영속화`() {

@@ -20,11 +20,11 @@ class MemberWriteService(
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
     // 회원가입 영속화 repository
-    private val roleSaveRepo: MemberRoleSaveOrmPort,
+    private val roleModifyRepo: MemberRoleWriteOrmPort,
     private val roleReadRepo: MemberRoleReadOrmPort,
-    private val memberPrivateModifyOrmPort: MemberPrivateModifyOrmPort,
-    private val profileModifyOrmPort: MemberProfileModifyOrmPort,
-    private val privateModifyRepo: MemberPrivateModifyOrmPort,
+    private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort,
+    private val profileModifyOrmPort: MemberProfileWriteOrmPort,
+    private val privateModifyRepo: MemberPrivateWriteOrmPort,
 ) : MemberWriteUseCase {
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
@@ -65,7 +65,7 @@ class MemberWriteService(
         }
 
         // 4. 권한 설정
-        roleSaveRepo.saveUserRole(id)
+        roleModifyRepo.saveUserRole(id)
         val roleList = roleReadRepo.readRoleByMemberId(id)
         return MemberSignUpResultVo(id, signUpDto.email, roleList)
     }

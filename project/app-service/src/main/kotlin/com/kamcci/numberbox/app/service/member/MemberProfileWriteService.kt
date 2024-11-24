@@ -6,8 +6,8 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.member.MemberProfileModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteUseCase
@@ -16,13 +16,13 @@ import java.util.*
 @UseCase
 class MemberProfileWriteService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
-    private val memberProfileModifyOrmPort: MemberProfileModifyOrmPort,
+    private val memberProfileWriteOrmPort: MemberProfileWriteOrmPort,
     private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
     private val fileUseCase: FileUseCase
 ) : MemberProfileWriteUseCase {
     @TXExecute
     override fun updateProfileTypeByMemberId(memberId: UUID, profileType: ProfileType) {
-        memberProfileModifyOrmPort.updateProfileTypeByMemberId(memberId, profileType)
+        memberProfileWriteOrmPort.updateProfileTypeByMemberId(memberId, profileType)
     }
 
     @TXExecute
@@ -31,7 +31,7 @@ class MemberProfileWriteService(
         val prevImgVo = memberProfileReadOrmPort.readProfileImgByMemberId(updateDto.memberId)
 
         // 2. 프로필 이미지 파일 정보 DB에 저장
-        memberProfileModifyOrmPort.updateImgByMemberId(updateDto)
+        memberProfileWriteOrmPort.updateImgByMemberId(updateDto)
 
         // 3. 삭제 대상 이미지 저장(추후 스케줄러를 통해 일괄 삭제됨)
         val filePath = prevImgVo?.profileImgPath
@@ -43,11 +43,11 @@ class MemberProfileWriteService(
 
     @TXExecute
     override fun updateNicknameByMemberId(memberId: UUID, nickname: String) {
-        memberProfileModifyOrmPort.updateNicknameByMemberId(memberId, nickname)
+        memberProfileWriteOrmPort.updateNicknameByMemberId(memberId, nickname)
     }
 
     @TXExecute
     override fun updateHwpDownCnt(hwpDownCnt: Int): Long {
-        return memberProfileModifyOrmPort.updateHwpDownCntByMemberId(hwpDownCnt)
+        return memberProfileWriteOrmPort.updateHwpDownCntByMemberId(hwpDownCnt)
     }
 }

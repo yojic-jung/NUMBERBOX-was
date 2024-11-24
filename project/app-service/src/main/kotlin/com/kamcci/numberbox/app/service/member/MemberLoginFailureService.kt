@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
-import com.kamcci.numberbox.app.port.orm.member.MemberRoleModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUsecase
 import java.time.LocalDateTime
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 class MemberLoginFailureService(
     private val memberReadOrmPort: MemberReadOrmPort,
     private val memberModifyOrmPort: MemberModifyOrmPort,
-    private val membersRoleModifyRepository: MemberRoleModifyOrmPort
+    private val membersRoleModifyRepository: MemberRoleWriteOrmPort
 ) : MemberLoginFailureUsecase {
     companion object {
         // 계정 비활성화 실패 카운트 기준

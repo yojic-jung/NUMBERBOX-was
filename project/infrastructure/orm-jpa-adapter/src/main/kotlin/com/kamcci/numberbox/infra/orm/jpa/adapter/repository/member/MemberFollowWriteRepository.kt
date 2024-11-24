@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.app.port.orm.member.MemberFollowModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberFollowWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.FollowUserDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberFollowEntity.memberFollowEntity
@@ -8,7 +8,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberFollowFac
 import org.springframework.stereotype.Repository
 
 @Repository
-class MemberFollowModifyRepository : MemberFollowModifyOrmPort, BaseRepository() {
+class MemberFollowWriteRepository : MemberFollowWriteOrmPort, BaseRepository() {
     override fun save(followingId: Long, followerId: Long): Boolean {
         val entity = MemberFollowFactory.getSaveEntity(followingId, followerId)
         em.persist(entity)

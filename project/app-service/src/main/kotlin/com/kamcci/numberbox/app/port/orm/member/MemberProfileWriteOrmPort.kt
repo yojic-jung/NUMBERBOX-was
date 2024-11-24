@@ -7,7 +7,7 @@ import java.util.*
 /**
  * 프로필 변경
  */
-interface MemberProfileModifyOrmPort {
+interface MemberProfileWriteOrmPort {
     // 프로필 등록
     fun save(uuid: UUID, nickName: String): Long
 
