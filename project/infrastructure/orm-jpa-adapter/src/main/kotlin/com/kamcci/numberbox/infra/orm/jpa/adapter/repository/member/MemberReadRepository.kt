@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberPrivateEntity.memberPrivateEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRoleEntity.memberRoleEntity
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -69,5 +70,17 @@ class MemberReadRepository : MemberReadOrmPort, BaseRepository() {
             .from(memberEntity)
             .limit(limit)
             .where(memberEntity.isTmpPassword.eq(isTrue))
+            .fetch()
+
+    override fun readUserIdByHumanStatus(humanStatus: Int): List<UUID> =
+        queryFactory
+            .select(memberEntity.id)
+            .from(memberEntity)
+            .leftJoin(memberRoleEntity)
+            .on(memberRoleEntity.member.id.eq(memberEntity.id))
+            .where(
+                memberEntity.humanStatus.eq(humanStatus),
+                memberRoleEntity.roleName.notIn("ADMIN", "USER", "TOP_TESTER")
+            )
             .fetch()
 }

@@ -3,16 +3,16 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import java.time.LocalDateTime
 
 @UseCase
 class MemberLoginFailureService(
     private val memberReadOrmPort: MemberReadOrmPort,
-    private val memberModifyOrmPort: MemberModifyOrmPort,
+    private val memberWriteOrmPort: MemberWriteOrmPort,
     private val membersRoleModifyRepository: MemberRoleWriteOrmPort
 ) : MemberLoginFailureUseCase {
     companion object {
@@ -35,7 +35,7 @@ class MemberLoginFailureService(
         }
 
         // 실패 카운트 +1
-        memberModifyOrmPort.updateFailCountById(id, failCount + 1)
+        memberWriteOrmPort.updateFailCountById(id, failCount + 1)
         return failCount >= DISABLE_COUNT
     }
 
@@ -50,10 +50,10 @@ class MemberLoginFailureService(
         // 비활성화 잠금 시간 지나면 enabled=true, failCount=0로 변경(로그인 시도 가능하도록)
         if (isAfterLockTime) {
             membersRoleModifyRepository.updateEnabledById(userId, true)
-            memberModifyOrmPort.updateFailCountById(userId, 0)
+            memberWriteOrmPort.updateFailCountById(userId, 0)
         } else {
             // 비활성화 잠금 시간이 지나지 않으면 마지막 실패 시간만 변경(지속적으로 실패시 계정 잠금시간을 늘리기 위하여)
-            memberModifyOrmPort.updateLastFailTimeById(userId, LocalDateTime.now())
+            memberWriteOrmPort.updateLastFailTimeById(userId, LocalDateTime.now())
         }
         return isAfterLockTime
     }

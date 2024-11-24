@@ -15,11 +15,12 @@ class MemberFollowWriteRepository : MemberFollowWriteOrmPort, BaseRepository() {
         return em.contains(entity)
     }
 
-    override fun delete(followingId: Long, followerId: Long): Boolean {
+    override fun delete(followingId: Long, followerId: Long): Long {
         val followDomain = FollowUserDomain(followingId, followerId)
         return queryFactory
             .delete(memberFollowEntity)
             .where(memberFollowEntity.id.eq(followDomain))
-            .execute() > 0
+            .execute()
     }
+
 }

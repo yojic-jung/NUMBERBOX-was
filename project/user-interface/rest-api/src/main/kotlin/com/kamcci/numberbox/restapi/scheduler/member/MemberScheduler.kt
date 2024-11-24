@@ -1,8 +1,10 @@
 package com.kamcci.numberbox.restapi.scheduler.member
 
+import com.kamcci.numberbox.app.usecase.member.MemberDropCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
@@ -10,11 +12,14 @@ import org.springframework.stereotype.Component
 class MemberScheduler(
     private val memberReadCase: MemberReadCase,
     private val memberWriteCase: MemberWriteCase,
-    private val memberProfileWriteCase: MemberProfileWriteCase
+    private val memberProfileWriteCase: MemberProfileWriteCase,
+    private val memberDropCase: MemberDropCase
 ) {
     companion object {
         const val BATCH_SIZE = 500L
     }
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     // 임시 비밀번호 발급자 새로운 비밀번호로 셋팅
     @Scheduled(cron = "00 00 06 * * *")
@@ -31,15 +36,15 @@ class MemberScheduler(
     // 탈퇴 요청 회원 탈퇴처리
     @Scheduled(cron = "00 10 06 * * *")
     fun dropMember() {
-        /**
-         * 1. 개인정보 삭제 처리
-         * 2. 휴먼 계정 처리
-         * 3. 제작 컨텐츠 비공개 처리
-         */
-
         // 회원 탈퇴 요청 대상자 조회(관리자, 매니저 제외)
-
-//        memberModifyUseCase.drop()
+        val dropReqIds = memberReadCase.readUserIdByHumanStatus(3)
+        dropReqIds.forEach { memberId ->
+            try {
+                memberDropCase.drop(memberId)
+            } catch (e: Exception) {
+                log.info("회원 탈퇴 실패 : $memberId, ${e.message}")
+            }
+        }
     }
 
     // 일일 학습지 다운로드 횟수 초기화

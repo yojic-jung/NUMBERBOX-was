@@ -16,4 +16,5 @@ interface MathResourceWriteOrmPort {
 
     // 삭제
     fun deleteByIdAndMemberId(id: Long, memberId: UUID): Long
+
 }

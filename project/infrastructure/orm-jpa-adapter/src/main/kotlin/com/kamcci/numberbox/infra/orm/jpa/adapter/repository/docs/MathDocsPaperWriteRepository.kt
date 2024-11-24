@@ -58,4 +58,12 @@ class MathDocsPaperWriteRepository : MathDocsPaperWriteOrmPort, BaseRepository()
             )
             .execute()
     }
+
+    override fun delete(memberId: UUID): Long {
+        return queryFactory
+            .update(mathDocsPaperEntity)
+            .set(mathDocsPaperEntity.sysDeleteDate, LocalDateTime.now())
+            .where(mathDocsPaperEntity.memberId.eq(memberId))
+            .execute()
+    }
 }

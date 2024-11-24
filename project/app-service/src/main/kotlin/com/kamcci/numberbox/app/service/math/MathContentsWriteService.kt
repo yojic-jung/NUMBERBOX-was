@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.NotRelease
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.Release
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
@@ -113,6 +114,12 @@ class MathContentsWriteService(
     @TXExecute
     override fun delete(contentsId: Long, memberId: UUID) {
         // 수학문제 출시 상태 미출시로 변경
-        mathContentsWriteOrmPort.updateSvcPosbStts(contentsId, memberId, NotRelease)
+        mathContentsWriteOrmPort.updateContentsClassifyType(contentsId, memberId, ContentsClassifyType.Deleted)
+    }
+
+    @TXExecute
+    override fun delete(memberId: UUID) {
+        // 수학문제 출시 상태 미출시로 변경
+        mathContentsWriteOrmPort.updateContentsClassifyType(memberId, ContentsClassifyType.Deleted)
     }
 }

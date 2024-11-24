@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import java.util.*
 
@@ -119,9 +120,14 @@ interface MathContentsWriteOrmPort {
     /**
      * 서비스 가능 상태 변경
      */
-    fun updateSvcPosbStts(
+    fun updateContentsClassifyType(
         contentsId: Long,
         memberId: UUID,
-        svcPosbSttsType: ContentsSvcPosbSttsType
+        contentsClassifyType: ContentsClassifyType
+    ): Boolean
+
+    fun updateContentsClassifyType(
+        memberId: UUID,
+        contentsClassifyType: ContentsClassifyType
     ): Boolean
 }

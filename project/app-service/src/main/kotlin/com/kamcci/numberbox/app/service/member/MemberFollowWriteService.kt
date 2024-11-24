@@ -16,6 +16,6 @@ class MemberFollowWriteService(
 
     @TXExecute
     override fun cancel(followingId: Long, followerId: Long): Boolean {
-        return memberFollowWriteOrmPort.delete(followingId, followerId)
+        return memberFollowWriteOrmPort.delete(followingId, followerId) > 0
     }
 }

@@ -6,12 +6,17 @@ import java.util.*
 /**
  * 회원 변경
  */
-interface MemberModifyOrmPort {
+interface MemberWriteOrmPort {
 
     /**
      * 회원 등록
      */
     fun save(email: String, password: String): UUID
+
+    /**
+     * 회원 탈퇴
+     */
+    fun drop(memberId: UUID): Long
 
     /**
      * 비밀번호 변경

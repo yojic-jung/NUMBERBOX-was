@@ -17,7 +17,7 @@ class MemberWriteRepositoryTest(
     @Autowired
     private val em: EntityManager,
     @Autowired
-    private val memberModifyRepository: MemberModifyRepository
+    private val memberModifyRepository: MemberWriteRepository
 ) {
 
     @Test

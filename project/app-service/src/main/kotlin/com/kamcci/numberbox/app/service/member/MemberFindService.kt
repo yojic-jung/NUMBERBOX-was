@@ -8,14 +8,14 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberFindReadCase
 
 @UseCase
 class MemberFindService(
     private val memberReadOrmPort: MemberReadOrmPort,
-    private val memberModifyOrmPort: MemberModifyOrmPort,
+    private val memberWriteOrmPort: MemberWriteOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     private val passwordEncoder: MemberPasswordEncoder,
     @Aliases("password")
@@ -40,7 +40,7 @@ class MemberFindService(
         // 임시 비밀번호로 변경
         val tmpPassword = makeTmpPassword()
         val encodedPassword = passwordEncoder.encode(tmpPassword)
-        memberModifyOrmPort.updatePassword(email, encodedPassword)
+        memberWriteOrmPort.updatePassword(email, encodedPassword)
 
         // 임시 비밀번호 메시지 전송
         val msgDto = EmailCodeMessageDto(email, tmpPassword)

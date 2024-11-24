@@ -13,6 +13,14 @@ import java.util.*
 class MemberProfileReadRepository(
     private val memberProfileExpression: MemberProfileExpression
 ) : MemberProfileReadOrmPort, BaseRepository() {
+    override fun readIdByMemberId(memberId: UUID): Long? {
+        return queryFactory
+            .select(memberProfileEntity.id)
+            .from(memberProfileEntity)
+            .where(memberProfileEntity.memberId.eq(memberId))
+            .fetchFirst()
+    }
+
     override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return queryFactory
             .select(memberProfileExpression.ceMemberProfileVo())

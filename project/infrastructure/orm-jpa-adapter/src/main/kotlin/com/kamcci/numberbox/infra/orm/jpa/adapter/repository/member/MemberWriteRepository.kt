@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Repository
-class MemberModifyRepository : MemberModifyOrmPort, BaseRepository() {
+class MemberWriteRepository : MemberWriteOrmPort, BaseRepository() {
     override fun save(email: String, password: String): UUID {
         val memberEntity = MemberEntity().apply {
             this.email = email
@@ -17,6 +17,15 @@ class MemberModifyRepository : MemberModifyOrmPort, BaseRepository() {
         }
         em.persist(memberEntity)
         return memberEntity.id!!
+    }
+
+    override fun drop(memberId: UUID): Long {
+        return queryFactory
+            .update(memberEntity)
+            .set(memberEntity.humanStatus, 3)
+            .set(memberEntity.sysUpdateTime, LocalDateTime.now())
+            .where(memberEntity.id.eq(memberId))
+            .execute()
     }
 
     override fun updatePassword(memberId: UUID, password: String): Boolean {

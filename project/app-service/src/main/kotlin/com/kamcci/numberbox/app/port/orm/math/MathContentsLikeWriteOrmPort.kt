@@ -11,4 +11,5 @@ interface MathContentsLikeWriteOrmPort {
 
     // 좋아요 목록에서 제거
     fun delete(modifyDto: MathContentsLikeModifyDto): Boolean
+
 }

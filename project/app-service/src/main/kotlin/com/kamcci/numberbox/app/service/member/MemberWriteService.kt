@@ -15,7 +15,7 @@ import java.util.*
 
 @UseCase
 class MemberWriteService(
-    private val memberModifyOrmPort: MemberModifyOrmPort,
+    private val memberWriteOrmPort: MemberWriteOrmPort,
     private val memberReadOrmPort: MemberReadOrmPort,
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
@@ -35,7 +35,7 @@ class MemberWriteService(
 
         // 비밀번호 변경
         val encodedPassword = memberPasswordEncoder.encode(updtDto.password)
-        return memberModifyOrmPort.updatePassword(updtDto.memberId, encodedPassword)
+        return memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPassword)
     }
 
     @TXExecute
@@ -53,7 +53,7 @@ class MemberWriteService(
         // [회원가입 진행]
         // 1. 계정 가입
         val encodedPassword = memberPasswordEncoder.encode(signUpDto.password)
-        val id = memberModifyOrmPort.save(signUpDto.email, encodedPassword)
+        val id = memberWriteOrmPort.save(signUpDto.email, encodedPassword)
 
         // 2. 프로필 설정
         val nickName = makeNickname()
@@ -79,32 +79,8 @@ class MemberWriteService(
     }
 
     @TXExecute
-    override fun drop(memberId: UUID) {
-        // 1. 개인 정보 파기
-        memberPrivateWriteOrmPort.updatePrivateToNull(memberId)
-        // 5. 사용자 제작 문제 삭제 - 변형문제는 바로 삭제
-        // contents_classify = Deleted으로 변환
-
-        // 7. 학습지 생성내역 삭제
-
-        // 5. 학습 자료 삭제
-
-        // 3. 팔로우 및 팔로잉 삭제
-        // 6. 좋아요 및 저장소 삭제
-
-
-        // 1. 파일 삭제
-
-
-        // 4. 사용자 프로필 탈퇴 회원으로 전환
-        // 8. 최종 탈퇴 처리(human_status=3(탈퇴회원), enabled=false)
-
-
-    }
-
-    @TXExecute
     override fun updateTmpPassword(id: List<UUID>) {
         // 로그인시 암호화를 거치기 때문에 null로 선언된 사용자들은 로그인 불가(반드시 새롭게 임시 비밀번호 발급 받아야함)
-        memberModifyOrmPort.updatePassword(id, null)
+        memberWriteOrmPort.updatePassword(id, null)
     }
 }

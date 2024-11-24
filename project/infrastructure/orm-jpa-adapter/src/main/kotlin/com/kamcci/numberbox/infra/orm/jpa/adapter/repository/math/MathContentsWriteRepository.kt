@@ -164,19 +164,26 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
         return contentsEntity.id
     }
 
-    override fun updateSvcPosbStts(
+    override fun updateContentsClassifyType(
         contentsId: Long,
         memberId: UUID,
-        svcPosbSttsType: ContentsSvcPosbSttsType
+        contentsClassifyType: ContentsClassifyType
     ): Boolean {
         return queryFactory
             .update(mathContentsEntity)
-            .set(mathContentsEntity.svcPosbStts, svcPosbSttsType)
+            .set(mathContentsEntity.contentsClassify, contentsClassifyType)
             .where(
                 mathContentsEntity.id.eq(contentsId),
                 mathContentsEntity.memberId.eq(memberId),
             )
             .execute() > 0
+    }
 
+    override fun updateContentsClassifyType(memberId: UUID, contentsClassifyType: ContentsClassifyType): Boolean {
+        return queryFactory
+            .update(mathContentsEntity)
+            .set(mathContentsEntity.contentsClassify, contentsClassifyType)
+            .where(mathContentsEntity.memberId.eq(memberId))
+            .execute() > 0
     }
 }

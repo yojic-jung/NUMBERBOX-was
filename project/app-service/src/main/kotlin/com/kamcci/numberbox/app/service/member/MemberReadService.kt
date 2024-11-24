@@ -14,4 +14,7 @@ class MemberReadService(
 
     override fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID> =
         memberReadOrmPort.readByIsTmpPassword(isTrue, limit)
+
+    override fun readUserIdByHumanStatus(humanStatus: Int): List<UUID> =
+        memberReadOrmPort.readUserIdByHumanStatus(humanStatus)
 }

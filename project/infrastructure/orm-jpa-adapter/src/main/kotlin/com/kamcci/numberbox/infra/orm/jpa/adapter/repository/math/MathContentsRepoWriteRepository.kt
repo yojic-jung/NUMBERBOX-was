@@ -27,4 +27,5 @@ class MathContentsRepoWriteRepository : MathContentsRepoWriteOrmPort, BaseReposi
             )
             .execute() > 0
     }
+
 }

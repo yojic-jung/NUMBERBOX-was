@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.port.orm.member.MemberModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
+import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.app.service.member.MemberLoginFailureService.Companion.DISABLE_COUNT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,11 +16,11 @@ import java.util.*
 
 class MemberLoginFailureServiceTest {
     private val memberReadOrmPort: MemberReadOrmPort = mock()
-    private val memberModifyOrmPort: MemberModifyOrmPort = mock()
+    private val memberWriteOrmPort: MemberWriteOrmPort = mock()
     private val membersRoleModifyRepository: MemberRoleWriteOrmPort = mock()
 
     private val memberLoginFailureService =
-        MemberLoginFailureService(memberReadOrmPort, memberModifyOrmPort, membersRoleModifyRepository)
+        MemberLoginFailureService(memberReadOrmPort, memberWriteOrmPort, membersRoleModifyRepository)
 
     @Test
     fun `실패 카운트 초과시 계정 비활성화 - 성공`() {

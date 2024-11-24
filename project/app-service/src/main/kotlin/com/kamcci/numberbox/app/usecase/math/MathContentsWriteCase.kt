@@ -101,4 +101,10 @@ interface MathContentsWriteCase {
         contentsId: Long,
         memberId: UUID
     )
+
+    /**
+     * 수학문제 삭제 - 사용자의 모든 문제 삭제
+     * @param   memberId            member id
+     */
+    fun delete(memberId: UUID)
 }

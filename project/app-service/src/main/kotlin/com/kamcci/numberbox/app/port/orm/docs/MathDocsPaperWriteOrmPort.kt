@@ -20,4 +20,7 @@ interface MathDocsPaperWriteOrmPort {
 
     // 학습지 삭제
     fun delete(docsId: Long, memberId: UUID): Long
+
+    // 사용자의 모든 학습지 삭제
+    fun delete(memberId: UUID): Long
 }

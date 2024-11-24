@@ -8,5 +8,6 @@ interface MemberFollowWriteOrmPort {
     fun save(followingId: Long, followerId: Long): Boolean
 
     // 팔로잉 취소
-    fun delete(followingId: Long, followerId: Long): Boolean
+    fun delete(followingId: Long, followerId: Long): Long
+
 }
