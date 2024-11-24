@@ -1,24 +1,24 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.factory.cs
 
-import com.kamcci.numberbox.app.domain.dto.cs.CsErrorReportSaveDto
+import com.kamcci.numberbox.app.domain.dto.cs.CsErrorReportCreateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.cs.CsErrorReportEntity
 
 object CsErrorReportFactory {
-    fun getSaveEntity(saveDto: CsErrorReportSaveDto): CsErrorReportEntity {
+    fun getSaveEntity(createDto: CsErrorReportCreateDto): CsErrorReportEntity {
         return CsErrorReportEntity().apply {
-            errType = saveDto.errType
-            contentsId = saveDto.contentsId
-            reportMemberId = saveDto.reportMemberId
-            reportContents = saveDto.reportContents
-            clientOs = saveDto.clientOs
-            clientBrowser = saveDto.clientBrowser
-            firstImgPath = saveDto.firstImgPath
-            firstImgName = saveDto.firstImgName
-            secondImgPath = saveDto.secondImgPath
-            secondImgName = saveDto.secondImgName
-            thirdImgPath = saveDto.thirdImgPath
-            thirdImgName = saveDto.thirdImgName
-            reportStts = saveDto.reportStts
+            errType = createDto.errType
+            contentsId = createDto.contentsId
+            reportMemberId = createDto.reportMemberId
+            reportContents = createDto.reportContents
+            clientOs = createDto.clientOs
+            clientBrowser = createDto.clientBrowser
+            firstImgPath = createDto.firstImgPath
+            firstImgName = createDto.firstImgName
+            secondImgPath = createDto.secondImgPath
+            secondImgName = createDto.secondImgName
+            thirdImgPath = createDto.thirdImgPath
+            thirdImgName = createDto.thirdImgName
+            reportStts = createDto.reportStts
         }
     }
 }

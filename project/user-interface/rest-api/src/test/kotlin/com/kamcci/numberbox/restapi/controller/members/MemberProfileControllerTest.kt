@@ -41,7 +41,6 @@ class MemberProfileControllerTest : BaseMockMvcTest() {
     fun `프로필 등록 - 성공`() {
         // given
         val reqBody = mapOf("profileType" to ProfileType.Teacher.name)
-        `when`(memberProfileModifyUseCase.updateProfileTypeByMemberId(any(), any())).thenReturn(true)
 
         //when
         val resultAction = putRequest(PROFILE_REG_URL, reqBody)

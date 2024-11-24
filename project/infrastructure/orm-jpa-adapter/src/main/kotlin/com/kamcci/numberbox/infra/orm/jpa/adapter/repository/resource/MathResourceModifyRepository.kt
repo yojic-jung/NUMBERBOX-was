@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.resource
 
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateOrmDto
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdtOrmDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceModifyOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
@@ -14,7 +14,7 @@ import java.util.*
 
 @Repository
 class MathResourceModifyRepository : MathResourceModifyOrmPort, BaseRepository() {
-    override fun create(createDto: MathResourceCreateOrmDto): Long {
+    override fun create(createDto: MathResourceCreateDto): Long {
         val saveEntity = MathResourceFactory.getSaveEntity(createDto)
 
         // 카테고리 설정
@@ -30,7 +30,7 @@ class MathResourceModifyRepository : MathResourceModifyOrmPort, BaseRepository()
         return saveEntity.id
     }
 
-    override fun update(updateDto: MathResourceUpdtOrmDto) {
+    override fun update(updateDto: MathResourceUpdateDto) {
         val originEntity = em.find(MathResourceEntity::class.java, updateDto.resourceId)
         val updateEntity = MathResourceFactory.getUpdateEntity(originEntity, updateDto)
 

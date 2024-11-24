@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.port.orm.resource
 
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateOrmDto
-import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdtOrmDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import java.util.*
 
 /**
@@ -9,10 +9,10 @@ import java.util.*
  */
 interface MathResourceModifyOrmPort {
     // 등록
-    fun create(createDto: MathResourceCreateOrmDto): Long
+    fun create(createDto: MathResourceCreateDto): Long
 
     // 수정
-    fun update(updateDto: MathResourceUpdtOrmDto)
+    fun update(updateDto: MathResourceUpdateDto)
 
     // 삭제
     fun deleteByIdAndMemberId(id: Long, memberId: UUID): Long

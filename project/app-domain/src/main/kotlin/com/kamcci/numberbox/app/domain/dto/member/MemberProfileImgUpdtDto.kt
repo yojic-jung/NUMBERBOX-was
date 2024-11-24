@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.app.domain.dto.member
 
-import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import java.util.*
 
 /**
@@ -8,5 +7,6 @@ import java.util.*
  */
 data class MemberProfileImgUpdtDto(
     val memberId: UUID,
-    val imgFile: FileUploadDto,
+    val profileImgPath: String,
+    val profileImgName: String,
 )

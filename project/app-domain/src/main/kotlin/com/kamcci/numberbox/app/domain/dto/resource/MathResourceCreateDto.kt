@@ -1,25 +1,26 @@
 package com.kamcci.numberbox.app.domain.dto.resource
 
-import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
+import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import java.util.*
 
 /**
  * 수학 학습 자료 등록용
  */
 data class MathResourceCreateDto(
+    // 등록자 memberId
     val memberId: UUID,
-    // 제목
+    // 학습 자료 제목
     val title: String,
-    // 대표 카테고리
-    val mainCateId: String,
-    // 대표 세부 카테고리
-    val midCateId: String,
-    // 카테고리 리스트('mainCateId-midCateId' 문자열 형식)
+    // ppt 파일
+    val pptFilePath: String,
+    val pptFileName: String,
+    val pptPageCnt: Int,
+    // 대표 이미지 경로
+    val imgPath: String,
+    // 대표 이미지명
+    val imgName: String,
+    // 카테고리
     val cateList: List<String>,
-    // 학습자료 ppt
-    val pptFile: FileUploadDto,
-    // ppt 슬라이드 이미지
-    val slideImgList: List<FileUploadDto>,
-    // 대표 이미지
-    val imgFile: FileUploadDto?,
+    // 슬라이드
+    val imgList: List<FileNameVo>
 )

@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.app.domain.dto.cs
 
-import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.cs.BrowserType
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
+import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
 import java.util.*
 
 /**
@@ -22,10 +22,18 @@ data class CsErrorReportCreateDto(
     val clientOs: OsType,
     // 사용자 브라우저
     val clientBrowser: BrowserType,
-    // 참고 이미지1
-    val firstImgFile: FileUploadDto?,
-    // 참고 이미지2
-    val secondImgFile: FileUploadDto?,
-    // 참고 이미지3
-    val thirdImgFile: FileUploadDto?,
+    // 참고 이미지1 - 경로
+    val firstImgPath: String?,
+    // 참고 이미지1 - 이름
+    val firstImgName: String?,
+    // 참고 이미지2 - 이름
+    val secondImgPath: String?,
+    // 참고 이미지2 - 경로
+    val secondImgName: String?,
+    // 참고 이미지3- 경로
+    val thirdImgPath: String?,
+    // 참고 이미지3 - 이름
+    val thirdImgName: String?,
+    // 접수 상태
+    val reportStts: ReportSttsType
 )

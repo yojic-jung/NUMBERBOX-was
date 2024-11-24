@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtOrmDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberProfileEntity
@@ -39,7 +39,7 @@ class MemberProfileModifyRepositoryTest(
         val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
         val profileImgPath = "profileImgPath"
         val profileImgName = "profileImgName"
-        val profileImgInfo = MemberProfileImgUpdtOrmDto(memberId, profileImgPath, profileImgName)
+        val profileImgInfo = MemberProfileImgUpdtDto(memberId, profileImgPath, profileImgName)
 
         // when
         memberProfileModifyRepository.updateImgByMemberId(profileImgInfo)

@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
-import com.kamcci.numberbox.restapi.util.file.FileConvertUtil
+import com.kamcci.numberbox.restapi.util.file.FileUtil
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.Named
@@ -32,7 +32,7 @@ interface MathResourceMapper {
         @Named("toSlideImgList")
         fun toSlideImgList(multipartFile: MultipartFile?): List<FileUploadDto> {
             return if (multipartFile == null || multipartFile.isEmpty) listOf()
-            else FileConvertUtil.pptToImg(multipartFile)
+            else FileUtil.toPptSlide(multipartFile)
         }
     }
 

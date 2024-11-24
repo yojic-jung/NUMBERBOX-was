@@ -8,8 +8,19 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
-object FileConvertUtil {
-    fun pptToImg(multipartFile: MultipartFile): List<FileUploadDto> {
+object FileUtil {
+    // multipartFile to inputStream
+    fun toFile(multipartFile: MultipartFile): FileUploadDto {
+        return FileUploadDto(
+            multipartFile.originalFilename!!,
+            multipartFile.contentType,
+            multipartFile.size,
+            multipartFile.inputStream
+        )
+    }
+
+    // ppt 슬라이드별 inputStream 변환
+    fun toPptSlide(multipartFile: MultipartFile): List<FileUploadDto> {
         val slideShow = XMLSlideShow(multipartFile.inputStream)
         val slides = slideShow.slides
         val imageFormat = "png"
@@ -42,4 +53,5 @@ object FileConvertUtil {
 
         return imgList
     }
+
 }
