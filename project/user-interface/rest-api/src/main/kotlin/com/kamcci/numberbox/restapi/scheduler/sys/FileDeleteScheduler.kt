@@ -2,8 +2,8 @@ package com.kamcci.numberbox.restapi.scheduler.sys
 
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileModifyUseCase
 import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadUseCase
+import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class FileDeleteScheduler(
     private val fileStoragePort: FileStoragePort,
     private val sysGarbageFileReadUseCase: SysGarbageFileReadUseCase,
-    private val sysGarbageFileModifyUseCase: SysGarbageFileModifyUseCase
+    private val sysGarbageFileWriteUseCase: SysGarbageFileWriteUseCase
 ) {
     companion object {
         const val BATCH_SIZE = 500L
@@ -42,9 +42,9 @@ class FileDeleteScheduler(
             }
 
             // 성공건 db에서 삭제
-            sysGarbageFileModifyUseCase.deleteById(successIdList)
+            sysGarbageFileWriteUseCase.deleteById(successIdList)
             // 실패건 failCnt+1
-            sysGarbageFileModifyUseCase.incrementFailCntById(failIdList)
+            sysGarbageFileWriteUseCase.incrementFailCntById(failIdList)
 
             // 더이상 조회할 데이터 없다면 종료
             if (deleteTargetFile.size < BATCH_SIZE) break

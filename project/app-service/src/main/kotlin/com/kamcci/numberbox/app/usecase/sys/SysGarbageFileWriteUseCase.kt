@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.usecase.sys
 /**
  * 삭제 대상 유휴 파일 - 변경
  */
-interface SysGarbageFileModifyUseCase {
+interface SysGarbageFileWriteUseCase {
     // 삭제
     fun deleteById(idList: List<Long>)
 
