@@ -7,7 +7,6 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -24,7 +23,6 @@ import java.util.*
 class MathDocsReadController(
     private val mathDocsReadCase: MathDocsReadCase,
     private val mathDocsPaperReadCase: MathDocsPaperReadCase,
-    private val mathDocsPaperWriteCase: MathDocsPaperWriteCase
 ) {
     @GetMapping("/in-house")
     fun makeInHouseDocs(

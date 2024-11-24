@@ -1,8 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserEmail
-import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
-import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.http.ResponseEntity
@@ -14,10 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")
-class MemberReadController(
-    private val memberWriteCase: MemberWriteCase,
-    private val memberMapper: MemberMapper,
-) {
+class MemberReadController {
     // 내 이메일
     @GetMapping("/email")
     fun readEmail(@UserEmail email: String): ResponseEntity<ResponseData<Map<String, Any?>>> {
