@@ -10,7 +10,7 @@ import java.util.*
 /**
  * 수학문제 - 변경
  */
-interface MathContentsModifyUseCase {
+interface MathContentsWriteUseCase {
     /**
      * 사용자 수학문제 등록
      * @param   contentsModifyDto   수학문제 정보

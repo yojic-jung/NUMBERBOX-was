@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsWriteUseCase
 import com.kamcci.numberbox.restapi.dto.request.math.MathConIpsiSrcCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.math.MathConSimilarSrcCreateRequest
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
@@ -23,7 +23,7 @@ import java.util.*
 @RestController
 @RequestMapping("/manger/math/content")
 class ManagerMathContentsController(
-    private val mathContentsModifyUseCase: MathContentsModifyUseCase,
+    private val mathContentsWriteUseCase: MathContentsWriteUseCase,
     private val mathContentsMapper: MathContentsMapper
 ) {
     // 자체제작 문제 등록
@@ -37,7 +37,7 @@ class ManagerMathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        val contentsId = mathContentsModifyUseCase.createInHouseContents(contents, createReq.similarSrc)
+        val contentsId = mathContentsWriteUseCase.createInHouseContents(contents, createReq.similarSrc)
 
         return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }
@@ -53,7 +53,7 @@ class ManagerMathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        val contentsId = mathContentsModifyUseCase.createIpsiContents(contents, createReq.ipsiSrc)
+        val contentsId = mathContentsWriteUseCase.createIpsiContents(contents, createReq.ipsiSrc)
 
         return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }

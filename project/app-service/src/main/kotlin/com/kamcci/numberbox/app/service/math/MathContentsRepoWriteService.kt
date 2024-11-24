@@ -6,13 +6,13 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoModifyUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsRepoWriteUseCase
 
 @UseCase
-class MathContentsRepoModifyService(
+class MathContentsRepoWriteService(
     private val mathConRepoReadOrmPort: MathContentsRepoReadOrmPort,
     private val mathConRepoModifyOrmPort: MathContentsRepoModifyOrmPort
-) : MathContentsRepoModifyUseCase {
+) : MathContentsRepoWriteUseCase {
     companion object {
         // 예외 메시지
         const val ALREADY_EXIST = "이미 저장소 목록에 존재합니다."

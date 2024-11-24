@@ -11,14 +11,14 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsModifyUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsWriteUseCase
 import java.util.*
 
 @UseCase
-class MathContentsModifyService(
+class MathContentsWriteService(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort,
     private val mathContentsModifyOrmPort: MathContentsModifyOrmPort,
-) : MathContentsModifyUseCase {
+) : MathContentsWriteUseCase {
     companion object {
         const val NOT_EXIST_CONTENTS = "해당 수학문제가 존재하지 않습니다."
     }

@@ -36,8 +36,8 @@ class MathContentsController(
     private val mathContentsReadUseCase: MathContentsReadUseCase,
     private val mathContentsRepoReadUseCase: MathContentsRepoReadUseCase,
     // 문제 제작 목적
-    private val mathContentsModifyUseCase: MathContentsModifyUseCase,
-    private val mathConGrammarModifyUseCase: MathContentsGrammarModifyUseCase,
+    private val mathContentsWriteUseCase: MathContentsWriteUseCase,
+    private val mathConGrammarModifyUseCase: MathContentsGrammarWriteUseCase,
     private val mathContentsMapper: MathContentsMapper,
     // 매퍼
     private val memberMapper: MemberMapper
@@ -58,7 +58,7 @@ class MathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        val contentsId = mathContentsModifyUseCase.createUserCustomContents(contents, createReq.license)
+        val contentsId = mathContentsWriteUseCase.createUserCustomContents(contents, createReq.license)
 
         // 생성된 문제 정보 반환
         return ResponseUtil.ok(
@@ -82,7 +82,7 @@ class MathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        mathContentsModifyUseCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license).let {
+        mathContentsWriteUseCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license).let {
             if (!it) throw BusinessValidException("수학문제가 수정 되지 않았습니다.")
         }
 
@@ -108,7 +108,7 @@ class MathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        val contentsId = mathContentsModifyUseCase.createTransContents(createReq.orgContentsId, contents)
+        val contentsId = mathContentsWriteUseCase.createTransContents(createReq.orgContentsId, contents)
 
         // 생성된 문제 정보 반환
         return ResponseUtil.ok(
@@ -132,7 +132,7 @@ class MathContentsController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        mathContentsModifyUseCase.updateTransContents(createReq.contentsId, contents)
+        mathContentsWriteUseCase.updateTransContents(createReq.contentsId, contents)
 
         // 생성된 문제 정보 반환
         return ResponseUtil.ok(
@@ -304,7 +304,7 @@ class MathContentsController(
         @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 삭제
-        val res = mathContentsModifyUseCase.delete(contentsId, memberId)
+        val res = mathContentsWriteUseCase.delete(contentsId, memberId)
         return ResponseUtil.ok(mapOf("contents" to res))
     }
 

@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 /**
  * 문제 좋아요 - 변경
  */
-interface MathContentsLikeModifyUseCase {
+interface MathContentsLikeWriteUseCase {
     // 좋아요 목록 저장
     fun save(modifyDto: MathContentsLikeModifyDto)
 

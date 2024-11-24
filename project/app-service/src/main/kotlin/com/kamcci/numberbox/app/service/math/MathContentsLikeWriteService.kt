@@ -6,13 +6,13 @@ import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeModifyOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeReadOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeModifyUseCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteUseCase
 
 @UseCase
-class MathContentsLikeModifyService(
+class MathContentsLikeWriteService(
     private val mathConLikeReadOrmPort: MathContentsLikeReadOrmPort,
     private val mathConLikeModifyPort: MathContentsLikeModifyOrmPort
-) : MathContentsLikeModifyUseCase {
+) : MathContentsLikeWriteUseCase {
     companion object {
         // 예외 메시지
         const val ALREADY_EXIST = "이미 좋아요를 누른 수학 문제입니다."
