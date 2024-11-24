@@ -2,13 +2,19 @@ package com.kamcci.numberbox.restapi.controller.resource
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
+import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
+import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceModifyUseCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadUseCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
 import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
-import com.kamcci.numberbox.restapi.mapper.resource.MathResourceMapper
+import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
+import com.kamcci.numberbox.restapi.util.file.FileUtil.toPptSlide
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -20,10 +26,10 @@ import java.util.*
 @RequestMapping("/math/resource")
 @RestController
 class MathResourceController(
+    private val fileUseCase: FileUseCase,
     private val mathResourceMenuReadUseCase: MathResourceMenuReadUseCase,
     private val mathResourceReadUseCase: MathResourceReadUseCase,
     private val mathResourceModifyUseCase: MathResourceModifyUseCase,
-    private val mathResourceMapper: MathResourceMapper
 ) {
     /**
      * 조회 - 카테고리 id로
@@ -75,8 +81,35 @@ class MathResourceController(
         @ModelAttribute @Valid
         request: MathResourceCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
+        // 1. ppt 파일 업로드
+        val pptFileNameVo = fileUseCase.upload(toFile(request.pptFile), FileType.PptResource)
+
+        // 2. ppt 슬라이드 이미지 업로드
+        val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
+        for (slideImg in toPptSlide(request.pptFile)) {
+            val imgFileNameVo = fileUseCase.upload(slideImg, FileType.PptImage)
+            slideImgNameList.add(imgFileNameVo)
+        }
+
+        // 3. 대표 이미지 존재시 업로드
+        val imgFileNameVo = if (request.imgFile != null) {
+            val imgFileNameVo = fileUseCase.upload(toFile(request.imgFile), FileType.PptImage)
+            imgFileNameVo
+        } else null
+
+        // 4. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        val createDto = MathResourceCreateDto(
+            memberId = memberId,
+            title = request.title,
+            pptFilePath = pptFileNameVo.path,
+            pptFileName = pptFileNameVo.name,
+            pptPageCnt = slideImgNameList.size,
+            imgPath = imgFileNameVo?.path ?: slideImgNameList[0].path,
+            imgName = imgFileNameVo?.name ?: slideImgNameList[0].name,
+            cateList = request.cateList,
+            imgList = slideImgNameList
+        )
         // 학습 자료 영속화
-        val createDto = mathResourceMapper.toDto(memberId, request)
         val resourceId = mathResourceModifyUseCase.create(createDto)
         return ResponseUtil.ok(resourceId)
     }
@@ -91,9 +124,42 @@ class MathResourceController(
         @ModelAttribute @Valid
         request: MathResourceUpdateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val updateDto = mathResourceMapper.toDto(memberId, request)
+        // 1. ppt 파일 수정시 업로드
+        val pptFileNameVo = if (request.pptFile != null) {
+            fileUseCase.upload(toFile(request.pptFile), FileType.PptResource)
+        } else null
+
+        // 2. ppt 슬라이드 수정시 업로드
+        val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
+        if (request.pptFile != null) {
+            for (inpStream in toPptSlide(request.pptFile)) {
+                val imgFileNameVo = fileUseCase.upload(inpStream, FileType.PptImage)
+                slideImgNameList.add(imgFileNameVo)
+            }
+        }
+
+        // 3. 대표 이미지 수정시 업로드
+        val imgFileNameVo = if (request.imgFile != null) {
+            fileUseCase.upload(toFile(request.imgFile), FileType.PptImage)
+        } else null
+
+        // 4. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        val updateDto = MathResourceUpdateDto(
+            resourceId = request.resourceId,
+            title = request.title,
+            pptFilePath = pptFileNameVo?.path,
+            pptFileName = pptFileNameVo?.name,
+            pptPageCnt = if (slideImgNameList.isEmpty()) null else slideImgNameList.size,
+            imgPath = imgFileNameVo?.path,
+            imgName = imgFileNameVo?.name,
+            cateList = request.cateList,
+            imgList = slideImgNameList
+        )
+
+        // 학습 자료 수정
         mathResourceModifyUseCase.update(updateDto)
 
+        // 수정된 학습 자료 반환
         val updatedVo = mathResourceReadUseCase.readById(updateDto.resourceId)
         return ResponseUtil.ok(updatedVo)
     }

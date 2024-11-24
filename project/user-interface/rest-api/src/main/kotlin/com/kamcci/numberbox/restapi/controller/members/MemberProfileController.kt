@@ -1,7 +1,10 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
+import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
+import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileModifyUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadUseCase
@@ -9,7 +12,7 @@ import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
-import com.kamcci.numberbox.restapi.mapper.member.MemberProfileImgMapper
+import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -27,7 +30,7 @@ class MemberProfileController(
     private val memberProfileModifyUseCase: MemberProfileModifyUseCase,
     private val memberFollowReadUseCase: MemberFollowReadUseCase,
     private val memberMapper: MemberMapper,
-    private val memberProfileImgMapper: MemberProfileImgMapper
+    private val fileUseCase: FileUseCase,
 ) {
     /**
      * 프로필 등록
@@ -37,9 +40,9 @@ class MemberProfileController(
         @UserId memberId: UUID,
         @RequestBody @Valid
         profileImgReq: ProfileTypeUpdtRequest
-    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        val isRegistered = memberProfileModifyUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
-        return ResponseUtil.ok(mapOf("isRegistered" to isRegistered))
+    ): ResponseEntity<ResponseData<String>> {
+        memberProfileModifyUseCase.updateProfileTypeByMemberId(memberId, profileImgReq.profileType)
+        return ResponseUtil.ok()
     }
 
 
@@ -52,8 +55,12 @@ class MemberProfileController(
         @ModelAttribute @Valid
         req: ProfileImgUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        val updateDto = memberProfileImgMapper.toDto(memberId, req)
-        val fileNameVo = memberProfileModifyUseCase.updateImgByMemberId(updateDto)
+        // 파일 업로드
+        val fileNameVo = fileUseCase.upload(toFile(req.imgFile), FileType.ProfileIMG)
+        val updateDto = MemberProfileImgUpdtDto(memberId, fileNameVo.path, fileNameVo.name)
+
+        //  프로필 저장
+        memberProfileModifyUseCase.updateImgByMemberId(updateDto)
         return ResponseUtil.ok(mapOf("fileNameVo" to fileNameVo))
     }
 
@@ -65,10 +72,9 @@ class MemberProfileController(
         @UserId memberId: UUID,
         @RequestBody @Valid
         profileNicknameReq: ProfileNicknameUpdtRequest
-    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-        val isUpdated =
-            memberProfileModifyUseCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
-        return ResponseUtil.ok(mapOf("isUpdated" to isUpdated))
+    ): ResponseEntity<ResponseData<String>> {
+        memberProfileModifyUseCase.updateNicknameByMemberId(memberId, profileNicknameReq.nickname)
+        return ResponseUtil.ok()
     }
 
     /**
