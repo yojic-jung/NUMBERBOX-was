@@ -20,5 +20,5 @@ data class MathResourceUpdateDto(
     // 카테고리 리스트('mainCateId-midCateId' 문자열 형식)
     val cateList: List<String>,
     // 슬라이드
-    val imgList: MutableList<FileNameVo>
+    val imgList: List<FileNameVo>
 )

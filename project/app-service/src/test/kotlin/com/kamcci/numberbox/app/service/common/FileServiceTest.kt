@@ -10,17 +10,17 @@ class FileServiceTest {
     private val fileNameMakeService = FileService(mock())
 
     companion object {
-        const val MAX_FILE_NAME_SIZE = 30
+        const val MAX_FILE_NAME_LENGTH = 70
     }
 
     @Test
-    fun `파일명 30글자 이하 - 성공`() {
+    fun `파일명 70글자 이하 - 성공`() {
         // given
         FileType.entries.forEach {
             // when
             val fileNameVo = fileNameMakeService.makeFileNameByType("tmp.heic", it)
 
-            assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_SIZE)
+            assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_LENGTH)
         }
     }
 

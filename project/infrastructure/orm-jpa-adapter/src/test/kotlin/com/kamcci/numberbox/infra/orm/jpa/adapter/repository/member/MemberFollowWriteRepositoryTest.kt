@@ -48,6 +48,6 @@ class MemberFollowWriteRepositoryTest(
         em.clear()
 
         // then
-        assertThat(isDeleted).isTrue()
+        assertThat(isDeleted).isGreaterThan(0)
     }
 }

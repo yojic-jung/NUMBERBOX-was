@@ -124,10 +124,10 @@ interface MathContentsWriteOrmPort {
         contentsId: Long,
         memberId: UUID,
         contentsClassifyType: ContentsClassifyType
-    ): Boolean
+    ): Long
 
     fun updateContentsClassifyType(
         memberId: UUID,
         contentsClassifyType: ContentsClassifyType
-    ): Boolean
+    ): Long
 }

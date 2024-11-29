@@ -7,14 +7,12 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
-import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperReadOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 
 @UseCase
 class MathDocsReadService(
     private val mathDocsReadOrmPort: MathDocsReadOrmPort,
-    private val mathDocsPaperReadOrmPort: MathDocsPaperReadOrmPort
 ) : MathDocsReadCase {
 
     // 각 유형별로 몇 문제씩 뽑아와야할지 기준
@@ -24,6 +22,7 @@ class MathDocsReadService(
     val lowLv = Pair(listOf(1, 2), listOf(3, 4))
     val midLv = Pair(listOf(2, 3, 4), listOf(1, 5))
     val highLv = Pair(listOf(4, 5), listOf(2, 3))
+    
     override fun makeDocs(readDto: MathDocsReadDto): List<MathDocsVo> {
         // 레벨 조건
         val lvCond = when (readDto.quesLevel) {

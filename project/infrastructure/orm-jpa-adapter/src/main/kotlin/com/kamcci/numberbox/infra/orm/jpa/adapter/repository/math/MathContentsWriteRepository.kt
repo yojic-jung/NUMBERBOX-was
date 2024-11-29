@@ -168,7 +168,7 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
         contentsId: Long,
         memberId: UUID,
         contentsClassifyType: ContentsClassifyType
-    ): Boolean {
+    ): Long {
         return queryFactory
             .update(mathContentsEntity)
             .set(mathContentsEntity.contentsClassify, contentsClassifyType)
@@ -176,14 +176,14 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
                 mathContentsEntity.id.eq(contentsId),
                 mathContentsEntity.memberId.eq(memberId),
             )
-            .execute() > 0
+            .execute()
     }
 
-    override fun updateContentsClassifyType(memberId: UUID, contentsClassifyType: ContentsClassifyType): Boolean {
+    override fun updateContentsClassifyType(memberId: UUID, contentsClassifyType: ContentsClassifyType): Long {
         return queryFactory
             .update(mathContentsEntity)
             .set(mathContentsEntity.contentsClassify, contentsClassifyType)
             .where(mathContentsEntity.memberId.eq(memberId))
-            .execute() > 0
+            .execute()
     }
 }

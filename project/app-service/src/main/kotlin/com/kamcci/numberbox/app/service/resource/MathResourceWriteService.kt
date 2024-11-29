@@ -42,7 +42,6 @@ class MathResourceWriteService(
         // 2. ppt 슬라이드 이미지 존재시 이전 파일 삭제 대상에 추가
         if (updateDto.imgList.isNotEmpty()) {
             prevFile.imgList.forEach {
-                //
                 deletePrevFile(it.imgPath, it.imgName, deleteImgList)
             }
         }

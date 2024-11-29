@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
-class MemberVerifyCodeModifyServiceTest {
+class MemberVerifyCodeWriteServiceTest {
     private val memberVerifyCodeSaveService = MemberVerifyCodeWriteService(mock(), mock(), mock())
 
     @Test
