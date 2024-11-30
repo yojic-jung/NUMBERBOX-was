@@ -6,7 +6,7 @@ import jakarta.persistence.Converter
 
 @Converter(autoApply = true)
 class IpsiPaperTypeConverter : AttributeConverter<IpsiPaperType, Int> {
-    override fun convertToEntityAttribute(column: Int): IpsiPaperType? {
+    override fun convertToEntityAttribute(column: Int?): IpsiPaperType? {
         return IpsiPaperType.entries.find { it.id == column }
     }
 

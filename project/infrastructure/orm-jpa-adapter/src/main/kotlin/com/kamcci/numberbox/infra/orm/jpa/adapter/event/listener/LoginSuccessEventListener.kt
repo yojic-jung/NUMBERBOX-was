@@ -26,12 +26,12 @@ class LoginSuccessEventListener(
     @Transactional
     @EventListener
     fun handle(loginSuccessEvent: LoginSuccessEvent) {
-        val userUniqId: UUID = loginSuccessEvent.userId()
+        val userId: UUID = loginSuccessEvent.userId()
         val refreshToken: String = loginSuccessEvent.refreshToken()
         val remainedRefreshToken: String? = loginSuccessEvent.remainedRefreshToken()
 
         // 실패 횟수, 휴면 계정 초기화
-        memberRepository.updateSuccessUser(userUniqId, FAIL_CNT_ZERO, HUMAN_STATUS_ENABLE)
+        memberRepository.updateSuccessUser(userId, FAIL_CNT_ZERO, HUMAN_STATUS_ENABLE)
 
         // 기존 refreshToken 남아있는 경우 삭제
         remainedRefreshToken
@@ -39,7 +39,7 @@ class LoginSuccessEventListener(
             ?.let { memberRefreshTokenRepo.deleteByToken(it) }
 
         // 새로운 리프레시 토큰 저장
-        val rerfreshTokenEntity = MemberRefreshTokenFactory.getSaveEntity(refreshToken, userUniqId)
+        val rerfreshTokenEntity = MemberRefreshTokenFactory.getSaveEntity(refreshToken, userId)
         memberRefreshTokenRepo.save(rerfreshTokenEntity)
     }
 }

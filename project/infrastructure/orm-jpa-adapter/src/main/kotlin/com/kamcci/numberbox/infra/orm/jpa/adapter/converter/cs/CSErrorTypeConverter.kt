@@ -7,7 +7,7 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class CSErrorTypeConverter : AttributeConverter<CSErrorType, Int> {
     // LeftJoin으로 null 반환 가능
-    override fun convertToEntityAttribute(column: Int): CSErrorType? {
+    override fun convertToEntityAttribute(column: Int?): CSErrorType? {
         return CSErrorType.entries.find { it.id == column }
     }
 

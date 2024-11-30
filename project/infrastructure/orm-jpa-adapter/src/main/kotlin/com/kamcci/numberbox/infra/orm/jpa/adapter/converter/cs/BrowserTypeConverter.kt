@@ -7,7 +7,7 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class BrowserTypeConverter : AttributeConverter<BrowserType, String> {
     // LeftJoin으로 null 반환 가능
-    override fun convertToEntityAttribute(column: String): BrowserType? {
+    override fun convertToEntityAttribute(column: String?): BrowserType? {
         return BrowserType.entries.find { it.id == column }
     }
 

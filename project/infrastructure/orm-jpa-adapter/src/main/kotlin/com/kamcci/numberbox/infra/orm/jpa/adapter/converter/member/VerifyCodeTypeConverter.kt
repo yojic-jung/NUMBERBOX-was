@@ -6,7 +6,7 @@ import jakarta.persistence.Converter
 
 @Converter(autoApply = true)
 class VerifyCodeTypeConverter : AttributeConverter<VerifyCodeType, Int> {
-    override fun convertToEntityAttribute(column: Int): VerifyCodeType? {
+    override fun convertToEntityAttribute(column: Int?): VerifyCodeType? {
         return VerifyCodeType.entries.find { it.id == column }
     }
 

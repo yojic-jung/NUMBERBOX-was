@@ -7,7 +7,6 @@ import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.docs.QMathDocsPaperEntity.mathDocsPaperEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.util.docs.MathDocsExpression
-import com.querydsl.core.types.Projections
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -55,20 +54,7 @@ class MathDocsPaperReadRepository(
 
     private fun commonMathDocsPaperQuery() =
         queryFactory
-            .select(
-                Projections.constructor(
-                    MathDocsPaperVo::class.java,
-                    mathDocsPaperEntity.id,
-                    mathDocsPaperEntity.contentsIdList,
-                    mathDocsPaperEntity.docsGrade,
-                    mathDocsPaperEntity.docsTitle,
-                    mathDocsPaperEntity.docsSubTitle,
-                    mathDocsPaperEntity.docsOwner,
-                    mathDocsPaperEntity.docsStts,
-                    mathDocsPaperEntity.sysCreateDate,
-                    mathDocsPaperEntity.sysUpdateDate,
-                )
-            )
+            .select(mathDocsExpression.ceMathDocsPaper())
             .from(mathDocsPaperEntity)
 
 }

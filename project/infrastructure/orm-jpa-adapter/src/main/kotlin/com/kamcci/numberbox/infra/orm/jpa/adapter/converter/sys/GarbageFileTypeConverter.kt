@@ -6,7 +6,7 @@ import jakarta.persistence.Converter
 
 @Converter(autoApply = true)
 class GarbageFileTypeConverter : AttributeConverter<GarbageFileType, String> {
-    override fun convertToEntityAttribute(column: String): GarbageFileType? {
+    override fun convertToEntityAttribute(column: String?): GarbageFileType? {
         return GarbageFileType.entries.find { it.dbData == column }
     }
 

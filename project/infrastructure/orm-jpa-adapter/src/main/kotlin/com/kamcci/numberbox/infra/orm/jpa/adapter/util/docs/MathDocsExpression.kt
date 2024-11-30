@@ -1,8 +1,10 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.util.docs
 
 import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathDocsPaperVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.docs.QMathDocsPaperEntity.mathDocsPaperEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsEntity.mathContentsEntity
@@ -111,5 +113,18 @@ class MathDocsExpression {
         mathContentsIpsiSrcEntity.oddQuesNum,
         mathContentsIpsiSrcEntity.wrongRatio,
         mathContentsIpsiSrcEntity.paperType,
+    )
+
+    fun ceMathDocsPaper() = Projections.constructor(
+        MathDocsPaperVo::class.java,
+        mathDocsPaperEntity.id,
+        mathDocsPaperEntity.contentsIdList,
+        mathDocsPaperEntity.docsGrade,
+        mathDocsPaperEntity.docsTitle,
+        mathDocsPaperEntity.docsSubTitle,
+        mathDocsPaperEntity.docsOwner,
+        mathDocsPaperEntity.docsStts,
+        mathDocsPaperEntity.sysCreateDate,
+        mathDocsPaperEntity.sysUpdateDate,
     )
 }

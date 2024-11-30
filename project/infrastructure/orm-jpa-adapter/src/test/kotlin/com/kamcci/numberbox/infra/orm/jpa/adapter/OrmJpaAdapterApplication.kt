@@ -15,4 +15,4 @@ import org.springframework.stereotype.Repository
     ]
 )
 @SpringBootApplication
-class OrmAdapterApplication
+class OrmJpaAdapterApplication

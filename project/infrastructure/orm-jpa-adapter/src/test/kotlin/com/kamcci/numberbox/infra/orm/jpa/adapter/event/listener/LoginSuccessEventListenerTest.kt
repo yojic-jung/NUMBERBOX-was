@@ -1,0 +1,37 @@
+package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
+
+import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
+import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBSpringTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenJpaRepository
+import org.junit.jupiter.api.Test
+import org.mockito.Mockito
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.mock.mockito.SpyBean
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
+
+@TcDBSpringTest
+class LoginSuccessEventListenerTest @Autowired constructor(
+    private val eventPublisher: ApplicationEventPublisher,
+    @SpyBean
+    private val memberRefreshTokenRepo: MemberRefreshTokenJpaRepository
+) {
+    @Transactional
+    @Test
+    fun `로그인 성공 이벤트 리스너 검증`() {
+        // given
+        val memberId = UUID.fromString("10ca3122-cda8-ea4d-9bc7-037cb86fdb20")
+        val refreshToken = "new-refresh-token"
+        val remainedRefreshToken = "old-refresh-token"
+        val loginSuccessEvent = LoginSuccessEvent(memberId, refreshToken, remainedRefreshToken)
+
+        // when
+        eventPublisher.publishEvent(loginSuccessEvent)
+
+        // then
+        Mockito.verify(memberRefreshTokenRepo).save(
+            Mockito.argThat { it.token == refreshToken && it.memberId == memberId }
+        )
+    }
+}
