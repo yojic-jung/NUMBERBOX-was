@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
-import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
+import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import org.springframework.context.event.EventListener
@@ -13,13 +13,13 @@ class FileDeleteEventListener(
 ) : BaseRepository() {
     @Async
     @EventListener
-    fun save(eventDto: FileDeleteCreateDto) {
+    fun save(eventDto: FileDeleteDto) {
         sysGarbageFileWriteOrmPort.create(eventDto)
     }
 
     @Async
     @EventListener
-    fun save(eventDtoList: List<FileDeleteCreateDto>) {
+    fun save(eventDtoList: List<FileDeleteDto>) {
         eventDtoList.forEach { eventDto ->
             sysGarbageFileWriteOrmPort.create(eventDto)
         }

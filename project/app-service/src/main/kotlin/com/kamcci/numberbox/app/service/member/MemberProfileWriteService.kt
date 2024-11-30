@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
-import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
+import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
@@ -37,7 +37,7 @@ class MemberProfileWriteService(
         val filePath = prevImgVo?.profileImgPath
         val fileName = prevImgVo?.profileImgName
         if (!fileName.isNullOrEmpty() && !filePath.isNullOrEmpty()) {
-            sysGarbageFileWriteOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, filePath, fileName))
+            sysGarbageFileWriteOrmPort.create(FileDeleteDto(GarbageFileType.S3, filePath, fileName))
         }
     }
 

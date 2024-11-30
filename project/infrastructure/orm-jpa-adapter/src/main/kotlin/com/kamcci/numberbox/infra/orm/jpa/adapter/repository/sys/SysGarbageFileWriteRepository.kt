@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.sys
 
-import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
+import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.sys.QSysGarbageFileEntity.sysGarbageFileEntity
@@ -10,14 +10,14 @@ import java.time.LocalDateTime
 
 @Repository
 class SysGarbageFileWriteRepository : SysGarbageFileWriteOrmPort, BaseRepository() {
-    override fun create(createDto: FileDeleteCreateDto): Long {
-        val saveEntity = SysGarbageFileFactory.getSaveEntity(createDto)
+    override fun create(fileDeleteDto: FileDeleteDto): Long {
+        val saveEntity = SysGarbageFileFactory.getSaveEntity(fileDeleteDto)
         em.persist(saveEntity)
         return saveEntity.id
     }
 
-    override fun create(createDtoList: List<FileDeleteCreateDto>) {
-        createDtoList.forEach {
+    override fun create(fileDeleteDtoList: List<FileDeleteDto>) {
+        fileDeleteDtoList.forEach {
             val saveEntity = SysGarbageFileFactory.getSaveEntity(it)
             em.persist(saveEntity)
         }

@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 /**
  * 삭제 대상 파일 저장 dto
  */
-data class FileDeleteCreateDto(
+data class FileDeleteDto(
     var type: GarbageFileType,
     val path: String,
     val name: String,

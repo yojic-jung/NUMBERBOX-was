@@ -2,7 +2,7 @@ package com.kamcci.numberbox.app.service.resource
 
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
-import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteCreateDto
+import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
@@ -32,7 +32,7 @@ class MathResourceWriteService(
     override fun update(updateDto: MathResourceUpdateDto) {
         // 0. 이전 파일 조회
         val prevFile = mathResourceReadOrmPort.readFileById(updateDto.resourceId)
-        val deleteImgList: MutableList<FileDeleteCreateDto> = mutableListOf()
+        val deleteImgList: MutableList<FileDeleteDto> = mutableListOf()
 
         // 1. ppt 파일 이전 파일 삭제 대상에 추가
         if (updateDto.pptFilePath != null && updateDto.pptFileName != null) {
@@ -56,16 +56,16 @@ class MathResourceWriteService(
 
         // 이전 이미지 삭제
         deleteImgList.forEach {
-            sysGarbageFileWriteOrmPort.create(FileDeleteCreateDto(GarbageFileType.S3, it.path, it.name))
+            sysGarbageFileWriteOrmPort.create(FileDeleteDto(GarbageFileType.S3, it.path, it.name))
         }
     }
 
     private fun deletePrevFile(
         prevImgPath: String,
         prevImgName: String,
-        deleteImgList: MutableList<FileDeleteCreateDto>
+        deleteImgList: MutableList<FileDeleteDto>
     ) {
-        val prevImg = FileDeleteCreateDto(GarbageFileType.S3, prevImgPath, prevImgName)
+        val prevImg = FileDeleteDto(GarbageFileType.S3, prevImgPath, prevImgName)
         deleteImgList.add(prevImg)
     }
 
