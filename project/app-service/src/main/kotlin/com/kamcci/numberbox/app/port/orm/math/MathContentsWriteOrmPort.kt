@@ -60,8 +60,8 @@ interface MathContentsWriteOrmPort {
         contentsModifyDto: MathContentsModifyDto
     ): Long
 
-    // 변형문제 갯수 변경
-    fun updateTransConCntById(id: Long, transContCnt: Int): Boolean
+    // 변형문제 갯수 +1
+    fun incrementTransConCntById(id: Long): Long
 
     /**
      * 사용자 수학문제 수정

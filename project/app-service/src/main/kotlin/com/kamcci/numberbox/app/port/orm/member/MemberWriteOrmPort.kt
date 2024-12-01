@@ -21,25 +21,25 @@ interface MemberWriteOrmPort {
     /**
      * 비밀번호 변경
      */
-    fun updatePassword(memberId: UUID, password: String): Boolean
+    fun updatePassword(memberId: UUID, password: String): Long
 
     /**
      * 비밀번호 변경
      */
-    fun updatePassword(memberId: List<UUID>, password: String?): Boolean
+    fun updatePassword(memberId: List<UUID>, password: String?): Long
 
     /**
      * 비밀번호 변경
      */
-    fun updatePassword(email: String, password: String): Boolean
+    fun updatePassword(email: String, password: String): Long
 
     /**
      * 실패 카운트를 변경함(실패 시간은 현재시간으로 변경)
      */
-    fun updateFailCountById(userId: UUID, failCount: Int): Boolean
+    fun updateFailCountById(userId: UUID, failCount: Int): Long
 
     /**
      * 실패 시간만 변경함
      */
-    fun updateLastFailTimeById(userId: UUID, lastFailTime: LocalDateTime): Boolean
+    fun updateLastFailTimeById(userId: UUID, lastFailTime: LocalDateTime): Long
 }

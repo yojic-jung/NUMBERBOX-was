@@ -56,8 +56,7 @@ class MathContentsWriteService(
             mathContentsWriteOrmPort.saveTransContents(orgContentsId, Release, contentsModifyDto)
 
         // 원본문제의 변형문제수 +1
-        val transConCnt = mathContentsReadOrmPort.readTransContCntById(orgContentsId)!!
-        mathContentsWriteOrmPort.updateTransConCntById(orgContentsId, transConCnt + 1)
+        mathContentsWriteOrmPort.incrementTransConCntById(orgContentsId)
         return contentsId
     }
 

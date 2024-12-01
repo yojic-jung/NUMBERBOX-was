@@ -58,6 +58,4 @@ class MathResourceWriteRepository : MathResourceWriteOrmPort, BaseRepository() {
                 mathResourceEntity.memberId.eq(memberId)
             )
             .execute()
-
-
 }

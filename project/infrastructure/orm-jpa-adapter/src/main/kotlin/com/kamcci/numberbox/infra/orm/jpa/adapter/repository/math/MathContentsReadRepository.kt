@@ -23,29 +23,25 @@ class MathContentsReadRepository(
     private val mathContentsExpression: MathContentsExpression
 ) : MathContentsReadOrmPort, BaseRepository() {
     override fun readById(contentsId: Long): MathContentsVo? =
-        findBy(contentsId = contentsId, contentsIdList = null, pageReq = null)
+        findBy(pageReq = null)
+            .where(
+                mathContentsEntity.id.eq(contentsId),
+                mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release)
+            )
             .fetchOne()
 
     override fun readById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> =
-        findBy(contentsId = null, contentsIdList = contentsId, pageReq = pageReq)
+        findBy(pageReq = pageReq)
+            .where(
+                mathContentsEntity.id.`in`(contentsId),
+                mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release)
+            )
             .fetch()
 
     // 검색조건에 따른 동적 쿼리
     private fun findBy(
-        contentsId: Long?,
-        contentsIdList: List<Long>?,
         pageReq: PageRequest?
     ): JPAQuery<MathContentsVo> {
-        // id 조건에 따른 동적 쿼리 조건
-        val idCondition =
-            when {
-                contentsId != null -> mathContentsEntity.id.eq(contentsId)
-
-                contentsIdList != null -> mathContentsEntity.id.`in`(contentsIdList)
-
-                else -> null
-            }
-
         // 쿼리 생성
         val qry: JPAQuery<MathContentsVo> =
             queryFactory
@@ -57,10 +53,7 @@ class MathContentsReadRepository(
                 .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
                 .leftJoin(mathContentsLicenseEntity)
                 .on(mathContentsEntity.id.eq(mathContentsLicenseEntity.mathContents.id))
-                .where(
-                    idCondition,
-                    mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release)
-                )
+
 
         // 페이징 조건 추가
         if (pageReq != null) {

@@ -88,12 +88,12 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
         return entity.id
     }
 
-    override fun updateTransConCntById(id: Long, transContCnt: Int): Boolean {
+    override fun incrementTransConCntById(id: Long): Long {
         return queryFactory
             .update(mathContentsEntity)
-            .set(mathContentsEntity.transConCnt, transContCnt)
+            .set(mathContentsEntity.transConCnt, mathContentsEntity.transConCnt.add(1))
             .where(mathContentsEntity.id.eq(id))
-            .execute() > 0
+            .execute()
     }
 
     override fun updateWithLicense(

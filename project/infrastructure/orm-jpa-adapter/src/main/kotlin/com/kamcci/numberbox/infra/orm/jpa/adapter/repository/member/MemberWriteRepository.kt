@@ -28,47 +28,47 @@ class MemberWriteRepository : MemberWriteOrmPort, BaseRepository() {
             .execute()
     }
 
-    override fun updatePassword(memberId: UUID, password: String): Boolean {
+    override fun updatePassword(memberId: UUID, password: String): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)
             .set(memberEntity.sysUpdateTime, LocalDateTime.now())
             .where(memberEntity.id.eq(memberId))
-            .execute() > 0
+            .execute()
     }
 
-    override fun updatePassword(memberId: List<UUID>, password: String?): Boolean {
+    override fun updatePassword(memberId: List<UUID>, password: String?): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)
             .set(memberEntity.sysUpdateTime, LocalDateTime.now())
             .where(memberEntity.id.`in`(memberId))
-            .execute() > 0
+            .execute()
     }
 
-    override fun updatePassword(email: String, password: String): Boolean {
+    override fun updatePassword(email: String, password: String): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)
             .set(memberEntity.sysUpdateTime, LocalDateTime.now())
             .where(memberEntity.email.eq(email))
-            .execute() > 0
+            .execute()
     }
 
-    override fun updateFailCountById(userId: UUID, failCount: Int): Boolean {
+    override fun updateFailCountById(userId: UUID, failCount: Int): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.failCount, failCount)
             .set(memberEntity.lastFailTime, LocalDateTime.now())
             .where(memberEntity.id.eq(userId))
-            .execute() > 0
+            .execute()
     }
 
-    override fun updateLastFailTimeById(userId: UUID, lastFailTime: LocalDateTime): Boolean {
+    override fun updateLastFailTimeById(userId: UUID, lastFailTime: LocalDateTime): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.lastFailTime, lastFailTime)
             .where(memberEntity.id.eq(userId))
-            .execute() > 0
+            .execute()
     }
 }

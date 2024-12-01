@@ -16,6 +16,18 @@ class MathContentsGrammarWriteRepositoryTest(
     @Test
     fun `수학문제 문법 저장`() {
         // given
+        val contentsId = 999999L
+        val grammar = ""
+
+        // when
+        mathContentsGrammarWriteRepository.createGrammar(contentsId, grammar)
+        em.flush()
+        em.clear()
+    }
+
+    @Test
+    fun `수학문제 문법 수정`() {
+        // given
         val contentsId = 1L
         val grammar = ""
 

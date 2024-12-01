@@ -26,10 +26,10 @@ class MemberProfileReadRepositoryTest(
     @Test
     fun `프로필 id로 프로필 조회`() {
         // given
-        val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
+        val profileId = 1L
 
         // when
-        val profile = memberProfileReadRepository.readByMemberId(memberId)
+        val profile = memberProfileReadRepository.readByProfileId(profileId)
 
         // then
         assertThat(profile?.id).isEqualTo(1L)

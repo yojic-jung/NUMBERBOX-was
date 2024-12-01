@@ -8,9 +8,6 @@ import java.util.*
  * 프로필 조회
  */
 interface MemberProfileReadOrmPort {
-    // 프로필 id 조회 - memberId로 조회
-    fun readIdByMemberId(memberId: UUID): Long?
-
     // 프로필 조회 - memberId로 조회
     fun readByMemberId(memberId: UUID): MemberProfileVo?
 

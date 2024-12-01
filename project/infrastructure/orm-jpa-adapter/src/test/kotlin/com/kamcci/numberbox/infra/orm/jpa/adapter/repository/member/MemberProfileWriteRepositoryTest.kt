@@ -109,4 +109,16 @@ class MemberProfileWriteRepositoryTest(
         val memberProfileEntity = entityManager.find(MemberProfileEntity::class.java, 1)
         assertThat(memberProfileEntity.nickname).isEqualTo(nickname)
     }
+
+    @Test
+    fun `한글 다운로드 수 전체 초기화`() {
+        // given
+        val hwpDownCnt = 0
+
+        // when
+        val executeRowCnt = memberProfileModifyRepository.updateHwpDownCntByMemberId(hwpDownCnt)
+
+        // then
+        assertThat(executeRowCnt).isGreaterThan(0)
+    }
 }

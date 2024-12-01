@@ -89,6 +89,18 @@ class MathContentsWriteRepositoryTest(
     }
 
     @Test
+    fun `변형문제 수 수정`() {
+        // given
+        val contentsId = 1L
+
+        // when
+        val executeRowCnt = mathContentsWriteRepository.incrementTransConCntById(contentsId)
+
+        // then
+        assertThat(executeRowCnt).isEqualTo(1)
+    }
+
+    @Test
     fun `저작권 수정`() {
         // given
         val contentsId = 1L
@@ -100,6 +112,26 @@ class MathContentsWriteRepositoryTest(
                 ContentsSvcPosbSttsType.Release,
                 modifyDto,
                 licenseCreateDto
+            )
+        em.flush()
+        em.clear()
+
+        // then
+        assertThat(id).isEqualTo(contentsId)
+    }
+
+    @Test
+    fun `자체 제작문제 수정`() {
+        // given
+        val contentsId = 1L
+
+        // when
+        val id =
+            mathContentsWriteRepository.updateWithSimilarSrc(
+                contentsId,
+                ContentsSvcPosbSttsType.Release,
+                modifyDto,
+                similarSrcDto
             )
         em.flush()
         em.clear()

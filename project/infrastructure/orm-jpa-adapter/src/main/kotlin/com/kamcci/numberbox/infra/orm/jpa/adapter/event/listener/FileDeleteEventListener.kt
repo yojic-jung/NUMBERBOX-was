@@ -16,12 +16,4 @@ class FileDeleteEventListener(
     fun save(eventDto: FileDeleteDto) {
         sysGarbageFileWriteOrmPort.create(eventDto)
     }
-
-    @Async
-    @EventListener
-    fun save(eventDtoList: List<FileDeleteDto>) {
-        eventDtoList.forEach { eventDto ->
-            sysGarbageFileWriteOrmPort.create(eventDto)
-        }
-    }
 }

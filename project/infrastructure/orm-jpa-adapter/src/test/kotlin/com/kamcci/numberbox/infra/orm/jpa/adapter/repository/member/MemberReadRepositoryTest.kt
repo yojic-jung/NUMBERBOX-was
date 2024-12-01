@@ -46,7 +46,37 @@ class MemberReadRepositoryTest(
 
         // then
         assertThat(email).isEqualTo("dywlr@test.com")
+    }
 
+    @Test
+    fun `이메일 조회 - 성공`() {
+        // given & when
+        val email = "dywlr@test.com"
+        val isExist = memberReadRepo.existEmail(email)
+
+        // then
+        assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `계정 존재여부 확인`() {
+        // when
+        val isExist = memberReadRepo.existsByEmail(EXIST_EMAIL)
+
+        // then
+        assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `암호화 비밀번호 조회`() {
+        // given
+        val memberId = UUID.fromString(EXIST_ID)
+
+        // when
+        val password = memberReadRepo.readPasswordByMemberId(memberId)
+
+        // then
+        assertThat(password).isNotNull
     }
 
     @Test
@@ -115,5 +145,24 @@ class MemberReadRepositoryTest(
 
         // then
         assertThat(isExist).isFalse()
+    }
+
+    @Test
+    fun `임시 비밀번호 발급자 모두 조회`() {
+        // when
+        val memberIdList = memberReadRepo.readByIsTmpPassword(true, 10)
+
+        // then
+        assertThat(memberIdList).contains(UUID.fromString("32ca3122-cda8-ea4d-9bc7-037cb86fdb20"))
+    }
+
+    @Test
+    fun `활성 비활성 조건으로 계정 조회`() {
+        // when
+        val memberIdList = memberReadRepo.readUserIdByHumanStatus(1)
+        println(memberIdList)
+
+        // then
+        assertThat(memberIdList).contains(UUID.fromString("32ca3122-cda8-ea4d-9bc7-037cb86fdb20"))
     }
 }

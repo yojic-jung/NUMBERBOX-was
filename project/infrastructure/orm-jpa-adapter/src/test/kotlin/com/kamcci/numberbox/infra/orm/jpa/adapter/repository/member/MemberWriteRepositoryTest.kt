@@ -35,6 +35,17 @@ class MemberWriteRepositoryTest(
     }
 
     @Test
+    fun `회원 비활성화 - 성공`() {
+        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+
+        // when
+        val executeRowCnt = memberModifyRepository.drop(memberId)
+
+        // then
+        assertThat(executeRowCnt).isEqualTo(1)
+    }
+
+    @Test
     fun `중복 이메일 멤버 영속화 - 실패`() {
         // given
         val duplicateEmail = "test@test.com"
@@ -60,6 +71,19 @@ class MemberWriteRepositoryTest(
         // then
         val memberEntity = em.find(MemberEntity::class.java, memberId)
         assertThat(memberEntity.password).isEqualTo(password)
+    }
+
+    @Test
+    fun `멤버 id List로 비밀번호 변경 - 성공`() {
+        // given
+        val memberId = listOf(UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"))
+        val password = "tmp"
+
+        // when
+        val executeRowCnt = memberModifyRepository.updatePassword(memberId, password)
+
+        // then
+        assertThat(executeRowCnt).isEqualTo(1)
     }
 
     @Test

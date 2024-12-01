@@ -79,8 +79,11 @@ class MemberReadRepository : MemberReadOrmPort, BaseRepository() {
             .leftJoin(memberRoleEntity)
             .on(memberRoleEntity.member.id.eq(memberEntity.id))
             .where(
-                memberEntity.humanStatus.eq(humanStatus),
-                memberRoleEntity.roleName.notIn("ADMIN", "USER", "TOP_TESTER")
+                memberEntity.humanStatus.eq(humanStatus).and(
+                    memberRoleEntity.roleName.isNull.or(
+                        memberRoleEntity.roleName.notIn("ADMIN", "MANAGER", "TOP_TESTER")
+                    )
+                ),
             )
             .fetch()
 }

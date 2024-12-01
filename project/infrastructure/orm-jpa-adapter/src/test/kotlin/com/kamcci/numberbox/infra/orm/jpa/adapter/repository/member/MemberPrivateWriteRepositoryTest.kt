@@ -73,4 +73,16 @@ class MemberPrivateWriteRepositoryTest(
         val memberPrivateEntity = em.find(MemberPrivateEntity::class.java, memberId)
         assertThat(memberPrivateEntity.phoneNumber).isEqualTo(phoneUpdtDto.phoneNumber)
     }
+
+    @Test
+    fun `개인정보 파기`() {
+        // given
+        val memberId = UUID.fromString("33CA3122-CDA8-EA4D-9BC7-037CB86FDB20")
+
+        // when
+        val executeRowCnt = memberPrivateWriteOrmPort.updatePrivateToNull(memberId)
+
+        // then
+        assertThat(executeRowCnt).isEqualTo(1)
+    }
 }

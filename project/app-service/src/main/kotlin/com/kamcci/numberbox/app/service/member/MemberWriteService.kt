@@ -35,7 +35,7 @@ class MemberWriteService(
 
         // 비밀번호 변경
         val encodedPassword = memberPasswordEncoder.encode(updtDto.password)
-        return memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPassword)
+        return memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPassword) > 0
     }
 
     @TXExecute
