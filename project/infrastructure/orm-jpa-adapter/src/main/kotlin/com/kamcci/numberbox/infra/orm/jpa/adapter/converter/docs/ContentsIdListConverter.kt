@@ -6,7 +6,8 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class ContentsIdListConverter : AttributeConverter<MutableList<Long>, String> {
     override fun convertToEntityAttribute(column: String?): MutableList<Long> {
-        return column?.split(",")?.map { it.toLong() }?.toMutableList() ?: mutableListOf()
+        return if (column == null) mutableListOf()
+        else column.split(",").map { it.toLong() }.toMutableList()
     }
 
     override fun convertToDatabaseColumn(property: MutableList<Long>): String {

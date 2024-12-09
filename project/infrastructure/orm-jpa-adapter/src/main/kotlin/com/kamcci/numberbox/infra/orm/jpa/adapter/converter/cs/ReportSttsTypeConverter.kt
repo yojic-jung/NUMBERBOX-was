@@ -8,10 +8,10 @@ import jakarta.persistence.Converter
 class ReportSttsTypeConverter : AttributeConverter<ReportSttsType, Int> {
     // LeftJoin으로 null 반환 가능
     override fun convertToEntityAttribute(column: Int?): ReportSttsType? {
-        return ReportSttsType.entries.find { it.id == column }
+        return ReportSttsType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: ReportSttsType): Int {
-        return property.id
+        return property.dbData
     }
 }

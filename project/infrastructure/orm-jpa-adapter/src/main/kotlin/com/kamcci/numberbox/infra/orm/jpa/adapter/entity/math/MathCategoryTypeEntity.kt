@@ -18,8 +18,8 @@ class MathCategoryTypeEntity {
 
 @Embeddable
 class MathTypeDomain(
-    @Column(nullable = false)
+    @Column(name = "unit_id", nullable = false)
     val unitId: Int,
-    @Column(nullable = false)
+    @Column(name = "type_id", nullable = false)
     val typeId: Int,
 ) : Serializable

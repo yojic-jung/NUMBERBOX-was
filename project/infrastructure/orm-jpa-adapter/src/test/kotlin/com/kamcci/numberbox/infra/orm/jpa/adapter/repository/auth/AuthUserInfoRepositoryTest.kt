@@ -11,7 +11,7 @@ class AuthUserInfoRepositoryTest(
     private val authUserInfoRepository: AuthUserInfoRepository
 ) {
     @Test
-    fun `멤버엔티티 조회 - 성공`() {
+    fun `멤버엔티티 조회 - 존재`() {
         // given
         val email = "dywlr@test.com"
 
@@ -20,6 +20,18 @@ class AuthUserInfoRepositoryTest(
 
         // then
         assertThat(authUser?.username).isEqualTo(email)
+    }
+
+    @Test
+    fun `멤버엔티티 조회 - 미존재`() {
+        // given
+        val email = "dywㄴㅇㅁㄹlr@test.com"
+
+        // when
+        val authUser = authUserInfoRepository.loadUserByUsername(email)
+
+        // then
+        assertThat(authUser).isNull()
     }
 
     @Test

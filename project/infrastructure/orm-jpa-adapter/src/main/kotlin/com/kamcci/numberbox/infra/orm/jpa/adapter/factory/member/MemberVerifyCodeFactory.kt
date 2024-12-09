@@ -13,6 +13,7 @@ object MemberVerifyCodeFactory {
             email = memberVerifyCodeSaveDto.email
             codeType = memberVerifyCodeSaveDto.codeType
             verifyCode = memberVerifyCodeSaveDto.verifyCode
+            tryCnt = 0
         }
 
     fun makeUpdateEntity(memberVerifyCodeSaveDto: MemberVerifyCodeSaveDto) = MemberVerifyCodeEntity()

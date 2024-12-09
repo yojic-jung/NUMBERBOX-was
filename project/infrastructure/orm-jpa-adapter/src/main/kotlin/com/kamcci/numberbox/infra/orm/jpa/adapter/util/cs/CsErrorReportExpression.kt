@@ -15,6 +15,8 @@ class CsErrorReportExpression {
             csErrorReportEntity.errType,
             csErrorReportEntity.contentsId,
             csErrorReportEntity.reportContents,
+            csErrorReportEntity.clientBrowser,
+            csErrorReportEntity.clientOs,
             csErrorReportEntity.replyContents,
             csErrorReportEntity.firstImgPath,
             csErrorReportEntity.firstImgName,

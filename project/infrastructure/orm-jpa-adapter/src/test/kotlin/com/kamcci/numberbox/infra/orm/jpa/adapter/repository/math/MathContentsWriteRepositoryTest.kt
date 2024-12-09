@@ -3,9 +3,9 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.*
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsFixture
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,21 +21,6 @@ class MathContentsWriteRepositoryTest(
 ) {
 
     private val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
-    private val modifyDto = MathContentsModifyDto(
-        memberId = memberId,
-        unitId = 21001,
-        typeId = 1,
-        contents = "",
-        solution = "",
-        answer = "",
-        choiceAnswer = listOf("1"),
-        firNo = "",
-        secNo = "",
-        thrNo = "",
-        fourNo = "",
-        fifNo = "",
-        quesLevel = 1
-    )
     private val licenseCreateDto = MathConLicenseModifyDto(true, true, true, true)
     private val similarSrcDto = MathConSimilarSrcCreateDto("", 1, 1, "", MathTypeClassifyType.Simple)
     private val ipsiCreateDto = MathConIpsiSrcModifyDto(IpsiManageInsType.Kice, 2022, 11, 55, IpsiPaperType.Ka, 1, 2)
@@ -45,7 +30,11 @@ class MathContentsWriteRepositoryTest(
     fun `사용자 수학문제 제작`() {
         // when
         val id =
-            mathContentsWriteRepository.saveWithLicense(ContentsSvcPosbSttsType.Release, modifyDto, licenseCreateDto)
+            mathContentsWriteRepository.saveWithLicense(
+                ContentsSvcPosbSttsType.Release,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                licenseCreateDto
+            )
         em.flush()
         em.clear()
 
@@ -55,6 +44,9 @@ class MathContentsWriteRepositoryTest(
 
     @Test
     fun `자체제작 수학문제 제작`() {
+        // given
+        val modifyDto = MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")) // 주관식, 객관식 정답 존재
+
         // when
         val id =
             mathContentsWriteRepository.saveWithSimilarSrc(ContentsSvcPosbSttsType.Release, modifyDto, similarSrcDto)
@@ -68,7 +60,11 @@ class MathContentsWriteRepositoryTest(
     fun `입시 수학문제 제작`() {
         // when
         val id =
-            mathContentsWriteRepository.saveWithIpsiSrc(ContentsSvcPosbSttsType.Release, modifyDto, ipsiCreateDto)
+            mathContentsWriteRepository.saveWithIpsiSrc(
+                ContentsSvcPosbSttsType.Release,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                ipsiCreateDto
+            )
         em.flush()
         em.clear()
 
@@ -80,7 +76,11 @@ class MathContentsWriteRepositoryTest(
     fun `변형문제 제작`() {
         // when
         val id =
-            mathContentsWriteRepository.saveTransContents(1L, ContentsSvcPosbSttsType.Release, modifyDto)
+            mathContentsWriteRepository.saveTransContents(
+                1L,
+                ContentsSvcPosbSttsType.Release,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2"))
+            )
         em.flush()
         em.clear()
 
@@ -110,7 +110,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithLicense(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                modifyDto,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
                 licenseCreateDto
             )
         em.flush()
@@ -130,7 +130,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithSimilarSrc(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                modifyDto,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
                 similarSrcDto
             )
         em.flush()
@@ -150,7 +150,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithIpsiSrc(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                modifyDto,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
                 ipsiCreateDto
             )
         em.flush()
@@ -170,7 +170,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateTransContents(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                modifyDto,
+                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
             )
         em.flush()
         em.clear()

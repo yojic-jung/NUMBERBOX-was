@@ -18,6 +18,7 @@ class MemberVerifyCodeWriteRepositoryTest(
 ) {
     companion object {
         const val EMAIL = "test1234535@test.com"
+        const val EXIST_EMAIL = "dywlr@test.com"
         const val VERIFY_CODE = "testtestcom"
     }
 
@@ -31,6 +32,19 @@ class MemberVerifyCodeWriteRepositoryTest(
         val saveEntity = entityManager.find(MemberVerifyCodeEntity::class.java, EMAIL)
 
         assertThat(saveEntity.email).isEqualTo(EMAIL)
+        assertThat(saveEntity.verifyCode).isEqualTo(VERIFY_CODE)
+    }
+
+    @Test
+    fun `MemberEmailVerifyCodeEntity 수정 - 성공`() {
+        val saveDto = MemberVerifyCodeSaveDto(EXIST_EMAIL, VerifyCodeType.SignUp, VERIFY_CODE)
+        verifyCodeModifyRepoImpl.save(saveDto)
+        entityManager.flush()
+        entityManager.clear()
+
+        val saveEntity = entityManager.find(MemberVerifyCodeEntity::class.java, EXIST_EMAIL)
+
+        assertThat(saveEntity.email).isEqualTo(EXIST_EMAIL)
         assertThat(saveEntity.verifyCode).isEqualTo(VERIFY_CODE)
     }
 }

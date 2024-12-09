@@ -5,9 +5,8 @@ import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
-import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
-import com.kammci.numberbox.restapi.common.BaseMockMvcTest
+import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
+import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -27,9 +26,6 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
         const val NICKNAME_CHNG_URL = "/member/profile/nickname"
         const val MY_PROFILE_URL = "/member/profile"
     }
-
-    @Autowired
-    lateinit var memberProfileWriteCase: MemberProfileWriteCase
 
     @Autowired
     lateinit var memberProfileReadCase: MemberProfileReadCase

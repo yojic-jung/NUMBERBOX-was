@@ -16,7 +16,7 @@ class MathContentsGrammarWriteRepositoryTest(
     @Test
     fun `수학문제 문법 저장`() {
         // given
-        val contentsId = 999999L
+        val contentsId = 4907L
         val grammar = ""
 
         // when

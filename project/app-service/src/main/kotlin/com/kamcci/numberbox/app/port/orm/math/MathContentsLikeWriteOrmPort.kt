@@ -10,6 +10,6 @@ interface MathContentsLikeWriteOrmPort {
     fun save(modifyDto: MathContentsLikeModifyDto): Boolean
 
     // 좋아요 목록에서 제거
-    fun delete(modifyDto: MathContentsLikeModifyDto): Boolean
+    fun delete(modifyDto: MathContentsLikeModifyDto): Long
 
 }

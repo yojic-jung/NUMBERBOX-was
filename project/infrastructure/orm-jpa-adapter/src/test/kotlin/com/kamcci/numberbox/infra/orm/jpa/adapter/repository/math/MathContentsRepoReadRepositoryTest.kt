@@ -23,7 +23,7 @@ class MathContentsRepoReadRepositoryTest(
     }
 
     @Test
-    fun `저장소 존재여부 확인`() {
+    fun `저장소 존재여부 확인 - 존재`() {
         // given
         val contentsId = 1L
 
@@ -32,5 +32,17 @@ class MathContentsRepoReadRepositoryTest(
 
         // then
         assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `저장소 존재여부 확인 - 미존재`() {
+        // given
+        val contentsId = 99999999L
+
+        // when
+        val isExist = mathContentsRepoReadRepository.existByContentsIdAndMemberId(contentsId, memberId)
+
+        // then
+        assertThat(isExist).isFalse()
     }
 }

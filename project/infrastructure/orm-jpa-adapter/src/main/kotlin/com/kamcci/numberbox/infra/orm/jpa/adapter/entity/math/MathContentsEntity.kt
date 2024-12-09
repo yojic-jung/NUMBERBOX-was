@@ -130,19 +130,6 @@ class MathContentsEntity {
     @UpdateTimestamp
     var sysUpdateDate: LocalDateTime? = null
 
-    // 단원 정보
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "unit_id", insertable = false, updatable = false)
-    var mathUnitInfo: MathCategoryUnitEntity? = null
-
-    // 유형 정보
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns(
-        JoinColumn(name = "unit_id", insertable = false, updatable = false),
-        JoinColumn(name = "type_id", insertable = false, updatable = false)
-    )
-    var mathTypeInfo: MathCategoryTypeEntity? = null
-
     // 자체제작 수학문제 출처
     @OneToMany(mappedBy = "mathContents", fetch = FetchType.LAZY)
     var mathContentsSimilarSrc: MutableList<MathContentsSimilarSrcEntity> = mutableListOf()

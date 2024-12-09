@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteCase
-import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
-import com.kammci.numberbox.restapi.common.BaseMockMvcTest
+import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
+import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any

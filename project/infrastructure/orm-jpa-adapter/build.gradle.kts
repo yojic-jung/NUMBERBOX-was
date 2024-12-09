@@ -6,6 +6,7 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java-test-fixtures")
+    id("jacoco")
 
     kotlin("jvm")
     kotlin("kapt") version "1.9.22"
@@ -85,6 +86,7 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
 }
 
 tasks.named<BootJar>("bootJar") {
@@ -93,4 +95,40 @@ tasks.named<BootJar>("bootJar") {
 
 tasks.named<BootRun>("bootRun") {
     enabled = false
+}
+
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+var Qdomains = mutableListOf<String>()
+
+for (qPattern in 'A'..'Z') {
+    Qdomains.add("*.Q${qPattern}*")
+}
+
+tasks.jacocoTestReport {
+    executionData(fileTree(layout.buildDirectory).include("jacoco/*.exec"))
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+
+        html.outputLocation = file("${layout.buildDirectory}/jacoco.html")
+        xml.outputLocation = file("${layout.buildDirectory}/jacoco.xml")
+    }
+
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("**/Q*Entity.class", "**/Q*Domain.class")
+        }
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            excludes = mutableListOf("**/Q*Entity")
+        }
+    }
 }

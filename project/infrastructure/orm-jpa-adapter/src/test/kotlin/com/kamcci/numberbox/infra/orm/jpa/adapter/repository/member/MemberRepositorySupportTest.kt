@@ -24,11 +24,11 @@ class MemberRepositorySupportTest(
         val memberId = UUID.fromString(EXIST_ID)
 
         // when
-        val isUpdated = memberRepositorySupport.updateSuccessUser(memberId, 0, 1)
+        val executedRowCnt = memberRepositorySupport.updateSuccessUser(memberId, 0, 1)
         em.flush()
         em.clear()
 
         // then
-        assertThat(isUpdated).isTrue()
+        assertThat(executedRowCnt).isGreaterThan(0)
     }
 }

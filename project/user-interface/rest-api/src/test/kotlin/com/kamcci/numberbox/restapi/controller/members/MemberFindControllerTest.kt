@@ -3,8 +3,8 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
-import com.kammci.numberbox.restapi.annotation.WebMvcUnitTest
-import com.kammci.numberbox.restapi.common.BaseMockMvcTest
+import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
+import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -16,19 +16,19 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @WebMvcUnitTest
 class MemberFindControllerTest : BaseMockMvcTest() {
     companion object {
-        private const val CREATE_VERIFY_CODE_URL = "/public/member/signup/verifyCode"
-        private const val SIGNUP_URL = "/public/member/signup"
+        const val CREATE_VERIFY_CODE_URL = "/public/member/signup/verifyCode"
+        const val SIGNUP_URL = "/public/member/signup"
 
-        private const val FIND_EMAIL_URL = "/public/member/findEmail"
-        private const val FIND_PASSWD_URL = "/public/member/findPassword"
+        const val FIND_EMAIL_URL = "/public/member/findEmail"
+        const val FIND_PASSWD_URL = "/public/member/findPassword"
 
         // 정상 케이스 테스트 케이스
-        private const val EMAIL = "test@test.com"
-        private const val PW = "abcd1234!"
-        private const val VERIFY_CODE = "3e0c5f0e-3e12-488c-be48-88fdb92c2dd0"
-        private const val NAME = "홍길동"
-        private const val PHONE = "01012341234"
-        private const val BIRTH = "650123"
+        const val EMAIL = "test@test.com"
+        const val PW = "abcd1234!"
+        const val VERIFY_CODE = "3e0c5f0e-3e12-488c-be48-88fdb92c2dd0"
+        const val NAME = "홍길동"
+        const val PHONE = "01012341234"
+        const val BIRTH = "650123"
     }
 
     @Autowired

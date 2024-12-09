@@ -1,7 +1,8 @@
-package com.kammci.numberbox.restapi.annotation
+package com.kamcci.numberbox.restapi.annotation
 
+import com.kamcci.numberbox.restapi.config.RestApiWebMvcMockBeanConfig
+import com.kamcci.numberbox.restapi.controller.cs.CsErrorReportReadController
 import com.kamcci.numberbox.restapi.controller.members.*
-import com.kammci.numberbox.restapi.config.RestApiWebMvcMockBeanConfig
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -16,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration
         MemberProfileWriteController::class,
         MemberFindController::class,
         MembersFollowWriteController::class,
+        CsErrorReportReadController::class,
     ]
 )
 annotation class WebMvcUnitTest

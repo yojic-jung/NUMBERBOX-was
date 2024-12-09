@@ -47,7 +47,7 @@ class MemberFollowReadRepositoryTest(
     }
 
     @Test
-    fun `팔로우 존재 여부 조회`() {
+    fun `팔로우 존재 여부 조회 - 존재`() {
         // given
         val followingId = 3L
         val followerId = 4L
@@ -57,5 +57,18 @@ class MemberFollowReadRepositoryTest(
 
         // then
         assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `팔로우 존재 여부 조회 - 미존재`() {
+        // given
+        val followingId = 99999L
+        val followerId = 99999L
+
+        // when
+        val isExist = memberFollowReadRepository.existFollow(followingId, followerId)
+
+        // then
+        assertThat(isExist).isFalse()
     }
 }

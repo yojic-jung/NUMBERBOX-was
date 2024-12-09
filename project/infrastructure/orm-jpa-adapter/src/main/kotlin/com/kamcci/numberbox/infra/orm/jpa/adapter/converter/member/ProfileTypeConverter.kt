@@ -6,7 +6,7 @@ import jakarta.persistence.Converter
 
 @Converter(autoApply = true)
 class ProfileTypeConverter : AttributeConverter<ProfileType, Int> {
-    override fun convertToEntityAttribute(column: Int): ProfileType? {
+    override fun convertToEntityAttribute(column: Int?): ProfileType? {
         return ProfileType.entries.find { it.id == column }
     }
 

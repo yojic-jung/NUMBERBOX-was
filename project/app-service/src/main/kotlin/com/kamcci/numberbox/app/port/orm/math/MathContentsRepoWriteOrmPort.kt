@@ -10,6 +10,6 @@ interface MathContentsRepoWriteOrmPort {
     fun save(modifyDto: MathContentsRepoModifyDto): Boolean
 
     // 저장소에서 제거
-    fun delete(modifyDto: MathContentsRepoModifyDto): Boolean
+    fun delete(modifyDto: MathContentsRepoModifyDto): Long
 
 }

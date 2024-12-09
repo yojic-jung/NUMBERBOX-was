@@ -18,13 +18,13 @@ class MemberPrivateWriteRepository : MemberPrivateWriteOrmPort, BaseRepository()
         return memberPrivateEntity.memberId!!
     }
 
-    override fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean {
+    override fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Long {
         return queryFactory
             .update(memberPrivateEntity)
             .set(memberPrivateEntity.phoneNumber, phoneUpdtDto.phoneNumber)
             .set(memberPrivateEntity.sysUpdateTime, LocalDateTime.now())
             .where(memberPrivateEntity.memberId.eq(phoneUpdtDto.memberId))
-            .execute() > 0
+            .execute()
     }
 
     override fun updatePrivateToNull(memberId: UUID): Long {

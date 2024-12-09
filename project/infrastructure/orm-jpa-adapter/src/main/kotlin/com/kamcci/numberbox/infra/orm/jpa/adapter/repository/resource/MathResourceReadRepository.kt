@@ -132,8 +132,7 @@ class MathResourceReadRepository(
             .fetch()
 
         // Vo로 변환
-        val imgList = resourceImg.filter { it.mathResource!!.id == resourceEntity.id }
-            .map { MathResourceImgVo(it.imgPath!!, it.imgName!!) }
+        val imgList = resourceImg.map { MathResourceImgVo(it.imgPath!!, it.imgName!!) }
 
         return MathResourceFileVo(
             id = resourceEntity.id,

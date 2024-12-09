@@ -12,13 +12,13 @@ class MemberRepositorySupport : BaseRepository() {
         userUniqId: UUID,
         failCount: Int,
         humanStatus: Int,
-    ): Boolean {
+    ): Long {
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.lastLoginTime, LocalDateTime.now())
             .set(memberEntity.failCount, failCount)
             .set(memberEntity.humanStatus, humanStatus)
             .where(memberEntity.id.eq(userUniqId))
-            .execute() > 0
+            .execute()
     }
 }

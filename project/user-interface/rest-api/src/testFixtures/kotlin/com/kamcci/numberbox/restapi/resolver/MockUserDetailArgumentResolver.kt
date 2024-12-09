@@ -1,4 +1,4 @@
-package com.kammci.numberbox.restapi.resolver
+package com.kamcci.numberbox.restapi.resolver
 
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId

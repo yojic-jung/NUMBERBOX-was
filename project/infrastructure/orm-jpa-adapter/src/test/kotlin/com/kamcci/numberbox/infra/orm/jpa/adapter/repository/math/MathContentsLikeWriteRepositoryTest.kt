@@ -32,9 +32,9 @@ class MathContentsLikeWriteRepositoryTest(
         val modifyDto = MathContentsLikeModifyDto(1L, memberId)
 
         // when
-        val isDeleted = mathContentsLikeWriteRepository.delete(modifyDto)
+        val executeRowCnt = mathContentsLikeWriteRepository.delete(modifyDto)
 
         // then
-        assertThat(isDeleted).isTrue()
+        assertThat(executeRowCnt).isGreaterThan(0)
     }
 }

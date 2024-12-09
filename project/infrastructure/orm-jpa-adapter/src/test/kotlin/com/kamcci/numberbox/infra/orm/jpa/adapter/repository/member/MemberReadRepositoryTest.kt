@@ -49,13 +49,23 @@ class MemberReadRepositoryTest(
     }
 
     @Test
-    fun `이메일 조회 - 성공`() {
+    fun `이메일 조회 - 존재`() {
         // given & when
         val email = "dywlr@test.com"
         val isExist = memberReadRepo.existEmail(email)
 
         // then
         assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `이메일 조회 - 미존재`() {
+        // given & when
+        val email = "dywㄴㅁㅇㄹ21lr@test.com"
+        val isExist = memberReadRepo.existEmail(email)
+
+        // then
+        assertThat(isExist).isFalse()
     }
 
     @Test

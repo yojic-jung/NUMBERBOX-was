@@ -9,7 +9,7 @@ interface MemberPrivateWriteOrmPort {
     fun save(memberId: UUID, privateSignUpDto: MemberPrivateSignUpDto): UUID
 
     // 휴대폰 번호 변경
-    fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean
+    fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Long
 
     // 개인정보 파기
     fun updatePrivateToNull(memberId: UUID): Long

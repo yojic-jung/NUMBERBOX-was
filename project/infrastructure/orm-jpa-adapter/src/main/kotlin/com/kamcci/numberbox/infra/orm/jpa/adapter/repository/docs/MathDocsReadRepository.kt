@@ -10,6 +10,8 @@ import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math.ContentsClassifyTypeConverter
+import com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math.MultiChoiceTypeConverter
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathTypeDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryTypeEntity.mathCategoryTypeEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
@@ -104,9 +106,6 @@ class MathDocsReadRepository(
         mysqlQuery.setParameter("limit", limit)
         val resultList = mysqlQuery.resultList.map {
             val result = it as Array<out Any>
-            for (idx in 0..result.size - 1) {
-                println("$idx : ${result[idx]}")
-            }
             MathDocsVo(
                 contentsId = result[0] as Long,
                 unitId = result[1] as Int,
@@ -122,12 +121,14 @@ class MathDocsReadRepository(
                 thrNo = result[11] as String?,
                 fourNo = result[12] as String?,
                 fifNo = result[13] as String?,
-                multiChoiceType = MultiChoiceType.entries.find { it.id == result[14].toString() } as MultiChoiceType,
+                multiChoiceType = MultiChoiceTypeConverter().convertToEntityAttribute(result[14].toString()) as MultiChoiceType,
                 answer = result[15] as String?,
                 choiceAnswer = result[16] as String?,
                 quesLevel = result[17] as Int,
                 ansExistStts = result[18].toString() == "1",
-                contentsClassify = ContentsClassifyType.entries.find { it.id.toString() == result[19].toString() } as ContentsClassifyType,
+                contentsClassify = ContentsClassifyTypeConverter().convertToEntityAttribute(
+                    result[19].toString().toInt()
+                ) as ContentsClassifyType,
                 subject = result[20] as String,
                 firUnit = result[21] as String,
                 secUnit = result[22] as String,

@@ -12,6 +12,6 @@ class MemberPrivateWriteService(
 ) : MemberPrivateWriteCase {
     @TXExecute
     override fun updatePhoneNumber(phoneUpdtDto: MemberPhoneUpdtDto): Boolean {
-        return memberPrivateWriteOrmPort.updatePhoneNumber(phoneUpdtDto)
+        return memberPrivateWriteOrmPort.updatePhoneNumber(phoneUpdtDto) > 0
     }
 }

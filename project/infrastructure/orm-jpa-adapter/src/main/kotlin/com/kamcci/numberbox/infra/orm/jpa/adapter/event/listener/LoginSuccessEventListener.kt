@@ -6,6 +6,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefres
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -23,6 +24,7 @@ class LoginSuccessEventListener(
         private const val HUMAN_STATUS_ENABLE = 0
     }
 
+    @Async
     @Transactional
     @EventListener
     fun handle(loginSuccessEvent: LoginSuccessEvent) {

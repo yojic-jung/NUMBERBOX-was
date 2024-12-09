@@ -1,4 +1,4 @@
-package com.kammci.numberbox.restapi.common
+package com.kamcci.numberbox.restapi.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired

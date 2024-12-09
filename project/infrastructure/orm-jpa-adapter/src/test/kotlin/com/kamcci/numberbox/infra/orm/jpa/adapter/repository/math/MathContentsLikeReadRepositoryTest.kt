@@ -14,11 +14,20 @@ class MathContentsLikeReadRepositoryTest(
     private val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
 
     @Test
-    fun `memberId로 조회`() {
+    fun `memberId로 조회 - 존재`() {
         // when
         val isExist = mathContentsLikeReadRepository.existByContentsIdAndMemberId(1L, memberId)
 
         // then
         assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `memberId로 조회 - 미존재`() {
+        // when
+        val isExist = mathContentsLikeReadRepository.existByContentsIdAndMemberId(9999999L, memberId)
+
+        // then
+        assertThat(isExist).isFalse()
     }
 }

@@ -9,5 +9,6 @@ object SysGarbageFileFactory {
             type = fileDeleteDto.type
             path = fileDeleteDto.path
             name = fileDeleteDto.name
+            failCnt = 0
         }
 }

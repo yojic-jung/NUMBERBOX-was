@@ -12,7 +12,6 @@ VALUES (1, 22003, 1,
         NULL, NULL, '', '', '', '', '', 'E', '1', NULL, UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), NULL, 0, 2, 1, 0, 0,
         1, '2022-02-28 06:09:46', '2022-09-28 14:46:07', 0);
 
-
 -- 입시 수학 문제
 INSERT INTO `numberbox_tc`.`math_contents` (`id`, `unit_id`, `type_id`, `contents`, `contents_img`, `img_path`,
                                             `solution`, `solution_img`,

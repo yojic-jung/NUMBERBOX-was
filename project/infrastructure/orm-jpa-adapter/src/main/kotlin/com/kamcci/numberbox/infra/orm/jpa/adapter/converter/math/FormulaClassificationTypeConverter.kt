@@ -7,7 +7,7 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class FormulaClassificationTypeConverter : AttributeConverter<FormulaClassificationType, String> {
     override fun convertToEntityAttribute(column: String?): FormulaClassificationType? {
-        return FormulaClassificationType.entries.find { it.name.lowercase() == column }
+        return FormulaClassificationType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: FormulaClassificationType): String {

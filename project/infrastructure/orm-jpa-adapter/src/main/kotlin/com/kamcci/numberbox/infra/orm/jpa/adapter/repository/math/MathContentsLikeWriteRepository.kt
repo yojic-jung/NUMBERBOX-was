@@ -18,14 +18,14 @@ class MathContentsLikeWriteRepository : MathContentsLikeWriteOrmPort, BaseReposi
         return em.contains(entity)
     }
 
-    override fun delete(modifyDto: MathContentsLikeModifyDto): Boolean {
+    override fun delete(modifyDto: MathContentsLikeModifyDto): Long {
         return queryFactory
             .delete(mathContentsLikeEntity)
             .where(
                 mathContentsLikeEntity.id.contentsId.eq(modifyDto.contentsId),
                 mathContentsLikeEntity.id.memberId.eq(modifyDto.memberId),
             )
-            .execute() > 0
+            .execute()
     }
 
 }

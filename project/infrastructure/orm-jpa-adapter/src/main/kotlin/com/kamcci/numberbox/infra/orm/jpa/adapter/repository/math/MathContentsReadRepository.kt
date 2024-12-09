@@ -86,7 +86,7 @@ class MathContentsReadRepository(
             if (svcPosbSttsType != null) {
                 mathContentsEntity.svcPosbStts.eq(svcPosbSttsType)
             } else {
-                svcPosbSttsType
+                null
             }
 
         return detailCommonQuery(memberId)
@@ -111,7 +111,7 @@ class MathContentsReadRepository(
             if (svcPosbSttsType != null) {
                 mathContentsEntity.svcPosbStts.eq(svcPosbSttsType)
             } else {
-                svcPosbSttsType
+                null
             }
 
         return detailCommonQuery(myMemberId)

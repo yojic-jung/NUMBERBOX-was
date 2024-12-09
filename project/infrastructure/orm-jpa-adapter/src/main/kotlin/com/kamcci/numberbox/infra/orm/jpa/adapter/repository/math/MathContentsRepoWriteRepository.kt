@@ -18,14 +18,14 @@ class MathContentsRepoWriteRepository : MathContentsRepoWriteOrmPort, BaseReposi
         return em.contains(entity)
     }
 
-    override fun delete(modifyDto: MathContentsRepoModifyDto): Boolean {
+    override fun delete(modifyDto: MathContentsRepoModifyDto): Long {
         return queryFactory
             .delete(mathContentsRepositoryEntity)
             .where(
                 mathContentsRepositoryEntity.id.contentsId.eq(modifyDto.contentsId),
                 mathContentsRepositoryEntity.id.memberId.eq(modifyDto.memberId),
             )
-            .execute() > 0
+            .execute()
     }
 
 }

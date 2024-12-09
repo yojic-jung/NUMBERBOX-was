@@ -31,12 +31,17 @@ class MathResourceWriteRepositoryTest(
     @Test
     fun `학습자료 수정`() {
         // given
-        val updateDto =
-            MathResourceUpdateDto(1L, "", "", "", 5, "", "", listOf("1-1"), listOf(FileNameVo("", "")))
+        val updateDtoList =
+            listOf(
+                MathResourceUpdateDto(1L, "", "", "", 5, "", "", listOf("1-1"), listOf(FileNameVo("", ""))),
+                MathResourceUpdateDto(1L, "", "", "", 5, "", "", listOf("1-1"), listOf()),
+            )
 
         // when
-        assertDoesNotThrow {
-            mathResourceWriteRepository.update(updateDto)
+        for (updateDto in updateDtoList) {
+            assertDoesNotThrow {
+                mathResourceWriteRepository.update(updateDto)
+            }
         }
     }
 

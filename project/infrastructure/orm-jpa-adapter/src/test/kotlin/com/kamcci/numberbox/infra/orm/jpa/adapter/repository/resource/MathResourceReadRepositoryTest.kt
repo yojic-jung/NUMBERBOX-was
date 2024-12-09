@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -40,9 +41,21 @@ class MathResourceReadRepositoryTest(
     }
 
     @Test
-    fun `id로 조회`() {
+    fun `id로 조회 - 이미지, 카테고리 존재`() {
         // given
         val id = 1L
+
+        // when
+        val resource = mathResourceReadRepository.readById(id)
+
+        // then
+        assertThat(resource).isNotNull
+    }
+
+    @Test
+    fun `id로 조회 - 이미지, 카테고리 미존재`() {
+        // given
+        val id = 2L
 
         // when
         val resource = mathResourceReadRepository.readById(id)
@@ -73,7 +86,18 @@ class MathResourceReadRepositoryTest(
     }
 
     @Test
-    fun `memberId로 학습 자료 파일 조회`() {
+    fun `memberId로 학습 자료 파일 조회 - 미존재`() {
+        // given
+        val id = 9999999L
+
+        // when
+        assertThrows<IllegalArgumentException> {
+            mathResourceReadRepository.readFileById(id)
+        }
+    }
+
+    @Test
+    fun `memberId로 학습 자료 파일 조회 - 이미지 존재`() {
         // given
         val id = 1L
 
@@ -81,6 +105,18 @@ class MathResourceReadRepositoryTest(
         val resource = mathResourceReadRepository.readFileById(id)
 
         // then
-        assertThat(resource).isNotNull
+        assertThat(resource.imgList).isNotEmpty
+    }
+
+    @Test
+    fun `memberId로 학습 자료 파일 조회 - 이미지 미존재`() {
+        // given
+        val id = 2L
+
+        // when
+        val resource = mathResourceReadRepository.readFileById(id)
+
+        // then
+        assertThat(resource.imgList).isEmpty()
     }
 }

@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
+import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -51,7 +52,7 @@ class MathContentsReadRepositoryTest(
     }
 
     @Test
-    fun `수학 문제 조회 - 좋아요 정보 제외`() {
+    fun `수학 문제 조회(서비스 가능 여부 Null) - 좋아요 정보 제외`() {
         // given
         val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
         val pageReq = PageRequestImpl(0, 10L)
@@ -64,13 +65,50 @@ class MathContentsReadRepositoryTest(
     }
 
     @Test
-    fun `수학 문제 조회 - 좋아요 정보 포함`() {
+    fun `수학 문제 조회(서비스 가능만) - 좋아요 정보 제외`() {
         // given
         val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
         val pageReq = PageRequestImpl(0, 10L)
 
         // when
-        val contentsList = mathContentsReadRepository.readDetailByMemberId(memberId, memberId, null, pageReq)
+        val contentsList =
+            mathContentsReadRepository.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
+
+        // then
+        assertThat(contentsList.size).isGreaterThan(0)
+    }
+
+    @Test
+    fun `수학 문제 조회(서비스 가능 여부 Null) - 좋아요 정보 포함`() {
+        // given
+        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val pageReq = PageRequestImpl(0, 10L)
+
+        // when
+        val contentsList = mathContentsReadRepository.readDetailByMemberId(
+            memberId,
+            memberId,
+            null,
+            pageReq
+        )
+
+        // then
+        assertThat(contentsList.size).isGreaterThan(0)
+    }
+
+    @Test
+    fun `수학 문제 조회(서비스 가능만) - 좋아요 정보 포함`() {
+        // given
+        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val pageReq = PageRequestImpl(0, 10L)
+
+        // when
+        val contentsList = mathContentsReadRepository.readDetailByMemberId(
+            memberId,
+            memberId,
+            ContentsSvcPosbSttsType.Release,
+            pageReq
+        )
 
         // then
         assertThat(contentsList.size).isGreaterThan(0)
@@ -153,7 +191,7 @@ class MathContentsReadRepositoryTest(
     }
 
     @Test
-    fun `수학문제 id 존재 여부`() {
+    fun `수학문제 id 존재 여부 - 존재`() {
         // given
         val contentsId = 1L
 
@@ -162,5 +200,17 @@ class MathContentsReadRepositoryTest(
 
         // then
         assertThat(isExist).isTrue()
+    }
+
+    @Test
+    fun `수학문제 id 존재 여부 - 미존재`() {
+        // given
+        val contentsId = 9999999L
+
+        // when
+        val isExist = mathContentsReadRepository.existById(contentsId)
+
+        // then
+        assertThat(isExist).isFalse()
     }
 }

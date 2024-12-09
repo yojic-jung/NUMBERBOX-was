@@ -38,11 +38,11 @@ class MathContentsRepoWriteRepositoryTest(
 
 
         // when
-        val isDeleted = mathContentsRepoWriteRepository.delete(modifyDto)
+        val executedRowCnt = mathContentsRepoWriteRepository.delete(modifyDto)
         em.flush()
         em.clear()
 
         // then
-        assertThat(isDeleted).isTrue()
+        assertThat(executedRowCnt).isGreaterThan(0)
     }
 }
