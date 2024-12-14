@@ -3,6 +3,7 @@ package com.kamcci.numberbox.restapi.common
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -14,6 +15,10 @@ open class BaseMockMvcTest {
     lateinit var mockMvc: MockMvc
 
     val objectMapper: ObjectMapper = ObjectMapper()
+
+    /**
+     * Rest API 요청
+     */
 
     // json GET 요청
     fun getRequest(url: String) =
@@ -37,6 +42,21 @@ open class BaseMockMvcTest {
             reqBuilder.content(objectMapper.writeValueAsString(reqBody))
         }
         return mockMvc.perform(reqBuilder)
+    }
+
+    // multipartform POST 요청
+    fun postMultipartForm(url: String, reqBody: Map<String, String>, fileList: List<MockMultipartFile>): ResultActions {
+        var requestBuilder = MockMvcRequestBuilders.multipart(url)
+        for (file in fileList) {
+            requestBuilder = requestBuilder.file(file)
+        }
+
+        for ((key, value) in reqBody) {
+            requestBuilder.param(key, value)
+        }
+        requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
+
+        return mockMvc.perform(requestBuilder)
     }
 
     // json PUT 요청
@@ -65,18 +85,9 @@ open class BaseMockMvcTest {
         return mockMvc.perform(reqBuilder)
     }
 
-
-    // response
-    fun takeJsonResponse(resultAction: ResultActions) =
-        objectMapper.readTree(resultAction.andReturn().response.contentAsString)
-
-    fun takeJsonResponseData(resultAction: ResultActions) =
-        objectMapper.readTree(resultAction.andReturn().response.contentAsString).get("data")
-
-    fun removeQuotes(inp: Any) = removeQuotes(inp.toString())
-
-    fun removeQuotes(input: String): String = input.removePrefix("\"").removeSuffix("\"")
-
+    /**
+     * 결과 검증
+     */
     fun assert2xx(resultActions: ResultActions) {
         resultActions.andExpect(MockMvcResultMatchers.status().is2xxSuccessful)
     }
@@ -96,5 +107,17 @@ open class BaseMockMvcTest {
         }
     }
 
+    /**
+     * 응답 값 검증
+     */
+    fun takeJsonResponse(resultAction: ResultActions) =
+        objectMapper.readTree(resultAction.andReturn().response.contentAsString)
+
+    fun takeJsonResponseData(resultAction: ResultActions) =
+        objectMapper.readTree(resultAction.andReturn().response.contentAsString).get("data")
+
+    fun removeQuotes(inp: Any) = removeQuotes(inp.toString())
+
+    fun removeQuotes(input: String): String = input.removePrefix("\"").removeSuffix("\"")
 
 }

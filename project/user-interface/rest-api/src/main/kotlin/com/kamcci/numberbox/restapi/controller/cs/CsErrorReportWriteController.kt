@@ -11,6 +11,7 @@ import com.kamcci.numberbox.restapi.dto.request.cs.CsErrorReportCreateRequest
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -36,7 +37,7 @@ class CsErrorReportWriteController(
     fun create(
         @UserId
         memberId: UUID,
-        @ModelAttribute reqBody: CsErrorReportCreateRequest
+        @Valid @ModelAttribute reqBody: CsErrorReportCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
         // 이미지 업로드(최대 세장)
         val firImgNameVo =

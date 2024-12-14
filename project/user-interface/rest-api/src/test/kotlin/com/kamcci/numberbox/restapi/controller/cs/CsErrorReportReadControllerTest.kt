@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 @WebMvcUnitTest
 class CsErrorReportReadControllerTest : BaseMockMvcTest() {
     companion object {
+        // 고객센터 내 문의 내역
         const val MY_CS_ERROR = "/cs/error/my"
     }
 
@@ -28,5 +29,5 @@ class CsErrorReportReadControllerTest : BaseMockMvcTest() {
         // then
         assert2xx(resultAction)
     }
-
+    
 }

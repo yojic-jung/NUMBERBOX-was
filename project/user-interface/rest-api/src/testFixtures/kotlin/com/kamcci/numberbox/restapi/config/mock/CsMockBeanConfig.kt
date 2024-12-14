@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.config.cs
+package com.kamcci.numberbox.restapi.config.mock
 
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportReadCase
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase
@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
 @TestConfiguration
-class CsControllerConfig {
+class CsMockBeanConfig {
     @Bean
     fun csErrorReportReadCase(): CsErrorReportReadCase = mock()
 
