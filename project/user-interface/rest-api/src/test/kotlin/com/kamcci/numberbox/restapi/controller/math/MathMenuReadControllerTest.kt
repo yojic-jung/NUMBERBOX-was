@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.math
 import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.MathUnitFixture.getMathCategoryUnitVo
+import com.kamcci.numberbox.restapi.dummy.math.MathUnitFixture.getMathCategoryUnitVo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired

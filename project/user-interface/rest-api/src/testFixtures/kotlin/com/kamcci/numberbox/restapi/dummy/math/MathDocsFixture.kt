@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.dummy
+package com.kamcci.numberbox.restapi.dummy.math
 
 import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsPaperVo

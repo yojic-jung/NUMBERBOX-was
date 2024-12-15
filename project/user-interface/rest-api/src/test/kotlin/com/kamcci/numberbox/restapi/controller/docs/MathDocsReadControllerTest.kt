@@ -11,7 +11,7 @@ import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.MathDocsFixture.getMathDocsPaperVo
+import com.kamcci.numberbox.restapi.dummy.math.MathDocsFixture.getMathDocsPaperVo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any

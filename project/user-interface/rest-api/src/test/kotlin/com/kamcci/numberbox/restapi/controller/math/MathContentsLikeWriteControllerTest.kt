@@ -17,11 +17,11 @@ class MathContentsLikeWriteControllerTest(
     private val mathContentsReadOrmPort: MathContentsReadOrmPort
 ) : BaseMockMvcTest() {
     companion object {
-        const val PREFIX = "/math/like/content"
+        const val PREFIX = "/math/repo/content"
     }
 
     @Test
-    fun `문제 좋아요 - 성공`() {
+    fun `문제 저장소 - 성공`() {
         // given
         val reqBody = mapOf("contentsId" to "1")
         Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(true)
@@ -34,7 +34,7 @@ class MathContentsLikeWriteControllerTest(
     }
 
     @Test
-    fun `문제 좋아요 - 실패`() {
+    fun `문제 저장소 - 실패`() {
         // given
         val reqBody = mapOf("contentsId" to "1")
         Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(false)
@@ -49,7 +49,7 @@ class MathContentsLikeWriteControllerTest(
     }
 
     @Test
-    fun `문제 좋아요 취소 - 성공`() {
+    fun `문제 저장소 취소 - 성공`() {
         // given
         val contentsId = 1
         val reqBody = mapOf("contentsId" to contentsId)
@@ -63,7 +63,7 @@ class MathContentsLikeWriteControllerTest(
     }
 
     @Test
-    fun `문제 좋아요 취소 - 실패`() {
+    fun `문제 저장소 취소 - 실패`() {
         // given
         val contentsId = 1
         Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(false)

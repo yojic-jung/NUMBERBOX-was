@@ -25,7 +25,7 @@ open class BaseMockMvcTest {
     fun getRequest(url: String) =
         getRequest(url, mapOf())
 
-    fun getRequest(url: String, queryMap: Map<String, String>?): ResultActions {
+    fun getRequest(url: String, queryMap: Map<String, String?>?): ResultActions {
         val queryString = queryMap?.entries?.joinToString("&") { (key, value) -> "${key}=${value}" }
         return mockMvc
             .perform(
@@ -34,7 +34,7 @@ open class BaseMockMvcTest {
     }
 
     // json POST 요청
-    fun postRequest(url: String, reqBody: Map<String, Any?>?): ResultActions {
+    fun postRequest(url: String, reqBody: Any?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.post(url)
             .contentType(MediaType.APPLICATION_JSON)
         if (reqBody != null) {
@@ -59,7 +59,7 @@ open class BaseMockMvcTest {
     }
 
     // json PUT 요청
-    fun putRequest(url: String, reqBody: Map<String, Any>?): ResultActions {
+    fun putRequest(url: String, reqBody: Any?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.put(url)
             .contentType(MediaType.APPLICATION_JSON)
         if (reqBody != null) {

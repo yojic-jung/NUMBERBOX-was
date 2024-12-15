@@ -26,6 +26,10 @@ class MathContentsWriteController(
     private val mathContentsMapper: MathContentsMapper,
 ) {
 
+    companion object {
+        const val NOT_UPDATED_CONTENTS = "수학문제가 수정되지 않았습니다."
+    }
+
     // 사용자 제작 문제 등록
     @PostMapping("/user-custom")
     fun createUserCustomContents(
@@ -62,7 +66,7 @@ class MathContentsWriteController(
 
         // 수학문제 생성
         mathContentsWriteCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license).let {
-            if (!it) throw BusinessValidException("수학문제가 수정 되지 않았습니다.")
+            if (!it) throw BusinessValidException(NOT_UPDATED_CONTENTS)
         }
 
         // 생성된 문제 정보 반환
@@ -78,7 +82,7 @@ class MathContentsWriteController(
 
     // 변형문제 등록
     @PostMapping("/trans")
-    fun createransContents(
+    fun createTransContents(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConTransCreateRequest
@@ -126,7 +130,7 @@ class MathContentsWriteController(
 
     // 문제 문법 등록
     @PostMapping("/grammar")
-    fun createMathGrammer(
+    fun createMathGrammar(
         @UserId memberId: UUID,
         @RequestBody
         @Valid modifyReq: MathContestGrammarModifyRequest

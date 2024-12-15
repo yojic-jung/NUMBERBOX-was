@@ -9,7 +9,7 @@ import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.FileFixture.getImgFile
+import com.kamcci.numberbox.restapi.dummy.file.FileFixture.getImgFile
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any

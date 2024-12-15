@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.dummy
+package com.kamcci.numberbox.restapi.dummy.file
 
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
