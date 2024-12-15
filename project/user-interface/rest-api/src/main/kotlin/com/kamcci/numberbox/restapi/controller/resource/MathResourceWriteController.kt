@@ -17,6 +17,7 @@ import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 
@@ -37,38 +38,31 @@ class MathResourceWriteController(
         @ModelAttribute @Valid
         request: MathResourceCreateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        // 1. ppt 파일 업로드
-        val pptFileNameVo = fileUseCase.upload(toFile(request.pptFile), FileType.PptResource)
+        // 1. ppt 업로드
+        val pptVo = uploadPPT(request.pptFile)
 
-        // 2. ppt 슬라이드 이미지 업로드
-        val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
-        for (slideImg in toPptSlide(request.pptFile)) {
-            val imgFileNameVo = fileUseCase.upload(slideImg, FileType.PptImage)
-            slideImgNameList.add(imgFileNameVo)
-        }
+        // 2. 대표 이미지 업로드
+        val imgFileNameVo = uploadImg(request.imgFile)
 
-        // 3. 대표 이미지 존재시 업로드
-        val imgFileNameVo = if (request.imgFile != null) {
-            val imgFileNameVo = fileUseCase.upload(toFile(request.imgFile), FileType.PptImage)
-            imgFileNameVo
-        } else null
-
-        // 4. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        // 3. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        val pptFileNameVo = pptVo.first
+        val slideImgNameList = pptVo.second
         val createDto = MathResourceCreateDto(
             memberId = memberId,
             title = request.title,
-            pptFilePath = pptFileNameVo.path,
+            pptFilePath = pptFileNameVo!!.path,
             pptFileName = pptFileNameVo.name,
             pptPageCnt = slideImgNameList.size,
             imgPath = imgFileNameVo?.path ?: slideImgNameList[0].path,
             imgName = imgFileNameVo?.name ?: slideImgNameList[0].name,
             cateList = request.cateList,
-            imgList = slideImgNameList
+            imgList = pptVo.second
         )
         // 학습 자료 영속화
         val resourceId = mathResourceWriteCase.create(createDto)
         return ResponseUtil.ok(resourceId)
     }
+
 
     /**
      * 수정
@@ -80,26 +74,15 @@ class MathResourceWriteController(
         @ModelAttribute @Valid
         request: MathResourceUpdateRequest
     ): ResponseEntity<ResponseData<Any>> {
-        // 1. ppt 파일 수정시 업로드
-        val pptFileNameVo = if (request.pptFile != null) {
-            fileUseCase.upload(toFile(request.pptFile), FileType.PptResource)
-        } else null
+        // 1. ppt 업로드
+        val pptVo = uploadPPT(request.pptFile)
 
-        // 2. ppt 슬라이드 수정시 업로드
-        val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
-        if (request.pptFile != null) {
-            for (inpStream in toPptSlide(request.pptFile)) {
-                val imgFileNameVo = fileUseCase.upload(inpStream, FileType.PptImage)
-                slideImgNameList.add(imgFileNameVo)
-            }
-        }
+        // 2. 대표 이미지 수정시 업로드
+        val imgFileNameVo = uploadImg(request.imgFile)
 
-        // 3. 대표 이미지 수정시 업로드
-        val imgFileNameVo = if (request.imgFile != null) {
-            fileUseCase.upload(toFile(request.imgFile), FileType.PptImage)
-        } else null
-
-        // 4. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        // 3. 영속화 목적 dto 생성(대표 이미지 미존재시 슬라이드 첫번째 이미지로 설정)
+        val pptFileNameVo = pptVo.first
+        val slideImgNameList = pptVo.second
         val updateDto = MathResourceUpdateDto(
             resourceId = request.resourceId,
             title = request.title,
@@ -133,4 +116,28 @@ class MathResourceWriteController(
         mathResourceWriteCase.deleteByIdAndMemberId(resourceId, memberId)
         return ResponseUtil.ok()
     }
+
+    // ppt 업로드
+    private fun uploadPPT(pptFile: MultipartFile?): Pair<FileNameVo?, List<FileNameVo>> {
+        // 1. ppt 파일 존재시 업로드(수정시에는 미존재일 수 있음)
+        val pptFileNameVo = if (pptFile != null) {
+            fileUseCase.upload(toFile(pptFile), FileType.PptResource)
+        } else null
+
+        // 2. ppt 슬라이드 업로드
+        val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
+        if (pptFile != null) {
+            for (inpStream in toPptSlide(pptFile)) {
+                val imgFileNameVo = fileUseCase.upload(inpStream, FileType.PptImage)
+                slideImgNameList.add(imgFileNameVo)
+            }
+        }
+        return Pair(pptFileNameVo, slideImgNameList)
+    }
+
+    // 이미지 업로드
+    private fun uploadImg(imgFile: MultipartFile?) =
+        if (imgFile != null) {
+            fileUseCase.upload(toFile(imgFile), FileType.PptImage)
+        } else null
 }

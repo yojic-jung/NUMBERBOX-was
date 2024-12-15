@@ -8,11 +8,11 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
+import com.kamcci.numberbox.restapi.dummy.math.MathCategoryFixture.getMathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathContentsOnlyVo
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathContentsVo
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathInHouseContentsVo
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathIpsiContentsVo
-import com.kamcci.numberbox.restapi.dummy.math.MathUnitFixture.getMathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dummy.member.MemberProfileFixture.getMemberProfileVo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -134,8 +134,7 @@ class MathContentsReadControllerTest @Autowired constructor(
     @Test
     fun `나의 문제 - 성공`() {
         // given
-        Mockito.`when`(mathContentsReadCase.readById(any()))
-            .thenReturn(getMathContentsVo())
+        Mockito.`when`(mathContentsReadCase.readById(any())).thenReturn(getMathContentsVo())
 
         // when
         val resultAction = getRequest(MY_CONTENTS_URL)
@@ -148,8 +147,8 @@ class MathContentsReadControllerTest @Autowired constructor(
     fun `나의 문제(페이지) - 성공`() {
         // given
         val reqBody = mapOf(
-            "pageNum" to "0",
-            "pageVolume" to "100",
+            "pageNum" to "1",
+            "pageVolume" to "50",
         )
 
         // when

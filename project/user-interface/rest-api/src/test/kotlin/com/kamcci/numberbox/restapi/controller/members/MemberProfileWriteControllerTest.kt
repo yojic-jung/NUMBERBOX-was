@@ -9,7 +9,7 @@ import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.file.FileFixture.getImgFile
+import com.kamcci.numberbox.restapi.dummy.file.FileFixture.getMultipartFile
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -67,7 +67,7 @@ class MemberProfileWriteControllerTest(
     @Test
     fun `프로필 이미지 등록 - 성공`() {
         // given
-        val file = getImgFile("imgFile", "imgFile.png")
+        val file = listOf(getMultipartFile("imgFile", "imgFile.png"))
         `when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("", ""))
 
         // when
@@ -81,7 +81,7 @@ class MemberProfileWriteControllerTest(
     @Test
     fun `프로필 이미지 등록 - 실패`() {
         // given
-        val file = getImgFile("imgFile", "imgFile.ppt")
+        val file = listOf(getMultipartFile("imgFile", "imgFile.ppt"))
 
         // when
         val resultAction = putMultipartForm(PROFILE_IMG_URL, file)

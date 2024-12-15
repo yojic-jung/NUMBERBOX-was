@@ -1,17 +1,19 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
+import com.kamcci.numberbox.app.usecase.math.MathFormulaKeyReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.math.MathUnitFixture.getMathCategoryUnitVo
+import com.kamcci.numberbox.restapi.dummy.math.MathCategoryFixture.getMathCategoryUnitVo
+import com.kamcci.numberbox.restapi.dummy.math.MathCategoryFixture.getMathFormulaKeyVoList
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class MathMenuReadControllerTest(
-    @Autowired
+class MathMenuReadControllerTest @Autowired constructor(
     private val mathCategoryUnitReadCase: MathCategoryUnitReadCase,
+    private val mathFormulaKeyReadCase: MathFormulaKeyReadCase
 ) : BaseMockMvcTest() {
 
     companion object {
@@ -49,6 +51,16 @@ class MathMenuReadControllerTest(
 
     @Test
     fun `수식 단축키 조회 - 성공`() {
+        // when
+        val resultAction = getRequest(SHORTCUTKEY_URL)
+        `when`(mathFormulaKeyReadCase.readAll()).thenReturn(getMathFormulaKeyVoList())
+
+        // then
+        assert2xx(resultAction)
+    }
+
+    @Test
+    fun `수식 단축키 조회(결과 미존재) - 성공`() {
         // when
         val resultAction = getRequest(SHORTCUTKEY_URL)
 

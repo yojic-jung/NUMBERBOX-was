@@ -22,7 +22,6 @@ class MemberWriteService(
     // 회원가입 영속화 repository
     private val roleModifyRepo: MemberRoleWriteOrmPort,
     private val roleReadRepo: MemberRoleReadOrmPort,
-    private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort,
     private val profileModifyOrmPort: MemberProfileWriteOrmPort,
     private val privateModifyRepo: MemberPrivateWriteOrmPort,
 ) : MemberWriteCase {

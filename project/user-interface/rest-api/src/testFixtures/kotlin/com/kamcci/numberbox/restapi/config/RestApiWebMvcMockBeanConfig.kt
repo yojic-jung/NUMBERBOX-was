@@ -16,6 +16,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
     MathCategoryMockBeanConfig::class,
     MathContentsMockBeanConfig::class,
     MathDocsMockBeanConfig::class,
+    MathResourceMockBeanConfig::class,
     MemberMockBeanConfig::class,
     TokenMockBeanConfig::class,
 )

@@ -5,9 +5,9 @@ import org.springframework.mock.web.MockMultipartFile
 
 object FileFixture {
     /**
-     * 이미지 파일
+     * MultipartFile 파일
      */
-    fun getImgFile(name: String, originFileName: String) = MockMultipartFile(
+    fun getMultipartFile(name: String, originFileName: String) = MockMultipartFile(
         name,
         originFileName,
         MediaType.MULTIPART_FORM_DATA_VALUE,

@@ -6,6 +6,7 @@ plugins {
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java-test-fixtures")
+    id("jacoco")
 
     kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
@@ -43,7 +44,6 @@ dependencies {
 
     // kotlin 직렬화(data class request 생성자 오류 해결)
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
-
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
@@ -52,6 +52,7 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    testImplementation("io.mockk:mockk:1.13.8")
 
     testFixturesImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -65,6 +66,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 tasks.named<BootJar>("bootJar") {
@@ -73,4 +79,19 @@ tasks.named<BootJar>("bootJar") {
 
 tasks.named<BootRun>("bootRun") {
     enabled = false
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+tasks.jacocoTestReport {
+    executionData(fileTree(layout.buildDirectory).include("jacoco/*.exec"))
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+
+        html.outputLocation = file("${layout.buildDirectory}/jacoco.html")
+        xml.outputLocation = file("${layout.buildDirectory}/jacoco.xml")
+    }
 }

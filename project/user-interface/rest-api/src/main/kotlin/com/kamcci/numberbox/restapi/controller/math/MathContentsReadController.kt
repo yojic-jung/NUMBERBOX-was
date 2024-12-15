@@ -111,7 +111,7 @@ class MathContentsReadController(
         @Valid req: ValidPageRequest
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 조회
-        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
         val res = mathContentsReadCase.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
 
         return ResponseUtil.ok(mapOf("contents" to res))
@@ -132,7 +132,7 @@ class MathContentsReadController(
         val profileRes = memberMapper.toProfileResponse(profile)
 
         // 문제 조회
-        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
         val res =
             mathContentsReadCase.readDetailByMemberId(
                 profile.memberId,
@@ -161,7 +161,7 @@ class MathContentsReadController(
         val unitIdList: List<Int> = getUnitIdList(unitInfoList, req.searchType, req.unitId)
 
         // 문제 조회
-        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
         val res = mathContentsReadCase.readDetailByUnitId(memberId, unitIdList, pageReq)
 
         return ResponseUtil.ok(mapOf("contents" to res))
@@ -177,7 +177,7 @@ class MathContentsReadController(
         val contentsIdList = mathContentsRepoReadCase.readContentsIdByMemberId(memberId)
 
         // 문제 조회
-        val pageReq = PageRequestImpl(req.pageNum ?: 0, req.pageVolume ?: 100)
+        val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
         val res = mathContentsReadCase.readById(contentsIdList, pageReq)
         return ResponseUtil.ok(mapOf("contents" to res))
     }

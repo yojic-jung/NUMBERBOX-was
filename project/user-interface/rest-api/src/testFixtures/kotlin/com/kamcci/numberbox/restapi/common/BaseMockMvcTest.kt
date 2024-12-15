@@ -69,15 +69,31 @@ open class BaseMockMvcTest {
     }
 
     // multipartform PUT 요청
-    fun putMultipartForm(url: String, file: MockMultipartFile): ResultActions {
-        var requestBuilder = MockMvcRequestBuilders.multipart(url).file(file).contentType(MediaType.MULTIPART_FORM_DATA)
+    fun putMultipartForm(url: String, fileList: List<MockMultipartFile>): ResultActions {
+        return putMultipartForm(url, null, fileList)
+    }
+
+    fun putMultipartForm(url: String, reqBody: Map<String, String>?, fileList: List<MockMultipartFile>): ResultActions {
+        var requestBuilder = MockMvcRequestBuilders.multipart(url)
+        for (file in fileList) {
+            requestBuilder.file(file)
+        }
+        requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
         requestBuilder.with { request ->
             request.method = "PUT"
             request
         }
 
+        if (reqBody != null) {
+            for ((key, value) in reqBody) {
+                requestBuilder.param(key, value)
+            }
+            requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
+        }
+
         return mockMvc.perform(requestBuilder)
     }
+
 
     // json DELETE 요청
     fun delRequest(url: String) = delRequest(url, null)
