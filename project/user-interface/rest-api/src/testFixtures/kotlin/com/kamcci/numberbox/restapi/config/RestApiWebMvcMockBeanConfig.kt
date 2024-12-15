@@ -1,9 +1,6 @@
 package com.kamcci.numberbox.restapi.config
 
-import com.kamcci.numberbox.restapi.config.mock.CsMockBeanConfig
-import com.kamcci.numberbox.restapi.config.mock.FileMockBeanConfig
-import com.kamcci.numberbox.restapi.config.mock.MemberMockBeanConfig
-import com.kamcci.numberbox.restapi.config.mock.TokenMockBeanConfig
+import com.kamcci.numberbox.restapi.config.mock.*
 import com.kamcci.numberbox.restapi.resolver.MockUserDetailArgumentResolver
 import org.apache.catalina.security.SecurityConfig
 import org.mockito.Mockito
@@ -15,9 +12,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 
 @Import(
     CsMockBeanConfig::class,
-    MemberMockBeanConfig::class,
     FileMockBeanConfig::class,
-    TokenMockBeanConfig::class
+    MathCategoryMockBeanConfig::class,
+    MathContentsMockBeanConfig::class,
+    MathDocsMockBeanConfig::class,
+    MemberMockBeanConfig::class,
+    TokenMockBeanConfig::class,
 )
 @TestConfiguration
 class RestApiWebMvcMockBeanConfig {

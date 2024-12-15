@@ -2,6 +2,7 @@ package com.kamcci.numberbox.restapi.handler
 
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import org.springframework.beans.BeanInstantiationException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -25,8 +26,30 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatusCode,
         request: WebRequest
     ): ResponseEntity<Any>? {
-        logger.warn(ex)
+        logger.info(ex)
         return ResponseUtil.error(ex, status, request)
+    }
+
+    /**
+     * controller dto객체 require 만족 못시키는 경우
+     * IllegalArgumentException -> BeanInstantiationException으로 예외 포장되는 경우 분기 처리
+     */
+    @ExceptionHandler(value = [IllegalArgumentException::class, BeanInstantiationException::class])
+    fun handleIllegalArgumentException(
+        ex: Exception,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        val actualCause: Throwable = if (ex is BeanInstantiationException) ex.cause ?: ex else ex
+
+        val status = when (actualCause) {
+            is IllegalArgumentException -> HttpStatus.BAD_REQUEST // 400
+            else -> HttpStatus.INTERNAL_SERVER_ERROR
+        }
+
+        // 예외 정보 출력
+        logger.info(ex)
+
+        return ResponseUtil.error(actualCause, status, request)
     }
 
     @ExceptionHandler(value = [BusinessValidException::class])
@@ -35,8 +58,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         body: Any?,
         request: WebRequest
     ): ResponseEntity<Any> {
-        println(ex.stackTraceToString())
-//        logger.warn(ex)
+        logger.info(ex)
         return ResponseUtil.error(ex, HttpStatus.BAD_REQUEST, request)
     }
 

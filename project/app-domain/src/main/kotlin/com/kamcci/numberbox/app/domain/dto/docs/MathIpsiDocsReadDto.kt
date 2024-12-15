@@ -23,16 +23,21 @@ data class MathIpsiDocsReadDto(
 ) {
     companion object {
         private val availIpsiMonth = listOf(6, 9, 11)
+
+        const val ILLEGAL_QUES_LEVEL = "입시문제 배점은 2점(3), 3점(4), 4점(5)만 가능합니다."
+        const val ILLEGAL_WRONG_RATIO = "오답률은 0에서 100 사이 값만 가능합니다."
+        const val ILLEGAL_IPSI_MONTH = "출제 월은 6, 9, 11월만 가능합니다."
+        const val ILLEGAL_QUES_COUNT = "수학문제는 최소 5문제 이상 100문제 이하"
     }
 
     init {
-        for (quesLv in quesLevel) require(quesLv in 3..5) { "입시문제 배점은 2점(3), 3점(4), 4점(5)만 가능합니다." }
+        for (quesLv in quesLevel) require(quesLv in 3..5) { ILLEGAL_QUES_LEVEL }
 
         require(wrongRatioMin in 0..100 && wrongRatioMax in 0..100 && wrongRatioMin <= wrongRatioMax)
-        { "오답률은 0에서 100 사이 값만 가능합니다." }
+        { ILLEGAL_WRONG_RATIO }
 
-        for (month in ipsiMonth) require(month in availIpsiMonth) { "출제 월은 6, 9, 11월만 가능합니다." }
+        for (month in ipsiMonth) require(month in availIpsiMonth) { ILLEGAL_IPSI_MONTH }
 
-        require(count in 1..100) { "수학문제는 최소 5문제 이상 100문제 이하" }
+        require(count in 5..100) { ILLEGAL_QUES_COUNT }
     }
 }

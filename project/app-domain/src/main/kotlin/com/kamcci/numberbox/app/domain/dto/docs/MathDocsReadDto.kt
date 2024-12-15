@@ -11,8 +11,13 @@ data class MathDocsReadDto(
     // 문제 갯수
     val count: Int,
 ) {
+    companion object {
+        const val ILLEGAL_QUES_LEVEL = "수학문제 난이도는 1에서 5 이하입니다."
+        const val ILLEGAL_QUES_COUNT = "수학문제는 최소 5문제 이상 100문제 이하"
+    }
+
     init {
-        require(quesLevel in 1..5) { "수학문제 난이도는 1에서 5 이하입니다." }
-        require(count in 1..100) { "수학문제는 최소 5문제 이상 100문제 이하" }
+        require(quesLevel in 1..5) { ILLEGAL_QUES_LEVEL }
+        require(count in 1..100) { ILLEGAL_QUES_COUNT }
     }
 }

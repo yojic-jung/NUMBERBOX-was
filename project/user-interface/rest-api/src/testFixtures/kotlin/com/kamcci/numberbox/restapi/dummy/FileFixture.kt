@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.dummy
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 
-object CsErrorReportFixture {
+object FileFixture {
     /**
      * 이미지 파일
      */
@@ -13,6 +13,4 @@ object CsErrorReportFixture {
         MediaType.MULTIPART_FORM_DATA_VALUE,
         "content".encodeToByteArray()
     )
-
-
 }

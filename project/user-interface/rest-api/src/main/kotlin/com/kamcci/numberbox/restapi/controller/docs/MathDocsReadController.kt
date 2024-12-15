@@ -24,6 +24,10 @@ class MathDocsReadController(
     private val mathDocsReadCase: MathDocsReadCase,
     private val mathDocsPaperReadCase: MathDocsPaperReadCase,
 ) {
+    companion object {
+        const val NOT_MY_DOCS = "자신의 학습지가 아니거나 존재하지 않는 학습지 입니다."
+    }
+
     @GetMapping("/in-house")
     fun makeInHouseDocs(
         @ModelAttribute @Valid
@@ -59,7 +63,7 @@ class MathDocsReadController(
         docsId: Long,
     ): ResponseEntity<ResponseData<Any>> {
         val docsPaperVo = mathDocsPaperReadCase.readByIdAndMemberId(docsId, memberId)
-            ?: throw BusinessValidException("자신의 학습지가 아니거나 존재하지 않는 학습지 입니다.")
+            ?: throw BusinessValidException(NOT_MY_DOCS)
         val docs = mathDocsReadCase.readDocsByDocsPaperId(docsPaperVo.contentsIdList)
         return ResponseUtil.ok(
             mapOf(

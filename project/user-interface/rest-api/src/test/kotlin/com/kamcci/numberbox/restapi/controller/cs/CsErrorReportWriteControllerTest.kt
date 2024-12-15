@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.CsErrorReportFixture.getImgFile
+import com.kamcci.numberbox.restapi.dummy.FileFixture.getImgFile
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`

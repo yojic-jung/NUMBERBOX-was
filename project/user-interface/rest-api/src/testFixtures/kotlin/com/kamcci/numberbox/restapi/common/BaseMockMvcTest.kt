@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
@@ -33,9 +34,7 @@ open class BaseMockMvcTest {
     }
 
     // json POST 요청
-    fun postRequest(url: String) = postRequest(url, null)
-
-    fun postRequest(url: String, reqBody: Map<String, Any>?): ResultActions {
+    fun postRequest(url: String, reqBody: Map<String, Any?>?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.post(url)
             .contentType(MediaType.APPLICATION_JSON)
         if (reqBody != null) {
@@ -60,9 +59,6 @@ open class BaseMockMvcTest {
     }
 
     // json PUT 요청
-    fun putRequest(url: String) =
-        putRequest(url, mapOf())
-
     fun putRequest(url: String, reqBody: Map<String, Any>?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.put(url)
             .contentType(MediaType.APPLICATION_JSON)
@@ -72,10 +68,19 @@ open class BaseMockMvcTest {
         return mockMvc.perform(reqBuilder)
     }
 
-    // json DELETE 요청
-    fun delRequest(url: String) =
-        delRequest(url, mapOf())
+    // multipartform PUT 요청
+    fun putMultipartForm(url: String, file: MockMultipartFile): ResultActions {
+        var requestBuilder = MockMvcRequestBuilders.multipart(url).file(file).contentType(MediaType.MULTIPART_FORM_DATA)
+        requestBuilder.with { request ->
+            request.method = "PUT"
+            request
+        }
 
+        return mockMvc.perform(requestBuilder)
+    }
+
+    // json DELETE 요청
+    fun delRequest(url: String) = delRequest(url, null)
     fun delRequest(url: String, reqBody: Map<String, Any>?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
@@ -107,12 +112,33 @@ open class BaseMockMvcTest {
         }
     }
 
+    // 예외 메시지 체크
+    fun assertExMsg(
+        resultActions: ResultActions,
+        exMsg: String
+    ) {
+        resultActions.andExpect { result ->
+            val exception = result.resolvedException // 발생한 최상위 예외
+            assertThat(exception).isNotNull
+
+            // 예외 추적하며 래핑한 예외 메시지 전부 추출
+            val messages = mutableListOf<String>()
+            var currentException: Throwable? = exception as Throwable
+            while (currentException != null) {
+                messages.add(currentException.message ?: "")
+                currentException = currentException.cause
+            }
+
+            // 래핑하며 변경된 예외메시지들 중 하나라도 일치하는게 있는지 체크
+            val matchFound = messages.any { it.contains(exMsg) }
+            assertThat(matchFound).isTrue()
+        }
+    }
+
+
     /**
      * 응답 값 검증
      */
-    fun takeJsonResponse(resultAction: ResultActions) =
-        objectMapper.readTree(resultAction.andReturn().response.contentAsString)
-
     fun takeJsonResponseData(resultAction: ResultActions) =
         objectMapper.readTree(resultAction.andReturn().response.contentAsString).get("data")
 

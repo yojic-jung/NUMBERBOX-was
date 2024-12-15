@@ -3,28 +3,33 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
+import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
+import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
+import com.kamcci.numberbox.restapi.dummy.FileFixture.getImgFile
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.method.annotation.HandlerMethodValidationException
 import java.util.*
 
 @WebMvcUnitTest
-class MemberProfileWriteControllerTest : BaseMockMvcTest() {
+class MemberProfileWriteControllerTest(
+    @Autowired
+    private val fileUseCase: FileUseCase
+) : BaseMockMvcTest() {
     companion object {
-        const val PROFILE_REG_URL = "/member/profile"
-        const val PROFILE_IMG_URL = "/member/profile/img"
-        const val NICKNAME_CHNG_URL = "/member/profile/nickname"
-        const val MY_PROFILE_URL = "/member/profile"
+        const val PREFIX = "/member/profile"
+        const val PROFILE_REG_URL = PREFIX
+        const val PROFILE_IMG_URL = "$PREFIX/img"
+        const val NICKNAME_CHNG_URL = "$PREFIX/nickname"
+        const val MY_PROFILE_URL = PREFIX
     }
 
     @Autowired
@@ -62,17 +67,11 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `프로필 이미지 등록 - 성공`() {
         // given
-        val file = MockMultipartFile("imgFile", "originalFilename", "image/jpeg", "12345".toByteArray())
+        val file = getImgFile("imgFile", "imgFile.png")
+        `when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("", ""))
 
         // when
-        val resultActions =
-            mockMvc.perform(
-                multipart(PROFILE_IMG_URL)
-                    .file(file)
-                    .with { request ->
-                        request.method = "PUT"
-                        request
-                    })
+        val resultActions = putMultipartForm(PROFILE_IMG_URL, file)
 
         // then
         assert2xx(resultActions)
@@ -82,18 +81,10 @@ class MemberProfileWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `프로필 이미지 등록 - 실패`() {
         // given
-        val file = MockMultipartFile("noName", "originalFilename", "image/jpeg", "12345".toByteArray())
+        val file = getImgFile("imgFile", "imgFile.ppt")
 
         // when
-        val resultAction =
-            mockMvc.perform(
-                multipart(PROFILE_IMG_URL)
-                    .file(file)
-                    .with { request ->
-                        request.method = "PUT"
-                        request
-                    }
-            )
+        val resultAction = putMultipartForm(PROFILE_IMG_URL, file)
 
         // then
         assert4xx(resultAction)

@@ -17,10 +17,14 @@ import kotlin.reflect.KClass
 )
 @Constraint(validatedBy = [ContentsCheckValidator::class])
 annotation class ContentsCheck(
-    val message: String = "존재하지 않는 수학 문제 id 입니다.",
+    val message: String = NOT_EXIST_CONTENT,
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
-)
+) {
+    companion object {
+        const val NOT_EXIST_CONTENT = "존재하지 않는 수학 문제 id 입니다."
+    }
+}
 
 @Component
 class ContentsCheckValidator(

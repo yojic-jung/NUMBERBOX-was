@@ -17,13 +17,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 
 @WebMvcUnitTest
-class LoginFailureControllerTest : BaseMockMvcTest() {
+class LoginFailureControllerTest(
     @Autowired
-    lateinit var loginFailureController: LoginFailureController
-
+    private val loginFailureController: LoginFailureController,
     @Autowired
-    lateinit var memberLoginFailureUsecase: MemberLoginFailureUseCase
-
+    private val memberLoginFailureUseCase: MemberLoginFailureUseCase
+) : BaseMockMvcTest() {
     @Test
     fun `로그인 실패 콜백 - 요청 형식 오류`() {
         // given
@@ -60,7 +59,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val mockRequest = MockHttpServletRequest()
         mockRequest.setAttribute("auth.error.exception", PasswordMissMatchException())
         mockRequest.setAttribute("username", "test@test.com")
-        Mockito.`when`(memberLoginFailureUsecase.disableUserIfFailCountOver(any())).thenReturn(true)
+        Mockito.`when`(memberLoginFailureUseCase.disableUserIfFailCountOver(any())).thenReturn(true)
 
         // when
         val result = loginFailureController.loginFailCallback(mockRequest)
@@ -77,7 +76,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val mockRequest = MockHttpServletRequest()
         mockRequest.setAttribute("auth.error.exception", PasswordMissMatchException())
         mockRequest.setAttribute("username", "test@test.com")
-        Mockito.`when`(memberLoginFailureUsecase.disableUserIfFailCountOver(any())).thenReturn(false)
+        Mockito.`when`(memberLoginFailureUseCase.disableUserIfFailCountOver(any())).thenReturn(false)
 
         // when
         val result = loginFailureController.loginFailCallback(mockRequest)
@@ -93,7 +92,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val mockRequest = MockHttpServletRequest()
         mockRequest.setAttribute("auth.error.exception", DisabledUserException())
         mockRequest.setAttribute("username", "test@test.com")
-        Mockito.`when`(memberLoginFailureUsecase.ableUserIfDisableTimeOver(any())).thenReturn(true)
+        Mockito.`when`(memberLoginFailureUseCase.ableUserIfDisableTimeOver(any())).thenReturn(true)
 
         // when
         val result = loginFailureController.loginFailCallback(mockRequest)
@@ -109,7 +108,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val mockRequest = MockHttpServletRequest()
         mockRequest.setAttribute("auth.error.exception", DisabledUserException())
         mockRequest.setAttribute("username", "test@test.com")
-        Mockito.`when`(memberLoginFailureUsecase.ableUserIfDisableTimeOver(any())).thenReturn(false)
+        Mockito.`when`(memberLoginFailureUseCase.ableUserIfDisableTimeOver(any())).thenReturn(false)
 
         // when
         val result = loginFailureController.loginFailCallback(mockRequest)
@@ -125,7 +124,7 @@ class LoginFailureControllerTest : BaseMockMvcTest() {
         val mockRequest = MockHttpServletRequest()
         mockRequest.setAttribute("auth.error.exception", RuntimeException())
         mockRequest.setAttribute("username", "test@test.com")
-        Mockito.`when`(memberLoginFailureUsecase.ableUserIfDisableTimeOver(any())).thenReturn(false)
+        Mockito.`when`(memberLoginFailureUseCase.ableUserIfDisableTimeOver(any())).thenReturn(false)
 
         // when
         val result = loginFailureController.loginFailCallback(mockRequest)

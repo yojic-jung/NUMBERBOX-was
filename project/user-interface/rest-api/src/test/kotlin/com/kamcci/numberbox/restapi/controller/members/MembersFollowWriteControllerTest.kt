@@ -11,9 +11,11 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class MembersFollowWriteControllerTest : BaseMockMvcTest() {
+class MembersFollowWriteControllerTest(
     @Autowired
-    lateinit var memberProfileReadCase: MemberProfileReadCase
+    private val memberProfileReadCase: MemberProfileReadCase
+) : BaseMockMvcTest() {
+
 
     companion object {
         const val FOLLOWING_URL = "/member/following"

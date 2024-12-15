@@ -4,13 +4,10 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
-import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -24,10 +21,7 @@ import java.util.*
 @RestController
 @RequestMapping("/member/profile")
 class MemberProfileWriteController(
-    private val memberProfileReadCase: MemberProfileReadCase,
     private val memberProfileWriteCase: MemberProfileWriteCase,
-    private val memberFollowReadCase: MemberFollowReadCase,
-    private val memberMapper: MemberMapper,
     private val fileUseCase: FileUseCase,
 ) {
     /**

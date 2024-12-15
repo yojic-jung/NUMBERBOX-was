@@ -6,6 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperUpdtDto
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperWriteCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.constraints.Positive
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -41,6 +42,7 @@ class MathDocsWriteController(
     fun deleteDocs(
         @UserId
         memberId: UUID,
+        @Positive
         @PathVariable
         docsId: Long
     ): ResponseEntity<ResponseData<String>> {

@@ -20,7 +20,7 @@ class MathContentsLikeReadController(
     private val mathConRepoReadUseCase: MathContentsRepoReadCase,
     private val mathConLikeReadUseCase: MathContentsLikeReadCase,
 ) {
-    // 저장소에 문제 저장
+    // 좋아요 및 저장소 여부
     @GetMapping("/{contentsId}")
     fun isLikeRepoContents(
         @UserId userId: UUID,

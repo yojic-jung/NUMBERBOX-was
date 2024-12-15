@@ -12,14 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.HttpMessageNotReadableException
 
 @WebMvcUnitTest
-class MemberWriteControllerTest : BaseMockMvcTest() {
-
+class MemberWriteControllerTest(
     @Autowired
-    lateinit var memberWriteCase: MemberWriteCase
-
+    private val memberWriteCase: MemberWriteCase
+) : BaseMockMvcTest() {
     companion object {
-        private const val EMAIl_URL = "/member/email"
-        private const val PASSWORD_URL = "/member/password"
+        const val PREFIX = "/member"
+        const val EMAIl_URL = "$PREFIX/email"
+        const val PASSWORD_URL = "$PREFIX/password"
+        const val PASSWORD_CONFIRM_URL = "$PREFIX/password-confirm"
     }
 
     @Test
@@ -61,6 +62,18 @@ class MemberWriteControllerTest : BaseMockMvcTest() {
 
         // when
         val resultAction = putRequest(PASSWORD_URL, req)
+
+        // then
+        assert2xx(resultAction)
+    }
+
+    @Test
+    fun `비밀번호 확인 - 성공`() {
+        // given
+        val req = mapOf("password" to "password")
+
+        // when
+        val resultAction = postRequest(PASSWORD_CONFIRM_URL, req)
 
         // then
         assert2xx(resultAction)

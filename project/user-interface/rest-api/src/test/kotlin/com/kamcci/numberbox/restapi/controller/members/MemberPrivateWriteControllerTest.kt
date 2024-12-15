@@ -11,9 +11,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import java.util.*
 
 @WebMvcUnitTest
-class MemberPrivateWriteControllerTest : BaseMockMvcTest() {
+class MemberPrivateWriteControllerTest(
     @Autowired
-    lateinit var memberPrivateWriteCase: MemberPrivateWriteCase
+    private val memberPrivateWriteCase: MemberPrivateWriteCase
+) : BaseMockMvcTest() {
 
     companion object {
         const val UPDATE_PHONE_URL = "/member/phone"

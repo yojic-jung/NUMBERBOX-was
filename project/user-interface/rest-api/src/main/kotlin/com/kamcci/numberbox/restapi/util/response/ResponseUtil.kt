@@ -38,6 +38,19 @@ object ResponseUtil {
         return error(exception, statusCode.value(), uri)
     }
 
+    fun error(
+        exception: Throwable,
+        statusCode: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        val uri = if (request is HttpServletRequest) {
+            request.requestURI
+        } else {
+            request.contextPath
+        }
+        return error(exception, statusCode.value(), uri)
+    }
+
     // HttpServletRequest를 사용하는 경우
     fun error(
         exception: Exception,
@@ -59,6 +72,20 @@ object ResponseUtil {
     // 에러메시지 응답 반환
     private fun error(
         exception: Exception,
+        statusCode: Int,
+        requestUri: String
+    ): ResponseEntity<Any> {
+        val responseErrMsg =
+            ResponseErrMsg(
+                status = statusCode,
+                message = exception.message.toString(),
+                path = requestUri
+            )
+        return ResponseEntity(responseErrMsg, HttpStatusCode.valueOf(statusCode))
+    }
+
+    private fun error(
+        exception: Throwable,
         statusCode: Int,
         requestUri: String
     ): ResponseEntity<Any> {

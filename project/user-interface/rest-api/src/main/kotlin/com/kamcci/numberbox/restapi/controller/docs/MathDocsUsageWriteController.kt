@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsUsageCreateDto
 import com.kamcci.numberbox.app.usecase.docs.MathDocsUsageWriteCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,6 +24,7 @@ class MathDocsUsageWriteController(
     fun create(
         @UserId
         memberId: UUID,
+        @Valid
         @RequestBody reqBody: MathDocsUsageCreateDto
     ): ResponseEntity<ResponseData<Any>> {
         val docsUsageId = mathDocsUsageWriteCase.create(memberId, reqBody)
