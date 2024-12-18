@@ -73,8 +73,12 @@ open class BaseMockMvcTest {
         return putMultipartForm(url, null, fileList)
     }
 
-    fun putMultipartForm(url: String, reqBody: Map<String, String>?, fileList: List<MockMultipartFile>): ResultActions {
-        var requestBuilder = MockMvcRequestBuilders.multipart(url)
+    fun putMultipartForm(
+        url: String,
+        reqBody: Map<String, String>?,
+        fileList: List<MockMultipartFile>
+    ): ResultActions {
+        val requestBuilder = MockMvcRequestBuilders.multipart(url)
         for (file in fileList) {
             requestBuilder.file(file)
         }
@@ -88,7 +92,6 @@ open class BaseMockMvcTest {
             for ((key, value) in reqBody) {
                 requestBuilder.param(key, value)
             }
-            requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
         }
 
         return mockMvc.perform(requestBuilder)

@@ -49,7 +49,7 @@ class MathResourceWriteControllerTest(
     }
 
     @Test
-    fun `학습자료 등록(대표이미지) - 성공`() {
+    fun `학습자료 등록(대표이미지 미존재) - 성공`() {
         // given
         val req = mapOf(
             "title" to "title",
@@ -97,7 +97,7 @@ class MathResourceWriteControllerTest(
     }
 
     @Test
-    fun `학습자료 수정(대표 이미지) - 성공`() {
+    fun `학습자료 수정(대표 이미지 미존재) - 성공`() {
         // given
         val req = mapOf(
             "resourceId" to "1",
@@ -115,6 +115,25 @@ class MathResourceWriteControllerTest(
 
         // when
         val resultAction = putMultipartForm(PREFIX, req, fileList)
+
+        // then
+        assert2xx(resultAction)
+    }
+
+    @Test
+    fun `학습자료 수정(파일 미존재) - 성공`() {
+        // given
+        val req = mapOf(
+            "resourceId" to "1",
+            "title" to "title",
+            "mainCateId" to "1",
+            "midCateId" to "1",
+            "cateList" to "1-1,1-2",
+        )
+        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(null)
+
+        // when
+        val resultAction = putMultipartForm(PREFIX, req, listOf())
 
         // then
         assert2xx(resultAction)

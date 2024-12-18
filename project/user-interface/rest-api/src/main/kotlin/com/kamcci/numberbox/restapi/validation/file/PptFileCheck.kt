@@ -40,7 +40,7 @@ class PptFileCheckValidator : ConstraintValidator<PptFileCheck, MultipartFile> {
     }
 
     override fun isValid(
-        value: MultipartFile,
+        value: MultipartFile?,
         context: ConstraintValidatorContext?,
     ): Boolean {
         return isValidImg(value)

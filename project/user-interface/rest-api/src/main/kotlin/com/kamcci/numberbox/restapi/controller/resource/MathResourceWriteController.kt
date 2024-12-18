@@ -53,8 +53,8 @@ class MathResourceWriteController(
             pptFilePath = pptFileNameVo!!.path,
             pptFileName = pptFileNameVo.name,
             pptPageCnt = slideImgNameList.size,
-            imgPath = imgFileNameVo?.path ?: slideImgNameList[0].path,
-            imgName = imgFileNameVo?.name ?: slideImgNameList[0].name,
+            imgPath = if (imgFileNameVo != null) imgFileNameVo.path else slideImgNameList[0].path,
+            imgName = if (imgFileNameVo != null) imgFileNameVo.name else slideImgNameList[0].name,
             cateList = request.cateList,
             imgList = pptVo.second
         )

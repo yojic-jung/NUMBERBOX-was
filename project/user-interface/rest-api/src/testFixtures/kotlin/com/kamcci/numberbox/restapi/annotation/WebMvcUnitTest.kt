@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.annotation
 
 import com.kamcci.numberbox.restapi.config.RestApiWebMvcMockBeanConfig
+import com.kamcci.numberbox.restapi.controller.HealthCheck
 import com.kamcci.numberbox.restapi.controller.cs.CsErrorReportReadController
 import com.kamcci.numberbox.restapi.controller.cs.CsErrorReportWriteController
 import com.kamcci.numberbox.restapi.controller.docs.MathDocsReadController
@@ -18,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration
 @ContextConfiguration(classes = [RestApiWebMvcMockBeanConfig::class])
 @WebMvcTest(
     value = [
+        HealthCheck::class,
         LoginFailureController::class,
         MemberReadController::class,
         MemberWriteController::class,

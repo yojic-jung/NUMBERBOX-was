@@ -38,11 +38,44 @@ class MathResourceReadControllerTest(
     }
 
     @Test
+    fun `카테고리 id로 조회(카운트 함수 실행) - 성공`() {
+        // given
+        val mainCateId = 1
+        val reqBody = mapOf(
+            "pageNum" to "0",
+            "pageVolume" to "2",
+        )
+        Mockito.`when`(mathResourceReadCase.readByMainCateId(any(), any())).thenReturn(getMathResourceVoList())
+
+        // when
+        val resultAction = getRequest("$PREFIX/$mainCateId", reqBody)
+
+        // then
+        assert2xx(resultAction)
+    }
+
+    @Test
     fun `나의 학습 자료 조회 - 성공`() {
         // given
         val reqBody = mapOf(
             "pageNum" to "0",
             "pageVolume" to "100",
+        )
+        Mockito.`when`(mathResourceReadCase.readByMemberId(any(), any())).thenReturn(getMathResourceDetailVoList())
+
+        // when
+        val resultAction = getRequest(MY_URL, reqBody)
+
+        // then
+        assert2xx(resultAction)
+    }
+
+    @Test
+    fun `나의 학습 자료 조회(카운트 실행) - 성공`() {
+        // given
+        val reqBody = mapOf(
+            "pageNum" to "0",
+            "pageVolume" to "2",
         )
         Mockito.`when`(mathResourceReadCase.readByMemberId(any(), any())).thenReturn(getMathResourceDetailVoList())
 
