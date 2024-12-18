@@ -6,7 +6,7 @@ import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
-import com.kamcci.numberbox.restapi.exception.code.RestApi100ErrCodeType
+import com.kamcci.numberbox.restapi.exception.code.RestApiErrCodeType
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -42,11 +42,11 @@ class LoginFailureController(
                 // 과도한 비밀번호 불일치 요청시 계정 비활성화
                 val isDisabled: Boolean = memberLoginFailureUsecase.disableUserIfFailCountOver(userEmail)
                 if (isDisabled) ResponseUtil.error(
-                    BusinessValidException(RestApi100ErrCodeType.DISABLE_USER, exception),
+                    BusinessValidException(RestApiErrCodeType.DISABLE_USER, exception),
                     HttpStatus.FORBIDDEN, request
                 )
                 else ResponseUtil.error(
-                    BusinessValidException(RestApi100ErrCodeType.PASSWORD_MISS_MATCH, exception),
+                    BusinessValidException(RestApiErrCodeType.PASSWORD_MISS_MATCH, exception),
                     HttpStatus.FORBIDDEN, request
                 )
             }
@@ -56,12 +56,12 @@ class LoginFailureController(
                 // 계정 비활성화 유효시간이 `지난 경우 다시 활성화
                 val isAfterDisableTime: Boolean = memberLoginFailureUsecase.ableUserIfDisableTimeOver(userEmail)
                 if (isAfterDisableTime) ResponseUtil.error(
-                    BusinessValidException(RestApi100ErrCodeType.DISABLE_TO_ABLE, exception),
+                    BusinessValidException(RestApiErrCodeType.DISABLE_TO_ABLE, exception),
                     HttpStatus.FORBIDDEN,
                     request
                 )
                 else ResponseUtil.error(
-                    BusinessValidException(RestApi100ErrCodeType.DISABLE_USER, exception),
+                    BusinessValidException(RestApiErrCodeType.DISABLE_USER, exception),
                     HttpStatus.FORBIDDEN,
                     request
                 )

@@ -94,4 +94,18 @@ tasks.jacocoTestReport {
         html.outputLocation = file("${layout.buildDirectory}/jacoco.html")
         xml.outputLocation = file("${layout.buildDirectory}/jacoco.xml")
     }
+
+    classDirectories.setFrom(
+        sourceSets.main.get().output.asFileTree.matching {
+            exclude("**/*MapperImpl.class")
+        }
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            excludes = mutableListOf("**/*MapperImpl.class")
+        }
+    }
 }

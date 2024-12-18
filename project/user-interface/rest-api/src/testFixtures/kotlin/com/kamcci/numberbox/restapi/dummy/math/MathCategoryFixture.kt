@@ -28,8 +28,7 @@ object MathCategoryFixture {
             texGrammer = "tex",
             lineChange = 1,
             classification = classification,
-
-            )
+        )
 
     fun getMathFormulaKeyVoList(): List<MathFormulaKeyVo> {
         return listOf(

@@ -13,8 +13,10 @@ class HealthCheckTest : BaseMockMvcTest() {
 
     @Test
     fun `헬스 체크 - 성공`() {
+        // when
         val resultAction = mockMvc.perform(MockMvcRequestBuilders.head(HEALTH_CHECK))
 
+        // then
         assert2xx(resultAction)
     }
 }

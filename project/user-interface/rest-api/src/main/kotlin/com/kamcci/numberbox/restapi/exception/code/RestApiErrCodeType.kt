@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.exception.code.BaseErrCodeType
 /**
  * 100번대 restApi모듈 에러코드(상태 코드 아닌 에러 코드)
  */
-enum class RestApi100ErrCodeType(
+enum class RestApiErrCodeType(
     override val code: Int,
     override val message: String,
 ) : BaseErrCodeType {

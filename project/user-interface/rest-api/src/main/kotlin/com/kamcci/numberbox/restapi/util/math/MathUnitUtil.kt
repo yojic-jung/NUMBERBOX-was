@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.restapi.util.math
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.domain.vo.math.MathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import com.kamcci.numberbox.restapi.dto.response.math.MathUnitGroupResponse
@@ -58,8 +57,7 @@ object MathUnitUtil {
             searchType == MathContentsSearchRequest.SearchType.ThrUnit -> return listOf(unitId)
             searchType == MathContentsSearchRequest.SearchType.SecUnit -> unitInfoList.find { it.id == unitId }
             searchType == MathContentsSearchRequest.SearchType.FirUnit -> unitInfoList.find { it.id == unitId }
-            searchType == MathContentsSearchRequest.SearchType.Subject -> unitInfoList.find { it.id == unitId }
-            else -> throw BusinessValidException("단원 id 검색 조건을 입력해주세요.")
+            else -> unitInfoList.find { it.id == unitId }
         }
 
         return when {
