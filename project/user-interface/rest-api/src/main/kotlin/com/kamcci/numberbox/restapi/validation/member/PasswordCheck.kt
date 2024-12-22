@@ -26,11 +26,7 @@ class PasswordCheckValidator(
     @Value("\${regex.member.password}")
     private val passwordRegex: String
 ) : ConstraintValidator<PasswordCheck, String> {
-    private lateinit var regexPattern: Regex
-    override fun initialize(constraintAnnotation: PasswordCheck?) {
-        // Regex 객체 초기화
-        regexPattern = Regex(passwordRegex)
-    }
+    private val regexPattern: Regex = Regex(passwordRegex)
 
     override fun isValid(
         value: String?,

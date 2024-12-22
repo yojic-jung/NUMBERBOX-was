@@ -26,10 +26,7 @@ class BirthCheckValidator : ConstraintValidator<BirthCheck, String> {
     ): Boolean {
         return if (value.length != 6) false
         else {
-            val result = runCatching {
-                value.toInt()
-            }
-            result.isSuccess
+            value.all { it.isDigit() }
         }
     }
 }

@@ -26,11 +26,7 @@ class EmailCheckValidator(
     @Value("\${regex.member.email}")
     private val emailRegex: String
 ) : ConstraintValidator<EmailCheck, String> {
-    private lateinit var regexPattern: Regex
-    override fun initialize(constraintAnnotation: EmailCheck?) {
-        // Regex 객체 초기화
-        regexPattern = Regex(emailRegex)
-    }
+    private val regexPattern: Regex = Regex(emailRegex)
 
     override fun isValid(
         value: String?,

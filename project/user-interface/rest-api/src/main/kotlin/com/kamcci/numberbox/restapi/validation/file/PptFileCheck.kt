@@ -23,14 +23,14 @@ annotation class PptFileCheck(
 class PptFileCheckValidator : ConstraintValidator<PptFileCheck, MultipartFile> {
     companion object {
         private val ImgExtensions = listOf("ppt", "pptx")
-        private val MaxFileSize = 20 * 1024 * 1024 // 20MB (바이트 단위)
+        const val MAX_FILE_SIZE = 20 * 1024 * 1024 // 20MB (바이트 단위)
 
-        fun isValidImg(value: MultipartFile?): Boolean {
+        fun isValidPpt(value: MultipartFile?): Boolean {
             // null인 경우 체크 안함
             if (value == null || value.isEmpty) return true
 
             // 최대 사이즈 체크
-            if (value.size > MaxFileSize) return false
+            if (value.size > MAX_FILE_SIZE) return false
 
             // 허용된 확장자에 포함되는지 확인
             val fileName = value.originalFilename ?: return false
@@ -43,6 +43,6 @@ class PptFileCheckValidator : ConstraintValidator<PptFileCheck, MultipartFile> {
         value: MultipartFile?,
         context: ConstraintValidatorContext?,
     ): Boolean {
-        return isValidImg(value)
+        return isValidPpt(value)
     }
 }

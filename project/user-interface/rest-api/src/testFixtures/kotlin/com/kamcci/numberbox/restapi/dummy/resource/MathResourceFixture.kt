@@ -56,14 +56,5 @@ object MathResourceFixture {
             getMathResourceDetailVo(4L),
             getMathResourceDetailVo(5L),
         )
-
-    fun getMathResourceCreateRequest() =
-        MathResourceCreateRequest(
-            title = "title",
-            mainCateId = "1",
-            midCateId = "1",
-            cateList = listOf("1-1", "1-2"),
-            pptFile = getMultipartFile("name", "name.ppt"),
-            imgFile = getMultipartFile("name", "name.png"),
-        )
+    
 }

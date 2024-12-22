@@ -26,10 +26,7 @@ class PhoneCheckValidator : ConstraintValidator<PhoneCheck, String> {
     ): Boolean {
         return if (value.length < 10 || value.length > 11) false
         else {
-            val result = runCatching {
-                value.toInt()
-            }
-            result.isSuccess
+            value.all { it.isDigit() }
         }
     }
 }

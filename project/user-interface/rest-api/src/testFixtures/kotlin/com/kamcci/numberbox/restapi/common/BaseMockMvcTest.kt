@@ -58,6 +58,15 @@ open class BaseMockMvcTest {
         return mockMvc.perform(requestBuilder)
     }
 
+    fun postMultipartForm(url: String, reqBody: Any): ResultActions {
+        val requestBuilder = MockMvcRequestBuilders.multipart(url)
+
+        requestBuilder.content(objectMapper.writeValueAsString(reqBody))
+        requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
+
+        return mockMvc.perform(requestBuilder)
+    }
+
     // json PUT 요청
     fun putRequest(url: String, reqBody: Any?): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.put(url)
