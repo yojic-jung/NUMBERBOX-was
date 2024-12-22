@@ -4,7 +4,6 @@ import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
-import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.constraints.Positive
@@ -22,7 +21,6 @@ import java.util.*
 class MemberProfileReadController(
     private val memberProfileReadCase: MemberProfileReadCase,
     private val memberFollowReadCase: MemberFollowReadCase,
-    private val memberMapper: MemberMapper,
 ) {
     /**
      * 내 프로필 보기
@@ -33,23 +31,20 @@ class MemberProfileReadController(
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 1. 프로필 조회
         val myProfile = memberProfileReadCase.readByMemberId(memberId)
-        val myProfileRs = memberMapper.toProfileResponse(myProfile)
 
         // 2. 팔로잉 프로필 조회
         val followingProfile = memberProfileReadCase.readFollowingProfileByMemberId(memberId)
-        val followingProfileRs = memberMapper.toProfileResponse(followingProfile)
 
         // 3. 팔로워 프로필 조회
         val followerProfile = memberProfileReadCase.readFollowerProfileByMemberId(memberId)
-        val followerProfileRs = memberMapper.toProfileResponse(followerProfile)
 
         return ResponseUtil.ok(
             mapOf(
-                "myProfile" to myProfileRs,
-                "followingProfile" to followingProfileRs,
-                "followingCnt" to followingProfileRs.size,
-                "followerProfile" to followerProfileRs,
-                "followerCnt" to followerProfileRs.size,
+                "myProfile" to myProfile,
+                "followingProfile" to followingProfile,
+                "followingCnt" to followingProfile.size,
+                "followerProfile" to followerProfile,
+                "followerCnt" to followerProfile.size,
             )
         )
     }

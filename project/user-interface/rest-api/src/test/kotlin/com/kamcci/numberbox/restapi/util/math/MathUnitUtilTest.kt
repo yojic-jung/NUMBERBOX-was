@@ -34,7 +34,20 @@ class MathUnitUtilTest {
     }
 
     @Test
-    fun `대당원 같은 단원 id 추출 - 성공`() {
+    fun `학년 같은 단원 id 추출 - 실패`() {
+        // given
+        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+
+        // when
+        val unitIdList =
+            MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.Subject, 41001)
+
+        // then
+        assertThat(unitIdList.size).isEqualTo(0)
+    }
+
+    @Test
+    fun `대단원 같은 단원 id 추출 - 성공`() {
         // given
         val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
 
@@ -44,6 +57,19 @@ class MathUnitUtilTest {
 
         // then
         assertThat(unitIdList.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `대단원 같은 단원 id 추출 - 실패`() {
+        // given
+        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+
+        // when
+        val unitIdList =
+            MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.FirUnit, 41001)
+
+        // then
+        assertThat(unitIdList.size).isEqualTo(0)
     }
 
     @Test
@@ -57,6 +83,19 @@ class MathUnitUtilTest {
 
         // then
         assertThat(unitIdList.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `중단원 같은 단원 id 추출 - 실패`() {
+        // given
+        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+
+        // when
+        val unitIdList =
+            MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.SecUnit, 41001)
+
+        // then
+        assertThat(unitIdList.size).isEqualTo(0)
     }
 
     @Test

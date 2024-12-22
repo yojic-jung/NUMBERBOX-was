@@ -61,13 +61,13 @@ object MathUnitUtil {
         }
 
         return when {
-            searchType == MathContentsSearchRequest.SearchType.SecUnit -> unitInfoList.filter { it.secUnit == unitInfo!!.secUnit }
+            searchType == MathContentsSearchRequest.SearchType.SecUnit -> unitInfoList.filter { it.secUnit == unitInfo?.secUnit }
                 .map { it.id }
 
-            searchType == MathContentsSearchRequest.SearchType.FirUnit -> unitInfoList.filter { it.firUnit == unitInfo!!.firUnit }
+            searchType == MathContentsSearchRequest.SearchType.FirUnit -> unitInfoList.filter { it.firUnit == unitInfo?.firUnit }
                 .map { it.id }
 
-            else -> unitInfoList.filter { it.subject == unitInfo!!.subject }.map { it.id }
+            else -> unitInfoList.filter { it.subject == unitInfo?.subject }.map { it.id }
         }
     }
 
