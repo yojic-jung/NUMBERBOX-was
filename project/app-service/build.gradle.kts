@@ -19,10 +19,7 @@ java {
 dependencies {
     implementation(project(":project:app-domain"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
-    testImplementation("org.assertj:assertj-core:3.24.2")
-    testImplementation("org.mockito:mockito-core:5.5.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    testImplementation(libs.bundles.app.service.test)
 }
 
 allOpen {

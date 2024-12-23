@@ -16,10 +16,12 @@ public class AuthConstantConfig {
     public static final long REFRESH_TOKEN_VALID_TIME = 1000L * 60 * 60 * 6; // 6시간
     public static final long REFRESH_TOKEN_VALID_TIME_OP_KEEP = 1000L * 60 * 60 * 24 * 30; // 1달 (로그인 유지 요청한 경우)
     // 클라이언트에 전달할 액세스 토큰 속성명
-    public static String ACCESS_TOKEN_NAME = "Authorization";
-    public static String TOKEN_STANDARD_PREFIX = "Bearer";
+    public static final String ACCESS_TOKEN_NAME = "Authorization";
+    public static final String TOKEN_STANDARD_PREFIX = "Bearer";
     // 클라이언트에 전달할 리프레시 토큰 속성명
-    public static String REFRESH_TOKEN_NAME = "refresh-token";
+    public static final String REFRESH_TOKEN_NAME = "refresh-token";
     // 클라이언트에 전달할 사용자 권한 속성명
-    public static String ROLE_NAME = "roles";
+    public static final String ROLE_NAME = "roles";
+
+    private AuthConstantConfig() { }
 }

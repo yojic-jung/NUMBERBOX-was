@@ -8,8 +8,6 @@ import com.kamcci.modules.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -21,7 +19,6 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_ST
 
 public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private final AuthenticationManager authenticationManager;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final TokenResponseService tokenResponseService;
 
     public JwtRequestAuthFilter(AuthenticationManager authenticationManager,

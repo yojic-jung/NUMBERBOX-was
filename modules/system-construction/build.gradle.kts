@@ -23,13 +23,8 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":project:app-domain"))
 
-    // spring
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    // 트랜잭션
-    implementation("org.springframework:spring-tx:6.1.4")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(libs.bundles.modules.system.construction)
+    testImplementation(libs.bundles.modules.system.construction.test)
 }
 
 tasks.withType<KotlinCompile> {

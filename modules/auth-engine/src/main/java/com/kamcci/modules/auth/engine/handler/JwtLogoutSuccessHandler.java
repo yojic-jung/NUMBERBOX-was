@@ -25,8 +25,10 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                                 Authentication authentication) throws IOException, ServletException {
         Cookie cookie = WebUtils.getCookie(request, "refresh-token");
-        String jwtToken = cookie.getValue();
-        eventPublisher.publishEvent(new LogoutSuccessEvent(jwtToken));
+        if(cookie != null) {
+            String jwtToken = cookie.getValue();
+            eventPublisher.publishEvent(new LogoutSuccessEvent(jwtToken));
+        }
         AuthWebUtil.responseOK(response, false, AuthResponse.LOGOUT_OK.message);
     }
 }

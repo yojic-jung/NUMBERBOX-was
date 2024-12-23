@@ -37,12 +37,11 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
         String accessToken = authTokenUtil.createAccessToken(oldAccessToken);
-        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+        if(response != null) response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
     }
 
     /**
      * accessToken을 만들어 헤더에, refreshToken을 만들어 쿠키에 담음
-     * todo 제대로 동작하는지 테스트 필요
      */
     @Override
     public void responseAuthToken(String email, UUID userId, List<String> roleList) {
@@ -57,9 +56,11 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         // 로그인 성공 이벤트 발행
         publishLoginSuccessEvent(request, userId, refreshToken);
 
-        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
-        response.setHeader(ROLE_NAME, roleList.toString());
-        response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+        if(response != null) {
+            response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+            response.setHeader(ROLE_NAME, roleList.toString());
+            response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+        }
     }
 
     // todo 이름 변경?? refreshTokenCreatedEvent
@@ -79,9 +80,11 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
-        response.setHeader(ROLE_NAME, roleList.toString());
-        response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+        if(response != null) {
+            response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+            response.setHeader(ROLE_NAME, roleList.toString());
+            response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+        }
     }
 
     /**

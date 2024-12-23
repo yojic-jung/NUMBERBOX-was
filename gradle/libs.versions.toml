@@ -1,0 +1,110 @@
+[versions]
+kotlin = "1.9.22"
+
+spring-boot = "3.2.3"
+spring-aws = "2.2.6.RELEASE"
+spring-tx = "6.1.4"
+aws-s3 = "1.12.281"
+
+querydsl = "5.0.0"
+mysql-version = "9.0.0"
+
+java-uuid = "4.0.1"
+test-container = "1.19.5"
+flyway = "9.22.3"
+mockito = "5.4.0"
+jackson = "2.17.2"
+mockk = "1.13.8"
+mapstruct = "1.5.5.Final"
+jupiter = "5.11.0"
+assertj = "3.24.2"
+poi = "5.2.5"
+jsonwebtoken = "0.9.1"
+jaxb-api = "2.3.1"
+javax-mail = "1.4.7"
+iamport = "0.2.4"
+retrofit = "2.10.0"
+gson = "2.10.1"
+
+[libraries]
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
+fasterxml-jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
+spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-cloud-aws = { module = "org.springframework.cloud:spring-cloud-starter-aws", version.ref = "spring-aws" }
+aws-java-sdk-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "aws-s3" }
+spring-tx = { module = "org.springframework:spring-tx", version.ref = "spring-tx" }
+iamport-rest-client-java = { module = "com.github.iamport:iamport-rest-client-java", version.ref = "iamport" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+querydsl-jpa = { module = "com.querydsl:querydsl-jpa", version.ref = "querydsl" }
+querydsl-apt = { module = "com.querydsl:querydsl-apt", version.ref = "querydsl" }
+mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "mysql-version" }
+
+java-uuid-generator = { module = "com.fasterxml.uuid:java-uuid-generator", version.ref = "java-uuid" }
+jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxb-api" }
+
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+
+javax-mail = { module = "javax.mail:mail", version.ref = "javax-mail" }
+
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers", version.ref = "spring-boot" }
+testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "test-container" }
+testcontainers-jdbc = { module = "org.testcontainers:jdbc", version.ref = "test-container" }
+io-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupiter" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }
+
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
+jsonwebtoken = { module = "io.jsonwebtoken:jjwt", version.ref = "jsonwebtoken" }
+
+[bundles]
+orm-jpa-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "mysql-connector-j", "java-uuid-generator"]
+orm-jpa-adapter-test = ["spring-boot-starter-test", "flyway-core", "flyway-mysql"]
+orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcontainers", "testcontainers-mysql",
+    "testcontainers-jdbc", "flyway-core", "flyway-mysql"]
+
+email-adapter = ["kotlin-reflect", "spring-boot-starter"]
+email-adapter-test = ["spring-boot-starter-test"]
+
+storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]
+storage-adapter-test = ["mockito-kotlin", "spring-boot-starter-test"]
+
+boot-strap = ["spring-boot-starter", "spring-boot-devtools"]
+boot-strap-test = ["spring-boot-starter-test"]
+
+ui-rest-api = ["spring-boot-starter", "spring-boot-starter-web", "spring-boot-starter-security", "spring-boot-starter-validation",
+    "fasterxml-jackson", "poi-ooxml", "mapstruct"]
+ui-rest-api-test = ["spring-boot-starter-test", "mockito-kotlin", "io-mockk"]
+ui-rest-api-test-fixture = ["spring-boot-starter-test"]
+
+app-service-test = ["junit-jupiter", "assertj-core", "mockito-kotlin", "mockito-core"]
+
+modules-auth-engine = ["kotlin-stdlib", "spring-boot-starter-web", "spring-boot-starter-security", "jsonwebtoken",
+    "java-uuid-generator", "jaxb-api"]
+modules-auth-engine-test = ["spring-boot-starter-test", ]
+
+modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-mail"]
+modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
+
+modules-system-construction = ["kotlin-reflect", "spring-boot-starter", "spring-tx"]
+modules-system-construction-test = ["spring-boot-starter-test"]
+
+modules-identity-veriry-iamport-engine = ["kotlin-reflect", "spring-boot-starter", "iamport-rest-client-java",
+    "poi-ooxml", "retrofit", "gson"]
+modules-identity-veriry-iamport-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]

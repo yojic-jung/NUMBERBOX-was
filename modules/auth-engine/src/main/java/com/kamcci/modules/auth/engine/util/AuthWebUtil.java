@@ -65,9 +65,11 @@ public class AuthWebUtil {
 
         // 응닶값 path 추출 및 설정
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        String requestUri = request.getRequestURI();
-        map.put("path", requestUri);
+        if(attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            String requestUri = request.getRequestURI();
+            map.put("path", requestUri);
+        }
 
         try {
             PrintWriter printWriter = response.getWriter();

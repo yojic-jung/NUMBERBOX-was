@@ -20,15 +20,9 @@ java {
 dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
-    
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.281")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    implementation(libs.bundles.storage.adapter)
+    testImplementation(libs.bundles.storage.adapter.test)
 }
 
 tasks.withType<Test> {

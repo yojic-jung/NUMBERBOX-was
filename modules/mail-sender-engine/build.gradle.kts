@@ -20,13 +20,9 @@ java {
 dependencies {
     implementation(project(":modules:mail-sender-control"))
 
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation(libs.bundles.modules.mail.sender.engine)
+    testImplementation(libs.bundles.modules.mail.sender.engine.test)
 
-    implementation("javax.mail:mail:1.4.7")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 }
 
 tasks.withType<Test> {

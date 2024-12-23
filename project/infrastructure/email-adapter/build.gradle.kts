@@ -20,13 +20,10 @@ java {
 dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
-
     implementation(project(":modules:mail-sender-control"))
 
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(libs.bundles.email.adapter)
+    testImplementation(libs.bundles.email.adapter.test)
 }
 
 tasks.withType<Test> {

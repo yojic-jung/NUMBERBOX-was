@@ -1,15 +1,16 @@
 pluginManagement {
     plugins {
-        id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+        id("org.jetbrains.kotlin.jvm") version "1.9.22"
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
-rootProject.name = 'NUMBERBOX-was'
+rootProject.name = "NUMBERBOX-was"
 
+// 프로젝트 모듈 포함
 include(":project")
 
 // project-bootstrap
@@ -37,5 +38,4 @@ include(":modules:mail-sender-control")
 include(":modules:mail-sender-engine")
 include(":modules:identity-verify-control")
 include(":modules:identity-verify-iamport-engine")
-
 include(":modules:system-construction")

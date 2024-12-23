@@ -21,20 +21,8 @@ java {
 dependencies {
     implementation(project(":modules:identity-verify-control"))
 
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    // https://mvnrepository.com/artifact/com.github.iamport/iamport-rest-client-java
-    implementation("com.github.iamport:iamport-rest-client-java:0.2.4")
-    implementation("org.apache.poi:poi-ooxml:4.1.2")
-    implementation("com.squareup.retrofit2:retrofit:2.10.0")
-//    implementation("com.squareup.retrofit2:converter-gson:2.10.0")
-
-    implementation("com.google.code.gson:gson:2.10.1")
-
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    implementation(libs.bundles.modules.identity.veriry.iamport.engine)
+    testImplementation(libs.bundles.modules.identity.veriry.iamport.engine.test)
 }
 
 tasks.withType<Test> {
