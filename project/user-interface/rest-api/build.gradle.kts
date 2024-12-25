@@ -36,10 +36,19 @@ dependencies {
 
     implementation(libs.bundles.ui.rest.api)
     kapt(libs.mapstruct.processor)
+
     testImplementation(libs.bundles.ui.rest.api.test)
     testFixturesImplementation(libs.bundles.ui.rest.api.test.fixture)
 
-
+    // end to end test config
+    testImplementation(project(":project:app-domain"))
+    testImplementation(project(":project:app-service"))
+    testImplementation(project(":project:infrastructure:storage-adapter"))
+    testImplementation(project(":project:infrastructure:email-adapter"))
+    testImplementation(project(":project:infrastructure:orm-jpa-adapter"))
+    testImplementation(testFixtures(project(":project:infrastructure:orm-jpa-adapter")))
+    testImplementation(project(":modules:system-construction"))
+    testFixturesImplementation(project(":modules:mail-sender-control"))
 }
 
 tasks.withType<KotlinCompile> {

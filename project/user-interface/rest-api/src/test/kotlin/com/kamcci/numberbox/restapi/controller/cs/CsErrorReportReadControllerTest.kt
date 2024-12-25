@@ -9,14 +9,15 @@ import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class CsErrorReportReadControllerTest : BaseMockMvcTest() {
+class CsErrorReportReadControllerTest(
+    @Autowired
+    private val csErrorReportReadCase: CsErrorReportReadCase
+) : BaseMockMvcTest() {
     companion object {
         // 고객센터 내 문의 내역
         const val MY_CS_ERROR = "/cs/error/my"
     }
 
-    @Autowired
-    lateinit var csErrorReportReadCase: CsErrorReportReadCase
 
     @Test
     fun `고객센터 내 문의 내역 - 성공`() {
@@ -29,5 +30,5 @@ class CsErrorReportReadControllerTest : BaseMockMvcTest() {
         // then
         assert2xx(resultAction)
     }
-    
+
 }

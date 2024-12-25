@@ -8,7 +8,6 @@ import com.kamcci.numberbox.app.domain.system_construction.UseCase
  * Def : 의존관계 설정 제공받을 사용자 정의 어노테이션 설정
  */
 object CustomDIAnnotationBeanConstConfig {
-    // todo application.yml 설정으로 변경하여 의존성 제거
     // 사용자 정의 빈 등록 대상 어노테이션
     val CUSTOM_BEAN_ANNOTATION = UseCase::class
 
