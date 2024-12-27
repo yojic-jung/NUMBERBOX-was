@@ -32,6 +32,8 @@ subprojects {
     }
 
     tasks.jacocoTestReport {
+        dependsOn(tasks.test)
+
         reports {
             html.required.set(true)
             xml.required.set(true)
@@ -44,6 +46,11 @@ subprojects {
                 exclude("**/*MapperImpl.class", "**/Q*Entity.class", "**/Q*Domain.class")
             }
         )
+
+        // 실행된 모든 `jacoco.exec` 파일 병합
+        executionData.setFrom(fileTree(projectDir).matching {
+            this.include("**/jacoco.exec")
+        })
     }
 }
 

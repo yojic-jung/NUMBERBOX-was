@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.app.service.common
 
+import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -7,10 +8,28 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 class FileServiceTest {
-    private val fileNameMakeService = FileService(mock())
+    private val fileService = FileService(mock())
 
     companion object {
         const val MAX_FILE_NAME_LENGTH = 70
+    }
+
+    @Test
+    fun `파일 업로드 - 성공`() {
+        // given
+        val uploadDto = FileUploadDto(
+            name = "fileName.png",
+            contentType = "",
+            size = 1,
+            inputStream = "1".byteInputStream(),
+        )
+        val fileType = FileType.ProfileIMG
+
+        // when
+        val fileNameVo = fileService.upload(uploadDto, fileType)
+
+        // then
+        assertThat(fileNameVo.path).contains(fileType.path)
     }
 
     @Test
@@ -18,7 +37,7 @@ class FileServiceTest {
         // given
         FileType.entries.forEach {
             // when
-            val fileNameVo = fileNameMakeService.makeFileNameByType("tmp.heic", it)
+            val fileNameVo = fileService.makeFileNameByType("tmp.heic", it)
 
             assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_LENGTH)
         }
@@ -31,7 +50,7 @@ class FileServiceTest {
         val fileType = FileType.ProfileIMG
 
         // when
-        val fileNameVo = fileNameMakeService.makeFileNameByType(fileName, fileType)
+        val fileNameVo = fileService.makeFileNameByType(fileName, fileType)
 
         // then
         // 1. 파일 경로 첫글자는 파일 타입 상태코드
@@ -41,6 +60,42 @@ class FileServiceTest {
         val expectedExtension = fileName.substringAfterLast(".")
         val actualExtension = fileNameVo.name.substringAfterLast(".")
         assertEquals(expectedExtension, actualExtension)
+    }
+
+    @Test
+    fun `파일 확장자 없는 경우 - 실패`() {
+        // given
+        val fileName = "test"
+        val fileType = FileType.ProfileIMG
+
+        // when
+        val fileNameVo = fileService.makeFileNameByType(fileName, fileType)
+
+        // then
+        // 1. 파일 경로 첫글자는 파일 타입 상태코드
+        assertEquals(fileType.path, fileNameVo.path.split("/")[0])
+
+        // 2. 파일 확장자 그대로
+        val actualExtension = fileNameVo.name.substringAfterLast(".")
+        assertEquals("", actualExtension)
+    }
+
+    @Test
+    fun `파일 확장자 없는 경우(dot만 있음) - 실패`() {
+        // given
+        val fileName = "test."
+        val fileType = FileType.ProfileIMG
+
+        // when
+        val fileNameVo = fileService.makeFileNameByType(fileName, fileType)
+
+        // then
+        // 1. 파일 경로 첫글자는 파일 타입 상태코드
+        assertEquals(fileType.path, fileNameVo.path.split("/")[0])
+
+        // 2. 파일 확장자 그대로
+        val actualExtension = fileNameVo.name.substringAfterLast(".")
+        assertEquals("", actualExtension)
     }
 
 }

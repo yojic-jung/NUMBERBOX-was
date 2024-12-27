@@ -41,8 +41,7 @@ class MathContentsWriteService(
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
         // 수학문제 및 유사문제 출처 저장(자체제작 문제는 검수 진행하므로 미출시)
-        val contentsId = mathContentsWriteOrmPort.saveWithSimilarSrc(NotRelease, contentsModifyDto, similarSrcDto)
-        return contentsId
+        return mathContentsWriteOrmPort.saveWithSimilarSrc(NotRelease, contentsModifyDto, similarSrcDto)
     }
 
     // 변형문제 등록
@@ -67,8 +66,7 @@ class MathContentsWriteService(
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
         // 수학문제 및 입시 출처 정보 저장(입시 문제는 즉시 출시)
-        val contentsId = mathContentsWriteOrmPort.saveWithIpsiSrc(Release, contentsModifyDto, ipsiSrcCreateDto)
-        return contentsId
+        return mathContentsWriteOrmPort.saveWithIpsiSrc(Release, contentsModifyDto, ipsiSrcCreateDto)
     }
 
     @TXExecute

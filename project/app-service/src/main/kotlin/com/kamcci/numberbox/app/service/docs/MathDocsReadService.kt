@@ -14,7 +14,6 @@ import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 class MathDocsReadService(
     private val mathDocsReadOrmPort: MathDocsReadOrmPort,
 ) : MathDocsReadCase {
-
     // 각 유형별로 몇 문제씩 뽑아와야할지 기준
     private val cntStandards: List<Int> = listOf(1, 2, 3, 4, 5, 10, 15, 20, 30, 50, 100)
 
@@ -22,7 +21,7 @@ class MathDocsReadService(
     val lowLv = Pair(listOf(1, 2), listOf(3, 4))
     val midLv = Pair(listOf(2, 3, 4), listOf(1, 5))
     val highLv = Pair(listOf(4, 5), listOf(2, 3))
-    
+
     override fun makeDocs(readDto: MathDocsReadDto): List<MathDocsVo> {
         // 레벨 조건
         val lvCond = when (readDto.quesLevel) {
@@ -33,9 +32,7 @@ class MathDocsReadService(
             3, 4 -> midLv
 
             // 난이도 상 선택한 경우
-            5 -> highLv
-
-            else -> throw IllegalArgumentException("난이도는 1부터 5까지만 설정 가능합니다. 사용자 설정 값 : $readDto.quesLevel")
+            else -> highLv
         }
 
         // 문제 조회
