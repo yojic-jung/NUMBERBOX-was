@@ -25,6 +25,10 @@ class MemberWriteService(
     private val profileModifyOrmPort: MemberProfileWriteOrmPort,
     private val privateModifyRepo: MemberPrivateWriteOrmPort,
 ) : MemberWriteCase {
+    companion object {
+        const val ALREADY_EXIST_EMAIL = "이미 존재하는 이메일입니다."
+    }
+
     @TXExecute
     override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
         // 이전 비밀번호 일치 여부 확인
@@ -47,7 +51,7 @@ class MemberWriteService(
     override fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo {
         // [validation] 이메일 중복 여부 체크
         val isEmailExists = memberReadOrmPort.existsByEmail(signUpDto.email)
-        if (isEmailExists) throw BusinessValidException("이미 존재하는 이메일입니다.")
+        if (isEmailExists) throw BusinessValidException(ALREADY_EXIST_EMAIL)
 
         // [회원가입 진행]
         // 1. 계정 가입

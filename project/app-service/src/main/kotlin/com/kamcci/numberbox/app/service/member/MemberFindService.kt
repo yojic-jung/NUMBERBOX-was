@@ -24,6 +24,7 @@ class MemberFindService(
 
     companion object {
         const val TMP_PASSWD_LENGTH = 40
+        const val NOT_EXIST_USER = "존재하지 않는 계정입니다."
     }
 
     @TXExecute
@@ -34,7 +35,7 @@ class MemberFindService(
     @TXExecute
     override fun readMyPassword(email: String) {
         memberReadOrmPort.existsByEmail(email).let {
-            if (!it) throw BusinessValidException("해당 계정이 존재하지 않습니다.")
+            if (!it) throw BusinessValidException(NOT_EXIST_USER)
         }
         // 이메일 존재하는 경우
         // 임시 비밀번호로 변경

@@ -14,6 +14,10 @@ class MemberProfileReadService(
     private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
     private val memberFollowReadOrmPort: MemberFollowReadOrmPort
 ) : MemberProfileReadCase {
+    companion object {
+        const val NOT_EXIST_PROFILE = "회원 프로필이 존재하지 않습니다."
+    }
+
     override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return memberProfileReadOrmPort.readByMemberId(memberId)
     }
@@ -34,7 +38,7 @@ class MemberProfileReadService(
     override fun readFollowingProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
         // 팔로잉 profileId 조회
         val profileId = memberProfileReadOrmPort.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException("회원 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException(NOT_EXIST_PROFILE)
         val followingProfileIdList = memberFollowReadOrmPort.readFollowingByFollower(profileId)
 
         // 프로필 조회
@@ -44,7 +48,7 @@ class MemberProfileReadService(
     override fun readFollowerProfileByMemberId(memberId: UUID): List<MemberProfileVo> {
         // 팔로워 profileId 조회
         val profileId = memberProfileReadOrmPort.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException("회원 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException(NOT_EXIST_PROFILE)
         val followerProfileIdList = memberFollowReadOrmPort.readFollowerByFollowing(profileId)
 
         // 프로필 조회

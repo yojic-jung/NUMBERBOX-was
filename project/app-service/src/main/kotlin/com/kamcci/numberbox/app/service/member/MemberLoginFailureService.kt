@@ -21,13 +21,15 @@ class MemberLoginFailureService(
 
         // 계정 비활성화 잠금 시간 기준
         const val DISABLE_LOCK_TIME = 15L
+
+        const val NOT_EXIST_USER = "존재하지 않는 계정입니다."
     }
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val id = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+        val id = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException(NOT_EXIST_USER)
         val failCount =
-            memberReadOrmPort.readFailCountById(id) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.readFailCountById(id) ?: throw BusinessValidException(NOT_EXIST_USER)
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount >= DISABLE_COUNT) {
@@ -41,9 +43,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
-        val userId = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+        val userId = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException(NOT_EXIST_USER)
         val lastFailTime: LocalDateTime =
-            memberReadOrmPort.readLastFailTimeById(userId) ?: throw BusinessValidException("존재하지 않는 계정입니다.")
+            memberReadOrmPort.readLastFailTimeById(userId) ?: throw BusinessValidException(NOT_EXIST_USER)
 
         val isAfterLockTime = lastFailTime.plusMinutes(DISABLE_LOCK_TIME).isBefore(LocalDateTime.now())
 
