@@ -30,6 +30,10 @@ class MemberSignUpController(
     private val tokenResponseService: TokenResponseService,
     private val memberMapper: MemberMapper,
 ) {
+    companion object {
+        const val ALREADY_EXIST_EMAIL = "해당 이메일이 이미 존재합니다."
+    }
+
     /**
      * 회원가입 목적 인증 코드 발급
      */
@@ -40,7 +44,7 @@ class MemberSignUpController(
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
         // 이메일 중복 체크
         val isExist = memberReadCase.existEmail(req.email)
-        if (isExist) throw BusinessValidException("해당 이메일이 이미 존재합니다.")
+        if (isExist) throw BusinessValidException(ALREADY_EXIST_EMAIL)
 
         // 인증 코드 생성
         memberVerifyCodeWriteCase.createVerifyCode(req.email, req.codeType)

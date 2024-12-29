@@ -20,6 +20,10 @@ class MembersFollowWriteController(
     private val memberFollowReadCase: MemberFollowReadCase,
     private val memberProfileReadCase: MemberProfileReadCase
 ) {
+    companion object {
+        const val PROFILE_NOT_EXIST = "해당 계정의 프로필이 존재하지 않습니다."
+    }
+
     /**
      * 팔로잉
      */
@@ -30,7 +34,7 @@ class MembersFollowWriteController(
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 하기
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.following(profileId, myProfileId)
 
         // 해당 사용자의 팔로워 수
@@ -48,7 +52,7 @@ class MembersFollowWriteController(
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 취소
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.cancel(profileId, myProfileId)
 
         // 해당 사용자의 팔로워 수

@@ -22,6 +22,10 @@ class MemberProfileReadController(
     private val memberProfileReadCase: MemberProfileReadCase,
     private val memberFollowReadCase: MemberFollowReadCase,
 ) {
+    companion object {
+        const val PROFILE_NOT_EXIST = "해당 계정의 프로필이 존재하지 않습니다."
+    }
+
     /**
      * 내 프로필 보기
      */
@@ -63,7 +67,7 @@ class MemberProfileReadController(
 
         // 2. 팔로우 여부 조회
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException("해당 계정의 프로필이 존재하지 않습니다.")
+            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
         val isMyFollower = memberFollowReadCase.isFollowing(profileId, myProfileId)
 
         // 3. 팔로워 수 조회
