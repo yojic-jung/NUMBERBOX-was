@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
-import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEntity.memberProfileEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.util.member.MemberProfileExpression
@@ -12,7 +12,7 @@ import java.util.*
 @Repository
 class MemberProfileReadRepository(
     private val memberProfileExpression: MemberProfileExpression
-) : MemberProfileReadOrmPort, BaseRepository() {
+) : MemberProfileReadCase, BaseRepository() {
     override fun readByMemberId(memberId: UUID): MemberProfileVo? {
         return queryFactory
             .select(memberProfileExpression.ceMemberProfileVo())

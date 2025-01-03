@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsUsageCreateDto
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsUsageWriteOrmPort
@@ -11,10 +12,15 @@ import java.util.*
 class MathDocsUsageWriteService(
     private val mathDocsUsageWriteOrmPort: MathDocsUsageWriteOrmPort
 ) : MathDocsUsageWriteCase {
+    companion object {
+        const val NOT_SAVED = "학습지 사용 로그가 저장 되지 않았습니다."
+    }
 
     @TXExecute
     override fun create(memberId: UUID, createDto: MathDocsUsageCreateDto): Long {
-        return mathDocsUsageWriteOrmPort.create(memberId, createDto)
+        val id = mathDocsUsageWriteOrmPort.create(memberId, createDto)
+        if (id == 0L) throw BusinessInValidException(NOT_SAVED)
+        return id
     }
 
 }

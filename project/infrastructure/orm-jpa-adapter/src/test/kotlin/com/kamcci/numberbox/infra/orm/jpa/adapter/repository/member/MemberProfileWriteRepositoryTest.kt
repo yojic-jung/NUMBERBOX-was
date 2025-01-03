@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.hibernate.exception.ConstraintViolationException
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -40,7 +41,7 @@ class MemberProfileWriteRepositoryTest(
         val memberId = UUID.fromString("29ed5466-cda8-ea4d-9bc7-037cb86fdb20")
 
         // when
-        org.junit.jupiter.api.assertThrows<ConstraintViolationException> {
+        assertThrows<ConstraintViolationException> {
             memberProfileModifyRepository.save(memberId, "nickname")
             entityManager.flush()
         }

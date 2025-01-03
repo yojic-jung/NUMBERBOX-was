@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
-import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberPrivateEntity.memberPrivateEntity
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MemberReadRepository : MemberReadOrmPort, BaseRepository() {
+class MemberReadRepository : MemberReadCase, BaseRepository() {
     override fun readIdByEmail(email: String) =
         queryFactory
             .select(memberEntity.id)

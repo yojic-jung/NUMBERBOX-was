@@ -6,15 +6,15 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.member.MemberProfileReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import java.util.*
 
 @UseCase
 class MemberProfileWriteService(
-    private val memberProfileReadOrmPort: MemberProfileReadOrmPort,
+    private val memberProfileReadOrmPort: MemberProfileReadCase,
     private val memberProfileWriteOrmPort: MemberProfileWriteOrmPort,
     private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
 ) : MemberProfileWriteCase {

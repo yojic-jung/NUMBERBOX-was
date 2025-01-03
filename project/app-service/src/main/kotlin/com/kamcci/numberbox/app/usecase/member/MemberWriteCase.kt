@@ -12,6 +12,11 @@ import java.util.*
  */
 interface MemberWriteCase {
     /**
+     * 회원가입
+     */
+    fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo
+
+    /**
      * 비밀번호 변경
      */
     fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean
@@ -20,11 +25,6 @@ interface MemberWriteCase {
      * 비밀번호 검증
      */
     fun confirmPassword(confirmDto: MemberPasswdConfirmDto): Boolean
-
-    /**
-     * 회원가입
-     */
-    fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo
 
     /**
      * 임시 비밀번호 발급 만료자 신규 비밀번호로 변경

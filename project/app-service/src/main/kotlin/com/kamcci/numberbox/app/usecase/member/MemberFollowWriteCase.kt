@@ -10,7 +10,7 @@ interface MemberFollowWriteCase {
      * @param followingId - 팔로잉 하는 상대방 프로필 id
      * @param followerId - 팔로워 프로필 id
      */
-    fun following(followingId: Long, followerId: Long): Boolean
+    fun following(followingId: Long, followerId: Long)
 
     /**
      * 팔로잉 취소
@@ -18,6 +18,6 @@ interface MemberFollowWriteCase {
      * @param followingId - 팔로잉 하는 상대방 프로필 id
      * @param followerId - 팔로워 프로필 id
      */
-    fun cancel(followingId: Long, followerId: Long): Boolean
+    fun cancel(followingId: Long, followerId: Long)
 
 }

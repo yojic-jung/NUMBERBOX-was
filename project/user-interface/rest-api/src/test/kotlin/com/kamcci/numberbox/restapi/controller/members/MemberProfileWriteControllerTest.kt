@@ -1,11 +1,12 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
@@ -20,9 +21,11 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import java.util.*
 
 @WebMvcUnitTest
-class MemberProfileWriteControllerTest(
-    @Autowired
-    private val fileUseCase: FileUseCase
+class MemberProfileWriteControllerTest @Autowired constructor(
+    private val fileUseCase: FileUseCase,
+    private val memberProfileReadCase: MemberProfileReadCase,
+    private val memberProfileFollowReadCase: MemberProfileFollowReadCase,
+    private val memberFollowReadCase: MemberFollowReadCase,
 ) : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/member/profile"
@@ -31,12 +34,6 @@ class MemberProfileWriteControllerTest(
         const val NICKNAME_CHNG_URL = "$PREFIX/nickname"
         const val MY_PROFILE_URL = PREFIX
     }
-
-    @Autowired
-    lateinit var memberProfileReadCase: MemberProfileReadCase
-
-    @Autowired
-    lateinit var memberFollowReadCase: MemberFollowReadCase
 
     @Test
     fun `프로필 등록 - 성공`() {
@@ -122,8 +119,8 @@ class MemberProfileWriteControllerTest(
         val memberProfileVo = MemberProfileVo(1L, UUID.randomUUID(), "", "", "", ProfileType.Teacher)
         val list = listOf(memberProfileVo)
         `when`(memberProfileReadCase.readByMemberId(any())).thenReturn(memberProfileVo)
-        `when`(memberProfileReadCase.readFollowingProfileByMemberId(any())).thenReturn(list)
-        `when`(memberProfileReadCase.readFollowerProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileFollowReadCase.readFollowingProfileByMemberId(any())).thenReturn(list)
+        `when`(memberProfileFollowReadCase.readFollowerProfileByMemberId(any())).thenReturn(list)
 
         // when
         val resultAction = getRequest(MY_PROFILE_URL)
@@ -135,7 +132,7 @@ class MemberProfileWriteControllerTest(
     @Test
     fun `다른 사람 프로필 보기 - 성공`() {
         `when`(memberProfileReadCase.readProfileIdByMemberId(any())).thenReturn(1L)
-        `when`(memberFollowReadCase.isFollowing(any(), any())).thenReturn(true)
+        `when`(memberFollowReadCase.existFollow(any(), any())).thenReturn(true)
         `when`(memberFollowReadCase.countFollower(any())).thenReturn(1)
 
         // when
@@ -155,7 +152,7 @@ class MemberProfileWriteControllerTest(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
     }
 
     @Test

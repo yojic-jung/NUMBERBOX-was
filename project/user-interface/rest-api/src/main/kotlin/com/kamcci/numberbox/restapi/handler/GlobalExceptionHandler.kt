@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.handler
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import org.springframework.beans.BeanInstantiationException
 import org.springframework.http.HttpHeaders
@@ -51,7 +51,7 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseUtil.error(actualCause, status, request)
     }
 
-    @ExceptionHandler(value = [BusinessValidException::class])
+    @ExceptionHandler(value = [BusinessInValidException::class])
     fun handleBusinessInValidException(
         ex: Exception,
         body: Any?,

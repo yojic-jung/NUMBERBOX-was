@@ -1,12 +1,16 @@
 package com.kamcci.numberbox.app.usecase.sys
 
+import com.kamcci.numberbox.app.domain.system_construction.TXExecute
+
 /**
  * 삭제 대상 유휴 파일 - 변경
  */
 interface SysGarbageFileWriteCase {
     // 삭제
-    fun deleteById(idList: List<Long>)
+    @TXExecute
+    fun deleteById(idList: List<Long>): Long
 
     // 파일 삭제 실패 카운트 변경
-    fun incrementFailCntById(id: List<Long>)
+    @TXExecute
+    fun incrementFailCntById(id: List<Long>): Long
 }

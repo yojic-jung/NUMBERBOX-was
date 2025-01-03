@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.handler
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.restapi.util.response.ResponseErrMsg
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -63,7 +63,7 @@ class GlobalExceptionHandlerTest {
         // given
         val mockingMsg = "mocking exception message"
         val path = "uri"
-        val exception = mock(BusinessValidException::class.java)
+        val exception = mock(BusinessInValidException::class.java)
         `when`(exception.message).thenReturn(mockingMsg)
         // Mock WebRequest 생성
         val webRequest = mock(WebRequest::class.java)

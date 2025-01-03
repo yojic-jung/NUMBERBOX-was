@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
@@ -45,7 +45,7 @@ class MembersFollowWriteControllerTest(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
     }
 
     @Test
@@ -72,6 +72,6 @@ class MembersFollowWriteControllerTest(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
     }
 }

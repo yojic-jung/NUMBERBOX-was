@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteCase
@@ -44,7 +44,7 @@ class MemberSignUpController(
     ): ResponseEntity<ResponseData<Map<String, Boolean>>> {
         // 이메일 중복 체크
         val isExist = memberReadCase.existEmail(req.email)
-        if (isExist) throw BusinessValidException(ALREADY_EXIST_EMAIL)
+        if (isExist) throw BusinessInValidException(ALREADY_EXIST_EMAIL)
 
         // 인증 코드 생성
         memberVerifyCodeWriteCase.createVerifyCode(req.email, req.codeType)

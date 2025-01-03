@@ -43,4 +43,7 @@ class MemberMockBeanConfig {
 
     @Bean
     fun memberReadUseCase(): MemberReadCase = mock()
+
+    @Bean
+    fun memberProfileFollowReadCase(): MemberProfileFollowReadCase = mock()
 }

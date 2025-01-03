@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 import com.kamcci.numberbox.restapi.dto.response.common.PageResponseImpl.Companion.paginate
@@ -38,11 +38,11 @@ class MathDocsReadController(
     }
 
     @GetMapping("/ipsi")
-    fun makeIpsiDocs(
+    fun readIpsiDocs(
         @ModelAttribute @Valid
         request: MathIpsiDocsReadDto
     ): ResponseEntity<ResponseData<Any>> {
-        val docs = mathDocsReadCase.makeIpsiDocs(request)
+        val docs = mathDocsReadCase.readIpsiDocs(request)
         return ResponseUtil.ok(mapOf("docs" to docs))
     }
 
@@ -63,7 +63,7 @@ class MathDocsReadController(
         docsId: Long,
     ): ResponseEntity<ResponseData<Any>> {
         val docsPaperVo = mathDocsPaperReadCase.readByIdAndMemberId(docsId, memberId)
-            ?: throw BusinessValidException(NOT_MY_DOCS)
+            ?: throw BusinessInValidException(NOT_MY_DOCS)
         val docs = mathDocsReadCase.readDocsByDocsPaperId(docsPaperVo.contentsIdList)
         return ResponseUtil.ok(
             mapOf(

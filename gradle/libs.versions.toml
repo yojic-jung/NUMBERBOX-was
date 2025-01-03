@@ -103,7 +103,7 @@ modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-ma
 modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-system-construction = ["kotlin-reflect", "spring-boot-starter", "spring-tx"]
-modules-system-construction-test = ["spring-boot-starter-test"]
+modules-system-construction-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-identity-veriry-iamport-engine = ["kotlin-reflect", "spring-boot-starter", "iamport-rest-client-java",
     "poi-ooxml", "retrofit", "gson"]

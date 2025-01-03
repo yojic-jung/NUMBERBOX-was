@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
@@ -34,7 +34,7 @@ class MembersFollowWriteController(
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 하기
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
+            ?: throw BusinessInValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.following(profileId, myProfileId)
 
         // 해당 사용자의 팔로워 수
@@ -52,7 +52,7 @@ class MembersFollowWriteController(
     ): ResponseEntity<ResponseData<Map<String, Any>>> {
         // 팔로잉 취소
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
+            ?: throw BusinessInValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.cancel(profileId, myProfileId)
 
         // 해당 사용자의 팔로워 수

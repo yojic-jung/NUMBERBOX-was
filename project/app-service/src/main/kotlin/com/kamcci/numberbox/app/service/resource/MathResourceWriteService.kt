@@ -4,18 +4,18 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteCase
 import java.util.*
 
 @UseCase
 class MathResourceWriteService(
-    private val mathResourceReadOrmPort: MathResourceReadOrmPort,
+    private val mathResourceReadOrmPort: MathResourceReadCase,
     private val mathResourceWriteOrmPort: MathResourceWriteOrmPort,
     private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort,
 ) : MathResourceWriteCase {
@@ -72,7 +72,7 @@ class MathResourceWriteService(
     @TXExecute
     override fun deleteByIdAndMemberId(id: Long, memberId: UUID) {
         mathResourceWriteOrmPort.deleteByIdAndMemberId(id, memberId).let {
-            if (it != 1L) throw BusinessValidException(NOT_MY_CONTENTS)
+            if (it != 1L) throw BusinessInValidException(NOT_MY_CONTENTS)
         }
     }
 }

@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import java.util.*
 
 /**
@@ -35,7 +35,7 @@ interface MathContentsWriteCase {
      * 변형문제 등록
      * @param   contentsModifyDto   수학문제 정보
      * @return  수학문제 id
-     * @throws  BusinessValidException  - 원본문제 id가 존재하지 않는 경우
+     * @throws  BusinessInValidException  - 원본문제 id가 존재하지 않는 경우
      */
     fun createTransContents(orgContentsId: Long, contentsModifyDto: MathContentsModifyDto): Long
 
@@ -58,7 +58,7 @@ interface MathContentsWriteCase {
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         licenseCreateDto: MathConLicenseModifyDto
-    ): Boolean
+    )
 
     /**
      * 자체 수학문제 수정
@@ -70,7 +70,7 @@ interface MathContentsWriteCase {
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         similarSrcDto: MathConSimilarSrcCreateDto
-    ): Boolean
+    )
 
 
     /**
@@ -78,7 +78,7 @@ interface MathContentsWriteCase {
      * @param   contentsId          수학문제 id
      * @param   contentsModifyDto   수학문제 정보
      */
-    fun updateTransContents(contentsId: Long, contentsModifyDto: MathContentsModifyDto): Boolean
+    fun updateTransContents(contentsId: Long, contentsModifyDto: MathContentsModifyDto)
 
     /**
      * 입시 수학문제 수정
@@ -90,7 +90,7 @@ interface MathContentsWriteCase {
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
-    ): Boolean
+    )
 
     /**
      * 수학문제 삭제 - 자기 자신의 문제만 삭제 가능

@@ -1,17 +1,17 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import java.time.LocalDateTime
 
 @UseCase
 class MemberLoginFailureService(
-    private val memberReadOrmPort: MemberReadOrmPort,
+    private val memberReadCase: MemberReadCase,
     private val memberWriteOrmPort: MemberWriteOrmPort,
     private val membersRoleModifyRepository: MemberRoleWriteOrmPort
 ) : MemberLoginFailureUseCase {
@@ -27,9 +27,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun disableUserIfFailCountOver(email: String): Boolean {
-        val id = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException(NOT_EXIST_USER)
+        val id = memberReadCase.readIdByEmail(email) ?: throw BusinessInValidException(NOT_EXIST_USER)
         val failCount =
-            memberReadOrmPort.readFailCountById(id) ?: throw BusinessValidException(NOT_EXIST_USER)
+            memberReadCase.readFailCountById(id) ?: throw BusinessInValidException(NOT_EXIST_USER)
 
         // 비활성화 실패 카운트 기준 초과시 enabled=false 변경
         if (failCount >= DISABLE_COUNT) {
@@ -43,9 +43,9 @@ class MemberLoginFailureService(
 
     @TXExecute
     override fun ableUserIfDisableTimeOver(email: String): Boolean {
-        val userId = memberReadOrmPort.readIdByEmail(email) ?: throw BusinessValidException(NOT_EXIST_USER)
+        val userId = memberReadCase.readIdByEmail(email) ?: throw BusinessInValidException(NOT_EXIST_USER)
         val lastFailTime: LocalDateTime =
-            memberReadOrmPort.readLastFailTimeById(userId) ?: throw BusinessValidException(NOT_EXIST_USER)
+            memberReadCase.readLastFailTimeById(userId) ?: throw BusinessInValidException(NOT_EXIST_USER)
 
         val isAfterLockTime = lastFailTime.plusMinutes(DISABLE_LOCK_TIME).isBefore(LocalDateTime.now())
 

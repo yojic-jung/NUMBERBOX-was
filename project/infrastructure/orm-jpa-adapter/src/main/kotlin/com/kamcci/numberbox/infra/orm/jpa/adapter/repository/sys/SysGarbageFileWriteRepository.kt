@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.sys
 
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.sys.QSysGarbageFileEntity.sysGarbageFileEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.sys.SysGarbageFileFactory
@@ -9,17 +10,17 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-class SysGarbageFileWriteRepository : SysGarbageFileWriteOrmPort, BaseRepository() {
+class SysGarbageFileWriteRepository : SysGarbageFileWriteCase, SysGarbageFileWriteOrmPort, BaseRepository() {
     override fun create(fileDeleteDto: FileDeleteDto): Long {
         val saveEntity = SysGarbageFileFactory.getSaveEntity(fileDeleteDto)
         em.persist(saveEntity)
         return saveEntity.id
     }
 
-    override fun deleteById(id: List<Long>): Long {
+    override fun deleteById(idList: List<Long>): Long {
         return queryFactory
             .delete(sysGarbageFileEntity)
-            .where(sysGarbageFileEntity.id.`in`(id))
+            .where(sysGarbageFileEntity.id.`in`(idList))
             .execute()
     }
 

@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
@@ -68,7 +68,7 @@ class MemberSignUpControllerTest @Autowired constructor(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
     }
 
 

@@ -45,7 +45,7 @@ class MathContentsReadRepositoryTest(
         val contentsId = 1L
 
         // when
-        val contents = mathContentsReadRepository.readDetailByIdAndMemberId(contentsId, memberId)
+        val contents = mathContentsReadRepository.readDetailByContentsIdAndMemberId(contentsId, memberId)
 
         // then
         assertThat(contents).isNotNull

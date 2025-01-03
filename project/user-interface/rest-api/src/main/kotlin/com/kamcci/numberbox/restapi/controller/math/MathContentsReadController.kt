@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.InHouse
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.Ipsi
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsOnlyVo
 import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
@@ -62,7 +62,7 @@ class MathContentsReadController(
 
                 // 그외는 라이선스 정보
                 else -> mathContentsReadCase.readById(contentsId)
-            } ?: throw BusinessValidException(NOT_EXIST_CONTENTS)
+            } ?: throw BusinessInValidException(NOT_EXIST_CONTENTS)
 
         // 나의 제작문제인지 판별
         val isMine =
@@ -125,7 +125,7 @@ class MathContentsReadController(
     ): ResponseEntity<ResponseData<Any>> {
         // 프로필 조회
         val profile =
-            memberProfileReadCase.readByProfileId(profileId) ?: throw BusinessValidException(NOT_EXIST_MEMBER)
+            memberProfileReadCase.readByProfileId(profileId) ?: throw BusinessInValidException(NOT_EXIST_MEMBER)
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)

@@ -8,6 +8,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring") version "1.9.22"
 }
+
 group = "com.kamcci"
 version = "0.0.1-SNAPSHOT"
 

@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.restapi.config.mock
 
-import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
 import org.mockito.Mockito
@@ -36,6 +35,4 @@ class MathContentsMockBeanConfig {
     @Bean
     fun mathConLikeReadUseCase(): MathContentsLikeReadCase = Mockito.mock()
 
-    @Bean
-    fun mathContentsReadOrmPort(): MathContentsReadOrmPort = Mockito.mock()
 }

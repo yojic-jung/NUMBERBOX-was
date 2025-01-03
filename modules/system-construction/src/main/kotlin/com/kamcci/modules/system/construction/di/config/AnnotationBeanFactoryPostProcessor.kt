@@ -3,8 +3,8 @@ package com.kamcci.modules.system.construction.di.config
 import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.BASE_PACKAGES
 import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.CUSTOM_BEAN_ANNOTATION
 import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.CUSTOM_QUALIFIER_ANNOTATION
-import com.kamcci.modules.system.construction.di.factory.AnnotationCapableBeanFactory
-import com.kamcci.modules.system.construction.di.resolver.DICapableAnnotationResolver
+import com.kamcci.modules.system.construction.di.registrar.AnnotationCapableBeanRegistrar
+import com.kamcci.modules.system.construction.di.resolver.QualifierAnnotationRegistrar
 import com.kamcci.modules.system.construction.di.util.AnnotationCapableInstanceFactory
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
@@ -19,15 +19,15 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AnnotationBeanFactoryPostProcessor(
-    private val annotationCapableBeanFactory: AnnotationCapableBeanFactory = AnnotationCapableInstanceFactory.getAnnotationCapableBeanFactory(),
-    private val diCapableAnnotationResolver: DICapableAnnotationResolver = AnnotationCapableInstanceFactory.getDICapableAnnotationResolver(),
+    private val annotationCapableBeanRegistrar: AnnotationCapableBeanRegistrar = AnnotationCapableInstanceFactory.getAnnotationCapableBeanFactory(),
+    private val qualifierAnnotationRegistrar: QualifierAnnotationRegistrar = AnnotationCapableInstanceFactory.getDICapableAnnotationResolver(),
 ) : BeanFactoryPostProcessor {
     override fun postProcessBeanFactory(beanFactory: ConfigurableListableBeanFactory) {
         // 커스텀 어노테이션 붙은 클래스 beanDefinition으로 생성
         val registry = beanFactory as BeanDefinitionRegistry
-        annotationCapableBeanFactory.registerOnlyWith(CUSTOM_BEAN_ANNOTATION, BASE_PACKAGES, registry)
+        annotationCapableBeanRegistrar.registerOnlyWith(CUSTOM_BEAN_ANNOTATION, BASE_PACKAGES, registry)
 
         // 의존(참조속성)관계 설정에 @Qualifier처럼 사용될 어노테이션 타입 지정
-        diCapableAnnotationResolver.add(CUSTOM_QUALIFIER_ANNOTATION, beanFactory as DefaultListableBeanFactory)
+        qualifierAnnotationRegistrar.add(CUSTOM_QUALIFIER_ANNOTATION, beanFactory as DefaultListableBeanFactory)
     }
 }

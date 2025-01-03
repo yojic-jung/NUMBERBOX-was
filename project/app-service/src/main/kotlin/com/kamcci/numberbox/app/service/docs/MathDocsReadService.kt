@@ -79,7 +79,7 @@ class MathDocsReadService(
         return mathDocsReadOrmPort.readDocsByContentsIdList(contentsIdList)
     }
 
-    override fun makeIpsiDocs(readDto: MathIpsiDocsReadDto) =
+    override fun readIpsiDocs(readDto: MathIpsiDocsReadDto) =
         mathDocsReadOrmPort.readAllIpsiDocsVoBy(readDto)
 
     override fun readAdditionalContents(readDto: MathDocsAdditionalReadDto) =

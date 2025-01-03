@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.resource
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.vo.resource.*
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceReadOrmPort
+import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.QMathResourceCateEntity.mathResourceCateEntity
@@ -15,7 +15,7 @@ import java.util.*
 @Repository
 class MathResourceReadRepository(
     private val mathResourceExpression: MathResourceExpression
-) : MathResourceReadOrmPort, BaseRepository() {
+) : MathResourceReadCase, BaseRepository() {
     override fun readByMainCateId(mainCateId: Int, pageReq: PageRequest): List<MathResourceVo> =
         queryFactory
             .select(mathResourceExpression.ceMathResourceVo())

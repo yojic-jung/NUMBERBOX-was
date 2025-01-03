@@ -1,8 +1,9 @@
 package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberProfileFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -20,6 +21,7 @@ import java.util.*
 @RequestMapping("/member/profile")
 class MemberProfileReadController(
     private val memberProfileReadCase: MemberProfileReadCase,
+    private val memberProfileFollowReadCase: MemberProfileFollowReadCase,
     private val memberFollowReadCase: MemberFollowReadCase,
 ) {
     companion object {
@@ -37,10 +39,10 @@ class MemberProfileReadController(
         val myProfile = memberProfileReadCase.readByMemberId(memberId)
 
         // 2. 팔로잉 프로필 조회
-        val followingProfile = memberProfileReadCase.readFollowingProfileByMemberId(memberId)
+        val followingProfile = memberProfileFollowReadCase.readFollowingProfileByMemberId(memberId)
 
         // 3. 팔로워 프로필 조회
-        val followerProfile = memberProfileReadCase.readFollowerProfileByMemberId(memberId)
+        val followerProfile = memberProfileFollowReadCase.readFollowerProfileByMemberId(memberId)
 
         return ResponseUtil.ok(
             mapOf(
@@ -67,8 +69,8 @@ class MemberProfileReadController(
 
         // 2. 팔로우 여부 조회
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
-            ?: throw BusinessValidException(PROFILE_NOT_EXIST)
-        val isMyFollower = memberFollowReadCase.isFollowing(profileId, myProfileId)
+            ?: throw BusinessInValidException(PROFILE_NOT_EXIST)
+        val isMyFollower = memberFollowReadCase.existFollow(profileId, myProfileId)
 
         // 3. 팔로워 수 조회
         val followerCount = memberFollowReadCase.countFollower(profileId)

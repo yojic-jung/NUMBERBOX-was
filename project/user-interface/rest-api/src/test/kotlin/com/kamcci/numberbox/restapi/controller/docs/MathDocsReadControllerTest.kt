@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.IL
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.ILLEGAL_QUES_LEVEL
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.ILLEGAL_WRONG_RATIO
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
 import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
@@ -204,7 +204,7 @@ class MathDocsReadControllerTest @Autowired constructor(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
         assertExMsg(resultAction, MathDocsReadController.NOT_MY_DOCS)
     }
 

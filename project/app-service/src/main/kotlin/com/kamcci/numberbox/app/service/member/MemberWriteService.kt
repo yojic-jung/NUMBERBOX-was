@@ -4,19 +4,20 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.*
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import java.util.*
 
 @UseCase
 class MemberWriteService(
     private val memberWriteOrmPort: MemberWriteOrmPort,
-    private val memberReadOrmPort: MemberReadOrmPort,
+    private val memberReadCase: MemberReadCase,
     // 비밀번호 인코더
     private val memberPasswordEncoder: MemberPasswordEncoder,
     // 회원가입 영속화 repository
@@ -30,28 +31,10 @@ class MemberWriteService(
     }
 
     @TXExecute
-    override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
-        // 이전 비밀번호 일치 여부 확인
-        val dbPassword = memberReadOrmPort.readPasswordByMemberId(updtDto.memberId) ?: return false
-        val isPasswordEqual = memberPasswordEncoder.matches(updtDto.previousPassword, dbPassword)
-        if (!isPasswordEqual) return false
-
-        // 비밀번호 변경
-        val encodedPassword = memberPasswordEncoder.encode(updtDto.password)
-        return memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPassword) > 0
-    }
-
-    @TXExecute
-    override fun confirmPassword(confirmDto: MemberPasswdConfirmDto): Boolean {
-        val encodedPassword = memberReadOrmPort.readPasswordByMemberId(confirmDto.memberId) ?: return false
-        return memberPasswordEncoder.matches(confirmDto.password, encodedPassword)
-    }
-
-    @TXExecute
     override fun signup(signUpDto: MemberSignUpDto, privateSignUpDto: MemberPrivateSignUpDto?): MemberSignUpResultVo {
         // [validation] 이메일 중복 여부 체크
-        val isEmailExists = memberReadOrmPort.existsByEmail(signUpDto.email)
-        if (isEmailExists) throw BusinessValidException(ALREADY_EXIST_EMAIL)
+        val isEmailExists = memberReadCase.existsByEmail(signUpDto.email)
+        if (isEmailExists) throw BusinessInValidException(ALREADY_EXIST_EMAIL)
 
         // [회원가입 진행]
         // 1. 계정 가입
@@ -72,6 +55,25 @@ class MemberWriteService(
         val roleList = roleReadRepo.readRoleByMemberId(id)
         return MemberSignUpResultVo(id, signUpDto.email, roleList)
     }
+
+    @TXExecute
+    override fun updatePassword(updtDto: MemberPasswdUpdtDto): Boolean {
+        // 이전 비밀번호 일치 여부 확인
+        val dbPassword = memberReadCase.readPasswordByMemberId(updtDto.memberId) ?: return false
+        val isPasswordEqual = memberPasswordEncoder.matches(updtDto.previousPassword, dbPassword)
+        if (!isPasswordEqual) return false
+
+        // 비밀번호 변경
+        val encodedPassword = memberPasswordEncoder.encode(updtDto.password)
+        return memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPassword) > 0
+    }
+
+    @TXExecute
+    override fun confirmPassword(confirmDto: MemberPasswdConfirmDto): Boolean {
+        val encodedPassword = memberReadCase.readPasswordByMemberId(confirmDto.memberId) ?: return false
+        return memberPasswordEncoder.matches(confirmDto.password, encodedPassword)
+    }
+
 
     // 10글자 랜덤 알파벳 닉네임 생성
     private fun makeNickname(): String {

@@ -2,19 +2,19 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailCodeMessageDto
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.Aliases
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.orm.member.MemberReadOrmPort
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberFindReadCase
+import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 
 @UseCase
 class MemberFindService(
-    private val memberReadOrmPort: MemberReadOrmPort,
+    private val memberReadCase: MemberReadCase,
     private val memberWriteOrmPort: MemberWriteOrmPort,
     private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort,
     private val passwordEncoder: MemberPasswordEncoder,
@@ -29,13 +29,13 @@ class MemberFindService(
 
     @TXExecute
     override fun readMyEmail(userName: String, phoneNumber: String): String? {
-        return memberReadOrmPort.readEmailByUsernameAndPhone(userName, phoneNumber)
+        return memberReadCase.readEmailByUsernameAndPhone(userName, phoneNumber)
     }
 
     @TXExecute
     override fun readMyPassword(email: String) {
-        memberReadOrmPort.existsByEmail(email).let {
-            if (!it) throw BusinessValidException(NOT_EXIST_USER)
+        memberReadCase.existsByEmail(email).let {
+            if (!it) throw BusinessInValidException(NOT_EXIST_USER)
         }
         // 이메일 존재하는 경우
         // 임시 비밀번호로 변경

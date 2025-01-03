@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
 class SystemConstructionTxConfig(
+    // txMananger의 구현체는 모듈 사용처의 구현체가 주입됨
     private val txManager: PlatformTransactionManager,
 ) {
     @Bean

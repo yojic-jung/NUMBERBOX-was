@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.math
 
-import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
@@ -28,12 +28,12 @@ annotation class ContentsCheck(
 
 @Component
 class ContentsCheckValidator(
-    private val mathContentsReadOrmPort: MathContentsReadOrmPort
+    private val mathContentsReadCase: MathContentsReadCase
 ) : ConstraintValidator<ContentsCheck, Long> {
     override fun isValid(
         value: Long,
         context: ConstraintValidatorContext?,
     ): Boolean {
-        return mathContentsReadOrmPort.existById(value)
+        return mathContentsReadCase.existById(value)
     }
 }

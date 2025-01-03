@@ -55,6 +55,9 @@ interface MathContentsReadCase {
     // 입시 수학 문제
     fun readIpsiContentsById(contentsId: Long): MathIpsiContentsVo?
 
+    // 변형문제 갯수 조회
+    fun readTransContCntById(id: Long): Int?
+
     /**
      * 문제만 조회 - 문제, 좋아요 및 저장소 저장 여부만 조회
      *          - 저작권 및 출처 정보 제외

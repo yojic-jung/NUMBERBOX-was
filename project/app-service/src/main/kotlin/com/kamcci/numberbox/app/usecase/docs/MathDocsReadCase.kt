@@ -19,10 +19,9 @@ interface MathDocsReadCase {
     fun readDocsByDocsPaperId(contentsIdList: List<Long>): List<MathAllTypeDocsVo>
 
     // 입시 수학문제 제작
-    fun makeIpsiDocs(readDto: MathIpsiDocsReadDto): List<MathIpsiDocsVo>
+    fun readIpsiDocs(readDto: MathIpsiDocsReadDto): List<MathIpsiDocsVo>
 
     // 추가 문제 조회
     fun readAdditionalContents(readDto: MathDocsAdditionalReadDto): List<MathDocsVo>
-
 
 }

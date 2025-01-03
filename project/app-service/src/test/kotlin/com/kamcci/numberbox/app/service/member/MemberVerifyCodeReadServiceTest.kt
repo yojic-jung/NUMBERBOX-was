@@ -2,9 +2,10 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeVo
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -34,9 +35,10 @@ class MemberVerifyCodeReadServiceTest {
             .thenReturn(null)
 
         // when & then
-        assertThrows<BusinessValidException> {
+        val exception = assertThrows<BusinessInValidException> {
             memberVerifyCodeReadUseCase.validate(signUpDto)
         }
+        assertThat(exception.msg).isEqualTo(MemberVerifyCodeReadService.NOT_EXIST_CODE)
     }
 
     @Test
@@ -50,9 +52,10 @@ class MemberVerifyCodeReadServiceTest {
             .thenReturn(memberVerifyCodeVo)
 
         // when & then
-        assertThrows<BusinessValidException> {
+        val exception = assertThrows<BusinessInValidException> {
             memberVerifyCodeReadUseCase.validate(signUpDto)
         }
+        assertThat(exception.msg).isEqualTo(MemberVerifyCodeReadService.EXPIRED_CODE)
     }
 
     @Test
@@ -67,9 +70,10 @@ class MemberVerifyCodeReadServiceTest {
         )
 
         // when & then
-        assertThrows<BusinessValidException> {
+        val exception = assertThrows<BusinessInValidException> {
             memberVerifyCodeReadUseCase.validate(signUpDto)
         }
+        assertThat(exception.msg).isEqualTo(MemberVerifyCodeReadService.NOT_MATCHED_CODE)
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.*
-import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathCategoryUnitEntity.mathCategoryUnitEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsEntity.mathContentsEntity
@@ -21,7 +21,7 @@ import java.util.*
 @Repository
 class MathContentsReadRepository(
     private val mathContentsExpression: MathContentsExpression
-) : MathContentsReadOrmPort, BaseRepository() {
+) : MathContentsReadCase, BaseRepository() {
     override fun readById(contentsId: Long): MathContentsVo? =
         findBy(pageReq = null)
             .where(
@@ -67,7 +67,7 @@ class MathContentsReadRepository(
     }
 
 
-    override fun readDetailByIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
+    override fun readDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
         return detailCommonQuery(memberId)
             .where(
                 mathContentsEntity.id.eq(id),

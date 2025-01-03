@@ -1,11 +1,9 @@
 package com.kamcci.numberbox.restapi.controller.math
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
-import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.controller.math.MathContentsWriteController.Companion.NOT_UPDATED_CONTENTS
 import com.kamcci.numberbox.restapi.dto.request.math.MathContestGrammarModifyRequest
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathConLicenseCreateRequest
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathConLicenseUpdtRequest
@@ -14,12 +12,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
 class MathContentsWriteControllerTest @Autowired constructor(
-    private val mathContentsReadOrmPort: MathContentsReadOrmPort,
+    private val mathContentsReadCase: MathContentsReadCase,
     private val mathContentsWriteCase: MathContentsWriteCase,
 ) : BaseMockMvcTest() {
     companion object {
@@ -51,9 +48,7 @@ class MathContentsWriteControllerTest @Autowired constructor(
     fun `사용자 제작 문제 수정 - 성공`() {
         // given
         val updateReq = getMathConLicenseUpdtRequest()
-        Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(true)
-        Mockito.`when`(mathContentsWriteCase.updateUserCustomContents(anyOrNull(), anyOrNull(), anyOrNull()))
-            .thenReturn(true)
+        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(true)
 
         // when
         val resultAction = putRequest(USER_CUSTOM_URL, updateReq)
@@ -62,22 +57,6 @@ class MathContentsWriteControllerTest @Autowired constructor(
         assert2xx(resultAction)
     }
 
-    @Test
-    fun `사용자 제작 문제 수정 - 실패`() {
-        // given
-        val updateReq = getMathConLicenseUpdtRequest()
-        Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(true)
-        Mockito.`when`(mathContentsWriteCase.updateUserCustomContents(anyOrNull(), anyOrNull(), anyOrNull()))
-            .thenReturn(false)
-
-        // when
-        val resultAction = putRequest(USER_CUSTOM_URL, updateReq)
-
-        // then
-        assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
-        assertExMsg(resultAction, NOT_UPDATED_CONTENTS)
-    }
 
     @Test
     fun `변형문제 등록 - 성공`() {
@@ -95,9 +74,7 @@ class MathContentsWriteControllerTest @Autowired constructor(
     fun `변형문제 수정 - 성공`() {
         // given
         val updateReq = getMathConTransCreateRequest()
-        Mockito.`when`(mathContentsReadOrmPort.existById(any())).thenReturn(true)
-        Mockito.`when`(mathContentsWriteCase.updateTransContents(anyOrNull(), anyOrNull()))
-            .thenReturn(false)
+        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(true)
 
         // when
         val resultAction = putRequest(TRANS_CONTENTS_URL, updateReq)

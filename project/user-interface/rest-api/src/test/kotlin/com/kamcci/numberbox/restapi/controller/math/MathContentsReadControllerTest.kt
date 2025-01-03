@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
@@ -75,7 +75,7 @@ class MathContentsReadControllerTest @Autowired constructor(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
         assertExMsg(resultAction, MathContentsReadController.NOT_EXIST_CONTENTS)
     }
 
@@ -202,7 +202,7 @@ class MathContentsReadControllerTest @Autowired constructor(
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, BusinessValidException::class)
+        assertException(resultAction, BusinessInValidException::class)
         assertExMsg(resultAction, MathContentsReadController.NOT_EXIST_MEMBER)
     }
 

@@ -7,21 +7,23 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.NotRelease
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.Release
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.domain.system_construction.TXExecute
 import com.kamcci.numberbox.app.domain.system_construction.UseCase
-import com.kamcci.numberbox.app.port.orm.math.MathContentsReadOrmPort
 import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase
 import java.util.*
 
 @UseCase
 class MathContentsWriteService(
-    private val mathContentsReadOrmPort: MathContentsReadOrmPort,
+    private val mathContentsReadCase: MathContentsReadCase,
     private val mathContentsWriteOrmPort: MathContentsWriteOrmPort,
 ) : MathContentsWriteCase {
     companion object {
         const val NOT_EXIST_CONTENTS = "해당 수학문제가 존재하지 않습니다."
+        const val NOT_UPDATED_CONTENTS = "수학문제가 수정되지 않았습니다."
+        const val NOT_DELETED_CONTENTS = "수학문제가 삭제되지 않았습니다."
     }
 
     // 사용자 수학문제 등록
@@ -48,7 +50,7 @@ class MathContentsWriteService(
     @TXExecute
     override fun createTransContents(orgContentsId: Long, contentsModifyDto: MathContentsModifyDto): Long {
         // orgContentsId 존재여부 체크
-        if (!mathContentsReadOrmPort.existById(orgContentsId)) throw BusinessValidException(NOT_EXIST_CONTENTS)
+        if (!mathContentsReadCase.existById(orgContentsId)) throw BusinessInValidException(NOT_EXIST_CONTENTS)
 
         // 수학문제 저장
         val contentsId =
@@ -74,9 +76,11 @@ class MathContentsWriteService(
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         licenseCreateDto: MathConLicenseModifyDto
-    ): Boolean {
+    ) {
         // 수학문제 저장 및 저작권(사용자 수학문제는 즉시 출시)
-        return mathContentsWriteOrmPort.updateWithLicense(contentsId, Release, contentsModifyDto, licenseCreateDto) > 0
+        mathContentsWriteOrmPort.updateWithLicense(contentsId, Release, contentsModifyDto, licenseCreateDto).let {
+            if (it != 1L) throw BusinessInValidException(NOT_UPDATED_CONTENTS)
+        }
     }
 
     @TXExecute
@@ -84,9 +88,11 @@ class MathContentsWriteService(
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         similarSrcDto: MathConSimilarSrcCreateDto
-    ): Boolean {
+    ) {
         // 수학문제 및 유사문제 출처 저장(자체제작 문제는 검수 진행하므로 미출시)
-        return mathContentsWriteOrmPort.updateWithSimilarSrc(contentsId, Release, contentsModifyDto, similarSrcDto) > 0
+        mathContentsWriteOrmPort.updateWithSimilarSrc(contentsId, Release, contentsModifyDto, similarSrcDto).let {
+            if (it != 1L) throw BusinessInValidException(NOT_UPDATED_CONTENTS)
+        }
     }
 
     @TXExecute
@@ -94,29 +100,38 @@ class MathContentsWriteService(
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto,
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
-    ): Boolean {
+    ) {
         // 수학문제 및 입시 출처 정보 저장(입시 문제는 즉시 출시)
-        return mathContentsWriteOrmPort.updateWithIpsiSrc(contentsId, Release, contentsModifyDto, ipsiSrcCreateDto) > 0
+        mathContentsWriteOrmPort.updateWithIpsiSrc(contentsId, Release, contentsModifyDto, ipsiSrcCreateDto)
+            .let {
+                if (it != 1L) throw BusinessInValidException(NOT_UPDATED_CONTENTS)
+            }
     }
 
     @TXExecute
     override fun updateTransContents(
         contentsId: Long,
         contentsModifyDto: MathContentsModifyDto
-    ): Boolean {
+    ) {
         // 수학문제 저장
-        return mathContentsWriteOrmPort.updateTransContents(contentsId, Release, contentsModifyDto) > 0
+        mathContentsWriteOrmPort.updateTransContents(contentsId, Release, contentsModifyDto).let {
+            if (it != 1L) throw BusinessInValidException(NOT_UPDATED_CONTENTS)
+        }
     }
 
     @TXExecute
     override fun delete(contentsId: Long, memberId: UUID) {
         // 수학문제 출시 상태 미출시로 변경
-        mathContentsWriteOrmPort.updateContentsClassifyType(contentsId, memberId, ContentsClassifyType.Deleted)
+        mathContentsWriteOrmPort.updateContentsClassifyType(contentsId, memberId, ContentsClassifyType.Deleted).let {
+            if (it != 1L) throw BusinessInValidException(NOT_DELETED_CONTENTS)
+        }
     }
 
     @TXExecute
     override fun delete(memberId: UUID) {
         // 수학문제 출시 상태 미출시로 변경
-        mathContentsWriteOrmPort.updateContentsClassifyType(memberId, ContentsClassifyType.Deleted)
+        mathContentsWriteOrmPort.updateContentsClassifyType(memberId, ContentsClassifyType.Deleted).let {
+            if (it != 1L) throw BusinessInValidException(NOT_DELETED_CONTENTS)
+        }
     }
 }

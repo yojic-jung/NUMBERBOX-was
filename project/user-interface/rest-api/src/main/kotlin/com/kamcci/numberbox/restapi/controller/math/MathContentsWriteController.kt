@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
-import com.kamcci.numberbox.app.domain.exception.BusinessValidException
 import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase
@@ -22,7 +21,7 @@ class MathContentsWriteController(
     private val mathContentsReadCase: MathContentsReadCase,
     // 문제 제작 목적
     private val mathContentsWriteCase: MathContentsWriteCase,
-    private val mathConGrammarModifyUseCase: MathContentsGrammarWriteCase,
+    private val mathConGrammarWriteCase: MathContentsGrammarWriteCase,
     private val mathContentsMapper: MathContentsMapper,
 ) {
 
@@ -65,9 +64,7 @@ class MathContentsWriteController(
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
-        mathContentsWriteCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license).let {
-            if (!it) throw BusinessValidException(NOT_UPDATED_CONTENTS)
-        }
+        mathContentsWriteCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license)
 
         // 생성된 문제 정보 반환
         return ResponseUtil.ok(
@@ -135,10 +132,15 @@ class MathContentsWriteController(
         @RequestBody
         @Valid modifyReq: MathContestGrammarModifyRequest
     ): ResponseEntity<ResponseData<Any>> {
-        // 문법 등록
-        mathConGrammarModifyUseCase.createGrammar(modifyReq.contentsId, modifyReq.grammar)
-        // 생성된 문제 정보 반환
-        return ResponseUtil.ok(mapOf("success" to true))
+        // 문법 정보 저장
+        return ResponseUtil.ok(
+            mapOf(
+                "isUpdate" to mathConGrammarWriteCase.createGrammar(
+                    modifyReq.contentsId,
+                    modifyReq.grammar
+                )
+            )
+        )
     }
 
     // 문제 삭제
@@ -148,8 +150,8 @@ class MathContentsWriteController(
         @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 삭제
-        val res = mathContentsWriteCase.delete(contentsId, memberId)
-        return ResponseUtil.ok(mapOf("contents" to res))
+        mathContentsWriteCase.delete(contentsId, memberId)
+        return ResponseUtil.ok(mapOf("isDeleted" to true))
     }
 
 }

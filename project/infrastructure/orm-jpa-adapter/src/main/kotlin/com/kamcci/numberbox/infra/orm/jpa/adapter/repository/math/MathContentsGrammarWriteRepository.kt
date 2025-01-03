@@ -1,14 +1,14 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
-import com.kamcci.numberbox.app.port.orm.math.MathContentsGrammarWriteOrmPort
+import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsGrammarEntity
 import org.springframework.stereotype.Repository
 
 @Repository
-class MathContentsGrammarWriteRepository : MathContentsGrammarWriteOrmPort, BaseRepository() {
+class MathContentsGrammarWriteRepository : MathContentsGrammarWriteCase, BaseRepository() {
 
-    override fun createGrammar(contentsId: Long, grammar: String) {
+    override fun createGrammar(contentsId: Long, grammar: String): Boolean {
         val existEntity = em.find(MathContentsGrammarEntity::class.java, contentsId)
 
         val saveEntity =
@@ -23,6 +23,7 @@ class MathContentsGrammarWriteRepository : MathContentsGrammarWriteOrmPort, Base
             }
 
         em.persist(saveEntity)
+        return existEntity != null
     }
 
 }
