@@ -27,13 +27,13 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.*;
 
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(value = {AuthUrlProperty.class})
+@EnableConfigurationProperties(value = {AuthLoginUrlProperty.class})
 public class SecurityConfig {
-    private final AuthUrlProperty authUrlProperty;
+    private final AuthLoginUrlProperty authLoginUrlProperty;
     private final ApplicationEventPublisher eventPublisher;
 
-    public SecurityConfig(AuthUrlProperty authUrlProperty, ApplicationEventPublisher eventPublisher) {
-        this.authUrlProperty = authUrlProperty;
+    public SecurityConfig(AuthLoginUrlProperty authLoginUrlProperty, ApplicationEventPublisher eventPublisher) {
+        this.authLoginUrlProperty = authLoginUrlProperty;
         this.eventPublisher = eventPublisher;
     }
 
@@ -54,9 +54,9 @@ public class SecurityConfig {
                         // 내부 에러 처리 컨트롤러로 전달
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         // 로그인 요청
-                        .requestMatchers(HttpMethod.POST, authUrlProperty.process()).permitAll()
+                        .requestMatchers(HttpMethod.POST, authLoginUrlProperty.process()).permitAll()
                         // 로그인 실패시
-                        .requestMatchers(HttpMethod.POST, authUrlProperty.fail()).permitAll()
+                        .requestMatchers(HttpMethod.POST, authLoginUrlProperty.fail()).permitAll()
                         //                        .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         // 전체 허용 디폴트
                         .requestMatchers("/public/**").permitAll().anyRequest().authenticated())
@@ -68,7 +68,8 @@ public class SecurityConfig {
         // logout
         http.logout(logout -> logout
                 // 로그아웃 url
-                .logoutRequestMatcher(new AntPathRequestMatcher(authUrlProperty.logout(), HttpMethod.DELETE.name()))
+                .logoutRequestMatcher(new AntPathRequestMatcher(authLoginUrlProperty.logout(),
+                        HttpMethod.DELETE.name()))
                 // 로그아웃 성공 핸들러
                 .logoutSuccessHandler(new JwtLogoutSuccessHandler(eventPublisher))
                 // 로그아웃 시 쿠키 삭제

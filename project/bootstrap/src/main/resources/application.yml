@@ -12,12 +12,7 @@ spring:
         - storage
         - storage-env
 
-numberbox:
-  openaiSecretKey: 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
-  openaiForbiddenWord: \uADF8\uB798\uD504,\uC911\uB4F1,\uADF8,\uC218,\uC131\uC9C8,\uC5F0\uC0B0,\uB3C4\uD615,\uACC4\uC0B0,\uB9BD,\uAE30\uBCF8,\uC2DD,\uD65C\uC6A9,\uACF1\uC148,\uC815\uB9AC,\uAD00\uACC4,\uB73B,\uBE44,\uBD80,\uC758,\uC5EC\uB7EC,\uC5EC\uB7EC\uAC00\uC9C0,\uD574,\uAC01,\uD569,\uAC00\uC9C0,\uD45C,\uC218\uD559,\uAE30\uCD08,\uB2E8\uC6D0,\uC77C\uBC18,\uACC4\uC218,\uBC29\uC815\uC2DD
-  s3BucketUrl: https://numberbox-bucket.s3.ap-northeast-2.amazonaws.com/
-  jwtSecretKey: localsecret
-  hwpSocketIp: localhost
+# s3 설정
 cloud:
   aws:
     s3:
@@ -29,3 +24,18 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+# DI 및 transaction 커스텀 어노테이션 경로
+system:
+  construction:
+    di:
+      class-path:
+        customBean: com.kamcci.numberbox.app.domain.system.construction.UseCase
+        basePackage: com.kamcci.numberbox.app
+        beanScope: singleton
+        primary: com.kamcci.numberbox.app.domain.system.construction.Priority
+        qualifier: com.kamcci.numberbox.app.domain.system.construction.Aliases
+    tx:
+      class-path:
+        transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute
+

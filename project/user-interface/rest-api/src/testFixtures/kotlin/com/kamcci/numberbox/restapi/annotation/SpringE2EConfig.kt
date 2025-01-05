@@ -5,5 +5,5 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 
 @ContextConfiguration(classes = [IntegrationMockBeanConfiguration::class])
-@ActiveProfiles("rest-api", "orm-jpa-adapter-tc-test", "storage", "storage-env")
+@ActiveProfiles("rest-api", "rest-api-e2e-test", "orm-jpa-adapter-tc-test", "storage", "storage-env")
 annotation class SpringE2EConfig

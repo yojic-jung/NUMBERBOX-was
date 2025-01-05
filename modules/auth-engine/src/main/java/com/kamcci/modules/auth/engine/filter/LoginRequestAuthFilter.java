@@ -57,13 +57,10 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
             return authenticationManager.authenticate(authRequest);
         } catch(AuthenticationException ex) {
             throw ex;
-        } catch(MismatchedInputException ex) {
+        } catch(MismatchedInputException | JsonParseException ex) {
             // 클라이언트에서 usename, password 올바른 형식으로 요청하지 않음
             logger.warn("시큐리티 인증 요청 형식 올바르지 않음 : " + ex);
             // failureHandler를 태우기 위해 AuthenticationException 타입으로 전환
-            throw new BadInputRequestException();
-        } catch(JsonParseException ex) {
-            logger.warn("시큐리티 인증 요청 형식 올바르지 않음 : " + ex);
             throw new BadInputRequestException();
         } catch(Exception ex) {
             logger.error("시큐리티 인증 과정 중 예외 발생 : " + ex);

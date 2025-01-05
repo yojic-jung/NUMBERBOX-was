@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort

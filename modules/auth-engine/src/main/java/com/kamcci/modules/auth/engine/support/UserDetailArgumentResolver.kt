@@ -34,29 +34,30 @@ class UserDetailArgumentResolver : HandlerMethodArgumentResolver {
         val hasUserEmailAnnot = parameter.getParameterAnnotation(UserEmail::class.java) != null
         val isAnonymousUser = authentication.principal == "anonymousUser"
 
-
         return when {
             // @UserID 적용 및 인증된 사용자
-            hasUserIDAnnot && !isAnonymousUser -> authentication.details as UUID
-            // @UserID 적용 및 익명 사용자
-            hasUserIDAnnot && isAnonymousUser -> 0
-
+            hasUserIDAnnot -> {
+                if (isAnonymousUser) 0
+                else authentication.details as UUID
+            }
             // @UserEmail 적용 및 인증된 사용자
-            hasUserEmailAnnot && !isAnonymousUser -> authentication.principal.toString()
-            // @UserEmail 적용 및 익명 사용자
-            hasUserEmailAnnot && isAnonymousUser -> ""
+            hasUserEmailAnnot -> {
+                if (isAnonymousUser) ""
+                else authentication.principal.toString()
+            }
 
             // @UserRole 적용 및 인증된 사용자
-            isAnonymousUser -> {
-                val roles = authentication.authorities.map { it.authority }
-                val roleTypeList: MutableList<UserRoleType?> = mutableListOf()
-                roles.forEach { role ->
-                    roleTypeList.add(UserRoleType.entries.find { it.name == role })
+            else -> {
+                if (isAnonymousUser) listOf<UserRoleType>()
+                else {
+                    val roles = authentication.authorities.map { it.authority }
+                    val roleTypeList: MutableList<UserRoleType?> = mutableListOf()
+                    roles.forEach { role ->
+                        roleTypeList.add(UserRoleType.entries.find { it.name == role })
+                    }
+                    roleTypeList
                 }
-                roleTypeList
             }
-            // @UserRole 적용 및 익명 사용자
-            else -> listOf<String>()
         }
     }
 }

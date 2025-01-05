@@ -8,7 +8,4 @@ public class TokenOwnerNotMatchingException extends TokenException {
         super("액세스 토큰과 리프레시 토큰의 발급 대상이 다릅니다.");
     }
 
-    public TokenOwnerNotMatchingException(String msg) {
-        super(msg);
-    }
 }

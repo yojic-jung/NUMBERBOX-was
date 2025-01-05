@@ -2,8 +2,8 @@ package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsUsageCreateDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsUsageWriteOrmPort
 import com.kamcci.numberbox.app.usecase.docs.MathDocsUsageWriteCase
 import java.util.*

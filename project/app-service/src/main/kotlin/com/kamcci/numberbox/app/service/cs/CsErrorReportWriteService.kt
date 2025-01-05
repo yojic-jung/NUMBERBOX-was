@@ -3,8 +3,8 @@ package com.kamcci.numberbox.app.service.cs
 import com.kamcci.numberbox.app.domain.dto.cs.CsErrorReportCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.cs.CsErrorReportWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperWriteOrmPort
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase

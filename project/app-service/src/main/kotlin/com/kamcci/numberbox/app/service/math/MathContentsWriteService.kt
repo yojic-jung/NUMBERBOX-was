@@ -8,8 +8,8 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.NotRelease
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType.Release
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase

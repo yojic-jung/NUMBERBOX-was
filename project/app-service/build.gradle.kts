@@ -24,11 +24,11 @@ dependencies {
 }
 
 allOpen {
-    annotation("com.kamcci.numberbox.app.domain.system_construction.UseCase")
+    annotation("com.kamcci.numberbox.app.domain.system.construction.UseCase")
 }
 
 noArg {
-    annotation("com.kamcci.numberbox.app.domain.system_construction.UseCase")
+    annotation("com.kamcci.numberbox.app.domain.system.construction.UseCase")
 }
 
 tasks.withType<Test> {

@@ -2,7 +2,7 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
 import java.time.Duration

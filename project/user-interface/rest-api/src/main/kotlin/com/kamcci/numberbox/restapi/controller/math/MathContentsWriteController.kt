@@ -25,10 +25,6 @@ class MathContentsWriteController(
     private val mathContentsMapper: MathContentsMapper,
 ) {
 
-    companion object {
-        const val NOT_UPDATED_CONTENTS = "수학문제가 수정되지 않았습니다."
-    }
-
     // 사용자 제작 문제 등록
     @PostMapping("/user-custom")
     fun createUserCustomContents(

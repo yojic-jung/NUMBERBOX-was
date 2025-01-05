@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.usecase.math
 
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
 
 /**
  * 수학문제 문법 저장

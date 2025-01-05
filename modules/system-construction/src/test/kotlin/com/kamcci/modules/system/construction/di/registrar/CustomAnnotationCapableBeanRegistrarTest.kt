@@ -1,40 +1,31 @@
 package com.kamcci.modules.system.construction.di.registrar
 
-import com.kamcci.modules.system.construction.MockBeanConfig
 import com.kamcci.modules.system.construction.di.processor.BeanDefinitionPropertyProcessor
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.verify
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
 
-@ContextConfiguration(classes = [MockBeanConfig::class])
-@SpringBootTest
-class CustomAnnotationCapableBeanRegistrarTest(
-    @Autowired
-    private val beanFactory: ConfigurableListableBeanFactory,
-) {
-    private val beanDefinitionPropertyProcessor: BeanDefinitionPropertyProcessor = Mockito.mock()
+class CustomAnnotationCapableBeanRegistrarTest {
+    private val beanDefinitionPropertyProcessor: BeanDefinitionPropertyProcessor = mock()
     private val customAnnotationCapableBeanFactory =
         CustomAnnotationCapableBeanRegistrar(beanDefinitionPropertyProcessor)
 
     @Test
     fun `beanDefinition 등록 - 성공`() {
         // given
-        val registry = beanFactory as BeanDefinitionRegistry
+        val registry: BeanDefinitionRegistry = mock()
 
-        // when & then
-        assertDoesNotThrow {
-            customAnnotationCapableBeanFactory.registerOnlyWith(
-                UseCase::class,
-                "com.kammci.modules.system.construction.di,com.kammci.modules.system.construction.tx",
-                registry
-            )
-        }
+        // when
+        customAnnotationCapableBeanFactory.registerOnlyWith(
+            getCustomAnnotationProperty(),
+            registry
+        )
+
+        // then
+        verify(registry, atLeast(1)).registerBeanDefinition(any(), any())
     }
-
 }

@@ -7,12 +7,11 @@ import com.kamcci.modules.auth.engine.filter.JwtRequestAuthFilter;
 import com.kamcci.modules.auth.engine.filter.LoginRequestAuthFilter;
 import com.kamcci.modules.auth.engine.provider.JwtRequestAuthProvider;
 import com.kamcci.modules.auth.engine.provider.LoginRequestAuthProvider;
-import com.kamcci.modules.auth.engine.service.JwtRequestUserDetailServiceWrapper;
 import com.kamcci.modules.auth.engine.service.JwtResponseHeaderCookieService;
 import com.kamcci.modules.auth.engine.service.LoginRequestUserDetailServiceWrapper;
 import com.kamcci.modules.auth.engine.util.AuthJwtUtil;
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +29,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@EnableConfigurationProperties(value = {AuthJwtProperty.class, AuthLoginUrlProperty.class})
 public class SecurityBeanConfig {
-    @Value("${auth.login.url.process}")
-    private String processUrl;
+    private final AuthJwtProperty authJwtProperty;
+    private final AuthLoginUrlProperty authLoginUrlProperty;
+
+    public SecurityBeanConfig(AuthJwtProperty authJwtProperty, AuthLoginUrlProperty authLoginUrlProperty) {
+        this.authJwtProperty = authJwtProperty;
+        this.authLoginUrlProperty = authLoginUrlProperty;
+    }
 
     /**
      * 비밀번호 인코더
@@ -45,12 +50,12 @@ public class SecurityBeanConfig {
 
     @Bean
     public AuthTokenUtil authTokenUtil() {
-        return new AuthJwtUtil();
+        return new AuthJwtUtil(authJwtProperty);
     }
 
     @Bean
     public TokenResponseService tokenResponseService(ApplicationEventPublisher eventPublisher) {
-        return new JwtResponseHeaderCookieService(authTokenUtil(), eventPublisher);
+        return new JwtResponseHeaderCookieService(authTokenUtil(), eventPublisher, authJwtProperty);
     }
 
     /**
@@ -60,16 +65,6 @@ public class SecurityBeanConfig {
     @Bean
     public UserDetailsService loginRequestUserService(LoginRequestUserDetailService loginRequestUserService) {
         return new LoginRequestUserDetailServiceWrapper(loginRequestUserService);
-    }
-
-    /**
-     * jwt 인증시 서버측 사용자 인증 정보를 가져옴
-     */
-    @Bean
-    public JwtRequestUserDetailServiceWrapper jwtRequestUserDetailService(
-            LoginRequestUserDetailService loginRequestUserService,
-            JwtRequestUserDetailService jwtRequestUserDetailService) {
-        return new JwtRequestUserDetailServiceWrapper(loginRequestUserService, jwtRequestUserDetailService);
     }
 
     /**
@@ -85,9 +80,10 @@ public class SecurityBeanConfig {
      * jwt 인증 요청시 인증 처리 담당 provider
      */
     @Bean
-    public JwtRequestAuthProvider jwtRequestAuthProvider(JwtRequestUserDetailServiceWrapper userTokenDetailService,
+    public JwtRequestAuthProvider jwtRequestAuthProvider(UserDetailsService userDetailsService,
+                                                         JwtRequestUserDetailService jwtRequestUserDetailService,
                                                          AuthTokenUtil authTokenUtil) {
-        return new JwtRequestAuthProvider(userTokenDetailService, authTokenUtil);
+        return new JwtRequestAuthProvider(userDetailsService, jwtRequestUserDetailService, authTokenUtil);
     }
 
     /**
@@ -109,8 +105,8 @@ public class SecurityBeanConfig {
     public LoginRequestAuthFilter loginRequestAuthenticationFilter(AuthenticationManager authenticationManager,
                                                                    AuthenticationSuccessHandler authenticationSuccessHandler,
                                                                    AuthenticationFailureHandler authenticationFailureHandler) {
-        return new LoginRequestAuthFilter(processUrl, authenticationManager, authenticationSuccessHandler,
-                authenticationFailureHandler);
+        return new LoginRequestAuthFilter(authLoginUrlProperty.process(), authenticationManager,
+                authenticationSuccessHandler, authenticationFailureHandler);
     }
 
     /**

@@ -1,13 +1,12 @@
 package com.kamcci.modules.auth.engine.util;
 
-import com.kamcci.modules.auth.control.config.AuthConstantConfig;
+import com.kamcci.modules.auth.engine.config.AuthJwtProperty;
 import com.kamcci.modules.auth.engine.exception.JwtInvalidException;
 import com.kamcci.modules.auth.engine.exception.TokenExpirationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -18,32 +17,26 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_NAM
 
 @Component
 public class AuthJwtUtil implements AuthTokenUtil {
-    private static final String EMAIL_KEY = "email";
-    private static final String USER_UNIQ_ID_KEY = "userUniqId";
-    private static final String DOMAIN = "nsoohak.com";
-    private static final String ISSUER = "nsoohak";
-    private static final String ACCESS_TOKEN_SUBJECT = "nsoohakAccessToken";
-    private static final String REFRESH_TOKEN_SUBJECT = "nsoohakRefreshToken";
-    private static final String AUDIENCE = "user";
-    private String secretKey;
+    private final AuthJwtProperty authJwtProperty;
 
-    @Value("${numberbox.jwtSecretKey}")
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public AuthJwtUtil(AuthJwtProperty authJwtProperty) {
+        this.authJwtProperty = authJwtProperty;
     }
 
     @Override
     public String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
         Claims claims = Jwts.claims();
-        claims.put(EMAIL_KEY, email);
-        claims.put(USER_UNIQ_ID_KEY, userUniqId);
+        claims.put(authJwtProperty.email(), email);
+        claims.put(authJwtProperty.id(), userUniqId);
         claims.put(ROLE_NAME, roleList);
-        claims.put(DOMAIN, true);
+        claims.put(authJwtProperty.domain(), true);
 
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + AuthConstantConfig.ACCESS_TOKEN_VALID_TIME);
-        return Jwts.builder().setClaims(claims).setIssuer(ISSUER).setSubject(ACCESS_TOKEN_SUBJECT).setAudience(AUDIENCE)
-                .setIssuedAt(now).setExpiration(expiration).signWith(SignatureAlgorithm.HS256, secretKey).compact();
+        Date expiration = new Date(now.getTime() + authJwtProperty.accessToken().validTime());
+        return Jwts.builder().setClaims(claims).setIssuer(authJwtProperty.issuer())
+                .setSubject(authJwtProperty.accessToken().subject()).setAudience(authJwtProperty.audience())
+                .setIssuedAt(now).setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS256, authJwtProperty.secretKey()).compact();
     }
 
     @Override
@@ -57,34 +50,36 @@ public class AuthJwtUtil implements AuthTokenUtil {
     @Override
     public String createRefreshToken() {
         Claims claims = Jwts.claims();
-        claims.put(DOMAIN, true);
+        claims.put(authJwtProperty.domain(), true);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + AuthConstantConfig.REFRESH_TOKEN_VALID_TIME);
-        return Jwts.builder().setClaims(claims).setIssuer(ISSUER).setSubject(REFRESH_TOKEN_SUBJECT)
-                .setAudience(AUDIENCE).setExpiration(expiration).setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+        Date expiration = new Date(now.getTime() + authJwtProperty.refreshToken().validTime());
+        return Jwts.builder().setClaims(claims).setIssuer(authJwtProperty.issuer())
+                .setSubject(authJwtProperty.refreshToken().subject()).setAudience(authJwtProperty.audience())
+                .setExpiration(expiration).setIssuedAt(now)
+                .signWith(SignatureAlgorithm.HS256, authJwtProperty.secretKey()).compact();
     }
 
     @Override
     public String getEmail(String token) {
         try {
             // 토큰 파싱 시도
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get(EMAIL_KEY, String.class);
+            return Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody()
+                    .get(authJwtProperty.email(), String.class);
         } catch(ExpiredJwtException e) {
             // 만료된 토큰이지만 Claims를 추출
-            return e.getClaims().get(EMAIL_KEY, String.class);
+            return e.getClaims().get(authJwtProperty.email(), String.class);
         }
     }
 
     @Override
     public UUID getUserUniqId(String token) {
         try {
-            String uuid = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                    .get(USER_UNIQ_ID_KEY, String.class);
+            String uuid = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody()
+                    .get(authJwtProperty.id(), String.class);
             return UUID.fromString(uuid);
         } catch(ExpiredJwtException e) {
             // 만료된 토큰이지만 Claims를 추출
-            String uuid = e.getClaims().get(USER_UNIQ_ID_KEY, String.class);
+            String uuid = e.getClaims().get(authJwtProperty.id(), String.class);
             return UUID.fromString(uuid);
         }
     }
@@ -92,8 +87,8 @@ public class AuthJwtUtil implements AuthTokenUtil {
     @Override
     public List<String> getRoles(String token) {
         try {
-            return (List<String>) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                    .get(ROLE_NAME, Object.class);
+            return (List<String>) Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token)
+                    .getBody().get(ROLE_NAME, Object.class);
         } catch(ExpiredJwtException e) {
             // 만료된 토큰이지만 Claims를 추출
             return (List<String>) e.getClaims().get(ROLE_NAME, Object.class);
@@ -106,7 +101,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
     @Override
     public void checkValidToken(String jwtToken, boolean checkExpiration) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(jwtToken);
         } catch(ExpiredJwtException e) {
             if(checkExpiration) throw new TokenExpirationException();
         } catch(Exception e) {

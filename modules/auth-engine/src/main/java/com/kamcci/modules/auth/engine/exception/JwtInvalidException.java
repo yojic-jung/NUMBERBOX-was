@@ -9,7 +9,4 @@ public class JwtInvalidException extends TokenException {
         super("액세스 토큰 또는 리프레시 토큰이 유효하지 않습니다.");
     }
 
-    public JwtInvalidException(String msg) {
-        super(msg);
-    }
 }

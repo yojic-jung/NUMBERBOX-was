@@ -41,6 +41,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 응답(토큰, 권한 포함)
         tokenResponseService.responseAuthToken(username, userId, roleList);
-        AuthWebUtil.responseOK(response, false, AuthResponse.LOGIN_OK.message);
+        AuthWebUtil.responseOK(response, AuthResponse.LOGIN_OK.message);
     }
 }

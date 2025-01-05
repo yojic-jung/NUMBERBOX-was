@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.usecase.sys
 
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
 
 /**
  * 삭제 대상 유휴 파일 - 변경

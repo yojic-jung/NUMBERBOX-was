@@ -4,9 +4,9 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeSaveDto
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailCodeMessageDto
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.domain.system_construction.Aliases
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.Aliases
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeWriteCase

@@ -2,6 +2,8 @@ package com.kamcci.modules.auth.control.util;
 
 /**
  * Def. 비밀번호 암호화 인코더
+ * <p>
+ * - 모듈 사용처에 암호화 기능 제공 목적
  */
 public interface AuthPasswordEncoder {
     /**

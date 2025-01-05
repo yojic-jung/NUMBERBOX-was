@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase

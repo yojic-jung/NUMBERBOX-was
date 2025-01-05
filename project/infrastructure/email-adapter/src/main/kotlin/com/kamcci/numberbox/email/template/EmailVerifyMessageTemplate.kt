@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.email.template
 
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
-import com.kamcci.numberbox.app.domain.system_construction.Aliases
+import com.kamcci.numberbox.app.domain.system.construction.Aliases
 import org.springframework.stereotype.Component
 
 @Aliases("emailVerify")

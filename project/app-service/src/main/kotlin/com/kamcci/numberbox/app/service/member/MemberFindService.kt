@@ -3,9 +3,9 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailCodeMessageDto
 import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.system_construction.Aliases
-import com.kamcci.numberbox.app.domain.system_construction.TXExecute
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.numberbox.app.domain.system.construction.Aliases
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort

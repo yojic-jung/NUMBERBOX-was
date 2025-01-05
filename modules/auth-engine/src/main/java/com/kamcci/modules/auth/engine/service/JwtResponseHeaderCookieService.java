@@ -3,6 +3,7 @@ package com.kamcci.modules.auth.engine.service;
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
+import com.kamcci.modules.auth.engine.config.AuthJwtProperty;
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
 import com.kamcci.modules.auth.engine.util.AuthWebUtil;
 import jakarta.servlet.http.Cookie;
@@ -25,10 +26,13 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.*;
 public class JwtResponseHeaderCookieService implements TokenResponseService {
     private final AuthTokenUtil authTokenUtil;
     private final ApplicationEventPublisher eventPublisher;
+    private final AuthJwtProperty authJwtProperty;
 
-    public JwtResponseHeaderCookieService(AuthTokenUtil authTokenUtil, ApplicationEventPublisher eventPublisher) {
+    public JwtResponseHeaderCookieService(AuthTokenUtil authTokenUtil, ApplicationEventPublisher eventPublisher,
+                                          AuthJwtProperty authJwtProperty) {
         this.authTokenUtil = authTokenUtil;
         this.eventPublisher = eventPublisher;
+        this.authJwtProperty = authJwtProperty;
     }
 
     @Override
@@ -63,7 +67,6 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         }
     }
 
-    // todo 이름 변경?? refreshTokenCreatedEvent
     private void publishLoginSuccessEvent(HttpServletRequest request, UUID userId, String refreshToken) {
         final String remainedRefreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
         final LoginSuccessEvent loginSuccessEvent = new LoginSuccessEvent(userId, refreshToken, remainedRefreshToken);
@@ -95,11 +98,12 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         final String loginState = request.getParameter(LOGIN_KEEP_ATTR);
 
         // 클라이언트가 로그인 상태 유지 요청한 경우
-        if(loginState != null && loginState.equals(LOGIN_KEEP_VAL)) {
-            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken,
-                    (int) (REFRESH_TOKEN_VALID_TIME_OP_KEEP / 1000L));
+        long validTime;
+        if(LOGIN_KEEP_VAL.equals(loginState)) {
+            validTime = authJwtProperty.refreshToken().keepValidTime() / 1000L;
         } else {
-            return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) (REFRESH_TOKEN_VALID_TIME / 1000L));
+            validTime = authJwtProperty.refreshToken().validTime() / 1000L;
         }
+        return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) validTime);
     }
 }

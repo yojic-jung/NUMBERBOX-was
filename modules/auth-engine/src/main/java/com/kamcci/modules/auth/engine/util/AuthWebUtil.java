@@ -17,41 +17,30 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-// todo 코드 리팩토링
+/**
+ * 웹 응답 반환 유틸
+ */
 public class AuthWebUtil {
     private static final ObjectMapper obj = new ObjectMapper();
 
-    private AuthWebUtil() {
-    }
+    private AuthWebUtil() { }
 
     public static void responseErrMsg(HttpServletResponse response, HttpStatus status, String msg) {
-        sendResponse(response, status.value(), true, msg);
+        sendResponse(response, status.value(), msg);
     }
 
     public static void responseErrMsg(HttpServletResponse response, int rawStatus, String msg) {
-        sendResponse(response, rawStatus, true, msg);
-    }
-
-    public static void responseErrMsg(HttpServletResponse response, HttpStatus status, boolean showMsg, String msg) {
-        sendResponse(response, status.value(), showMsg, msg);
-    }
-
-    public static void responseErrMsg(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
-        sendResponse(response, rawStatus, showMsg, msg);
+        sendResponse(response, rawStatus, msg);
     }
 
     /**
      * 200 성공 응답 전송
      */
-    public static void responseOK(HttpServletResponse response, boolean showMsg, String message) {
-        sendResponse(response, AuthResponse.LOGIN_OK.statusCode, showMsg, message);
-    }
-
     public static void responseOK(HttpServletResponse response, String message) {
-        sendResponse(response, AuthResponse.LOGIN_OK.statusCode, true, message);
+        sendResponse(response, AuthResponse.LOGIN_OK.statusCode, message);
     }
 
-    private static void sendResponse(HttpServletResponse response, int rawStatus, boolean showMsg, String msg) {
+    private static void sendResponse(HttpServletResponse response, int rawStatus, String msg) {
         response.setStatus(rawStatus);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -60,7 +49,6 @@ public class AuthWebUtil {
         Map<String, Object> map = new HashMap<>();
         map.put("timestamp", LocalDateTime.now().toString());
         map.put("status", rawStatus);
-        map.put("showMsg", showMsg);
         map.put("message", msg);
 
         // 응닶값 path 추출 및 설정
@@ -76,7 +64,6 @@ public class AuthWebUtil {
             printWriter.write(obj.writeValueAsString(map));
             printWriter.flush();
         } catch(IOException ex) {
-            //  todo 여기로 빠질시 응답 어떻게 나가는지 테스트 필요
             throw new AuthInternalException("IOException 발생");
         }
     }

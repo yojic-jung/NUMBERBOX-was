@@ -8,7 +8,4 @@ public class AuthInternalServerException extends RuntimeException {
         super("인증 과정 중 예외 발생");
     }
 
-    public AuthInternalServerException(String msg) {
-        super(msg);
-    }
 }

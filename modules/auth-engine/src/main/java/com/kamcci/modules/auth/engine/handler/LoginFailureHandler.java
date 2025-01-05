@@ -4,7 +4,7 @@ import com.kamcci.modules.auth.control.exception.BadAuthRequestException;
 import com.kamcci.modules.auth.control.exception.DisabledUserException;
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException;
 import com.kamcci.modules.auth.control.exception.UserNotFoundException;
-import com.kamcci.modules.auth.engine.config.AuthUrlProperty;
+import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
 import com.kamcci.modules.auth.engine.exception.AuthInternalServerException;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
 import jakarta.servlet.RequestDispatcher;
@@ -25,10 +25,10 @@ import java.io.IOException;
  */
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
-    private final AuthUrlProperty authUrlProperty;
+    private final AuthLoginUrlProperty authLoginUrlProperty;
 
-    public LoginFailureHandler(AuthUrlProperty authUrlProperty) {
-        this.authUrlProperty = authUrlProperty;
+    public LoginFailureHandler(AuthLoginUrlProperty authLoginUrlProperty) {
+        this.authLoginUrlProperty = authLoginUrlProperty;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     private void forwardToFailController(HttpServletRequest request, HttpServletResponse response,
                                          Exception exception) throws ServletException, IOException {
         request.setAttribute("auth.error.exception", exception);
-        RequestDispatcher dispatcher = request.getRequestDispatcher(authUrlProperty.fail());
+        RequestDispatcher dispatcher = request.getRequestDispatcher(authLoginUrlProperty.fail());
         dispatcher.forward(request, response);
     }
 }

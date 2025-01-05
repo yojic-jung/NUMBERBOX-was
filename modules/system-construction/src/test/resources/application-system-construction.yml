@@ -1,0 +1,12 @@
+system:
+  construction:
+    di:
+      class-path:
+        customBean: com.kamcci.modules.system.construction.dummy.CustomBean
+        basePackage: com.kamcci.modules.system.construction.dummy
+        beanScope: singleton
+        primary: com.kamcci.modules.system.construction.dummy.CustomPrimary
+        qualifier: com.kamcci.modules.system.construction.dummy.CustomQualifier
+    tx:
+      class-path:
+        transaction: com.kamcci.modules.system.construction.dummy.TXExecute

@@ -1,8 +1,7 @@
 package com.kamcci.modules.system.construction.di.processor
 
-import com.kamcci.numberbox.app.domain.system_construction.Aliases
-import com.kamcci.numberbox.app.domain.system_construction.Priority
-import com.kamcci.numberbox.app.domain.system_construction.UseCase
+import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
+import com.kamcci.modules.system.construction.dummy.TestBean
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
@@ -18,7 +17,11 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
         `when`(beanDefBuilder.beanDefinition).thenReturn(GenericBeanDefinition())
 
         // when
-        annotationBeanDefinitionModifyProcessor.modify(TestBean::class.java, beanDefBuilder)
+        annotationBeanDefinitionModifyProcessor.modify(
+            getCustomAnnotationProperty(),
+            TestBean::class.java,
+            beanDefBuilder
+        )
 
         // then
         verify(beanDefBuilder).setPrimary(true)
@@ -31,15 +34,14 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
         val beanDefBuilder = mock(BeanDefinitionBuilder::class.java)
 
         // when
-        annotationBeanDefinitionModifyProcessor.modify(Any::class.java, beanDefBuilder)
+        annotationBeanDefinitionModifyProcessor.modify(
+            getCustomAnnotationProperty(),
+            Any::class.java,
+            beanDefBuilder
+        )
 
         // then
         verify(beanDefBuilder, never()).setPrimary(true)
         verify(beanDefBuilder, never()).beanDefinition
     }
 }
-
-@Aliases
-@Priority
-@UseCase
-class TestBean

@@ -1,7 +1,7 @@
 package com.kamcci.modules.system.construction.di.util
 
 import com.kamcci.modules.system.construction.di.registrar.AnnotationCapableBeanRegistrar
-import com.kamcci.modules.system.construction.di.resolver.QualifierAnnotationRegistrar
+import com.kamcci.modules.system.construction.di.registrar.QualifierAnnotationRegistrar
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

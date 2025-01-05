@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AuthPasswordEncoderWrapper(
-    val authPasswordEncoder: AuthPasswordEncoder
+    private val authPasswordEncoder: AuthPasswordEncoder
 ) : MemberPasswordEncoder {
 
     override fun matches(rawPassword: CharSequence, encodedPassword: String) =

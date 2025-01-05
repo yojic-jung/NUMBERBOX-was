@@ -8,7 +8,4 @@ public class TokenExpirationException extends TokenException {
         super("리프레시 토큰이 만료되었습니다.");
     }
 
-    public TokenExpirationException(String msg) {
-        super(msg);
-    }
 }

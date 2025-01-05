@@ -3,8 +3,8 @@ package com.kamcci.modules.system.construction.di.util
 import com.kamcci.modules.system.construction.di.processor.AnnotationBeanDefinitionPropertyProcessor
 import com.kamcci.modules.system.construction.di.registrar.AnnotationCapableBeanRegistrar
 import com.kamcci.modules.system.construction.di.registrar.CustomAnnotationCapableBeanRegistrar
-import com.kamcci.modules.system.construction.di.resolver.CustomQualifierAnnotationRegistrar
-import com.kamcci.modules.system.construction.di.resolver.QualifierAnnotationRegistrar
+import com.kamcci.modules.system.construction.di.registrar.CustomQualifierAnnotationRegistrar
+import com.kamcci.modules.system.construction.di.registrar.QualifierAnnotationRegistrar
 
 /**
  * system-construction-di 모듈의 객체 생성 팩토리

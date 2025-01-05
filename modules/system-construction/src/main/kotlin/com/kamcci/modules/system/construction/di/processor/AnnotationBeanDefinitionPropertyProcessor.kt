@@ -1,9 +1,7 @@
 package com.kamcci.modules.system.construction.di.processor
 
 
-import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.BEAN_SCOPE
-import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.CUSTOM_PRIMARY_ANNOTATION
-import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.CUSTOM_QUALIFIER_ANNOTATION
+import com.kamcci.modules.system.construction.di.config.CustomBeanAnnotationProperty
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.support.AutowireCandidateQualifier
 import org.springframework.beans.factory.support.BeanDefinitionBuilder
@@ -13,20 +11,25 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder
  * BeanDefintion 변경 작업 진행
  */
 class AnnotationBeanDefinitionPropertyProcessor : BeanDefinitionPropertyProcessor {
-    override fun <T> modify(beanClass: Class<T>, beanDefinitionBuilder: BeanDefinitionBuilder) {
+    override fun <T> modify(
+        customAnnotationProperty: CustomBeanAnnotationProperty,
+        beanClass: Class<T>,
+        beanDefinitionBuilder: BeanDefinitionBuilder
+    ) {
         // scope 설정
-        beanDefinitionBuilder.setScope(BEAN_SCOPE)
+        beanDefinitionBuilder.setScope(customAnnotationProperty.beanScope)
 
         // primary 설정
-        if (beanClass.isAnnotationPresent(CUSTOM_PRIMARY_ANNOTATION.java)) {
+        if (beanClass.isAnnotationPresent(customAnnotationProperty.getPrimaryAnnotation().java)) {
             beanDefinitionBuilder.setPrimary(true)
         }
 
         // qualifier 설정
-        if (beanClass.isAnnotationPresent(CUSTOM_QUALIFIER_ANNOTATION.java)) {
-            val aliasesAnnotation = beanClass.getAnnotation(CUSTOM_QUALIFIER_ANNOTATION.java)
-            val aliases = aliasesAnnotation.value.split(",").map { it.trim() }
-            aliases.forEach { alias ->
+        if (beanClass.isAnnotationPresent(customAnnotationProperty.getQualifierAnnotation().java)) {
+            val annotationInstance = beanClass.getAnnotation(customAnnotationProperty.getQualifierAnnotation().java)
+            val valueMethod = customAnnotationProperty.getQualifierAnnotation().java.getDeclaredMethod("value")
+            val aliases = valueMethod.invoke(annotationInstance) as String // 어노테이션의 value 값
+            aliases.split(",").map { it.trim() }.forEach { alias ->
                 val qualifier = AutowireCandidateQualifier(Qualifier::class.java)
                 qualifier.setAttribute("value", alias)
                 beanDefinitionBuilder.beanDefinition.addQualifier(qualifier)

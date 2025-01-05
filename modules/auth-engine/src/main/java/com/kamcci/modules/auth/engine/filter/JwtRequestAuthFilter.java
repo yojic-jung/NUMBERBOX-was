@@ -33,8 +33,7 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
             // 클라이언트 토큰 추출
             String accessToken = request.getHeader(AuthConstantConfig.ACCESS_TOKEN_NAME)
                     .replace(TOKEN_STANDARD_PREFIX, "").trim();
-            if(accessToken != null && !accessToken.isBlank() && !accessToken.equals("null")) {
-
+            if(!accessToken.isBlank() && !accessToken.equals("null")) {
                 String refreshToken = AuthWebUtil.getCookieValue(request, AuthConstantConfig.REFRESH_TOKEN_NAME);
 
                 // 클라이언트 인증 객체 생성
@@ -62,13 +61,11 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
     private void unsuccessfulAuthentication(HttpServletResponse response, Exception exception) {
         // 인증 실패 응답 메시지 전송
         if(exception instanceof TokenException) {
-            // todo 리프레시 토큰 관련 에러 이벤트 발행??? 리프레시 토큰 DB에서 삭제 하도록
             AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
         } else if(exception instanceof DisabledException) {
             AuthWebUtil.responseErrMsg(response, HttpStatus.FORBIDDEN, exception.getMessage());
-        } else if(exception instanceof Exception) {
+        } else {
             logger.warn("jwt 인증 과정 중 예외 발생 : " + exception);
-            // todo 서버에러는 프로젝트로 보내줘서 에러 로깅 해야함
             // 현재 서버에서 예외 캐치하는 로직이 없음
             AuthWebUtil.responseErrMsg(response, HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
         }

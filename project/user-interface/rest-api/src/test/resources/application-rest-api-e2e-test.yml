@@ -1,0 +1,12 @@
+system:
+  construction:
+    di:
+      class-path:
+        customBean: com.kamcci.numberbox.app.domain.system.construction.UseCase
+        basePackage: com.kamcci.numberbox.app
+        beanScope: singleton
+        primary: com.kamcci.numberbox.app.domain.system.construction.Priority
+        qualifier: com.kamcci.numberbox.app.domain.system.construction.Aliases
+    tx:
+      class-path:
+        transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute

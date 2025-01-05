@@ -21,9 +21,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":project:app-service"))
-    implementation(project(":project:app-domain"))
-
     implementation(libs.bundles.modules.system.construction)
     testImplementation(libs.bundles.modules.system.construction.test)
 }
