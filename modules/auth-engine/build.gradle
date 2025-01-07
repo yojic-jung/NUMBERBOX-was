@@ -23,12 +23,33 @@ dependencies {
     testImplementation libs.bundles.modules.auth.engine.test
 }
 
+// engine 모듈에서 control 모듈 테스트 커버리지까지 측정
+tasks.jacocoTestReport {
+    classDirectories.setFrom(
+            files(
+                    fileTree(dir: "${buildDir}/classes/java/main", includes: ['**/*.class']),
+                    fileTree(dir: "${project(':modules:auth-control').buildDir}/classes/java/main", includes: ['**/*.class'])
+            )
+    )
+
+    executionData.setFrom(
+            file("${buildDir}/jacoco/test.exec"),
+    )
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+
 bootJar { enabled = false }
 bootRun { enabled = false }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
 kotlin {
     jvmToolchain(17)
 }

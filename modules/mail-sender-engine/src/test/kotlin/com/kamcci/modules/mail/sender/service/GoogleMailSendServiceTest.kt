@@ -1,9 +1,12 @@
 package com.kamcci.modules.mail.sender.service
 
+import com.kamcci.modules.mail.sender.auth.MailSenderAuthenticator
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty
 import com.kamcci.modules.mail.sender.processor.MockMailSendProcessor
+import com.kamcci.modules.mail.sender.processor.ProdMailSendProcessor
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mockStatic
 import org.mockito.kotlin.any
@@ -24,7 +27,9 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("test@email.com", "")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
+        val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
+        googleMailSendService =
+            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
 
         // when
         mockStatic(Transport::class.java).`when`<Unit> { Transport.send(any()) }.then { } // 실제 전송은 모킹
@@ -36,7 +41,9 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("", "")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
+        val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
+        googleMailSendService =
+            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
 
         // when & then
         assertThrows<AddressException> {
@@ -49,11 +56,28 @@ class GoogleMailSendServiceTest {
         // given
         val googleAccountProp = GoogleAccountProperty("test@email.com", "1234")
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
-        googleMailSendService = GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor())
+        val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
+        googleMailSendService =
+            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
 
         // when & then
         assertThrows<AddressException> {
             googleMailSendService.sendHTMLMessage("", title, contents)
+        }
+    }
+
+    @Test
+    fun `수신인 이메일 미작성(실서버) - 실패`() {
+        // given
+        val googleAccountProp = GoogleAccountProperty("test@email.com", "1234")
+        val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
+        val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
+        googleMailSendService =
+            GoogleMailSendService(googleAccountProp, googleMailProp, ProdMailSendProcessor(), mailSenderAuthenticator)
+
+        // when & then
+        assertDoesNotThrow {
+            googleMailSendService.sendHTMLMessage(recipientEmail, title, contents)
         }
     }
 }

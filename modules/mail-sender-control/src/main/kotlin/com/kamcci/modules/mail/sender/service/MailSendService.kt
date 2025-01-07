@@ -6,13 +6,11 @@ package com.kamcci.modules.mail.sender.service
 interface MailSendService {
 
     /**
-     * 메일 전송(contentType:text/plain)
-     * recipientEmail : 수신인 이메일
-     * title : 메일 제목
-     * contents : 메일 본문
+     * 메일 전송(contentType: text/html)
+     *
+     * @param recipientEmail : 수신인 이메일
+     * @param title : 메일 제목
+     * @param contents : 메일 본문
      */
-    fun sendTextMessage(recipientEmail: String, title: String, contents: String)
-
-    // 메일 전송(contentType: text/html)
     fun sendHTMLMessage(recipientEmail: String, title: String, contents: String)
 }

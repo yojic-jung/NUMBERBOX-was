@@ -9,8 +9,4 @@ public class BaseAuthException extends RuntimeException {
     public BaseAuthException(BaseAuthErrCodeType errCodeType) {
         super("[KC-AUTH-ERR-" + errCodeType.getCode() + "]" + errCodeType.getMessage());
     }
-
-    public BaseAuthException(String msg) {
-        super(msg);
-    }
 }

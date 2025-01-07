@@ -11,7 +11,4 @@ public class DisabledUserException extends BaseAuthException {
         super(Auth100ErrCodeType.DISABLED_USER);
     }
 
-    public DisabledUserException(String msg) {
-        super(msg);
-    }
 }

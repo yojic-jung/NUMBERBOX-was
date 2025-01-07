@@ -32,16 +32,22 @@ subprojects {
     }
 
     tasks.jacocoTestReport {
+        onlyIf { project.name != "app-domain" } // app-domain 모듈 제외
         reports {
             html.required.set(true)
             xml.required.set(true)
 
-            html.outputLocation = file("${layout.buildDirectory}/reports/jacoco.html")
-            xml.outputLocation = file("${layout.buildDirectory}/reports/jacoco.xml")
+            xml.outputLocation.set(file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml"))
+            html.outputLocation.set(file("${buildDir}/reports/jacoco/test/jacocoTestReport.html"))
         }
         classDirectories.setFrom(
             sourceSets.main.get().output.asFileTree.matching {
-                exclude("**/*MapperImpl.class", "**/Q*Entity.class", "**/Q*Domain.class")
+                exclude(
+                    "**/*MapperImpl.class",
+                    "**/Q*Entity.class",
+                    "**/Q*Domain.class",
+                    "**/Q*Domain.class",
+                )
             }
         )
     }
@@ -53,5 +59,11 @@ sonarqube {
         property("sonar.projectName", "numberbox-was")
         property("sonar.host.url", "http://localhost:9000")
         property("sonar.token", project.findProperty("sonar.token") ?: "")
+        // Java 커버리지 리포트 경로
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+        // Kotlin 커버리지 리포트 경로
+        property("sonar.kotlin.coverage.reportPaths", "build/reports/kover/xml/report.xml")
+        property("sonar.coverage.exclusions", "**/com/kamcci/numberbox/app/domain/**")
+
     }
 }

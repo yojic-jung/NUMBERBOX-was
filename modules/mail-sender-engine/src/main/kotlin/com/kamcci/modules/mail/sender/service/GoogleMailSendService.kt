@@ -7,7 +7,6 @@ import com.kamcci.modules.mail.sender.processor.MailSendProcessor
 import org.springframework.stereotype.Service
 import javax.mail.Authenticator
 import javax.mail.Message
-import javax.mail.PasswordAuthentication
 import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
@@ -17,16 +16,8 @@ class GoogleMailSendService(
     private val accountProp: GoogleAccountProperty,
     private val googleProp: GoogleMailProperty,
     private val mailSendProcessor: MailSendProcessor,
+    private val authenticator: Authenticator,
 ) : MailSendService {
-
-    override fun sendTextMessage(
-        recipientEmail: String,
-        title: String,
-        contents: String,
-    ) {
-        send(recipientEmail, title, contents, HttpContentType.TEXT)
-    }
-
     override fun sendHTMLMessage(
         recipientEmail: String,
         title: String,
@@ -51,17 +42,7 @@ class GoogleMailSendService(
         mailProps["mail.smtp.ssl.protocols"] = googleProp.protocols
 
         // 2. 세션 설정(구글 계정 인증)
-        val session =
-            Session.getInstance(
-                mailProps,
-                object : Authenticator() {
-                    private val username = accountProp.email.split("@")[0]
-                    private val password = accountProp.password
-
-                    override fun getPasswordAuthentication(): PasswordAuthentication =
-                        PasswordAuthentication(username, password)
-                },
-            )
+        val session = Session.getInstance(mailProps, authenticator)
         session.debug = true
 
         // 3. message 작성 및 발송

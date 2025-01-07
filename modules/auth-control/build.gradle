@@ -17,10 +17,32 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
 kotlin {
     jvmToolchain(17)
 }
+
+// engine 모듈에서 contorl 모듈의 테스트까지 같이 진행하고 해당 리포트를 가져옴
+tasks.jacocoTestReport {
+    dependsOn(':modules:auth-engine:test')
+
+    classDirectories.setFrom(
+            files(
+                    fileTree("${buildDir}/classes/java/main") {
+                        include("**/*.class")
+                    },
+                    fileTree("${project(":modules:auth-control").buildDir}/classes/java/main") {
+                        include("**/*.class")
+                    }
+            )
+    )
+
+    executionData.setFrom(
+            file("${project(':modules:auth-engine').buildDir}/jacoco/test.exec")  // engine 모듈의 테스트 데이터
+    )
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
