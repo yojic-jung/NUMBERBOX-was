@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @ComponentScan(basePackages = ["com.kamcci.modules", "com.kamcci.numberbox"])
 @EnableScheduling
 @SpringBootApplication
-class BootstrapApplicaton
+class BootstrapApplication
 
 fun main(args: Array<String>) {
-    runApplication<BootstrapApplicaton>(*args)
+    runApplication<BootstrapApplication>(*args)
 }
