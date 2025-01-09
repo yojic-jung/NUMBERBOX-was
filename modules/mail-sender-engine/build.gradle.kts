@@ -44,28 +44,3 @@ tasks.named<BootRun>("bootRun") {
     enabled = false
 }
 
-
-tasks.jacocoTestReport {
-    classDirectories.setFrom(classDirectories.files.map {
-        files(
-            fileTree(it) {
-                setDir("${buildDir}/classes/kotlin/main")
-                include("**/*.class")
-            },
-            fileTree(it) {
-                setDir("${project(":modules:mail-sender-control").buildDir}/classes/kotlin/main")
-                include("**/*.class")
-            }
-        )
-    })
-
-    executionData.setFrom(
-        file("${buildDir}/jacoco/test.exec")
-    )
-
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-}
-

@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.annotation
 
-import com.kamcci.numberbox.infra.orm.jpa.adapter.config.QueryDslConfig
+import com.kamcci.numberbox.infra.orm.jpa.adapter.config.QueryDslConfiguration
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
@@ -12,6 +12,6 @@ import org.springframework.test.context.ActiveProfiles
  */
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(value = [QueryDslConfig::class])
+@Import(value = [QueryDslConfiguration::class])
 @ActiveProfiles("orm-jpa-adapter-local-test")
 annotation class LocalDBJpaTest

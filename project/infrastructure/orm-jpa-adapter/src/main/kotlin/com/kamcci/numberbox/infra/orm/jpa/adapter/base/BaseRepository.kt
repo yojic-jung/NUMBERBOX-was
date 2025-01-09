@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired
 
 abstract class BaseRepository {
     @Autowired
-    protected lateinit var em: EntityManager
+    lateinit var em: EntityManager
 
     @Autowired
-    protected lateinit var queryFactory: JPAQueryFactory
+    lateinit var queryFactory: JPAQueryFactory
 }

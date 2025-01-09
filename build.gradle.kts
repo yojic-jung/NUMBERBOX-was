@@ -28,7 +28,7 @@ subprojects {
     }
 
     jacoco {
-        toolVersion = "0.8.11"
+        toolVersion = "0.8.12"
     }
 
     tasks.jacocoTestReport {
@@ -37,15 +37,14 @@ subprojects {
             html.required.set(true)
             xml.required.set(true)
 
-            xml.outputLocation.set(file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml"))
-            html.outputLocation.set(file("${buildDir}/reports/jacoco/test/jacocoTestReport.html"))
+            xml.outputLocation.set(file(layout.buildDirectory.dir("reports/jacoco/test/jacocoTestReport.xml")))
+            html.outputLocation.set(file(layout.buildDirectory.dir("reports/jacoco/test/jacocoTestReport.html")))
         }
         classDirectories.setFrom(
             sourceSets.main.get().output.asFileTree.matching {
                 exclude(
                     "**/*MapperImpl.class",
                     "**/Q*Entity.class",
-                    "**/Q*Domain.class",
                     "**/Q*Domain.class",
                 )
             }
@@ -62,7 +61,7 @@ sonarqube {
         // Java 커버리지 리포트 경로
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         // Kotlin 커버리지 리포트 경로
-        property("sonar.kotlin.coverage.reportPaths", "build/reports/kover/xml/report.xml")
+//        property("sonar.kotlin.coverage.reportPaths", "build/reports/kover/xml/report.xml")
         property("sonar.coverage.exclusions", "**/com/kamcci/numberbox/app/domain/**")
 
     }

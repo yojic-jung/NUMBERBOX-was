@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.annotation
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.config.MysqlTCExtension
-import com.kamcci.numberbox.infra.orm.jpa.adapter.config.QueryDslConfig
+import com.kamcci.numberbox.infra.orm.jpa.adapter.config.QueryDslConfiguration
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -15,6 +15,6 @@ import org.springframework.test.context.ActiveProfiles
 @DataJpaTest
 @ExtendWith(value = [MysqlTCExtension::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(value = [QueryDslConfig::class])
+@Import(value = [QueryDslConfiguration::class])
 @ActiveProfiles("orm-jpa-adapter-tc-test")
 annotation class TcDBJpaTest

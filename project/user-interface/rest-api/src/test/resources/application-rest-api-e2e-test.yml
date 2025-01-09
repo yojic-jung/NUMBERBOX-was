@@ -10,3 +10,4 @@ system:
     tx:
       class-path:
         transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute
+
