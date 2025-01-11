@@ -101,6 +101,8 @@ modules-auth-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-hwp-client-engine = ["kotlin-reflect", "spring-boot-starter"]
 
+modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web"]
+
 modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-mail"]
 modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 

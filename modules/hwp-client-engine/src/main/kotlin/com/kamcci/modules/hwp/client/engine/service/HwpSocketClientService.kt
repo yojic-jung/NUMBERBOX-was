@@ -23,7 +23,6 @@ class HwpSocketClientService : HwpSocketClient {
         const val BUFFER_SIZE = 8192
     }
 
-
     /**
      * jsonMsg to hwp 파일 변환 통신 규칙
      *

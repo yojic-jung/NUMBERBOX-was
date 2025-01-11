@@ -1,5 +1,10 @@
 package com.kamcci.modules.hwp.client.control.constant
 
+/**
+ * hwp 확장자 타입
+ *
+ * @param code hwp 서버에서 사용하는 확장자 코드 타입
+ */
 enum class HwpExtensionType(val code: Int) {
     Hwp(1),
     Hwpx(2),

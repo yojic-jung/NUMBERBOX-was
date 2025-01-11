@@ -13,6 +13,9 @@ java {
 }
 
 dependencies {
+    implementation(project(":modules:logging-control"))
+
+    implementation(libs.bundles.modules.logging.engine)
 }
 
 tasks.withType<Test> {
