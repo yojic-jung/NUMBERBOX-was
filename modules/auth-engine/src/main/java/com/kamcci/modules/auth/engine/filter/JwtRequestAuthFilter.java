@@ -44,7 +44,7 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
                 Authentication authentication = authenticationManager.authenticate(authRequest);
 
                 // request 및 SecurityContextHolder에 인증정보 저장
-                request.setAttribute("userId", authentication.getDetails());
+                if(authentication != null) request.setAttribute("userId", authentication.getDetails());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 successfulAuthentication(accessToken);
             }
