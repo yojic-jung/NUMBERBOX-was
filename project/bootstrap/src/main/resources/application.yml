@@ -11,6 +11,7 @@ spring:
         - mail-sender-env
         - storage
         - storage-env
+        - hwp-client
 
 # s3 설정
 cloud:

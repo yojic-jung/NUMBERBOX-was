@@ -23,12 +23,13 @@ dependencies {
     implementation(project(":modules:mail-sender-engine"))
     implementation(project(":modules:logging-engine"))
     implementation(project(":modules:system-construction"))
-    
+
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:email-adapter"))
     implementation(project(":project:infrastructure:orm-jpa-adapter"))
     implementation(project(":project:infrastructure:storage-adapter"))
+    implementation(project(":project:infrastructure:hwp-client-adapter"))
     implementation(project(":project:user-interface:rest-api"))
 
     implementation(libs.bundles.boot.strap)

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 /**
  * 한글 파일 변환 컨트롤러
@@ -26,6 +27,6 @@ class HwpConvertController(
         request: HwpConvertRequest
     ): ResponseEntity<ResponseData<Any>> {
         val hwpByteArr = hwpFileConvertCase.convertJsonMsgToHwp(request.jsonMsg)
-        return ResponseUtil.ok(mapOf("hwpFile" to hwpByteArr))
+        return ResponseUtil.ok(mapOf("hwpFile" to Base64.getEncoder().encodeToString(hwpByteArr)))
     }
 }

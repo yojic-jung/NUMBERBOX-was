@@ -1,10 +1,9 @@
-package com.kamcci.modules.hwp.client.engine.service
+package com.kamcci.numberbox.hwp.client.engine.service
 
-import com.kamcci.modules.hwp.client.engine.config.HwpServerConstant.HWP_SERVER_IP
-import com.kamcci.modules.hwp.client.engine.config.HwpServerConstant.HWP_SERVER_PORT
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpRequestType
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
+import com.kamcci.numberbox.hwp.client.engine.config.HwpSocketClientProperty
 import org.springframework.stereotype.Service
 import java.io.*
 import java.net.Socket
@@ -12,7 +11,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 @Service
-class HwpSocketClientService : HwpSocketClient {
+class HwpSocketClientService(
+    private val hwpSocketProp: HwpSocketClientProperty
+) : HwpSocketClient {
     companion object {
         // hwp 서버에 파일 사이즈를 알려줄 영역의 크기
         const val HEADER_SIZE = 4
@@ -29,7 +30,7 @@ class HwpSocketClientService : HwpSocketClient {
      */
     override fun requestHwpFile(jsonMsg: String): ByteArray {
         // 클라이언트 소켓 생성
-        val hwpClientSocket = getHwpClientSocket()
+        val hwpClientSocket = Socket(hwpSocketProp.ip, hwpSocketProp.port)
         val socketOup = DataOutputStream(hwpClientSocket.getOutputStream())
         val socketInp = hwpClientSocket.getInputStream()
 
@@ -64,7 +65,7 @@ class HwpSocketClientService : HwpSocketClient {
      */
     override fun requestHtmlZip(hwpFileIS: InputStream, extension: HwpExtensionType): ByteArray {
         // 클라이언트 소켓 생성
-        val hwpClientSocket = getHwpClientSocket()
+        val hwpClientSocket = Socket(hwpSocketProp.ip, hwpSocketProp.port)
         val socketOup = DataOutputStream(hwpClientSocket.getOutputStream())
         val socketInp = hwpClientSocket.getInputStream()
 
@@ -103,7 +104,10 @@ class HwpSocketClientService : HwpSocketClient {
 
     // 서버에 요청 타입 설정
     private fun setRequestType(requestType: HwpRequestType, byteSize: Int, socketOup: OutputStream) {
-        socketOup.write(requestType.type.toByteArray())
+        val modeBuffer = ByteBuffer.allocate(HEADER_SIZE)
+        modeBuffer.order(ByteOrder.LITTLE_ENDIAN)
+        modeBuffer.put(requestType.type.toByteArray())
+        socketOup.write(modeBuffer.array())
 
         // hwp 서버에 전송할 데이터 크기 전달
         val b = ByteBuffer.allocate(HEADER_SIZE)
@@ -122,10 +126,5 @@ class HwpSocketClientService : HwpSocketClient {
             buffer.write(bufferByte, 0, bytesRead)
         }
         return buffer.toByteArray()
-    }
-
-    // hwp 제작 서버와 연결하는 소켓 생성 및 반환
-    private fun getHwpClientSocket(): Socket {
-        return Socket(HWP_SERVER_IP, HWP_SERVER_PORT)
     }
 }
