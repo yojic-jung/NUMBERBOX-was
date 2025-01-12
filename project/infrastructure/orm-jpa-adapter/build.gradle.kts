@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
     implementation(project(":modules:auth-control"))
+    implementation(project(":modules:logging-control"))
 
     implementation(libs.bundles.orm.jpa.adapter)
     implementation(libs.querydsl.jpa) {

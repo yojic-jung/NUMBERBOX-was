@@ -2,17 +2,6 @@
  Def. 23.11 N명의수학 최종 운영 버전
  */
 
-DROP TABLE IF EXISTS `access_log_info`;
-CREATE TABLE `access_log_info` (
-                                   `log_info_no` int NOT NULL AUTO_INCREMENT,
-                                   `user_uniq_id` binary(16) NOT NULL,
-                                   `browser_info` varchar(7) NOT NULL,
-                                   `os_info` varchar(7) NOT NULL,
-                                   `client_ip` varchar(15) NOT NULL,
-                                   `login_time` datetime NOT NULL,
-                                   PRIMARY KEY (`log_info_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
 DROP TABLE IF EXISTS `email_id_code`;
 CREATE TABLE `email_id_code` (
                                  `email` varchar(60) NOT NULL,

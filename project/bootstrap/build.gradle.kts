@@ -21,7 +21,9 @@ repositories {
 dependencies {
     implementation(project(":modules:auth-engine"))
     implementation(project(":modules:mail-sender-engine"))
+    implementation(project(":modules:logging-engine"))
     implementation(project(":modules:system-construction"))
+    
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:email-adapter"))

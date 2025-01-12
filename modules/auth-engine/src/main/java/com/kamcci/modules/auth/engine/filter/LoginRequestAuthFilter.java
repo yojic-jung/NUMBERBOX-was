@@ -92,6 +92,7 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
+        request.setAttribute("userId", authResult.getDetails());
     }
 
     // AuthenticationException 타입 예외 발생시에만 실행됨

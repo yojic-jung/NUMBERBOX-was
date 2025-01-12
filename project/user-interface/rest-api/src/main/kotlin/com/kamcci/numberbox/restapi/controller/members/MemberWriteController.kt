@@ -46,15 +46,4 @@ class MemberWriteController(
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
     }
 
-    // todo
-    // 탈퇴
-//    @PostMapping("/drop")
-//    fun dropAccount(
-//        @UserId memberId: UUID,
-//        @RequestBody @Valid verifyCodeRequest: MemberVerifyCodeRequest
-//    ): ResponseEntity<ResponseData<Map<String, Any?>>> {
-//        val dropDto = memberMapper.toDropDto(memberId, verifyCodeRequest)
-//        val isSuccess = memberModifyUseCase.drop(dropDto)
-//        return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))
-//    }
 }

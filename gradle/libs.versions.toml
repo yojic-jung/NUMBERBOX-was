@@ -6,6 +6,8 @@ spring-aws = "2.2.6.RELEASE"
 spring-tx = "6.1.4"
 aws-s3 = "1.12.281"
 
+aspect-weaver = "1.9.22"
+
 querydsl = "5.0.0"
 mysql-version = "9.0.0"
 
@@ -37,6 +39,8 @@ spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
 spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+aspect-j-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspect-weaver" }
+
 spring-cloud-aws = { module = "org.springframework.cloud:spring-cloud-starter-aws", version.ref = "spring-aws" }
 aws-java-sdk-s3 = { module = "com.amazonaws:aws-java-sdk-s3", version.ref = "aws-s3" }
 spring-tx = { module = "org.springframework:spring-tx", version.ref = "spring-tx" }
@@ -101,7 +105,7 @@ modules-auth-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-hwp-client-engine = ["kotlin-reflect", "spring-boot-starter"]
 
-modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web"]
+modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web", "aspect-j-weaver"]
 
 modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-mail"]
 modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]

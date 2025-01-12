@@ -12,3 +12,18 @@ CREATE TABLE `sys_garbage_file` (
                                     PRIMARY KEY (`id`)
 ) comment '삭제대상 유휴 파일 목록'
 ;
+
+
+create table log_client_api (
+                                id int not null auto_increment,
+                                member_id binary(16) NOT NULL,
+                                browser varchar(7) NOT NULL,
+                                os varchar(7) NOT NULL,
+                                ip varchar(15) NOT NULL,
+                                http_method varchar(5) not null,
+                                uri varchar(500) NOT NULL,
+                                response_code tinyint UNSIGNED,
+                                request_body TEXT,
+                                sys_create_time datetime NOT NULL,
+                                PRIMARY KEY (`id`)
+) comment '사용자 api 요청 로깅 정보';

@@ -16,7 +16,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper
 import java.util.*
 
 /**
- * Def : request 정보 추출
+ * request 정보 추출
  */
 @Service
 class HttpRequestLoggingService(
@@ -34,34 +34,34 @@ class HttpRequestLoggingService(
 
     // Request 정보 로깅
     override fun logging(): HttpRequestLoggingDto? {
-        val request: HttpServletRequest =
-            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
+        val attr = RequestContextHolder.getRequestAttributes()
+        attr as ServletRequestAttributes
+        val request: HttpServletRequest = attr.request
 
         // 로깅 대상 아닌 경우 제외
-        if (!isLoggingTarget(request)) return null
+        if (!isLoggingUri(request)) return null
 
+        // userId
+        val userId = request.getAttribute("userId") ?: return null
 
-        // userId todo auth에서 끌고 들어와야함
-        val userId = request.getAttribute("userId") as UUID
         // uri, http method, req_body, os, ip, browser
         val reqUri = request.requestURI
         val method = request.method
         val os = osLogging(request.getHeader("sec-ch-ua-platform"))
-        val browser = browserLogging(request.getHeader("user-agent"), os.attrName)
+        val browser = browserLogging(request.getHeader("user-agent"), os)
         val clientIp = getPublicIPAddress(request)
 
-
-        // request Body 로깅 제외 uri는 null 선언
-        val reqBody = if (loggingProperty.bodyExceptUri.any { it.contains(reqUri) || reqUri.contains(it) }) {
-            // 로깅제외 대상은 null
-            null
-        } else {
+        // request Body 로깅 대상만 로깅
+        val reqBody = if (isBodyLogging(request)) {
             // requestBody 또는 쿼리스트링 추출
             getRequestBodyOrQueryString(request)
+        } else {
+            // 로깅제외 대상은 null
+            null
         }
 
         return HttpRequestLoggingDto(
-            memberId = userId,
+            memberId = userId as UUID,
             browser = browser.attrName,
             os = os.attrName,
             ip = clientIp,
@@ -71,15 +71,26 @@ class HttpRequestLoggingService(
         )
     }
 
-    // 로깅 대상인지 판별
-    private fun isLoggingTarget(request: HttpServletRequest): Boolean {
+    // 로깅 대상 uri인지 판별
+    private fun isLoggingUri(request: HttpServletRequest): Boolean {
         // 사용자 제외 설정 uri는 로깅 제외
         val exceptUriList = loggingProperty.exceptUri
-        if (exceptUriList.contains(request.requestURI)) return false
+        return exceptUriList == null || !exceptUriList.contains(request.requestURI)
+    }
 
-        // contentType이 application/json인 경우만 로깅
-        val contentType = request.getHeader("Content-Type") as String
-        return loggingProperty.contentType.any { contentType.contains(it) }
+    // reqBody 로깅 대상인지 판별
+    private fun isBodyLogging(request: HttpServletRequest): Boolean {
+        // 사용자 제외 설정 uri는 로깅 제외
+        val reqUri = request.requestURI
+        return if (loggingProperty.bodyExceptUri != null
+            && loggingProperty.bodyExceptUri.any { it.contains(reqUri) || reqUri.contains(it) }
+        ) {
+            false
+        } else {
+            // 사용자 설정 contentType만 body 로깅
+            val contentType = request.getHeader("Content-Type")
+            !contentType.isNullOrEmpty() && loggingProperty.contentType.any { contentType.contains(it) }
+        }
     }
 
 

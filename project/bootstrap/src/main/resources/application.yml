@@ -38,4 +38,13 @@ system:
     tx:
       class-path:
         transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute
-
+kamcci:
+  logging:
+    request:
+      content-type: application/json
+      body-except-uri:
+        - /member/phone
+        - /public/member/findEmail
+        - /public/member/signup
+        - /member/password
+        - /member/password-confirm
