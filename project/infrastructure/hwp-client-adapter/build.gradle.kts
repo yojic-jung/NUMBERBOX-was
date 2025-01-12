@@ -13,6 +13,10 @@ java {
 }
 
 dependencies {
+    implementation(project(":project:app-domain"))
+    implementation(project(":project:app-service"))
+
+    implementation(libs.bundles.hwp.client.adapter)
 }
 
 tasks.withType<Test> {

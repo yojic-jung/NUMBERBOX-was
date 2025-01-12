@@ -1,6 +1,6 @@
-package com.kamcci.modules.hwp.client.control.client
+package com.kamcci.numberbox.app.port.hwp
 
-import com.kamcci.modules.hwp.client.control.constant.HwpExtensionType
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
 import java.io.InputStream
 
 /**

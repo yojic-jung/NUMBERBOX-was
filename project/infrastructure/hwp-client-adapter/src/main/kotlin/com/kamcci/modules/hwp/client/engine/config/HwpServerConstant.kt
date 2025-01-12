@@ -1,4 +1,4 @@
-package com.kamcci.modules.hwp.client.control.constant
+package com.kamcci.modules.hwp.client.engine.config
 
 object HwpServerConstant {
     const val HWP_SERVER_IP = ""

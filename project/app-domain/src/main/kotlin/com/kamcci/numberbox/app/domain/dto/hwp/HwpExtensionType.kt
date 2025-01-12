@@ -1,4 +1,4 @@
-package com.kamcci.modules.hwp.client.control.constant
+package com.kamcci.numberbox.app.domain.dto.hwp
 
 /**
  * hwp 확장자 타입

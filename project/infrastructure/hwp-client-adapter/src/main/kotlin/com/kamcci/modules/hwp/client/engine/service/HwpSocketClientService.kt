@@ -1,12 +1,10 @@
 package com.kamcci.modules.hwp.client.engine.service
 
-import com.kamcci.modules.hwp.client.control.client.HwpSocketClient
-import com.kamcci.modules.hwp.client.control.constant.HwpExtensionType
-import com.kamcci.modules.hwp.client.control.constant.HwpRequestType
-import com.kamcci.modules.hwp.client.control.constant.HwpRequestType.HwpToHTML
-import com.kamcci.modules.hwp.client.control.constant.HwpRequestType.JsonToHwp
-import com.kamcci.modules.hwp.client.control.constant.HwpServerConstant.HWP_SERVER_IP
-import com.kamcci.modules.hwp.client.control.constant.HwpServerConstant.HWP_SERVER_PORT
+import com.kamcci.modules.hwp.client.engine.config.HwpServerConstant.HWP_SERVER_IP
+import com.kamcci.modules.hwp.client.engine.config.HwpServerConstant.HWP_SERVER_PORT
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpRequestType
+import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import org.springframework.stereotype.Service
 import java.io.*
 import java.net.Socket
@@ -38,7 +36,7 @@ class HwpSocketClientService : HwpSocketClient {
         try {
             // 1. 요청 타입 및 데이터 크기 전송
             val data = jsonMsg.toByteArray()
-            setRequestType(JsonToHwp, data.size, socketOup)
+            setRequestType(HwpRequestType.JsonToHwp, data.size, socketOup)
 
             // 2. 메시지 전송
             socketOup.write(data)
@@ -74,7 +72,7 @@ class HwpSocketClientService : HwpSocketClient {
             // 1. 요청 타입 및 파일 크기 전송
             val byteBuffer = ByteArray(BUFFER_SIZE)
             val dataSize = socketInp.read(byteBuffer)
-            setRequestType(HwpToHTML, dataSize, socketOup)
+            setRequestType(HwpRequestType.HwpToHTML, dataSize, socketOup)
 
             // 2. 확장자 전송
             val extBufferSize = ByteBuffer.allocate(HEADER_SIZE)

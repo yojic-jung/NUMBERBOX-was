@@ -85,6 +85,7 @@ orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcon
 
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
+hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter"]
 
 storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]
 storage-adapter-test = ["mockito-kotlin", "spring-boot-starter-test"]
@@ -103,7 +104,6 @@ modules-auth-engine = ["kotlin-stdlib", "spring-boot-starter-web", "spring-boot-
     "java-uuid-generator", "jaxb-api"]
 modules-auth-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
-modules-hwp-client-engine = ["kotlin-reflect", "spring-boot-starter"]
 
 modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web", "aspect-j-weaver"]
 
