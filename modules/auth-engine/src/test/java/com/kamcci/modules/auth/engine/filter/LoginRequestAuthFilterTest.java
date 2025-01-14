@@ -1,6 +1,7 @@
 package com.kamcci.modules.auth.engine.filter;
 
 import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
+import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
 import jakarta.servlet.ServletException;
@@ -107,6 +108,16 @@ class LoginRequestAuthFilterTest {
 
         // then
         verify(authenticationSuccessHandler).onAuthenticationSuccess(request, response, null);
+    }
+
+    @Test
+    void 로그인_성공_핸들러_auth_정보_전달_호출() throws ServletException, IOException {
+        // given
+        JwtAuthenticationToken authResult = new JwtAuthenticationToken(null, null, null);
+        loginRequestAuthFilter.successfulAuthentication(request, response, null, authResult);
+
+        // then
+        verify(authenticationSuccessHandler).onAuthenticationSuccess(request, response, authResult);
     }
 
     @Test

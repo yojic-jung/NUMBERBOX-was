@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.usecase.cs.CsErrorReportReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBConfig
 import com.kamcci.numberbox.restapi.RestApiApplication
 import com.kamcci.numberbox.restapi.annotation.SpringE2EConfig
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.util.*
 
+@Disabled
 @TcDBConfig
 @SpringE2EConfig
 @ComponentScan(

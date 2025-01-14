@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.hwp
 
-import com.kamcci.numberbox.app.usecase.hwp.HwpFileConvertCase
+import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpConvertRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -19,14 +19,14 @@ import java.util.*
 @RestController
 @RequestMapping("/hwp/math/docs")
 class HwpConvertController(
-    private val hwpFileConvertCase: HwpFileConvertCase
+    private val hwpSocketClient: HwpSocketClient
 ) {
     @PostMapping("")
     fun makeHwpFile(
         @RequestBody
         request: HwpConvertRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val hwpByteArr = hwpFileConvertCase.convertJsonMsgToHwp(request.jsonMsg)
+        val hwpByteArr = hwpSocketClient.requestHwpFile(request.jsonMsg)
         return ResponseUtil.ok(mapOf("hwpFile" to Base64.getEncoder().encodeToString(hwpByteArr)))
     }
 }

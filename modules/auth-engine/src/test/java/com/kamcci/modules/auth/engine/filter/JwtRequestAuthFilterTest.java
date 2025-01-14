@@ -2,6 +2,7 @@ package com.kamcci.modules.auth.engine.filter;
 
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
+import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.TokenException;
 import jakarta.servlet.FilterChain;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,18 @@ class JwtRequestAuthFilterTest {
     @Test
     void jwt토큰_필터_동작() {
         request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
+
+        // when
+        jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
+
+        // then
+        verify(authenticationManager).authenticate(any());
+    }
+
+    @Test
+    void jwt토큰_필터_동작_request_userId_setting() {
+        request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
+        when(authenticationManager.authenticate(any())).thenReturn(new JwtAuthenticationToken(null, null, null));
 
         // when
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
