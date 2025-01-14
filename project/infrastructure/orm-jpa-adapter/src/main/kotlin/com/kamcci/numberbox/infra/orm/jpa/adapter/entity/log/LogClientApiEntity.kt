@@ -47,7 +47,8 @@ class LogClientApiEntity {
     @Column(name = "uri", length = 500, nullable = false)
     var uri: String? = null
 
-    @Column(name = "response_code", length = 3, nullable = true)
+    @NotNull
+    @Column(name = "response_code", length = 3, nullable = false)
     var responseCode: Int? = null
 
     // request_body

@@ -22,7 +22,7 @@ create table log_client_api (
                                 ip varchar(15) NOT NULL,
                                 http_method varchar(5) not null,
                                 uri varchar(500) NOT NULL,
-                                response_code tinyint UNSIGNED,
+                                response_code tinyint UNSIGNED NOT NULL,
                                 request_body TEXT,
                                 sys_create_time datetime NOT NULL,
                                 PRIMARY KEY (`id`)

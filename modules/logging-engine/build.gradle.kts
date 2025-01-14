@@ -21,6 +21,7 @@ dependencies {
     implementation(project(":modules:logging-control"))
 
     implementation(libs.bundles.modules.logging.engine)
+    testImplementation(libs.bundles.modules.logging.engine.test)
 }
 
 tasks.withType<Test> {

@@ -22,7 +22,7 @@ class AccessLogApiEventListener(
                 ip = loggingEventDto.reqLoggingDto.ip
                 httpMethod = loggingEventDto.reqLoggingDto.method
                 uri = loggingEventDto.reqLoggingDto.uri
-                responseCode = loggingEventDto.resLoggingDto?.httpStatus
+                responseCode = loggingEventDto.resLoggingDto.httpStatus
                 requestBody = loggingEventDto.reqLoggingDto.reqBody
             }
         )

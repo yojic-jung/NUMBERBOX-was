@@ -5,5 +5,5 @@ package com.kamcci.modules.logging.control.dto
  */
 data class ClientLoggingInfoEventDto(
     val reqLoggingDto: HttpRequestLoggingDto,
-    val resLoggingDto: HttpResponseLoggingDto?,
+    val resLoggingDto: HttpResponseLoggingDto,
 )

@@ -9,4 +9,4 @@ import org.springframework.scheduling.annotation.EnableAsync
 @EnableAspectJAutoProxy
 @Configuration
 @EnableConfigurationProperties(value = [LoggingTargetProperty::class])
-open class LoggingConfig
+class LoggingConfig

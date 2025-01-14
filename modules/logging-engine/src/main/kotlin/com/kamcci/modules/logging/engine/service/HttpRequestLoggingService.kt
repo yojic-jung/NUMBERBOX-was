@@ -83,13 +83,13 @@ class HttpRequestLoggingService(
         // 사용자 제외 설정 uri는 로깅 제외
         val reqUri = request.requestURI
         return if (loggingProperty.bodyExceptUri != null
-            && loggingProperty.bodyExceptUri.any { it.contains(reqUri) || reqUri.contains(it) }
+            && loggingProperty.bodyExceptUri.any { it == reqUri }
         ) {
             false
         } else {
             // 사용자 설정 contentType만 body 로깅
             val contentType = request.getHeader("Content-Type")
-            !contentType.isNullOrEmpty() && loggingProperty.contentType.any { contentType.contains(it) }
+            contentType != null && loggingProperty.contentType.any { contentType.contains(it) }
         }
     }
 
@@ -99,11 +99,11 @@ class HttpRequestLoggingService(
         request: HttpServletRequest,
     ): String? {
         return when {
-            QUERY_STRING_METHOD.contains(request.method) -> {
+            QUERY_STRING_METHOD.contains(request.method.uppercase()) -> {
                 if (request.parameterMap.isNotEmpty()) objectMapper.writeValueAsString(request.parameterMap) else null
             }
 
-            REQUEST_BODY_METHOD.contains(request.method) -> {
+            REQUEST_BODY_METHOD.contains(request.method.uppercase()) -> {
                 val cachedRequest = request as ContentCachingRequestWrapper
                 cachedRequest.contentAsString
             }

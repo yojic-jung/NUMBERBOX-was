@@ -104,8 +104,8 @@ modules-auth-engine = ["kotlin-stdlib", "spring-boot-starter-web", "spring-boot-
     "java-uuid-generator", "jaxb-api"]
 modules-auth-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
-
 modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web", "aspect-j-weaver"]
+modules-logging-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-mail"]
 modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]

@@ -10,12 +10,12 @@ object BrowserOsUtil {
         val browserLowercase = browser.lowercase()
         return if (osType == OsType.WINDOW) {
             when {
-                browserLowercase.contains(BrowserType.SAFARI.attrName) -> BrowserType.ETC
+                browserLowercase.contains(BrowserType.SAFARI.attrName) -> BrowserType.SAFARI
                 else -> BrowserType.entries.find { browserLowercase.contains(it.attrName) } ?: BrowserType.ETC
             }
         } else if (osType == OsType.MAC) {
             when {
-                // mac chrom의 경우 safari도 포함하기에 safari 먼저 체크해야함
+                // mac chrome의 경우 safari도 포함하기에 safari 먼저 체크해야함
                 !browserLowercase.contains(BrowserType.CHROME.attrName) && browserLowercase.contains(BrowserType.SAFARI.attrName) -> BrowserType.SAFARI
                 browserLowercase.contains(BrowserType.CHROME.attrName) -> BrowserType.CHROME
                 else -> BrowserType.entries.find { browserLowercase.contains(it.attrName) } ?: BrowserType.ETC

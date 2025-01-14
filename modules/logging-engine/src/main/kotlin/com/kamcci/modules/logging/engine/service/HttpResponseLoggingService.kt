@@ -11,11 +11,15 @@ import org.springframework.stereotype.Service
 
 @Service
 class HttpResponseLoggingService : ResponseLoggingService {
+    companion object {
+        const val NOT_RESPONSE_ENTITY = "ResponseEntity 타입 반환값이 아닙니다."
+    }
+
     override fun logging(returnValue: Any?): HttpResponseLoggingDto {
-        // repsponse 추출
-        val resEntity = returnValue as? ResponseEntity<*>
+        // ResponseEntity 타입 검증
+        if (returnValue !is ResponseEntity<*>) throw ClassCastException(NOT_RESPONSE_ENTITY)
 
         // 응답상태 코드 반환
-        return HttpResponseLoggingDto(resEntity?.statusCode?.value())
+        return HttpResponseLoggingDto(returnValue.statusCode.value())
     }
 }
