@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 @TcDBSpringMockConfigTest
 class FileDeleteEventListenerTest @Autowired constructor(
     private val eventPublisher: ApplicationEventPublisher,
-    @Autowired
     private val sysGarbageFileWriteRepository: SysGarbageFileWriteRepository
 ) {
     @Transactional

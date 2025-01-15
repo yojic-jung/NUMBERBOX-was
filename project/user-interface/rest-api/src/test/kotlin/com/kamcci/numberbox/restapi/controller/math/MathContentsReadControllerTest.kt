@@ -213,8 +213,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             val reqBody = mapOf(
                 "searchType" to srchType.name,
                 "unitId" to "21001",
-                "pageNum" to "0",
-                "pageVolume" to "100",
             )
             Mockito.`when`(mathCategoryUnitReadCase.readAll()).thenReturn(getMathCategoryUnitVo())
 

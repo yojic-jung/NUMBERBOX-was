@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import
     MathResourceMockBeanConfig::class,
     MemberMockBeanConfig::class,
     TokenMockBeanConfig::class,
+    HwpMockBeanConfig::class,
 )
 @TestConfiguration
 class RestApiWebMvcMockBeanConfig

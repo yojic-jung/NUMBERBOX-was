@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":project:app-service"))
 
     implementation(libs.bundles.hwp.client.adapter)
+    testImplementation(libs.bundles.hwp.client.adapter.test)
 }
 
 tasks.withType<Test> {

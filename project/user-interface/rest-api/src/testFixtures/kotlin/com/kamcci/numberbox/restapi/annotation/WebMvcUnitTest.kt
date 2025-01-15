@@ -7,6 +7,7 @@ import com.kamcci.numberbox.restapi.controller.cs.CsErrorReportWriteController
 import com.kamcci.numberbox.restapi.controller.docs.MathDocsReadController
 import com.kamcci.numberbox.restapi.controller.docs.MathDocsUsageWriteController
 import com.kamcci.numberbox.restapi.controller.docs.MathDocsWriteController
+import com.kamcci.numberbox.restapi.controller.hwp.HwpConvertController
 import com.kamcci.numberbox.restapi.controller.math.*
 import com.kamcci.numberbox.restapi.controller.members.*
 import com.kamcci.numberbox.restapi.controller.resource.MathResourceMenuReadController
@@ -44,6 +45,7 @@ import org.springframework.test.context.ContextConfiguration
         MathResourceMenuReadController::class,
         MathResourceReadController::class,
         MathResourceWriteController::class,
+        HwpConvertController::class,
     ]
 )
 @ActiveProfiles("rest-api")

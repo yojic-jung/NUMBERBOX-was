@@ -85,13 +85,15 @@ orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcon
 
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
+
 hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter"]
+hwp-client-adapter-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
 
 storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]
 storage-adapter-test = ["mockito-kotlin", "spring-boot-starter-test"]
 
 boot-strap = ["spring-boot-starter", "spring-boot-devtools"]
-boot-strap-test = ["spring-boot-starter-test"]
+boot-strap-test = ["junit-jupiter"]
 
 ui-rest-api = ["spring-boot-starter", "spring-boot-starter-web", "spring-boot-starter-security", "spring-boot-starter-validation",
     "fasterxml-jackson", "poi-ooxml", "mapstruct"]

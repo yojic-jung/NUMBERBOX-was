@@ -32,7 +32,7 @@ subprojects {
     }
 
     tasks.jacocoTestReport {
-        onlyIf { project.name != "app-domain" } // app-domain 모듈 제외
+        onlyIf { project.name != "bootstrap" && project.name != "app-domain" } // bootstrap, app-domain 모듈 제외
         reports {
             html.required.set(true)
             xml.required.set(true)
