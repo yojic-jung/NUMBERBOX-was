@@ -62,13 +62,7 @@ sonarqube {
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         // Kotlin 커버리지 리포트 경로
 //        property("sonar.kotlin.coverage.reportPaths", "build/reports/kover/xml/report.xml")
-        property(
-            "sonar.coverage.exclusions", listOf(
-                "**/com/kamcci/numberbox/BootstrapApplication.class",
-                "**/com/kamcci/numberbox/BootstrapApplicationKt.class",
-                "**/com/kamcci/numberbox/app/domain/**"
-            )
-        )
+        property("sonar.coverage.exclusions", "**/com/kamcci/numberbox/app/domain/**")
 
     }
 }
