@@ -3,6 +3,7 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdConfirmDto
+import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdConfirmRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
@@ -29,7 +30,12 @@ class MemberWriteController(
         @UserEmail email: String,
         @RequestBody @Valid req: MemberPasswdUpdtRequest
     ): ResponseEntity<ResponseData<Any>> {
-        val updtDto = memberMapper.toPasswdUpdtDto(memberId, req)
+        val updtDto = MemberPasswdUpdtDto(
+            memberId = memberId,
+            previousPassword = req.previousPassword,
+            password = req.password,
+            passwordConfirm = req.passwordConfirm
+        )
         val isSuccess = memberWriteCase.updatePassword(updtDto)
 
         return ResponseUtil.ok(mapOf("isSuccess" to isSuccess))

@@ -237,4 +237,5 @@ class MemberSignUpControllerTest @Autowired constructor(
         assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
+
 }
