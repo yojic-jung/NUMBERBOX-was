@@ -14,7 +14,7 @@ class HwpSocketClientServiceTest {
 
     private val socketFactory: SocketFactory = getSocketFactory(RESPONSE_DATA)
 
-    private val socketErrFactory: SocketFactory = getErrorSocketFactory(RESPONSE_DATA)
+    private val socketErrFactory: SocketFactory = getErrorSocketFactory()
 
     @Test
     fun `jsonMsg to hwp 파일 변환 요청 - 성공`() {

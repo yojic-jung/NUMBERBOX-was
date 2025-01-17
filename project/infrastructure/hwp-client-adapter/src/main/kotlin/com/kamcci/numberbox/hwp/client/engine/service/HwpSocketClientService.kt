@@ -4,7 +4,10 @@ import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpRequestType
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import org.springframework.stereotype.Service
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -43,10 +46,10 @@ class HwpSocketClientService(
 
             // 3. hwp 서버에서 전송한 hwp 파일 반환
             return readSeverData(socketInp)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             // 예외 발생 시 처리
             e.printStackTrace()
-            throw IOException("hwp 서버 통신 중 오류 발생", e)
+            throw RuntimeException("hwp 서버 통신 중 오류 발생", e)
         } finally {
             socketInp.close()
             socketOup.close()
@@ -69,7 +72,6 @@ class HwpSocketClientService(
 
         try {
             // 1. 요청 타입 및 파일 크기 전송
-            val byteBuffer = ByteArray(BUFFER_SIZE)
             setRequestType(HwpRequestType.HwpToHTML, dataSize, socketOup)
 
             // 2. 확장자 전송
@@ -91,7 +93,7 @@ class HwpSocketClientService(
         } catch (e: Exception) {
             // 예외 발생 시 처리
             e.printStackTrace()
-            throw IOException("hwp 서버 통신 중 오류 발생", e)
+            throw RuntimeException("hwp 서버 통신 중 오류 발생", e)
         } finally {
             socketInp.close()
             socketOup.close()

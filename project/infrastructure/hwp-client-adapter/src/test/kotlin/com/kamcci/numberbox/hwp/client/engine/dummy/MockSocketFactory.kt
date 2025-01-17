@@ -1,9 +1,11 @@
 package com.kamcci.numberbox.hwp.client.engine.dummy
 
 import com.kamcci.numberbox.hwp.client.engine.service.SocketFactory
+import org.mockito.kotlin.mock
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.OutputStream
 import java.net.Socket
 
 object MockSocketFactory {
@@ -23,21 +25,39 @@ object MockSocketFactory {
         }
     }
 
-    fun getErrorSocketFactory(response: String): SocketFactory = object : SocketFactory {
+    fun getErrorSocketFactory(): SocketFactory = object : SocketFactory {
         override fun getSocket(): Socket {
             return StubSocket()
         }
 
         inner class StubSocket : Socket() {
-            private val outputStream = ByteArrayOutputStream()
-            private val inputStream = ByteArrayInputStream(response.toByteArray())
+            private val inputStream: InputStream = mock()
 
-            override fun getInputStream(): InputStream {
-                throw RuntimeException("")
+            override fun getInputStream() = MockInputStream()
+
+            override fun getOutputStream() = MockOutputStream()
+
+        }
+
+        inner class MockOutputStream : OutputStream() {
+            override fun write(b: Int) {
+                throw RuntimeException("모킹 에러")
             }
 
-            override fun getOutputStream() = outputStream
+            override fun write(b: ByteArray) {
+                throw RuntimeException("모킹 에러")
+            }
+        }
 
+        inner class MockInputStream : InputStream() {
+            override fun read(): Int {
+                throw RuntimeException("모킹 에러")
+            }
+
+            override fun read(b: ByteArray): Int {
+                throw RuntimeException("모킹 에러")
+
+            }
         }
     }
 }

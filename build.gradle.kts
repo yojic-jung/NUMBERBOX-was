@@ -64,8 +64,8 @@ sonarqube {
 //        property("sonar.kotlin.coverage.reportPaths", "build/reports/kover/xml/report.xml")
         property(
             "sonar.coverage.exclusions", listOf(
-                "**/com.kamcci.numberbox/BootstrapApplication.class",
-                "**/com.kamcci.numberbox/BootstrapApplicationKt.class",
+                "**/com/kamcci/numberbox/BootstrapApplication.class",
+                "**/com/kamcci/numberbox/BootstrapApplicationKt.class",
                 "**/com/kamcci/numberbox/app/domain/**"
             )
         )
