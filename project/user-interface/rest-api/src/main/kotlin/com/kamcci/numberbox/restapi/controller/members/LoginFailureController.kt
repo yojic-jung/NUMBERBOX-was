@@ -4,7 +4,7 @@ import com.kamcci.modules.auth.control.exception.BadAuthRequestException
 import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
-import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.domain.exception.BusinessErrCodeException
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import com.kamcci.numberbox.restapi.exception.code.RestApiErrCodeType
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
@@ -29,12 +29,20 @@ class LoginFailureController(
         return when (exception) {
             // 클라이언트의 로그인 요청 형식이 잘못됨
             is BadAuthRequestException -> {
-                ResponseUtil.error(exception, HttpStatus.BAD_REQUEST, request)
+                ResponseUtil.error(
+                    BusinessErrCodeException(RestApiErrCodeType.BAD_AUTH_REQUEST),
+                    HttpStatus.BAD_REQUEST,
+                    request
+                )
             }
 
             // 계정 존재하지 않음
             is UserNotFoundException -> {
-                ResponseUtil.error(exception, HttpStatus.UNAUTHORIZED, request)
+                ResponseUtil.error(
+                    BusinessErrCodeException(RestApiErrCodeType.USER_NOT_FOUND),
+                    HttpStatus.UNAUTHORIZED,
+                    request
+                )
             }
 
             // 비밀번호 불일치
@@ -42,11 +50,11 @@ class LoginFailureController(
                 // 과도한 비밀번호 불일치 요청시 계정 비활성화
                 val isDisabled: Boolean = memberLoginFailureUsecase.disableUserIfFailCountOver(userEmail)
                 if (isDisabled) ResponseUtil.error(
-                    BusinessInValidException(RestApiErrCodeType.DISABLE_USER, exception),
+                    BusinessErrCodeException(RestApiErrCodeType.DISABLE_USER),
                     HttpStatus.FORBIDDEN, request
                 )
                 else ResponseUtil.error(
-                    BusinessInValidException(RestApiErrCodeType.PASSWORD_MISS_MATCH, exception),
+                    BusinessErrCodeException(RestApiErrCodeType.PASSWORD_MISS_MATCH),
                     HttpStatus.FORBIDDEN, request
                 )
             }
@@ -56,12 +64,12 @@ class LoginFailureController(
                 // 계정 비활성화 유효시간이 `지난 경우 다시 활성화
                 val isAfterDisableTime: Boolean = memberLoginFailureUsecase.ableUserIfDisableTimeOver(userEmail)
                 if (isAfterDisableTime) ResponseUtil.error(
-                    BusinessInValidException(RestApiErrCodeType.DISABLE_TO_ABLE, exception),
+                    BusinessErrCodeException(RestApiErrCodeType.DISABLE_TO_ABLE),
                     HttpStatus.FORBIDDEN,
                     request
                 )
                 else ResponseUtil.error(
-                    BusinessInValidException(RestApiErrCodeType.DISABLE_USER, exception),
+                    BusinessErrCodeException(RestApiErrCodeType.DISABLE_USER),
                     HttpStatus.FORBIDDEN,
                     request
                 )
