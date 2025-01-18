@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.util.response
 
+import com.kamcci.numberbox.app.domain.exception.BusinessErrCodeException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -47,13 +48,17 @@ object ResponseUtil {
     private fun error(
         exception: Throwable,
         statusCode: Int,
-        requestUri: String
+        requestUri: String,
     ): ResponseEntity<Any> {
+        val errCode = if (exception is BusinessErrCodeException) exception.errType.errCode
+        else null
+
         val responseErrMsg =
             ResponseErrMsg(
                 status = statusCode,
                 message = exception.message.toString(),
-                path = requestUri
+                path = requestUri,
+                errCode = errCode
             )
         return ResponseEntity(responseErrMsg, HttpStatusCode.valueOf(statusCode))
     }

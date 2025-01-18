@@ -1,5 +1,7 @@
 package com.kamcci.numberbox.restapi.util.response
 
+import com.kamcci.numberbox.app.domain.exception.BusinessErrCodeException
+import com.kamcci.numberbox.restapi.exception.code.RestApiErrCodeType
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -59,5 +61,21 @@ class ResponseUtilTest {
 
         // then
         assertThat(errRes.statusCode).isEqualTo(sttsCode)
+    }
+
+    @Test
+    fun `에러 코드 포함한 응답 - 성공`() {
+        // given
+        val errType = RestApiErrCodeType.DISABLE_USER
+        val sttsCode = HttpStatus.BAD_REQUEST
+        val mockWebRequest: WebRequest = mock(WebRequest::class.java)
+        Mockito.`when`(mockWebRequest.contextPath).thenReturn("URI")
+
+        // when
+        val errRes = ResponseUtil.error(BusinessErrCodeException(errType), sttsCode, mockWebRequest)
+
+        // then
+        assertThat(errRes.statusCode).isEqualTo(sttsCode)
+        assertThat((errRes.body as ResponseErrMsg).errCode).isEqualTo(errType.errCode)
     }
 }

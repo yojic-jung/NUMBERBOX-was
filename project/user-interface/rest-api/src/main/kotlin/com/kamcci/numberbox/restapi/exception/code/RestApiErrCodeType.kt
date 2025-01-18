@@ -14,5 +14,4 @@ enum class RestApiErrCodeType(
     PASSWORD_MISS_MATCH("NB-REST-API-ERR-102", "이메일과 비밀번호를 다시 한번 입력해주시기 바랍니다.\n5회 이상 실패시 15분간 계정이 비활성화 됩니다."),
     BAD_AUTH_REQUEST("NB-AUTH-ERR-103", "잘못된 형식의 인증 요청입니다."),
     USER_NOT_FOUND("NB-AUTH-ERR-104", "해당 계정이 존재하지 않습니다."),
-
 }

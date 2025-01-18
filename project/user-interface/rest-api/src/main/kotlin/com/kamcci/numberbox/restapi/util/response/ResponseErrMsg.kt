@@ -9,6 +9,7 @@ data class ResponseErrMsg(
     val status: Int,
     val message: String,
     val path: String?,
+    val errCode: String?,
 ) {
     fun getTimestamp() = LocalDateTime.now()
 }
