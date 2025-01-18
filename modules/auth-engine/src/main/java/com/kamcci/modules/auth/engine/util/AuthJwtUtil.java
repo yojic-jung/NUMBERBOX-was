@@ -48,11 +48,11 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public String createRefreshToken() {
+    public String createRefreshToken(long validTime) {
         Claims claims = Jwts.claims();
         claims.put(authJwtProperty.domain(), true);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + authJwtProperty.refreshToken().validTime());
+        Date expiration = new Date(now.getTime() + validTime);
         return Jwts.builder().setClaims(claims).setIssuer(authJwtProperty.issuer())
                 .setSubject(authJwtProperty.refreshToken().subject()).setAudience(authJwtProperty.audience())
                 .setExpiration(expiration).setIssuedAt(now)

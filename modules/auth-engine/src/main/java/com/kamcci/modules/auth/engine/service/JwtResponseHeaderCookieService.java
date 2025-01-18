@@ -54,8 +54,12 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
+        // 토큰 생성
         String accessToken = authTokenUtil.createAccessToken(email, userId, roleList);
-        String refreshToken = authTokenUtil.createRefreshToken();
+
+        // 리프레시 토큰 유효기간 설정
+        long validTime = getRefreshTokenValidTime(request);
+        String refreshToken = authTokenUtil.createRefreshToken(validTime);
 
         // 로그인 성공 이벤트 발행
         publishLoginSuccessEvent(request, userId, refreshToken);
@@ -63,7 +67,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         if(response != null) {
             response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
             response.setHeader(ROLE_NAME, roleList.toString());
-            response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime));
         }
     }
 
@@ -83,27 +87,37 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
+        // 리프레시 토큰 유효기간 설정
+        long validTime = getRefreshTokenValidTime(request);
+
         if(response != null) {
             response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
             response.setHeader(ROLE_NAME, roleList.toString());
-            response.addCookie(makeRefreshTokenCookie(request, refreshToken));
+            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime));
         }
+    }
+
+    /**
+     * 리프레시 토큰 유효기간 반환
+     * <p>
+     * milleSecond 단위
+     */
+    private long getRefreshTokenValidTime(HttpServletRequest request) {
+        final String loginState = request.getParameter(LOGIN_KEEP_ATTR);
+
+        long validTime;
+        if(LOGIN_KEEP_VAL.equals(loginState)) {
+            validTime = authJwtProperty.refreshToken().keepValidTime();
+        } else {
+            validTime = authJwtProperty.refreshToken().validTime();
+        }
+        return validTime;
     }
 
     /**
      * 리프레시 토큰 쿠키 생성
      */
-    private Cookie makeRefreshTokenCookie(HttpServletRequest request, String refreshToken) {
-        // 리프레시 토큰 유효기간 설정
-        final String loginState = request.getParameter(LOGIN_KEEP_ATTR);
-
-        // 클라이언트가 로그인 상태 유지 요청한 경우
-        long validTime;
-        if(LOGIN_KEEP_VAL.equals(loginState)) {
-            validTime = authJwtProperty.refreshToken().keepValidTime() / 1000L;
-        } else {
-            validTime = authJwtProperty.refreshToken().validTime() / 1000L;
-        }
-        return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) validTime);
+    private Cookie makeRefreshTokenCookie(String refreshToken, long validTime) {
+        return AuthWebUtil.makeCookie(REFRESH_TOKEN_NAME, refreshToken, (int) (validTime / 1000L));
     }
 }

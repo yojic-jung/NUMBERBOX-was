@@ -68,7 +68,8 @@ class AuthJwtUtilTest {
     @Test
     void 리프레시_토큰_생성_성공() {
         // when
-        final String refreshToken = authJwtUtil.createRefreshToken();
+        long validTime = 10000000000L;
+        final String refreshToken = authJwtUtil.createRefreshToken(validTime);
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(refreshToken).getBody();
@@ -76,7 +77,7 @@ class AuthJwtUtilTest {
         assertThat(claims.getIssuer()).isEqualTo(authJwtProperty.issuer());
         assertThat(claims.getAudience()).isEqualTo(authJwtProperty.audience());
         assertThat(claims.getSubject()).isEqualTo(authJwtProperty.refreshToken().subject());
-        assertThat(claims.getExpiration()).isAfter(new Date());
+        assertThat(claims.getExpiration()).isBefore(new Date(new Date().getTime() + validTime));
         assertThat(claims.getIssuedAt()).isBeforeOrEqualTo(new Date());
     }
 

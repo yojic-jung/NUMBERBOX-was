@@ -8,7 +8,7 @@ public interface AuthTokenUtil {
 
     String createAccessToken(String oldAccessToken);
 
-    String createRefreshToken();
+    String createRefreshToken(long validTime);
 
     String getEmail(String token);
 
