@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.filter;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
@@ -11,6 +12,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_STANDARD_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,25 +58,35 @@ class JwtRequestAuthFilterTest {
 
     @Test
     void jwt토큰_필터_동작() {
+        // given
         request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
+        JwtAuthenticationToken auth = new JwtAuthenticationToken(null, null, null);
+        Map<String, Object> newDetails = new HashMap<>();
+        newDetails.put(UserId.ATTR_NAME, UUID.randomUUID());
+        auth.setDetails(newDetails);
+        when(authenticationManager.authenticate(any())).thenReturn(auth);
 
         // when
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(authenticationManager).authenticate(any());
+        verify(tokenResponseService).responseAuthToken(any(), any());
     }
 
     @Test
     void jwt토큰_필터_동작_request_userId_setting() {
         request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
-        when(authenticationManager.authenticate(any())).thenReturn(new JwtAuthenticationToken(null, null, null));
+        JwtAuthenticationToken auth = new JwtAuthenticationToken(null, null, null);
+        Map<String, Object> newDetails = new HashMap<>();
+        newDetails.put(UserId.ATTR_NAME, UUID.randomUUID());
+        auth.setDetails(newDetails);
+        when(authenticationManager.authenticate(any())).thenReturn(auth);
 
         // when
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        verify(authenticationManager).authenticate(any());
+        verify(tokenResponseService).responseAuthToken(any(), any());
     }
 
     @Test

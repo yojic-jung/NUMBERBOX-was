@@ -44,18 +44,21 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
 
         // 액세스 토큰 재발급 및 응답
         String accessToken = authTokenUtil.reCreateAccessToken(oldAccessToken);
-        if(response != null) response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+        if(response != null) {
+            response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
 
-        if(oldRefreshToken != null && response != null) {
             // 리프레시 토큰 재발급 및 응답
-            String refreshToken = authTokenUtil.reCreateRefreshToken(oldRefreshToken);
-            long validTime = authTokenUtil.getValidTime(oldRefreshToken);
-            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime + COOKIE_AGE));
+            if(oldRefreshToken != null) {
+                String refreshToken = authTokenUtil.reCreateRefreshToken(oldRefreshToken);
+                long validTime = authTokenUtil.getValidTime(oldRefreshToken);
+                response.addCookie(makeRefreshTokenCookie(refreshToken, validTime + COOKIE_AGE));
 
-            // 재발급 이벤트 발행
-            UUID userId = authTokenUtil.getUserId(accessToken);
-            eventPublisher.publishEvent(new LoginSuccessEvent(userId, refreshToken, oldRefreshToken));
+                // 재발급 이벤트 발행
+                UUID userId = authTokenUtil.getUserId(accessToken);
+                eventPublisher.publishEvent(new LoginSuccessEvent(userId, refreshToken, oldRefreshToken));
+            }
         }
+
     }
 
     /**

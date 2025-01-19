@@ -2,6 +2,7 @@ package com.kamcci.modules.logging.engine.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kamcci.modules.logging.engine.config.LoggingTargetProperty
+import com.kamcci.modules.logging.engine.util.IPAddressUtil
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +38,7 @@ class HttpRequestLoggingServiceTest {
     fun `Request 로깅 제외 대상 판별 - 성공(로깅 제외 uri 미설정)`() {
         // given
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), null, null), ObjectMapper())
+            HttpRequestLoggingService(IPAddressUtil(), LoggingTargetProperty(listOf(""), null, null), ObjectMapper())
 
         // when
         val loggingDto = loggingService.logging()
@@ -52,7 +53,11 @@ class HttpRequestLoggingServiceTest {
         // given
         val exceptUri = listOf(URI.reversed()) // 로깅 제외 uri 설정
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), exceptUri, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), exceptUri, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -67,7 +72,11 @@ class HttpRequestLoggingServiceTest {
         // given
         val exceptUri = listOf(URI) // 로깅 제외 uri 설정
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), exceptUri, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), exceptUri, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -80,7 +89,11 @@ class HttpRequestLoggingServiceTest {
     fun `Request 정보 로깅 - 실패(userId 미존재)`() {
         // given
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), null, listOf("")), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), null, listOf("")),
+                ObjectMapper()
+            )
         // userId 미존재
         mockRequest.setAttribute("userId", null)
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
@@ -98,7 +111,11 @@ class HttpRequestLoggingServiceTest {
         // given
         val bodyExceptUri = listOf("")
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), bodyExceptUri, bodyExceptUri), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), bodyExceptUri, bodyExceptUri),
+                ObjectMapper()
+            )
         mockRequest.removeHeader("Content-Type")
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
 
@@ -114,7 +131,11 @@ class HttpRequestLoggingServiceTest {
         // given
         val bodyExceptUri = listOf("")
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), null, bodyExceptUri), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), null, bodyExceptUri),
+                ObjectMapper()
+            )
         mockRequest.removeHeader("Content-Type")
         mockRequest.addHeader("Content-Type", "")
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
@@ -131,7 +152,11 @@ class HttpRequestLoggingServiceTest {
         // given
         val bodyExceptUri = listOf(URI)
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(""), null, bodyExceptUri), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(""), null, bodyExceptUri),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -146,7 +171,11 @@ class HttpRequestLoggingServiceTest {
         val bodyExceptUri = listOf("random")
         val contentType = "multipart/form"
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(contentType), null, bodyExceptUri), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(contentType), null, bodyExceptUri),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -162,7 +191,11 @@ class HttpRequestLoggingServiceTest {
         mockRequest.method = "GET"
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(CONTENT_TYPE), null, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(CONTENT_TYPE), null, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -180,7 +213,11 @@ class HttpRequestLoggingServiceTest {
         mockRequest.setParameter(key, value)
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(CONTENT_TYPE), null, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(CONTENT_TYPE), null, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -201,7 +238,11 @@ class HttpRequestLoggingServiceTest {
         wrappedRequest.inputStream.readBytes()
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(wrappedRequest))
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(CONTENT_TYPE), null, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(CONTENT_TYPE), null, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()
@@ -216,7 +257,11 @@ class HttpRequestLoggingServiceTest {
         mockRequest.method = "HEAD"
         RequestContextHolder.setRequestAttributes(ServletRequestAttributes(ContentCachingRequestWrapper(mockRequest)))
         val loggingService =
-            HttpRequestLoggingService(LoggingTargetProperty(listOf(CONTENT_TYPE), null, null), ObjectMapper())
+            HttpRequestLoggingService(
+                IPAddressUtil(),
+                LoggingTargetProperty(listOf(CONTENT_TYPE), null, null),
+                ObjectMapper()
+            )
 
         // when
         val loggingDto = loggingService.logging()

@@ -1,17 +1,16 @@
 package com.kamcci.modules.auth.engine.handler;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.enumeration.UserRoleType;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -29,7 +28,11 @@ class LoginSuccessHandlerTest {
         // given
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(UserRoleType.USER.name()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken("", "", authorityList);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("", "",
+                authorityList);
+        final Map<String, Object> details = new HashMap<>();
+        details.put(UserId.ATTR_NAME, UUID.randomUUID());
+        authentication.setDetails(details);
 
         // when
         loginSuccessHandler.onAuthenticationSuccess(request, response, authentication);

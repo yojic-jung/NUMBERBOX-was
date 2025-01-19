@@ -6,6 +6,7 @@ import com.kamcci.modules.logging.control.service.RequestLoggingService
 import com.kamcci.modules.logging.control.service.ResponseLoggingService
 import com.kamcci.modules.logging.engine.service.HttpRequestLoggingService
 import com.kamcci.modules.logging.engine.service.HttpResponseLoggingService
+import com.kamcci.modules.logging.engine.util.IPAddressUtil
 import org.aspectj.lang.ProceedingJoinPoint
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,7 +22,7 @@ class ClientLoggingAspectTest {
 
     @Test
     fun `request 로깅 - 실패`() {
-        val reqLoggingService = HttpRequestLoggingService(mock(), mock())
+        val reqLoggingService = HttpRequestLoggingService(IPAddressUtil(), mock(), mock())
         val resLoggingService: ResponseLoggingService = mock()
         val eventPublisher = MockEventPublisher()
         val resLoggingDto = HttpResponseLoggingDto(200)
@@ -54,7 +55,7 @@ class ClientLoggingAspectTest {
 
     @Test
     fun `request, reponse 로깅 - 실패`() {
-        val reqLoggingService = HttpRequestLoggingService(mock(), mock())
+        val reqLoggingService = HttpRequestLoggingService(IPAddressUtil(), mock(), mock())
         val resLoggingService = HttpResponseLoggingService()
         val eventPublisher = MockEventPublisher()
 

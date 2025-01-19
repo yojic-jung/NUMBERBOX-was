@@ -2,11 +2,11 @@ package com.kamcci.modules.logging.engine.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
+import com.kamcci.modules.logging.control.service.IPAddressService
 import com.kamcci.modules.logging.control.service.RequestLoggingService
 import com.kamcci.modules.logging.engine.config.LoggingTargetProperty
 import com.kamcci.modules.logging.engine.util.BrowserOsUtil.browserLogging
 import com.kamcci.modules.logging.engine.util.BrowserOsUtil.osLogging
-import com.kamcci.modules.logging.engine.util.IPAddressUtil.getPublicIPAddress
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
@@ -20,6 +20,7 @@ import java.util.*
  */
 @Service
 class HttpRequestLoggingService(
+    private val ipAddressService: IPAddressService,
     private val loggingProperty: LoggingTargetProperty,
     private val objectMapper: ObjectMapper,
 ) : RequestLoggingService {
@@ -49,7 +50,7 @@ class HttpRequestLoggingService(
         val method = request.method
         val os = osLogging(request.getHeader("sec-ch-ua-platform"))
         val browser = browserLogging(request.getHeader("user-agent"), os)
-        val clientIp = getPublicIPAddress(request)
+        val clientIp = ipAddressService.getPublicIPAddress()
 
         // request Body 로깅 대상만 로깅
         val reqBody = if (isBodyLogging(request)) {

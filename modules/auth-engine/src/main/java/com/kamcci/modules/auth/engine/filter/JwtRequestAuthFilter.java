@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.filter;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
@@ -49,12 +50,9 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
                 Authentication authentication = authenticationManager.authenticate(authRequest);
 
                 // request 및 SecurityContextHolder에 인증정보 저장
-                String oldRefreshToken = null;
-                if(authentication != null) {
-                    Map<String, Object> newDetails = (Map<String, Object>) authentication.getDetails();
-                    request.setAttribute("userId", newDetails.get("userId"));
-                    oldRefreshToken = (String) newDetails.get("oldRefreshToken");
-                }
+                Map<String, Object> newDetails = (Map<String, Object>) authentication.getDetails();
+                request.setAttribute(UserId.ATTR_NAME, newDetails.get(UserId.ATTR_NAME));
+                String oldRefreshToken = (String) newDetails.get("oldRefreshToken");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 successfulAuthentication(accessToken, oldRefreshToken);
             }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.dto.AuthRequest;
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
@@ -92,11 +93,11 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
         if(authResult != null) {
             Map<String, Object> details = (Map<String, Object>) authResult.getDetails();
-            request.setAttribute("userId", details.get("userId"));
+            request.setAttribute(UserId.ATTR_NAME, details.get(UserId.ATTR_NAME));
         }
+        authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
     // AuthenticationException 타입 예외 발생시에만 실행됨

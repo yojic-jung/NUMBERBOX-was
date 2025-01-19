@@ -61,9 +61,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
 
     @Override
     public String reCreateRefreshToken(String oldRefreshToken) {
-        Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(oldRefreshToken)
-                .getBody();
-        long validTime = claims.getExpiration().getTime() - claims.getIssuedAt().getTime();
+        long validTime = getValidTime(oldRefreshToken);
         return createRefreshToken(validTime);
     }
 
@@ -94,8 +92,16 @@ public class AuthJwtUtil implements AuthTokenUtil {
 
     @Override
     public long getValidTime(String token) {
-        Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody();
-        return claims.getExpiration().getTime() - claims.getIssuedAt().getTime();
+        Claims claims = null;
+        try {
+            claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody();
+        } catch(ExpiredJwtException e) {
+            // 만료된 토큰이지만 Claims를 추출
+            claims = e.getClaims();
+        }
+        Date expire = claims.getExpiration();
+        Date issued = claims.getIssuedAt();
+        return expire.getTime() - issued.getTime();
     }
 
     @Override
@@ -113,10 +119,11 @@ public class AuthJwtUtil implements AuthTokenUtil {
      * 토큰 유효성 검사
      */
     @Override
-    public void checkValidToken(String jwtToken) {
+    public void checkValidToken(String jwtToken, boolean checkExpire) {
         try {
             Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(jwtToken);
         } catch(ExpiredJwtException e) {
+            if(checkExpire) throw new TokenExpirationException();
         } catch(Exception e) {
             throw new JwtInvalidException();
         }
@@ -125,7 +132,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
     @Override
     public boolean isExpiredToken(String jwtToken) {
         try {
-            checkValidToken(jwtToken);
+            checkValidToken(jwtToken, true);
             return false;
         } catch(TokenExpirationException e) {
             return true;

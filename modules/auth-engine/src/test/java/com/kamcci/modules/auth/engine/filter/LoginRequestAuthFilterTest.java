@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.filter;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
@@ -14,8 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.kamcci.modules.auth.config.AuthConfigFixture.getAuthLoginUrlProperty;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -114,6 +114,10 @@ class LoginRequestAuthFilterTest {
     void 로그인_성공_핸들러_auth_정보_전달_호출() throws ServletException, IOException {
         // given
         JwtAuthenticationToken authResult = new JwtAuthenticationToken(null, null, null);
+        Map<String, Object> newDetails = new HashMap<>();
+        newDetails.put(UserId.ATTR_NAME, UUID.randomUUID());
+        authResult.setDetails(newDetails);
+        when(authenticationManager.authenticate(any())).thenReturn(authResult);
         loginRequestAuthFilter.successfulAuthentication(request, response, null, authResult);
 
         // then

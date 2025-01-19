@@ -31,8 +31,7 @@ public class UserDetailArgumentResolver implements HandlerMethodArgumentResolver
     @Nullable
     @Override
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws
-            Exception {
+                                  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean hasUserIdAnnot = parameter.getParameterAnnotation(UserId.class) != null;
@@ -42,7 +41,7 @@ public class UserDetailArgumentResolver implements HandlerMethodArgumentResolver
         if(hasUserIdAnnot) {
             // @UserId 처리
             Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
-            return isAnonymousUser ? 0 : UUID.fromString(details.get("userId").toString());
+            return isAnonymousUser ? 0 : UUID.fromString(details.get(UserId.ATTR_NAME).toString());
         } else if(hasUserEmailAnnot) {
             // @UserEmail 처리
             return isAnonymousUser ? "" : authentication.getPrincipal().toString();
@@ -56,11 +55,8 @@ public class UserDetailArgumentResolver implements HandlerMethodArgumentResolver
 
                 List<UserRoleType> roleTypeList = new ArrayList<>();
                 for(String role : roles) {
-                    for(UserRoleType roleType : UserRoleType.values()) {
-                        if(roleType.name().equals(role)) {
-                            roleTypeList.add(roleType);
-                        }
-                    }
+                    UserRoleType roleType = UserRoleType.valueOf(role);
+                    roleTypeList.add(roleType);
                 }
                 return roleTypeList;
             }

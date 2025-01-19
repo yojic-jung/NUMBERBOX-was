@@ -12,5 +12,5 @@ public interface JwtRequestUserDetailService {
     UUID loadUserIdByRefreshToken(String token);
 
     // 사용자 리프레시 토큰 재발급 가능 여부 결정
-    boolean canReCreateRefreshToken(UUID userId, String clientIp);
+    boolean canReCreateRefreshToken(UUID userId);
 }

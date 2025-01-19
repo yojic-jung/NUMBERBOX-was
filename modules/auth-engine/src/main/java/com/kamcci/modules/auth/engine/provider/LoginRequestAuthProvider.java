@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.provider;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.dto.AuthUserDetail;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -65,7 +66,7 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
                         , serverUserInfo.getAuthorities());
 
         Map<String, UUID> details = new HashMap<>();
-        details.put("userId", serverUserInfo.getUserId());
+        details.put(UserId.ATTR_NAME, serverUserInfo.getUserId());
         token.setDetails(details);
         return token;
     }

@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.handler;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.dto.AuthResponse;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
 import com.kamcci.modules.auth.engine.util.AuthWebUtil;
@@ -35,7 +36,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) {
         final String username = (String) authentication.getPrincipal();
         final Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
-        final UUID userId = (UUID) details.get("userId");
+        final UUID userId = (UUID) details.get(UserId.ATTR_NAME);
 
         // 권한 가져오기
         final List<String> roleList = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)

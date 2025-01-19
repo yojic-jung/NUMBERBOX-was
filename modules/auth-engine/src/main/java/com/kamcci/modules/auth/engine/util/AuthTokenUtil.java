@@ -31,7 +31,7 @@ public interface AuthTokenUtil {
     List<String> getRoles(String accessToken);
 
     // 토큰 유효성 검사 - 유효하지 않은 경우 exception 발생
-    void checkValidToken(String jwtToken);
+    void checkValidToken(String jwtToken, boolean checkExpire);
 
     // 토큰 만료여부 체크 - 유효한 토큰만 가능함
     boolean isExpiredToken(String jwtToken);

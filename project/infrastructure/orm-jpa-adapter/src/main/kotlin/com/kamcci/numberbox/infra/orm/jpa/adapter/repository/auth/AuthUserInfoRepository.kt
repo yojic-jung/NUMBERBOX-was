@@ -4,6 +4,7 @@ import com.kamcci.modules.auth.control.dto.AuthUserInfo
 import com.kamcci.modules.auth.control.dto.AuthUserRole
 import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService
+import com.kamcci.modules.logging.control.service.IPAddressService
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.log.QLogClientApiEntity.logClientApiEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
@@ -14,6 +15,7 @@ import java.util.*
 
 @Repository
 class AuthUserInfoRepository(
+    private val ipAddressService: IPAddressService,
     private val memberJpaRepository: MemberJpaRepository,
 ) : LoginRequestUserDetailService, JwtRequestUserDetailService, BaseRepository() {
 
@@ -33,7 +35,8 @@ class AuthUserInfoRepository(
             .fetchFirst()
     }
 
-    override fun canReCreateRefreshToken(userId: UUID, clientIp: String): Boolean {
+    override fun canReCreateRefreshToken(userId: UUID): Boolean {
+        val clientIp = ipAddressService.getPublicIPAddress()
         return queryFactory
             .selectOne()
             .from(logClientApiEntity)

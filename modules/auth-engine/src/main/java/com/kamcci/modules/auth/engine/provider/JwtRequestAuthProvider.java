@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.provider;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.exception.RefreshTokenNullException;
 import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService;
 import com.kamcci.modules.auth.engine.dto.AuthUserDetail;
@@ -7,17 +8,12 @@ import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.TokenExpirationException;
 import com.kamcci.modules.auth.engine.exception.TokenOwnerNotMatchingException;
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
-import com.kamcci.modules.auth.engine.util.IPAddressUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 
@@ -38,23 +34,20 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) {
         // 클라이언트 요청에 포함된 토큰 추출
         String accessToken = (String) authentication.getPrincipal();
-        Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
-        String refreshToken = (String) details.get("refreshToken");
 
         // check1. refreshToken 존재 여부 파악(accessToken은 존재함, 필터가 액세스 토큰 있는 경우에만 실행)
+        String refreshToken = null;
+        Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
+        if(details != null) refreshToken = (String) details.get("refreshToken");
         if(refreshToken == null) throw new RefreshTokenNullException();
 
         // check2. 토큰 유효성 검사
-        authTokenUtil.checkValidToken(accessToken);
+        authTokenUtil.checkValidToken(accessToken, false);
         boolean reCreateRefreshToken = false;
         boolean isExpire = authTokenUtil.isExpiredToken(refreshToken);
         if(isExpire) {
             // 리프로시 토큰 만료된 경우 ip 체크하여 재발급
-            final UUID userId = authTokenUtil.getUserId(accessToken);
-            RequestAttributes attr = RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = ((ServletRequestAttributes) attr).getRequest();
-            String clientIp = IPAddressUtil.getPublicIPAddress(request);
-            reCreateRefreshToken = jwtRequestUserDetailService.canReCreateRefreshToken(userId, clientIp);
+            reCreateRefreshToken = canReCreateRefreshToken(accessToken);
             if(!reCreateRefreshToken) throw new TokenExpirationException();
         }
 
@@ -71,6 +64,14 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
 
         // Authentication 객체 반환
         return makeAuthentication(user, reCreateRefreshToken ? refreshToken : null);
+    }
+
+    /**
+     * accessToken 정보로 부터 리프레시 토큰 재발급 가능 여부 판별
+     */
+    private boolean canReCreateRefreshToken(String accessToken) {
+        final UUID userId = authTokenUtil.getUserId(accessToken);
+        return jwtRequestUserDetailService.canReCreateRefreshToken(userId);
     }
 
     /**
@@ -93,8 +94,8 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getUsername(), "",
                 authorities);
         Map<String, Object> details = new HashMap<>();
-        details.put("userId", userId);
-        details.put("oldRefreshToken", oldRefreshToken);
+        details.put(UserId.ATTR_NAME, userId);
+        if(oldRefreshToken != null) details.put("oldRefreshToken", oldRefreshToken);
         auth.setDetails(details);
         return auth;
     }

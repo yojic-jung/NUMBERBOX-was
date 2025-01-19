@@ -68,7 +68,7 @@ class AuthJwtUtilTest {
     @Test
     void 리프레시_토큰_생성_성공() {
         // when
-        long validTime = 10000000000L;
+        final long validTime = 10000L;
         final String refreshToken = authJwtUtil.createRefreshToken(validTime);
 
         // then
@@ -79,6 +79,21 @@ class AuthJwtUtilTest {
         assertThat(claims.getSubject()).isEqualTo(authJwtProperty.refreshToken().subject());
         assertThat(claims.getExpiration()).isBefore(new Date(new Date().getTime() + validTime));
         assertThat(claims.getIssuedAt()).isBeforeOrEqualTo(new Date());
+    }
+
+    @Test
+    void 리프레시_토큰_재발급_성공() {
+        // given
+        String expireToken = "eyJhbGciOiJIUzI1NiJ9" +
+                ".eyJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJleHAiOjE3MzcyNTU3NzAsImlhdCI6MTczNzI1NTc2MH0.wMf4Ws6P9ZIY1ZX9KvUBa7yLLBBzM2UnVbosLkzQbpw";
+
+        // when
+        final String refreshToken = authJwtUtil.reCreateRefreshToken(expireToken);
+
+        // then
+        long expectedValidTime = authJwtUtil.getValidTime(expireToken);
+        long actualValidTime = authJwtUtil.getValidTime(refreshToken);
+        assertThat(actualValidTime).isEqualTo(expectedValidTime);
     }
 
     @Test
@@ -132,6 +147,35 @@ class AuthJwtUtilTest {
     }
 
     @Test
+    void 만료된_토큰으로_유효기간_추출() {
+        // given
+        long expectedValidTime = 10000L;
+        String expireToken = "eyJhbGciOiJIUzI1NiJ9" + // validTime = 1000l인 토큰
+                ".eyJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJleHAiOjE3MzcyNTU3NzAsImlhdCI6MTczNzI1NTc2MH0.wMf4Ws6P9ZIY1ZX9KvUBa7yLLBBzM2UnVbosLkzQbpw";
+
+        // when
+        final String refreshToken = authJwtUtil.reCreateRefreshToken(expireToken);
+
+        // then
+        long actualValidTime = authJwtUtil.getValidTime(refreshToken);
+        assertThat(actualValidTime).isEqualTo(expectedValidTime);
+    }
+
+    @Test
+    void 만료되지_않은_토큰으로_유효기간_추출() {
+        // given
+        final long validTime = 1000000L;
+        final String notExpireToken = authJwtUtil.createRefreshToken(validTime);
+
+        // when
+        final String refreshToken = authJwtUtil.reCreateRefreshToken(notExpireToken);
+
+        // then
+        long actualValidTime = authJwtUtil.getValidTime(refreshToken);
+        assertThat(actualValidTime).isEqualTo(validTime);
+    }
+
+    @Test
     void 만료된_토큰으로부터_권한_추출_성공() {
         // given
         final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
@@ -166,7 +210,7 @@ class AuthJwtUtilTest {
 
         // when
         assertDoesNotThrow(() -> {
-            authJwtUtil.checkValidToken(accessToken);
+            authJwtUtil.checkValidToken(accessToken, false);
         });
     }
 
@@ -178,7 +222,19 @@ class AuthJwtUtilTest {
 
         // when & then
         assertThrows(TokenExpirationException.class, () -> {
-            authJwtUtil.checkValidToken(accessToken);
+            authJwtUtil.checkValidToken(accessToken, true);
+        });
+    }
+
+    @Test
+    void 토큰_만료__유효성_검사_제외_성공() {
+        // given - 만료된 토큰
+        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
+                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+
+        // when & then
+        assertDoesNotThrow(() -> {
+            authJwtUtil.checkValidToken(accessToken, false);
         });
     }
 
@@ -190,7 +246,32 @@ class AuthJwtUtilTest {
 
         // when & then
         assertThrows(Exception.class, () -> {
-            authJwtUtil.checkValidToken(accessToken);
+            authJwtUtil.checkValidToken(accessToken, false);
         });
+    }
+
+    @Test
+    void 만료된_토큰_체크_성공() {
+        // given
+        final String expireToken = "eyJhbGciOiJIUzI1NiJ9" +
+                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+
+        // when
+        boolean isExpire = authJwtUtil.isExpiredToken(expireToken);
+
+        // then
+        assertThat(isExpire).isTrue();
+    }
+
+    @Test
+    void 만료되지_않은_토큰_체크_성공() {
+        // given
+        final long validTime = 1000000L;
+        final String notExpireToken = authJwtUtil.createRefreshToken(validTime);
+        // when
+        boolean isExpire = authJwtUtil.isExpiredToken(notExpireToken);
+
+        // then
+        assertThat(isExpire).isFalse();
     }
 }

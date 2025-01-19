@@ -1,5 +1,6 @@
 package com.kamcci.modules.auth.engine.provider;
 
+import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.dto.AuthUserDetail;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Map;
 
 import static com.kamcci.modules.auth.user.AuthUserFixture.getAuthUserDetail;
 import static com.kamcci.modules.auth.user.AuthUserFixture.getDisableAuthUserDetail;
@@ -70,7 +73,8 @@ class LoginRequestAuthProviderTest {
         Authentication actualAuth = loginRequestAuthProvider.authenticate(authentication);
 
         // then
-        assertThat(actualAuth.getDetails()).isEqualTo(userDetail.getUserId());
+        Map<String, Object> details = (Map<String, Object>) actualAuth.getDetails();
+        assertThat(details.get(UserId.ATTR_NAME)).isEqualTo(userDetail.getUserId());
     }
 
     @Test
