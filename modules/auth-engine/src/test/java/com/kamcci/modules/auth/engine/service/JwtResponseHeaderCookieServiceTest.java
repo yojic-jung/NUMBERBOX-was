@@ -23,6 +23,7 @@ class JwtResponseHeaderCookieServiceTest {
             new JwtResponseHeaderCookieService(authTokenUtil, mock(), authJwtProperty);
     // 테스트 데이터
     String oldAccessToken = "accessToken";
+    String oldRefreshToken = "refreshToken";
     HttpServletRequest request = mock();
     HttpServletResponse response = mock();
     ServletRequestAttributes attributes = mock();
@@ -32,10 +33,10 @@ class JwtResponseHeaderCookieServiceTest {
         // given
         RequestContextHolder.setRequestAttributes(attributes);
         when(attributes.getResponse()).thenReturn(response);
-        when(authTokenUtil.createAccessToken(oldAccessToken)).thenReturn("123");
+        when(authTokenUtil.reCreateAccessToken(oldAccessToken)).thenReturn("123");
 
         // when
-        jwtResponseHeaderCookieService.refreshAccessToken(oldAccessToken);
+        jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, null);
 
         // then
         verify(response).setHeader(any(), any());
@@ -48,10 +49,39 @@ class JwtResponseHeaderCookieServiceTest {
         when(attributes.getResponse()).thenReturn(null);
 
         // when
-        jwtResponseHeaderCookieService.refreshAccessToken(oldAccessToken);
+        jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, null);
 
         // then
         verify(response, never()).setHeader(any(), any());
+    }
+
+    @Test
+    void 리프레시토큰_초기화_성공() {
+        // given
+        RequestContextHolder.setRequestAttributes(attributes);
+        when(attributes.getResponse()).thenReturn(response);
+        when(authTokenUtil.reCreateAccessToken(oldAccessToken)).thenReturn("123");
+        when(authTokenUtil.reCreateRefreshToken(oldRefreshToken)).thenReturn("123");
+
+        // when
+        jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, oldRefreshToken);
+
+        // then
+        verify(authTokenUtil).getUserId(any());
+    }
+
+    @Test
+    void 기존_리프레시_토큰_미존재로_초기화_실패() {
+        // given
+        RequestContextHolder.setRequestAttributes(attributes);
+        when(attributes.getResponse()).thenReturn(response);
+        when(authTokenUtil.reCreateAccessToken(oldAccessToken)).thenReturn("123");
+
+        // when
+        jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, null);
+
+        // then
+        verify(authTokenUtil, never()).reCreateRefreshToken(oldRefreshToken);
     }
 
     @Test

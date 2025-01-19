@@ -11,6 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * Def. 인증 처리
  * - 사용자 요청 인증 정보와 서버에 저장된 인증 정보를 비교하여 인증 처리를 진행함
@@ -20,9 +24,7 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginRequestAuthProvider(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
+    public LoginRequestAuthProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -42,25 +44,29 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
      */
     private Authentication takeValidAuthentication(Authentication clientUserInfo, AuthUserDetail serverUserInfo) {
         // check1. 계정 존재 여부 체크
-        if (serverUserInfo == null){
+        if(serverUserInfo == null) {
             throw new UsernameNotFoundException("해당 계정이 없습니다.");
         }
 
         // check2. password 같은지 비교
         final String password = serverUserInfo.getPassword();
-        if (!passwordEncoder.matches((String) clientUserInfo.getCredentials(), password)){
+        if(!passwordEncoder.matches((String) clientUserInfo.getCredentials(), password)) {
             throw new BadCredentialsException("비밀번호가 일치 하지 않습니다.");
         }
 
         // check3. 활성 계정 체크
-        if (!serverUserInfo.isEnabled()){
+        if(!serverUserInfo.isEnabled()) {
             throw new DisabledException("비활성 계정입니다.");
         }
 
         // Authentication 반환 (authorities 주입하면 authenticated 속성 자동으로 true 설정됨)
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(serverUserInfo.getUsername(), clientUserInfo.getCredentials(), serverUserInfo.getAuthorities());
-        token.setDetails(serverUserInfo.getUserId());
+                new UsernamePasswordAuthenticationToken(serverUserInfo.getUsername(), clientUserInfo.getCredentials()
+                        , serverUserInfo.getAuthorities());
+
+        Map<String, UUID> details = new HashMap<>();
+        details.put("userId", serverUserInfo.getUserId());
+        token.setDetails(details);
         return token;
     }
 

@@ -1,6 +1,6 @@
 package com.kamcci.modules.logging.engine.util
 
-import com.kamcci.modules.logging.control.constant.ProxyIPHeaderType
+import com.kamcci.modules.logging.engine.util.IPAddressUtil.ProxyIPHeaderType
 import com.kamcci.modules.logging.engine.util.IPAddressUtil.getIPAddress
 import com.kamcci.modules.logging.engine.util.IPAddressUtil.getPublicIPAddress
 import jakarta.servlet.http.HttpServletRequest

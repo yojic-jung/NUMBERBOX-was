@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Def. 로그인 요청 인증 필터
@@ -92,7 +93,10 @@ public class LoginRequestAuthFilter extends AbstractAuthenticationProcessingFilt
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
-        if(authResult != null) request.setAttribute("userId", authResult.getDetails());
+        if(authResult != null) {
+            Map<String, Object> details = (Map<String, Object>) authResult.getDetails();
+            request.setAttribute("userId", details.get("userId"));
+        }
     }
 
     // AuthenticationException 타입 예외 발생시에만 실행됨

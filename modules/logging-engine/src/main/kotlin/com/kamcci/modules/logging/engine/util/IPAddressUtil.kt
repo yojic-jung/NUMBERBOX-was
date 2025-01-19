@@ -1,6 +1,5 @@
 package com.kamcci.modules.logging.engine.util
 
-import com.kamcci.modules.logging.control.constant.ProxyIPHeaderType
 import jakarta.servlet.http.HttpServletRequest
 
 object IPAddressUtil {
@@ -14,4 +13,18 @@ object IPAddressUtil {
     }
 
     fun getPublicIPAddress(req: HttpServletRequest) = getIPAddress(req).split(",").first().trim()
+
+    enum class ProxyIPHeaderType(val attrName: String) {
+        XForwardedFor("X-Forwarded-For"),
+        ProxyClientIP("Proxy-Client-IP"),
+        WLProxyClientIP("WL-Proxy-Client-IP"),
+        HttpClientIP("HTTP_CLIENT_IP"),
+        HttpXForwardedFor("HTTP_X_FORWARDED_FOR"),
+        HttpXForwarded("HTTP_X_FORWARDED"),
+        HttpXClusterClientIP("HTTP_X_CLUSTER_CLIENT_IP"),
+        HttpForwardedFor("HTTP_FORWARDED_FOR"),
+        HttpForwarded("HTTP_FORWARDED"),
+        HttpVia("HTTP_VIA"),
+        RemoteAddr("REMOTE_ADDR"),
+    }
 }

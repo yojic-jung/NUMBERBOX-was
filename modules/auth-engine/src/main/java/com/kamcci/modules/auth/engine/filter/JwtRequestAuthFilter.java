@@ -15,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_STANDARD_PREFIX;
 
 public class JwtRequestAuthFilter extends OncePerRequestFilter {
@@ -38,15 +41,22 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
 
                 // 클라이언트 인증 객체 생성
                 JwtAuthenticationToken authRequest = new JwtAuthenticationToken(accessToken, null, null);
-                authRequest.setDetails(refreshToken);
+                Map<String, String> details = new HashMap<>();
+                details.put("refreshToken", refreshToken);
+                authRequest.setDetails(details);
 
                 // 인증 요청
                 Authentication authentication = authenticationManager.authenticate(authRequest);
 
                 // request 및 SecurityContextHolder에 인증정보 저장
-                if(authentication != null) request.setAttribute("userId", authentication.getDetails());
+                String oldRefreshToken = null;
+                if(authentication != null) {
+                    Map<String, Object> newDetails = (Map<String, Object>) authentication.getDetails();
+                    request.setAttribute("userId", newDetails.get("userId"));
+                    oldRefreshToken = (String) newDetails.get("oldRefreshToken");
+                }
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                successfulAuthentication(accessToken);
+                successfulAuthentication(accessToken, oldRefreshToken);
             }
             filterChain.doFilter(request, response);
         } catch(Exception exception) {
@@ -55,8 +65,8 @@ public class JwtRequestAuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private void successfulAuthentication(String accessToken) {
-        tokenResponseService.refreshAccessToken(accessToken);
+    private void successfulAuthentication(String accessToken, String oldRefreshToken) {
+        tokenResponseService.responseAuthToken(accessToken, oldRefreshToken);
     }
 
     private void unsuccessfulAuthentication(HttpServletResponse response, Exception exception) {

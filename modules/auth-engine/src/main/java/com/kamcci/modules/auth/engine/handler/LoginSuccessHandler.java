@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
         final String username = (String) authentication.getPrincipal();
-        final UUID userId = (UUID) authentication.getDetails();
+        final Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
+        final UUID userId = (UUID) details.get("userId");
 
         // 권한 가져오기
         final List<String> roleList = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)

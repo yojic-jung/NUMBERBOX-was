@@ -24,7 +24,7 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public String createAccessToken(String email, UUID userUniqId, List<String> roleList) {
+    public String reCreateAccessToken(String email, UUID userUniqId, List<String> roleList) {
         Claims claims = Jwts.claims();
         claims.put(authJwtProperty.email(), email);
         claims.put(authJwtProperty.id(), userUniqId);
@@ -40,11 +40,11 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public String createAccessToken(String oldAccessToken) {
+    public String reCreateAccessToken(String oldAccessToken) {
         String email = getEmail(oldAccessToken);
-        UUID uuid = getUserUniqId(oldAccessToken);
+        UUID uuid = getUserId(oldAccessToken);
         List<String> role = getRoles(oldAccessToken);
-        return createAccessToken(email, uuid, role);
+        return reCreateAccessToken(email, uuid, role);
     }
 
     @Override
@@ -60,10 +60,18 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public String getEmail(String token) {
+    public String reCreateRefreshToken(String oldRefreshToken) {
+        Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(oldRefreshToken)
+                .getBody();
+        long validTime = claims.getExpiration().getTime() - claims.getIssuedAt().getTime();
+        return createRefreshToken(validTime);
+    }
+
+    @Override
+    public String getEmail(String accessToken) {
         try {
             // 토큰 파싱 시도
-            return Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody()
+            return Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody()
                     .get(authJwtProperty.email(), String.class);
         } catch(ExpiredJwtException e) {
             // 만료된 토큰이지만 Claims를 추출
@@ -72,9 +80,9 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public UUID getUserUniqId(String token) {
+    public UUID getUserId(String accessToken) {
         try {
-            String uuid = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody()
+            String uuid = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody()
                     .get(authJwtProperty.id(), String.class);
             return UUID.fromString(uuid);
         } catch(ExpiredJwtException e) {
@@ -85,9 +93,15 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     @Override
-    public List<String> getRoles(String token) {
+    public long getValidTime(String token) {
+        Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token).getBody();
+        return claims.getExpiration().getTime() - claims.getIssuedAt().getTime();
+    }
+
+    @Override
+    public List<String> getRoles(String accessToken) {
         try {
-            return (List<String>) Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(token)
+            return (List<String>) Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken)
                     .getBody().get(ROLE_NAME, Object.class);
         } catch(ExpiredJwtException e) {
             // 만료된 토큰이지만 Claims를 추출
@@ -96,16 +110,25 @@ public class AuthJwtUtil implements AuthTokenUtil {
     }
 
     /**
-     * 토큰 유효성 검사(만료 여부 검사 지정 가능)
+     * 토큰 유효성 검사
      */
     @Override
-    public void checkValidToken(String jwtToken, boolean checkExpiration) {
+    public void checkValidToken(String jwtToken) {
         try {
             Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(jwtToken);
         } catch(ExpiredJwtException e) {
-            if(checkExpiration) throw new TokenExpirationException();
         } catch(Exception e) {
             throw new JwtInvalidException();
+        }
+    }
+
+    @Override
+    public boolean isExpiredToken(String jwtToken) {
+        try {
+            checkValidToken(jwtToken);
+            return false;
+        } catch(TokenExpirationException e) {
+            return true;
         }
     }
 }

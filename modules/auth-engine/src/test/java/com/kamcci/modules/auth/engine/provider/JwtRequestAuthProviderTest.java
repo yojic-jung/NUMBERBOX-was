@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static com.kamcci.modules.auth.user.AuthUserFixture.getAuthUserDetail;
@@ -46,7 +47,7 @@ class JwtRequestAuthProviderTest {
 
         when(authentication.getPrincipal()).thenReturn("accessToken");
         when(authentication.getDetails()).thenReturn("refreshToken");
-        when(authTokenUtil.getUserUniqId(any())).thenReturn(UUID.fromString(accessTokenUserId));
+        when(authTokenUtil.getUserId(any())).thenReturn(UUID.fromString(accessTokenUserId));
         when(jwtRequestUserDetailService.loadUserIdByRefreshToken(any())).thenReturn(UUID.fromString(refreshTokenUserId));
 
         assertThrows(TokenOwnerNotMatchingException.class, () -> {
@@ -59,7 +60,7 @@ class JwtRequestAuthProviderTest {
         final AuthUserDetail disableUser = getDisableAuthUserDetail();
         when(authentication.getPrincipal()).thenReturn("accessToken");
         when(authentication.getDetails()).thenReturn("refreshToken");
-        when(authTokenUtil.getUserUniqId(any())).thenReturn(UUID.fromString(accessTokenUserId));
+        when(authTokenUtil.getUserId(any())).thenReturn(UUID.fromString(accessTokenUserId));
         when(jwtRequestUserDetailService.loadUserIdByRefreshToken(any())).thenReturn(UUID.fromString(accessTokenUserId));
         when(userDetailsService.loadUserByUsername(any())).thenReturn(disableUser);
 
@@ -73,7 +74,7 @@ class JwtRequestAuthProviderTest {
         final AuthUserDetail user = getAuthUserDetail();
         when(authentication.getPrincipal()).thenReturn("accessToken");
         when(authentication.getDetails()).thenReturn("refreshToken");
-        when(authTokenUtil.getUserUniqId(any())).thenReturn(UUID.fromString(accessTokenUserId));
+        when(authTokenUtil.getUserId(any())).thenReturn(UUID.fromString(accessTokenUserId));
         when(jwtRequestUserDetailService.loadUserIdByRefreshToken(any())).thenReturn(UUID.fromString(accessTokenUserId));
         when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
 
@@ -81,7 +82,8 @@ class JwtRequestAuthProviderTest {
         Authentication actualAuth = jwtRequestAuthProvider.authenticate(authentication);
 
         // then
-        assertThat(actualAuth.getDetails()).isEqualTo(user.getUserId());
+        Map<String, Object> detail = (Map<String, Object>) actualAuth.getDetails();
+        assertThat(detail.get("userId")).isEqualTo(user.getUserId());
     }
 
     @Test

@@ -33,7 +33,7 @@ class AuthJwtUtilTest {
         roleList.add(ROLE);
 
         // when
-        final String accessToken = authJwtUtil.createAccessToken(EMAIL, UNIQ_ID, roleList);
+        final String accessToken = authJwtUtil.reCreateAccessToken(EMAIL, UNIQ_ID, roleList);
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody();
@@ -52,10 +52,10 @@ class AuthJwtUtilTest {
         // given
         final List<String> roleList = new ArrayList<>();
         roleList.add(ROLE);
-        final String accessToken = authJwtUtil.createAccessToken(EMAIL, UNIQ_ID, roleList);
+        final String accessToken = authJwtUtil.reCreateAccessToken(EMAIL, UNIQ_ID, roleList);
 
         // when
-        final String newAccessToken = authJwtUtil.createAccessToken(accessToken);
+        final String newAccessToken = authJwtUtil.reCreateAccessToken(accessToken);
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(newAccessToken)
@@ -113,7 +113,7 @@ class AuthJwtUtilTest {
                 ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
 
         // when
-        final UUID userUniqId = authJwtUtil.getUserUniqId(accessToken);
+        final UUID userUniqId = authJwtUtil.getUserId(accessToken);
 
         // then
         assertThat(userUniqId).isEqualTo(UUID.fromString("688fa23b-194a-46f0-bc31-14601864f802"));
@@ -121,13 +121,13 @@ class AuthJwtUtilTest {
 
     @Test
     void 토큰으로부터_id_추출_실패() {
-        // given
+        // given - 유효하지 않은 토큰
         final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
                 ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
 
         // when & then
         assertThrows(Exception.class, () -> {
-            authJwtUtil.getUserUniqId(accessToken);
+            authJwtUtil.getUserId(accessToken);
         });
     }
 
@@ -147,7 +147,7 @@ class AuthJwtUtilTest {
 
     @Test
     void 토큰으로부터_권한_추출_실패() {
-        // given
+        // given - 유효하지 않은 토큰
         final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
                 ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
 
@@ -162,47 +162,35 @@ class AuthJwtUtilTest {
         // given
         final List<String> roleList = new ArrayList<>();
         roleList.add(ROLE);
-        final String accessToken = authJwtUtil.createAccessToken(EMAIL, UNIQ_ID, roleList);
+        final String accessToken = authJwtUtil.reCreateAccessToken(EMAIL, UNIQ_ID, roleList);
 
         // when
         assertDoesNotThrow(() -> {
-            authJwtUtil.checkValidToken(accessToken, false);
+            authJwtUtil.checkValidToken(accessToken);
         });
     }
 
     @Test
     void 토큰_만료로_유효성_실패() {
-        // given
+        // given - 만료된 토큰
         final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
                 ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
 
         // when & then
         assertThrows(TokenExpirationException.class, () -> {
-            authJwtUtil.checkValidToken(accessToken, true);
-        });
-    }
-
-    @Test
-    void 토큰_만료_유효성_무시_성공() {
-        // given
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
-
-        // when & then
-        assertDoesNotThrow(() -> {
-            authJwtUtil.checkValidToken(accessToken, false);
+            authJwtUtil.checkValidToken(accessToken);
         });
     }
 
     @Test
     void 토큰_유효성_실패() {
-        // given
+        // given - 유효하지 않은 jwt
         final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
                 ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
 
         // when & then
         assertThrows(Exception.class, () -> {
-            authJwtUtil.checkValidToken(accessToken, false);
+            authJwtUtil.checkValidToken(accessToken);
         });
     }
 }

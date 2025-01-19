@@ -24,6 +24,8 @@ import static com.kamcci.modules.auth.control.config.AuthConstantConfig.*;
  */
 @Component
 public class JwtResponseHeaderCookieService implements TokenResponseService {
+    // 리프레시 토큰 유효기간에 30일 더한 만큼 쿠키 수명 설정
+    private static final long COOKIE_AGE = 30 * 24 * 60 * 60 * 1000L;
     private final AuthTokenUtil authTokenUtil;
     private final ApplicationEventPublisher eventPublisher;
     private final AuthJwtProperty authJwtProperty;
@@ -36,12 +38,24 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
     }
 
     @Override
-    public void refreshAccessToken(String oldAccessToken) {
+    public void responseAuthToken(String oldAccessToken, String oldRefreshToken) {
         HttpServletResponse response =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        String accessToken = authTokenUtil.createAccessToken(oldAccessToken);
+        // 액세스 토큰 재발급 및 응답
+        String accessToken = authTokenUtil.reCreateAccessToken(oldAccessToken);
         if(response != null) response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
+
+        if(oldRefreshToken != null && response != null) {
+            // 리프레시 토큰 재발급 및 응답
+            String refreshToken = authTokenUtil.reCreateRefreshToken(oldRefreshToken);
+            long validTime = authTokenUtil.getValidTime(oldRefreshToken);
+            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime + COOKIE_AGE));
+
+            // 재발급 이벤트 발행
+            UUID userId = authTokenUtil.getUserId(accessToken);
+            eventPublisher.publishEvent(new LoginSuccessEvent(userId, refreshToken, oldRefreshToken));
+        }
     }
 
     /**
@@ -55,7 +69,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
         // 토큰 생성
-        String accessToken = authTokenUtil.createAccessToken(email, userId, roleList);
+        String accessToken = authTokenUtil.reCreateAccessToken(email, userId, roleList);
 
         // 리프레시 토큰 유효기간 설정
         long validTime = getRefreshTokenValidTime(request);
@@ -67,7 +81,7 @@ public class JwtResponseHeaderCookieService implements TokenResponseService {
         if(response != null) {
             response.setHeader(ACCESS_TOKEN_NAME, TOKEN_STANDARD_PREFIX + " " + accessToken);
             response.setHeader(ROLE_NAME, roleList.toString());
-            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime));
+            response.addCookie(makeRefreshTokenCookie(refreshToken, validTime + COOKIE_AGE));
         }
     }
 

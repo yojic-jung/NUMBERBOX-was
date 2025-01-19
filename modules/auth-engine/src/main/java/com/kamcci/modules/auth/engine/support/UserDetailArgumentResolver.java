@@ -17,6 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -40,7 +41,8 @@ public class UserDetailArgumentResolver implements HandlerMethodArgumentResolver
 
         if(hasUserIdAnnot) {
             // @UserId 처리
-            return isAnonymousUser ? 0 : UUID.fromString(authentication.getDetails().toString());
+            Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
+            return isAnonymousUser ? 0 : UUID.fromString(details.get("userId").toString());
         } else if(hasUserEmailAnnot) {
             // @UserEmail 처리
             return isAnonymousUser ? "" : authentication.getPrincipal().toString();
