@@ -6,9 +6,9 @@ package com.kamcci.numberbox.app.domain.dto.hwp
  * @param code hwp 서버에서 사용하는 확장자 코드 타입
  */
 enum class HwpExtensionType(val code: Int) {
-    Hwp(1),
-    Hwpx(2),
-    Hwt(3),
-    Hwtx(4),
-    Hml(5),
+    HWP(1),
+    HWPX(2),
+    HWT(3),
+    HWTX(4),
+    HML(5),
 }

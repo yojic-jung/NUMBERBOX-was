@@ -105,7 +105,7 @@ class HwpSocketClientService(
     private fun setRequestType(requestType: HwpRequestType, byteSize: Int, socketOup: OutputStream) {
         val modeBuffer = ByteBuffer.allocate(HEADER_SIZE)
         modeBuffer.order(ByteOrder.LITTLE_ENDIAN)
-        modeBuffer.put(requestType.type.toByteArray())
+        modeBuffer.put(requestType.type.toByteArray(Charsets.UTF_8))
         socketOup.write(modeBuffer.array())
 
         // hwp 서버에 전송할 데이터 크기 전달

@@ -52,7 +52,7 @@ class HwpSocketClientServiceTest {
         val actualRes = hwpSocketClientService.requestHtmlZip(
             jsonMsg,
             RESPONSE_DATA.toByteArray().size,
-            HwpExtensionType.Hwp
+            HwpExtensionType.HWP
         )
 
         // then
@@ -71,7 +71,7 @@ class HwpSocketClientServiceTest {
             hwpSocketClientService.requestHtmlZip(
                 jsonMsg,
                 RESPONSE_DATA.toByteArray().size,
-                HwpExtensionType.Hwp
+                HwpExtensionType.HWP
             )
         }
     }

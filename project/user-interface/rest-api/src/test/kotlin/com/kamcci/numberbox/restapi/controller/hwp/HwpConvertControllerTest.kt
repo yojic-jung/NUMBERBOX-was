@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test
 @WebMvcUnitTest
 class HwpConvertControllerTest : BaseMockMvcTest() {
     companion object {
-        const val PREFIX = "/hwp/math/docs"
+        const val PREFIX = "/hwp/convert"
+        const val JSON_TO_HWP = "$PREFIX/json-to-hwp"
     }
 
     @Test
@@ -18,7 +19,7 @@ class HwpConvertControllerTest : BaseMockMvcTest() {
         )
 
         // when
-        val resultAction = postRequest(PREFIX, reqBody)
+        val resultAction = postRequest(JSON_TO_HWP, reqBody)
 
         // then
         assert2xx(resultAction)
