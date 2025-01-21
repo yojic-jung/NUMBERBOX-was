@@ -11,6 +11,7 @@ interface FileUseCase {
 
     /**
      * 파일 업로드
+     * - 신규 파일명 경로를 만들어 저장하고 저장한 파일명과 경로를 반환
      */
     fun upload(uploadDto: FileUploadDto, fileType: FileType): FileNameVo
 

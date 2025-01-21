@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.domain.dto.hwp
+package com.kamcci.numberbox.app.domain.enumeration.hwp
 
 /**
  * hwp 서버 요청하는 파일 변환 요청 코드

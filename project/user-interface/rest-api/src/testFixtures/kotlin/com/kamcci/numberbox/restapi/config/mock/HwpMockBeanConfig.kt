@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.config.mock
 
-import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean

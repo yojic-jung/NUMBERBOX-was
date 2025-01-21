@@ -9,5 +9,5 @@ data class FileUploadDto(
     val name: String,
     val contentType: String?,
     val size: Long,
-    val inputStream: InputStream
+    val inputStream: InputStream,
 )

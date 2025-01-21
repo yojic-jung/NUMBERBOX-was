@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.hwp.client.engine.service
 
-import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.hwp.client.engine.dummy.MockSocketFactory.getErrorSocketFactory
 import com.kamcci.numberbox.hwp.client.engine.dummy.MockSocketFactory.getSocketFactory
 import org.junit.jupiter.api.Assertions.assertEquals

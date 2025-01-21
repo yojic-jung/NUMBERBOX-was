@@ -19,14 +19,14 @@ class FileService(
 
     override fun upload(uploadDto: FileUploadDto, fileType: FileType): FileNameVo {
         val fileNameVo = makeFileNameByType(uploadDto.name, fileType)
-        val slideImgUploadDto = FileUploadDto(
+        val randomNameUploadDto = FileUploadDto(
             "${fileNameVo.path}/${fileNameVo.name}",
             uploadDto.contentType,
             uploadDto.size,
             uploadDto.inputStream,
         )
         // 새 파일 업로드
-        fileStoragePort.upload(slideImgUploadDto)
+        fileStoragePort.upload(randomNameUploadDto)
         return fileNameVo
     }
 

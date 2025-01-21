@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.hwp.client.engine.service
 
-import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
-import com.kamcci.numberbox.app.domain.dto.hwp.HwpRequestType
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpRequestType
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream

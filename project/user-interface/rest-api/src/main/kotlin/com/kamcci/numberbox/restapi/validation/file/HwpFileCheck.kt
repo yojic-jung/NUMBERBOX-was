@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.file
 
-import com.kamcci.numberbox.app.domain.dto.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext

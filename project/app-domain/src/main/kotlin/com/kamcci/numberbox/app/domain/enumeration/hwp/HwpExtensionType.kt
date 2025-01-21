@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.domain.dto.hwp
+package com.kamcci.numberbox.app.domain.enumeration.hwp
 
 /**
  * hwp 확장자 타입
