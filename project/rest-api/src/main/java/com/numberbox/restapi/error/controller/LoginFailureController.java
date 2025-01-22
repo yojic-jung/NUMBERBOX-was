@@ -1,0 +1,78 @@
+package com.numberbox.restapi.error.controller;
+
+import com.numberbox.auth.control.dto.AuthResponse;
+import com.numberbox.auth.control.exception.BadAuthRequestException;
+import com.numberbox.auth.control.exception.DisabledUserException;
+import com.numberbox.auth.control.exception.PasswordMissMatchException;
+import com.numberbox.auth.control.exception.UserNotFoundException;
+import com.numberbox.common.error.port.in.LoginFailureUseCase;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import template.ResponseErrData;
+import util.ResponseUtil;
+
+import static com.numberbox.auth.control.dto.AuthResponse.*;
+
+/**
+ * 로그인 실패시 후처리 진행 후 실패 상황에 맞는 응답 전송
+ */
+@RestController
+public class LoginFailureController {
+    private final LoginFailureUseCase loginFailureUseCase;
+
+    public LoginFailureController(LoginFailureUseCase loginFailureUseCase) {
+        this.loginFailureUseCase = loginFailureUseCase;
+    }
+
+    @PostMapping("/loginFail")
+    public ResponseEntity<ResponseErrData> loginFailProcess(HttpServletRequest request) {
+        final Exception exception = (Exception) request.getAttribute("auth.error.exception");
+        final String userEmail = (String) request.getAttribute("username");
+
+        // 클라이언트의 로그인 요청 형식이 잘못됨
+        if (exception instanceof BadAuthRequestException) {
+            return responseErr(BAD_AUTH_REQUEST);
+        }
+
+        // 계정 존재하지 않음
+        if (exception instanceof UserNotFoundException) {
+            return responseErr(USER_NOT_FOUND);
+        }
+
+        // 비밀번호 불일치
+        if (exception instanceof PasswordMissMatchException) {
+            // 과도한 비밀번호 불일치 요청시 계정 비활성화
+            final boolean isDisabled = loginFailureUseCase.disableUserIfFailCountOver(userEmail);
+            return responseErr(isDisabled ? DISABLE_USER : PASSWORD_MISS_MATCH);
+        }
+
+        // 비활성화된 계정
+        if (exception instanceof DisabledUserException) {
+            // 계정 비활성화 유효시간이 지난 경우 다시 활성화
+            boolean isAfterDisableTime = loginFailureUseCase.ableUserIfDisableTimeOver(userEmail);
+            return responseErr(isAfterDisableTime ? ABLE_USER : DISABLE_USER);
+        }
+
+        // 서버 예외
+        return responseErr(false, AUTH_SERVER_ERROR);
+    }
+
+    @RequestMapping("/accessDenied")
+    public ResponseEntity<ResponseErrData> accessDenied() {
+        System.out.println("yojic");
+
+        return responseErr(true, ACCESS_DENIED);
+    }
+
+    private ResponseEntity<ResponseErrData> responseErr(AuthResponse authResponse) {
+        return ResponseUtil.err(authResponse.statusCode, true, authResponse.message);
+    }
+
+    private ResponseEntity<ResponseErrData> responseErr(boolean showMessage, AuthResponse authResponse) {
+        return ResponseUtil.err(authResponse.statusCode, showMessage, authResponse.message);
+    }
+}
+

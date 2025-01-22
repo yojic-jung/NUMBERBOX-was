@@ -14,6 +14,7 @@ import com.numberbox.appusecase.image.port.in.ImgFileNameMaker;
 import com.numberbox.appusecase.image.port.out.storage.ImgFileStorage;
 import com.numberbox.filestorage.config.StorageProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,7 +58,6 @@ public class AwsS3Storage implements ImgFileStorage {
     }
 
     // 단일 파일 S3 전달
-<<<<<<<< HEAD:project/infra/file-storage/src/main/java/com/numberbox/filestorage/storage/AwsS3Storage.java
     public String uploadToS3SeverSingleFile(int actionId, MultipartFile file) throws IOException {
         Random random1 = new Random();
         long currentTime1 = System.currentTimeMillis();
@@ -80,30 +80,6 @@ public class AwsS3Storage implements ImgFileStorage {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3.getUrl(bucketName, fileName).toString();
     }
-========
-//    public String uploadToS3SeverSingleFile(int actionId, MultipartFile file) throws IOException {
-//        Random random1 = new Random();
-//        long currentTime1 = System.currentTimeMillis();
-//        int randomValue1 = random1.nextInt(100);
-//        LocalDate now = LocalDate.now();
-//        String year = Integer.toString(now.getYear());
-//        int monthValue = now.getMonthValue();
-//
-//        // 폴더 이름 생성 규칙은 actionId-연월
-//        String fileName = file.getOriginalFilename();
-//        if (actionId == 10) {
-//            fileName = "editorImgUpld/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_"
-//                    + randomValue1 + "_" + file.getOriginalFilename();
-//        } else if (actionId == 11) {
-//            fileName = "hwpToHtml/" + actionId + "" + year + "" + monthValue + "/" + currentTime1 + "_" + randomValue1
-//                    + "_" + file.getOriginalFilename();
-//        }
-//
-//        s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
-//                .withCannedAcl(CannedAccessControlList.PublicRead));
-//        return s3Client.getUrl(bucket, fileName).toString();
-//    }
->>>>>>>> f9c8594 (모듈 분리 - file-storage 생성):project/app/src/main/java/com/numberbox/aws/s3/service/AwsS3Service.java
 
     // 단일 파일 S3 전달
     public String uploadToS3SeverSingleFile(int actionId, File file, String fileName) throws IOException {

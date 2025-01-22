@@ -1,0 +1,42 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.numberbox.bootstrap'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation project(":project:app")
+    implementation project(":project:app-domain")
+    implementation project(":project:app-usecase")
+    implementation project(":project:rest-api")
+    implementation project(":project:infra:data-repository")
+    implementation project(":project:infra:file-storage")
+
+    implementation project(":modules:auth-engine")
+    implementation project(":modules:di-engine")
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

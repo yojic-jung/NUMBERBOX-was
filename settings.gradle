@@ -1,0 +1,23 @@
+rootProject.name = 'NUMBERBOX'
+
+include(":project")
+include(":project:app")
+include(":project:app-usecase")
+include(":project:app-domain")
+include(":project:bootstrap")
+include(":project:rest-api")
+include(":project:infra")
+include(":project:infra:data-repository")
+include(":project:infra:file-storage")
+include(":project:infra:docs-server")
+
+include(":modules")
+include(":modules:auth-control")
+include(":modules:auth-engine")
+include(":modules:di-engine")
+include(":modules:logging-control")
+include(":modules:logging-engine")
+include(":modules:mail-control")
+include(":modules:mail-engine")
+include(":modules:open-api-control")
+include(":modules:open-api-engine")

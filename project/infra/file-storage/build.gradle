@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+<<<<<<<< HEAD:project/infra/file-storage/build.gradle
     implementation project(":project:app")
     implementation project(":project:app-domain")
     implementation project(":project:app-usecase")
@@ -32,6 +33,27 @@ dependencies {
     
     implementation 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
+========
+    // project
+    implementation project(":project:app")
+    implementation project(":project:app-domain")
+    implementation project(":project:app-usecase")
+
+    // modules
+    implementation project(":modules:auth-control")
+
+    // spring
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-devtools"
+
+    // lombok
+    implementation 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    // mapper
+    implementation "org.mapstruct:mapstruct:1.5.5.Final"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+>>>>>>>> origin/master:project/rest-api/build.gradle
 }
 
 bootJar {

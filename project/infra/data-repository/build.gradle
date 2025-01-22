@@ -19,34 +19,13 @@ repositories {
 }
 
 dependencies {
-<<<<<<<< HEAD:project/infra/data-repository/build.gradle
-========
-    // project
->>>>>>>> f9c8594 (모듈 분리 - file-storage 생성):project/rest-api/build.gradle
     implementation project(":project:app")
     implementation project(":project:app-domain")
     implementation project(":project:app-usecase")
 
-<<<<<<<< HEAD:project/infra/data-repository/build.gradle
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.projectlombok:lombok:1.18.28'
-========
-    // modules
-    implementation project(":modules:auth-control")
-
-    // spring
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-devtools"
-
-    // lombok
-    implementation 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    // mapper
-    implementation "org.mapstruct:mapstruct:1.5.5.Final"
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
->>>>>>>> f9c8594 (모듈 분리 - file-storage 생성):project/rest-api/build.gradle
 }
 
 bootJar {
