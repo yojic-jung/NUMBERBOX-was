@@ -1,9 +1,13 @@
 package com.kamcci.numberbox.restapi.controller.hwp
 
+import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
+import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
+import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpConvertRequest
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpFileConvertRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
+import java.time.LocalDate
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -27,7 +32,9 @@ import java.util.zip.ZipInputStream
 @RequestMapping("/hwp/convert")
 class HwpConvertController(
     private val hwpSocketClient: HwpSocketClient,
-    private val fileStoragePort: FileStoragePort
+    private val fileStoragePort: FileStoragePort,
+    private val hwpConvertContentsWriteCase: HwpConvertContentsWriteCase,
+    private val hwpConvertContentsReadCase: HwpConvertContentsReadCase,
 ) {
     @PostMapping("/json-to-hwp")
     fun makeHwpFile(
@@ -40,6 +47,7 @@ class HwpConvertController(
 
     @PostMapping("/hwp-to-html")
     fun makeHtml(
+        @UserId memberId: UUID,
         @ModelAttribute @Valid
         request: HwpFileConvertRequest
     ): ResponseEntity<ResponseData<Any>> {
@@ -48,26 +56,20 @@ class HwpConvertController(
         val extensionType = HwpExtensionType.valueOf(extension.uppercase())
         val zipByteArr = hwpSocketClient.requestHtmlZip(hwpFile.inputStream, hwpFile.size.toInt(), extensionType)
 
-        /**
-         * todo
-         * 1. unzip
-         * 2. /bindata 하위 이미지 파일 s3 저장
-         * 3. /index.xhtml 한줄씩 읽어들여 문자열로 컨텐츠 저장 -> hwp_convert_content에 영속화
-         * 4. s3FileUrl, contentsList(나의 변환 컨텐츠 목록)
-         */
         // 1. unZip
         val unZipFile = unzipAndProcess(zipByteArr)
         val indexHtml = unZipFile.first
         val imageFiles = unZipFile.second
 
         // 2. s3에 이미지 저장
+        val now = LocalDate.now()
         val currentTime1 = System.currentTimeMillis()
         val randomValue1: Int = Random().nextInt(100)
-        val filePath = "${currentTime1}_${randomValue1}"
+        val imgFilePath = "docs/${now.year}/${now.month}/${currentTime1}_${randomValue1}"
         imageFiles.forEach {
             fileStoragePort.upload(
                 FileUploadDto(
-                    name = "$filePath/bindata/${it.key}",
+                    name = "$imgFilePath/bindata/${it.key}",
                     contentType = "image/png",
                     size = it.value.size.toLong(),
                     inputStream = it.value.inputStream()
@@ -77,8 +79,20 @@ class HwpConvertController(
 
         // 3. hwp_convert_content에 영속화
         val htmlString = indexHtml!!.lineSequence().joinToString("")
+        val createDto = HwpConvertContentsCreateDto(
+            memberId = memberId,
+            isConverted = true,
+            filePath = imgFilePath,
+            contents = htmlString,
+            imgPath = imgFilePath,
+            isGrammarConverted = true
+        )
+        hwpConvertContentsWriteCase.create(createDto)
 
-        return ResponseUtil.ok(mapOf("zipFile" to Base64.getEncoder().encodeToString(zipByteArr)))
+        // 4. 변환 컨텐츠 조회
+        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
+
+        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
     }
 
     fun unzipAndProcess(zipBytes: ByteArray): Pair<String?, Map<String, ByteArray>> {

@@ -4,7 +4,7 @@
 ALTER TABLE hwp_convert_contents CHANGE convert_no id int NOT NULL AUTO_INCREMENT;
 ALTER TABLE hwp_convert_contents CHANGE converted is_converted tinyint NOT NULL DEFAULT '1' comment "파일 변환 완료 여부";
 ALTER TABLE hwp_convert_contents CHANGE user_uniq_id member_id binary(16) NOT NULL;
-ALTER TABLE hwp_convert_contents CHANGE convert_file_name file_name varchar(70) NOT NULL DEFAULT '' comment "원본 파일명";
+ALTER TABLE hwp_convert_contents CHANGE convert_file_name file_path varchar(70) NOT NULL DEFAULT '' comment "원본 파일명";
 ALTER TABLE hwp_convert_contents CHANGE convert_contents contents mediumtext;
 ALTER TABLE hwp_convert_contents CHANGE err_stts is_grammar_converted tinyint NOT NULL DEFAULT '1' comment "문법 변환 완료 여부";
 update hwp_convert_contents set is_grammar_converted =1;

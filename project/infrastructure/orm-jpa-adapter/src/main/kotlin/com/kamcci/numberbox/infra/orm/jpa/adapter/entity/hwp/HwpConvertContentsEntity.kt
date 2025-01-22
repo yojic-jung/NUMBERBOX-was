@@ -14,30 +14,31 @@ class HwpConvertContentsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @Column(columnDefinition = "BINARY(16)", nullable = false, updatable = false)
+    @Column(name = "member_id", columnDefinition = "BINARY(16)", nullable = false, updatable = false)
     var memberId: UUID? = null
 
     // 파일 변환 완료 여부
     @NotNull
-    @Column(nullable = false)
-    var isConverted: Boolean = false
+    @Column(name = "is_converted", nullable = false)
+    var isConverted: Boolean = true
 
-    // 원본 파일명
+    // xhtml 파일 경로
     @NotNull
-    @Column(length = 70, nullable = false)
-    var fileName: String? = null
+    @Column(name = "file_path", length = 70, nullable = false)
+    var filePath: String? = null
 
+    // xhtml 컨텐츠 내용 - html 스크립트 문법 문자열
     @NotNull
-    @Column(nullable = true)
+    @Column(name = "contents", nullable = true)
     var contents: String? = null
 
-    // 파일 내부 이미지 파일 경로(파일 이름 제외 이미지 경로만)
-    @Column(length = 120, nullable = false)
+    // xhtml 내부 이미지 파일 경로(파일 이름 제외 이미지 경로만)
+    @Column(name = "img_path", length = 120, nullable = false)
     var imgPath: String? = null
 
     // 문법 변환(클라이언트단에서 이뤄짐) 완료 여부
-    @Column(updatable = false, nullable = false)
-    var isGrammarConverted: Boolean = false
+    @Column(name = "is_grammar_converted", updatable = false, nullable = false)
+    var isGrammarConverted: Boolean = true
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
