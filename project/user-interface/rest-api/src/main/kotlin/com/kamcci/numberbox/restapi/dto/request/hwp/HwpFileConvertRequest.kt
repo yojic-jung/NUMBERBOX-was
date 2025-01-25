@@ -4,7 +4,7 @@ import com.kamcci.numberbox.restapi.validation.file.HwpFileCheck
 import org.springframework.web.multipart.MultipartFile
 
 /**
- * hwp 파일로 변환하기 위한 json 형태의 문자열
+ * html 파일로 변환하기 위한 hwp 파일
  */
 data class HwpFileConvertRequest(
     @field:HwpFileCheck

@@ -47,8 +47,7 @@ class SystemConstructionTXAdvice(
         txDefinition.isolationLevel = isolationLevel as Int
         txDefinition.propagationBehavior = propagationBehavior as Int
         txDefinition.isReadOnly = readOnly as Boolean
-        transactionManager.getTransaction(txDefinition)
-        val txStatus = transactionManager.getTransaction(DefaultTransactionDefinition())
+        val txStatus = transactionManager.getTransaction(txDefinition)
 
         try {
             val returnVal = invocation.proceed()

@@ -3,22 +3,23 @@ package com.kamcci.numberbox.restapi.controller.hwp
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsCreateDto
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsUpdateDto
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
+import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpConvertRequest
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpFileConvertRequest
+import com.kamcci.numberbox.restapi.dto.request.hwp.HwpToHtmlUpdateRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.InputStreamReader
 import java.time.LocalDate
 import java.util.*
 import java.util.zip.ZipEntry
@@ -36,6 +37,11 @@ class HwpConvertController(
     private val hwpConvertContentsWriteCase: HwpConvertContentsWriteCase,
     private val hwpConvertContentsReadCase: HwpConvertContentsReadCase,
 ) {
+    companion object {
+        const val NOT_MODIFIED = "수정 및 삭제 작업이 이루어지지 않았습니다."
+    }
+
+    // json 문자열 to hwp 파일 변환
     @PostMapping("/json-to-hwp")
     fun makeHwpFile(
         @RequestBody
@@ -45,6 +51,7 @@ class HwpConvertController(
         return ResponseUtil.ok(mapOf("hwpFile" to Base64.getEncoder().encodeToString(hwpByteArr)))
     }
 
+    // hwp to html변환 및 컨텐츠 저장
     @PostMapping("/hwp-to-html")
     fun makeHtml(
         @UserId memberId: UUID,
@@ -69,7 +76,7 @@ class HwpConvertController(
         imageFiles.forEach {
             fileStoragePort.upload(
                 FileUploadDto(
-                    name = "$imgFilePath/bindata/${it.key}",
+                    name = "$imgFilePath/${it.key}",
                     contentType = "image/png",
                     size = it.value.size.toLong(),
                     inputStream = it.value.inputStream()
@@ -82,16 +89,57 @@ class HwpConvertController(
         val createDto = HwpConvertContentsCreateDto(
             memberId = memberId,
             isConverted = true,
-            filePath = imgFilePath,
+            fileName = hwpFile.originalFilename ?: "파일명없음.hwp",
             contents = htmlString,
             imgPath = imgFilePath,
-            isGrammarConverted = true
         )
         hwpConvertContentsWriteCase.create(createDto)
 
         // 4. 변환 컨텐츠 조회
         val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
 
+        return ResponseUtil.ok(
+            mapOf(
+                "contentsList" to contentsList,
+                "s3FileUrl" to contentsList[0].imgPath
+            )
+        )
+    }
+
+    // 변환 컨텐츠 수정사항 저장
+    @PutMapping("/hwp-to-html")
+    fun update(
+        @UserId memberId: UUID,
+        @RequestBody
+        request: HwpToHtmlUpdateRequest
+    ): ResponseEntity<ResponseData<Any>> {
+        // 변환 컨텐츠 수정
+        hwpConvertContentsWriteCase.update(
+            HwpConvertContentsUpdateDto(
+                id = request.id,
+                memberId = memberId,
+                contents = request.contents,
+                isGrammarConverted = true
+            )
+        ).let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
+
+        // 변환 컨텐츠 조회
+        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
+        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
+    }
+
+    // 변환 컨텐츠 수정사항 저장
+    @DeleteMapping("/hwp-to-html/{contentsId}")
+    fun delete(
+        @UserId memberId: UUID,
+        @PathVariable contentsId: Long
+    ): ResponseEntity<ResponseData<Any>> {
+        // 변환 컨텐츠 수정
+        hwpConvertContentsWriteCase.delete(contentsId, memberId)
+            .let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
+
+        // 변환 컨텐츠 조회
+        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
         return ResponseUtil.ok(mapOf("contentsList" to contentsList))
     }
 
@@ -131,20 +179,4 @@ class HwpConvertController(
         return indexXhtml to images
     }
 
-    fun readIndexXhtml(indexXhtmlBytes: ByteArray): String {
-        // ByteArrayInputStream으로 ByteArray를 스트림으로 변환
-        val inputStream = ByteArrayInputStream(indexXhtmlBytes)
-
-        // BufferedReader를 사용해 한 줄씩 읽기
-        BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8)).use { reader ->
-            val stringBuilder = StringBuilder()
-
-            // 한 줄씩 읽어 StringBuilder에 추가
-            reader.lineSequence().forEach { line ->
-                stringBuilder.append(line).append("\n")
-            }
-
-            return stringBuilder.toString().trimEnd() // 마지막 줄바꿈 제거
-        }
-    }
 }

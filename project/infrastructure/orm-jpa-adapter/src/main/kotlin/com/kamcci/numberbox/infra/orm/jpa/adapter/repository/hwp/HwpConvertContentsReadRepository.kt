@@ -16,9 +16,9 @@ class HwpConvertContentsReadRepository : HwpConvertContentsReadCase, BaseReposit
                 Projections.constructor(
                     HwpConvertContentsVo::class.java,
                     hwpConvertContentsEntity.id,
-                    hwpConvertContentsEntity.memberId,
-                    hwpConvertContentsEntity.filePath,
+                    hwpConvertContentsEntity.fileName,
                     hwpConvertContentsEntity.contents,
+                    hwpConvertContentsEntity.isConverted,
                     hwpConvertContentsEntity.imgPath,
                     hwpConvertContentsEntity.sysCreateDate,
                     hwpConvertContentsEntity.sysUpdateDate,

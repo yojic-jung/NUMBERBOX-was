@@ -22,10 +22,10 @@ class HwpConvertContentsEntity {
     @Column(name = "is_converted", nullable = false)
     var isConverted: Boolean = true
 
-    // xhtml 파일 경로
+    // 원본 파일명
     @NotNull
-    @Column(name = "file_path", length = 70, nullable = false)
-    var filePath: String? = null
+    @Column(name = "file_name", length = 70, nullable = false)
+    var fileName: String? = null
 
     // xhtml 컨텐츠 내용 - html 스크립트 문법 문자열
     @NotNull
