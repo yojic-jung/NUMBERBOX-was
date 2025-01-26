@@ -44,4 +44,13 @@ public class AuthUserDetail extends User {
         return this.userId;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof AuthUserDetail user) {
+            return this.getUsername().equals(user.getUsername()) && this.getUserId() == user.getUserId();
+        } else {
+            return false;
+        }
+    }
+
 }

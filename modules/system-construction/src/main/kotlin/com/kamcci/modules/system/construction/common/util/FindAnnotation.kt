@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package com.kamcci.modules.system.construction.common.util
 
 import java.lang.reflect.Method
@@ -12,6 +10,7 @@ object FindAnnotation {
         val clazz = Class.forName(annotationClassName).kotlin
         // Annotation 서브클래스인지 확인하고 반환
         if (Annotation::class.java.isAssignableFrom(clazz.java)) {
+            @Suppress("UNCHECKED_CAST")
             return clazz as KClass<out Annotation>  // 안전하게 Annotation 타입으로 캐스팅
         } else {
             throw ClassNotFoundException()

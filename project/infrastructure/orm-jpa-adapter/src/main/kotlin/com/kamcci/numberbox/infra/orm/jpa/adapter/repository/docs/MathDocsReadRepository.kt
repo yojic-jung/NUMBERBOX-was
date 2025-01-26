@@ -105,6 +105,7 @@ class MathDocsReadRepository(
         mysqlQuery.setParameter("countByType", countByType)
         mysqlQuery.setParameter("limit", limit)
         val resultList = mysqlQuery.resultList.map {
+            @Suppress("UNCHECKED_CAST")
             val result = it as Array<out Any>
             MathDocsVo(
                 contentsId = result[0] as Long,

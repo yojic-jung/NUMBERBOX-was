@@ -28,4 +28,13 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return principal;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof JwtAuthenticationToken user) {
+            return this.getPrincipal().equals(user.getPrincipal()) && this.getCredentials() == user.getCredentials();
+        } else {
+            return false;
+        }
+    }
 }
