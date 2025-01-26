@@ -37,4 +37,10 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
 }

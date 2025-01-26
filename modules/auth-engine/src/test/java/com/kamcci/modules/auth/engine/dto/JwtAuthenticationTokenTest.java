@@ -46,4 +46,12 @@ class JwtAuthenticationTokenTest {
         String token = "";
         assertThat(jwtToken).isNotEqualTo(token);
     }
+
+    @Test
+    void hashcode_성공() {
+        JwtAuthenticationToken jwtToken = new JwtAuthenticationToken("", "", new ArrayList<>());
+        JwtAuthenticationToken compareToken = new JwtAuthenticationToken("", "", new ArrayList<>());
+
+        assertThat(jwtToken).hasSameHashCodeAs(compareToken);
+    }
 }

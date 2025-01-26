@@ -53,4 +53,9 @@ public class AuthUserDetail extends User {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
 }

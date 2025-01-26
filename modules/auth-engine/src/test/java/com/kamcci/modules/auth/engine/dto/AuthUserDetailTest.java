@@ -41,15 +41,23 @@ class AuthUserDetailTest {
         AuthUserDetail compareDetail3 = new AuthUserDetail(new AuthUserInfo("username2", UUID.randomUUID(), "",
                 roleList));
 
-        assertThat(authDetail).isNotEqualTo(compareDetail);
-        assertThat(authDetail).isNotEqualTo(compareDetail2);
-        assertThat(authDetail).isNotEqualTo(compareDetail3);
+        assertThat(authDetail).isNotEqualTo(compareDetail).isNotEqualTo(compareDetail2).isNotEqualTo(compareDetail3);
     }
 
     @Test
     void equals_실패_디테일_아님() {
-        AuthUserDetail jwtToken = new AuthUserDetail(user);
+        AuthUserDetail userDtail = new AuthUserDetail(user);
         String token = "";
-        assertThat(jwtToken).isNotEqualTo(token);
+        assertThat(userDtail).isNotEqualTo(token);
+    }
+
+    @Test
+    void userDetail_hashcode() {
+        // when
+        AuthUserDetail userDtail = new AuthUserDetail(user);
+        AuthUserDetail compareDetail = new AuthUserDetail(user);
+
+        // then
+        assertThat(userDtail).hasSameHashCodeAs(compareDetail);
     }
 }
