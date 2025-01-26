@@ -39,7 +39,7 @@ class LogClientApiEntity {
 
     // httpMethod 타입
     @NotNull
-    @Column(name = "http_method", length = 5, nullable = false)
+    @Column(name = "http_method", length = 6, nullable = false)
     var httpMethod: String? = null
 
     // uri

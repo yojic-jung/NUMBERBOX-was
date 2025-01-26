@@ -20,7 +20,7 @@ create table log_client_api (
                                 browser varchar(7) NOT NULL,
                                 os varchar(7) NOT NULL,
                                 ip varchar(15) NOT NULL,
-                                http_method varchar(5) not null,
+                                http_method varchar(6) not null,
                                 uri varchar(500) NOT NULL,
                                 response_code tinyint UNSIGNED NOT NULL,
                                 request_body TEXT,

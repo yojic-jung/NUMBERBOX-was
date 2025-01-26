@@ -9,12 +9,10 @@ import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Profile
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.util.*
 
-@Profile("test")
 @TestConfiguration
 class HwpMockBeanConfig {
     @Bean

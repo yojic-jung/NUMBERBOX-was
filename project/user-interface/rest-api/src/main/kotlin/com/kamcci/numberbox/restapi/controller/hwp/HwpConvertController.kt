@@ -175,7 +175,6 @@ class HwpConvertController(
                 entry = zipInputStream.nextEntry
             }
         }
-
         return indexXhtml to images
     }
 
