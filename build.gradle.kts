@@ -62,6 +62,12 @@ sonarqube {
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.coverage.exclusions", "**/com/kamcci/numberbox/app/domain/**")
         // 비활성화 규칙
-        property("sonar.issue.ignore.rules", "kotlin:S6517")
+        // 함수형 인터페이스
+        property("sonar.issue.ignore.multicriteria", "e1,e2")
+        property("sonar.issue.ignore.multicriteria.e1.ruleKey", "kotlin:S6517")
+        property("sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.kt")
+        // querydsl update set
+        property("sonar.issue.ignore.multicriteria.e2.ruleKey", "kotlin:S6518")
+        property("sonar.issue.ignore.multicriteria.e2.resourceKey", "**/*.kt")
     }
 }

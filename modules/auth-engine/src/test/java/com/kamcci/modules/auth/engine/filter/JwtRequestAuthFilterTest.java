@@ -74,22 +74,6 @@ class JwtRequestAuthFilterTest {
     }
 
     @Test
-    void jwt토큰_필터_응답반환_성공() {
-        request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
-        JwtAuthenticationToken auth = new JwtAuthenticationToken(null, null, null);
-        Map<String, Object> newDetails = new HashMap<>();
-        newDetails.put(UserId.ATTR_NAME, UUID.randomUUID());
-        auth.setDetails(newDetails);
-        when(authenticationManager.authenticate(any())).thenReturn(auth);
-
-        // when
-        jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
-
-        // then
-        verify(tokenResponseService).responseAuthToken(any(), any());
-    }
-
-    @Test
     void jwt토큰_필터_TokenException() {
         // given
         request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");

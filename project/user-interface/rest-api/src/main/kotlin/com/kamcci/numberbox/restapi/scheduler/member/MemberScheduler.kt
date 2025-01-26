@@ -52,10 +52,4 @@ class MemberScheduler(
     fun initHwpDownCnt() {
         memberProfileWriteCase.updateHwpDownCnt(0)
     }
-
-    // todo 만료된 리프레시 토큰 삭제
-//    @Scheduled(cron = "00 00 00 * * *")
-//    fun deleteExpiredRefreshToken() {
-//    }
-
 }

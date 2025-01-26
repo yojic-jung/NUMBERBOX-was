@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.kamcci.modules.system.construction.common.util
 
 import java.lang.reflect.Method
