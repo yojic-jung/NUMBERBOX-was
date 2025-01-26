@@ -24,9 +24,9 @@ annotation class HwpFileCheck(
 class HwpFileCheckValidator : ConstraintValidator<HwpFileCheck, MultipartFile> {
     companion object {
         private val HwpExtensions = HwpExtensionType.entries.map { it.name.lowercase() }
-        const val MAX_FILE_SIZE = 20 * 1024 * 1024 // 20MB (바이트 단위)
+        const val MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB (바이트 단위)
 
-        fun isValidPpt(value: MultipartFile): Boolean {
+        fun isValidHwp(value: MultipartFile): Boolean {
             // 최대 사이즈 체크
             if (value.size > MAX_FILE_SIZE) return false
 
@@ -41,6 +41,6 @@ class HwpFileCheckValidator : ConstraintValidator<HwpFileCheck, MultipartFile> {
         value: MultipartFile,
         context: ConstraintValidatorContext?,
     ): Boolean {
-        return isValidPpt(value)
+        return isValidHwp(value)
     }
 }

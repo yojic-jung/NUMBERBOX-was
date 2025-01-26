@@ -58,10 +58,9 @@ open class BaseMockMvcTest {
         return mockMvc.perform(requestBuilder)
     }
 
-    fun postMultipartForm(url: String, reqBody: Any): ResultActions {
-        val requestBuilder = MockMvcRequestBuilders.multipart(url)
-
-        requestBuilder.content(objectMapper.writeValueAsString(reqBody))
+    fun postMultipartForm(url: String, multipartFile: MockMultipartFile): ResultActions {
+        var requestBuilder = MockMvcRequestBuilders.multipart(url)
+        requestBuilder = requestBuilder.file(multipartFile)
         requestBuilder.contentType(MediaType.MULTIPART_FORM_DATA)
 
         return mockMvc.perform(requestBuilder)

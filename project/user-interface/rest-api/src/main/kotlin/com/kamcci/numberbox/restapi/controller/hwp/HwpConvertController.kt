@@ -13,17 +13,15 @@ import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpConvertRequest
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpFileConvertRequest
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpToHtmlUpdateRequest
+import com.kamcci.numberbox.restapi.util.hwp.HwpConvertFileUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import java.io.ByteArrayInputStream
 import java.time.LocalDate
 import java.util.*
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 
 /**
  * 한글 파일 변환 컨트롤러
@@ -32,6 +30,7 @@ import java.util.zip.ZipInputStream
 @RestController
 @RequestMapping("/hwp/convert")
 class HwpConvertController(
+    private val hwpConvertFileUtil: HwpConvertFileUtil,
     private val hwpSocketClient: HwpSocketClient,
     private val fileStoragePort: FileStoragePort,
     private val hwpConvertContentsWriteCase: HwpConvertContentsWriteCase,
@@ -64,7 +63,7 @@ class HwpConvertController(
         val zipByteArr = hwpSocketClient.requestHtmlZip(hwpFile.inputStream, hwpFile.size.toInt(), extensionType)
 
         // 1. unZip
-        val unZipFile = unzipAndProcess(zipByteArr)
+        val unZipFile = hwpConvertFileUtil.unzip(zipByteArr)
         val indexHtml = unZipFile.first
         val imageFiles = unZipFile.second
 
@@ -89,7 +88,7 @@ class HwpConvertController(
         val createDto = HwpConvertContentsCreateDto(
             memberId = memberId,
             isConverted = true,
-            fileName = hwpFile.originalFilename ?: "파일명없음.hwp",
+            fileName = hwpFile.originalFilename!!,
             contents = htmlString,
             imgPath = imgFilePath,
         )
@@ -97,7 +96,6 @@ class HwpConvertController(
 
         // 4. 변환 컨텐츠 조회
         val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
-
         return ResponseUtil.ok(
             mapOf(
                 "contentsList" to contentsList,
@@ -142,40 +140,4 @@ class HwpConvertController(
         val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
         return ResponseUtil.ok(mapOf("contentsList" to contentsList))
     }
-
-    fun unzipAndProcess(zipBytes: ByteArray): Pair<String?, Map<String, ByteArray>> {
-        var indexXhtml: String? = null
-        val images = mutableMapOf<String, ByteArray>()
-
-        // ByteArrayInputStream으로 byteArray 읽기
-        val byteArrayInputStream = ByteArrayInputStream(zipBytes)
-
-        // ZipInputStream으로 압축 해제
-        ZipInputStream(byteArrayInputStream).use { zipInputStream ->
-            var entry: ZipEntry? = zipInputStream.nextEntry
-
-            while (entry != null) {
-                val entryName = entry.name
-
-                if (!entry.isDirectory) {
-                    when {
-                        // index.xhtml 파일 읽기
-                        entryName.equals("index.xhtml", ignoreCase = true) -> {
-                            indexXhtml = zipInputStream.readBytes().toString(Charsets.UTF_8)
-                        }
-                        // /bindata/ 하위 이미지 파일 읽기
-                        entryName.startsWith("bindata/") -> {
-                            val fileName = entryName.removePrefix("bindata/")
-                            images[fileName] = zipInputStream.readBytes()
-                        }
-                    }
-                }
-
-                zipInputStream.closeEntry()
-                entry = zipInputStream.nextEntry
-            }
-        }
-        return indexXhtml to images
-    }
-
 }

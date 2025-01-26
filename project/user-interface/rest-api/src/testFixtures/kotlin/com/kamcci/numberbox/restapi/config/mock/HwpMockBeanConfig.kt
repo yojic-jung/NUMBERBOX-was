@@ -7,6 +7,7 @@ import com.kamcci.numberbox.app.domain.vo.hwp.HwpConvertContentsVo
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
+import com.kamcci.numberbox.restapi.util.hwp.HwpConvertFileUtil
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import java.io.InputStream
@@ -31,15 +32,15 @@ class HwpMockBeanConfig {
     @Bean
     fun hwpConvertContentsWriteCase(): HwpConvertContentsWriteCase = object : HwpConvertContentsWriteCase {
         override fun create(createDto: HwpConvertContentsCreateDto): Long {
-            return 1L
+            return if (createDto.fileName != "실패") 0L else 1L
         }
 
         override fun update(updateDto: HwpConvertContentsUpdateDto): Long {
-            return 1L
+            return if (updateDto.id % 2L == 1L) 1L else 0L
         }
 
         override fun delete(contentsId: Long, memberId: UUID): Long {
-            return 1L
+            return if (contentsId % 2L == 1L) 1L else 0L
         }
     }
 
@@ -57,6 +58,13 @@ class HwpMockBeanConfig {
                     sysUpdateDate = LocalDateTime.now(),
                 )
             )
+        }
+    }
+
+    @Bean
+    fun hwpConvertFileUtil(): HwpConvertFileUtil = object : HwpConvertFileUtil() {
+        override fun unzip(zipBytes: ByteArray): Pair<String?, Map<String, ByteArray>> {
+            return Pair("index.xhtml", mutableMapOf("BIN001.png" to "".toByteArray()))
         }
     }
 }
