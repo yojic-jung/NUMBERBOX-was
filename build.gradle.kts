@@ -61,5 +61,7 @@ sonarqube {
         // Java 커버리지 리포트 경로
         property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.coverage.exclusions", "**/com/kamcci/numberbox/app/domain/**")
+        // 비활성화 규칙
+        property("sonar.issue.ignore.rules", "kotlin:S6517")
     }
 }

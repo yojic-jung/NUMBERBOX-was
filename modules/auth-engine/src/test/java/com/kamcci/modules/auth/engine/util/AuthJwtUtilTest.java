@@ -37,15 +37,15 @@ class AuthJwtUtilTest {
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody();
-        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
-        assertThat(claims).containsEntry(authJwtProperty.id(), UNIQ_ID.toString());
-        assertThat(claims).containsEntry(ROLE_NAME, roleList);
-        assertThat(claims).containsEntry(authJwtProperty.domain(), true);
-        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
+        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL)
+                .containsEntry(authJwtProperty.id(), UNIQ_ID.toString()) //
+                .containsEntry(ROLE_NAME, roleList) //
+                .containsEntry(authJwtProperty.domain(), true) //
+                .containsEntry(authJwtProperty.email(), EMAIL);
         assertThat(claims.getIssuer()).isEqualTo(authJwtProperty.issuer());
         assertThat(claims.getAudience()).isEqualTo(authJwtProperty.audience());
         assertThat(claims.getSubject()).isEqualTo(authJwtProperty.accessToken().subject());
-        assertThat(claims.getExpiration()).isAfter(new Date()); // Token should have expiration in the future
+        assertThat(claims.getExpiration()).isAfter(new Date());
     }
 
     @Test
@@ -61,9 +61,9 @@ class AuthJwtUtilTest {
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(newAccessToken)
                 .getBody();
-        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
-        assertThat(claims).containsEntry(authJwtProperty.id(), UNIQ_ID.toString());
-        assertThat(claims).containsEntry(ROLE_NAME, roleList);
+        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL) //
+                .containsEntry(authJwtProperty.id(), UNIQ_ID.toString()) //
+                .containsEntry(ROLE_NAME, roleList);
     }
 
     @Test

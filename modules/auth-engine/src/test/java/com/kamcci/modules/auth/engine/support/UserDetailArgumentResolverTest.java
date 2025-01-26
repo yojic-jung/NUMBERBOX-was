@@ -5,6 +5,7 @@ import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.annotation.UserRole;
 import com.kamcci.modules.auth.control.enumeration.UserRoleType;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.MethodParameter;
@@ -180,7 +181,10 @@ class UserDetailArgumentResolverTest {
             Object resolveValue = userDetailArgumentResolver.resolveArgument(parameter, null, Mockito.mock(), null);
 
             // then
-            assertThat(((List<?>) resolveValue).contains(UserRoleType.USER));
+            assertThat(resolveValue).isInstanceOf(List.class)
+                    .asInstanceOf(InstanceOfAssertFactories.list(Object.class)) // Generic 검증
+                    .contains(UserRoleType.USER);
+
         }
     }
 }

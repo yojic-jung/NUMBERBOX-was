@@ -13,11 +13,11 @@ class ContentsIdListConverterTest {
 
         // then
         assertThat(list.size).isEqualTo(5)
-        assertThat(list.contains(1L)).isTrue()
-        assertThat(list.contains(2L)).isTrue()
-        assertThat(list.contains(3L)).isTrue()
-        assertThat(list.contains(4L)).isTrue()
-        assertThat(list.contains(5L)).isTrue()
+        assertThat(list).contains(1L)
+        assertThat(list).contains(2L)
+        assertThat(list).contains(3L)
+        assertThat(list).contains(4L)
+        assertThat(list).contains(5L)
     }
 
     @Test

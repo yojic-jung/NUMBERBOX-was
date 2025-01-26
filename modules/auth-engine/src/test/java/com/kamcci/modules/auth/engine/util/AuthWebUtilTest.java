@@ -33,7 +33,7 @@ class AuthWebUtilTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(httpStatus.value());
-        assertThat(response.getContentAsString().contains(msg)).isTrue();
+        assertThat(response.getContentAsString()).contains(msg);
     }
 
     @Test
@@ -47,7 +47,7 @@ class AuthWebUtilTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(statusCode);
-        assertThat(response.getContentAsString().contains(msg)).isTrue();
+        assertThat(response.getContentAsString()).contains(msg);
     }
 
     @Test
@@ -60,7 +60,7 @@ class AuthWebUtilTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString().contains(msg)).isTrue();
+        assertThat(response.getContentAsString()).contains(msg);
     }
 
     @Test
@@ -75,7 +75,7 @@ class AuthWebUtilTest {
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString().contains(msg)).isTrue();
+        assertThat(response.getContentAsString()).contains(msg);
     }
 
     @Test
