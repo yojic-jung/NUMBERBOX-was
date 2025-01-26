@@ -46,7 +46,7 @@ public class LoginRequestAuthProvider implements AuthenticationProvider {
     private Authentication takeValidAuthentication(Authentication clientUserInfo, AuthUserDetail serverUserInfo) {
         // check1. 계정 존재 여부 체크
         if(serverUserInfo == null) {
-            throw new UsernameNotFoundException("해당 계정이 없습니다.");
+            throw new UsernameNotFoundException("계정 정보가 올바르지 않습니다.");
         }
 
         // check2. password 같은지 비교

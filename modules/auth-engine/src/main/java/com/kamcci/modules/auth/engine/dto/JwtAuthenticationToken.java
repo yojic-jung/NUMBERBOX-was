@@ -9,10 +9,11 @@ import java.util.Collection;
  * Def. jwt 기반 인증 객체
  */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
-    private final Object principal;
-    private final Object credentials;
+    private transient final Object principal;
+    private transient final Object credentials;
 
-    public JwtAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public JwtAuthenticationToken(Object principal, Object credentials,
+                                  Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;

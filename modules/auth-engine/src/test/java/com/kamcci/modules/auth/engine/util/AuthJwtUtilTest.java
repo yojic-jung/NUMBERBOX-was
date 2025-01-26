@@ -37,10 +37,11 @@ class AuthJwtUtilTest {
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody();
-        assertThat(claims.get(authJwtProperty.email())).isEqualTo(EMAIL);
-        assertThat(claims.get(authJwtProperty.id())).isEqualTo(UNIQ_ID.toString());
-        assertThat(claims.get(ROLE_NAME)).isEqualTo(roleList);
-        assertThat(claims.get(authJwtProperty.domain())).isEqualTo(true);
+        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
+        assertThat(claims).containsEntry(authJwtProperty.id(), UNIQ_ID.toString());
+        assertThat(claims).containsEntry(ROLE_NAME, roleList);
+        assertThat(claims).containsEntry(authJwtProperty.domain(), true);
+        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
         assertThat(claims.getIssuer()).isEqualTo(authJwtProperty.issuer());
         assertThat(claims.getAudience()).isEqualTo(authJwtProperty.audience());
         assertThat(claims.getSubject()).isEqualTo(authJwtProperty.accessToken().subject());
@@ -60,9 +61,9 @@ class AuthJwtUtilTest {
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(newAccessToken)
                 .getBody();
-        assertThat(claims.get(authJwtProperty.email())).isEqualTo(EMAIL);
-        assertThat(claims.get(authJwtProperty.id())).isEqualTo(UNIQ_ID.toString());
-        assertThat(claims.get(ROLE_NAME)).isEqualTo(roleList);
+        assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL);
+        assertThat(claims).containsEntry(authJwtProperty.id(), UNIQ_ID.toString());
+        assertThat(claims).containsEntry(ROLE_NAME, roleList);
     }
 
     @Test
@@ -73,7 +74,7 @@ class AuthJwtUtilTest {
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(refreshToken).getBody();
-        assertThat(claims.get(authJwtProperty.domain())).isEqualTo(true);
+        assertThat(claims).containsEntry(authJwtProperty.domain(), true);
         assertThat(claims.getIssuer()).isEqualTo(authJwtProperty.issuer());
         assertThat(claims.getAudience()).isEqualTo(authJwtProperty.audience());
         assertThat(claims.getSubject()).isEqualTo(authJwtProperty.refreshToken().subject());

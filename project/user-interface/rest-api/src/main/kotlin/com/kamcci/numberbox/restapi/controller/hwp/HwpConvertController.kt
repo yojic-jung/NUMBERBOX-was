@@ -20,6 +20,7 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.security.SecureRandom
 import java.time.LocalDate
 import java.util.*
 
@@ -70,7 +71,7 @@ class HwpConvertController(
         // 2. s3에 이미지 저장
         val now = LocalDate.now()
         val currentTime1 = System.currentTimeMillis()
-        val randomValue1: Int = Random().nextInt(100)
+        val randomValue1: Int = SecureRandom().nextInt(100)
         val imgFilePath = "docs/${now.year}/${now.month}/${currentTime1}_${randomValue1}"
         imageFiles.forEach {
             fileStoragePort.upload(

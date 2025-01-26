@@ -91,8 +91,8 @@ class JwtRequestAuthProviderTest {
         Authentication auth = jwtRequestAuthProvider.authenticate(authentication);
 
         // then
-        Map<String, Object> details = (Map<String, Object>) auth.getDetails();
-        String oldRefreshToken = (String) details.get("oldRefreshToken");
+        Map<String, Object> authDetails = (Map<String, Object>) auth.getDetails();
+        String oldRefreshToken = (String) authDetails.get("oldRefreshToken");
         assertThat(oldRefreshToken).isEqualTo(refreshToken);
     }
 
@@ -136,7 +136,7 @@ class JwtRequestAuthProviderTest {
 
         // then
         Map<String, Object> detail = (Map<String, Object>) actualAuth.getDetails();
-        assertThat(detail.get(UserId.ATTR_NAME)).isEqualTo(user.getUserId());
+        assertThat(detail).containsEntry(UserId.ATTR_NAME, user.getUserId());
     }
 
     @Test

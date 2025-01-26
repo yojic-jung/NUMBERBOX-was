@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.ROLE_PREFIX;
 
@@ -40,7 +39,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 권한 가져오기
         final List<String> roleList = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .map(authority -> authority.replace(ROLE_PREFIX, "")).collect(Collectors.toList());
+                .map(authority -> authority.replace(ROLE_PREFIX, "")).toList();
 
         // 응답(토큰, 권한 포함)
         tokenResponseService.responseAuthToken(username, userId, roleList);

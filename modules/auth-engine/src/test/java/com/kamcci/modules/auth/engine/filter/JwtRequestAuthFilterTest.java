@@ -74,7 +74,7 @@ class JwtRequestAuthFilterTest {
     }
 
     @Test
-    void jwt토큰_필터_동작_request_userId_setting() {
+    void jwt토큰_필터_userId_설정() {
         request.addHeader(AuthConstantConfig.ACCESS_TOKEN_NAME, "132");
         JwtAuthenticationToken auth = new JwtAuthenticationToken(null, null, null);
         Map<String, Object> newDetails = new HashMap<>();

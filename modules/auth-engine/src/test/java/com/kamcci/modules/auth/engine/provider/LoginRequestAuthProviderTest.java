@@ -73,8 +73,8 @@ class LoginRequestAuthProviderTest {
         Authentication actualAuth = loginRequestAuthProvider.authenticate(authentication);
 
         // then
-        Map<String, Object> details = (Map<String, Object>) actualAuth.getDetails();
-        assertThat(details.get(UserId.ATTR_NAME)).isEqualTo(userDetail.getUserId());
+        Map<String, Object> authDetails = (Map<String, Object>) actualAuth.getDetails();
+        assertThat(authDetails).containsEntry(UserId.ATTR_NAME, userDetail.getUserId());
     }
 
     @Test

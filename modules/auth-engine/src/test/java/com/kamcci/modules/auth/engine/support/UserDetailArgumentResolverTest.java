@@ -35,7 +35,7 @@ class UserDetailArgumentResolverTest {
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
 
         // then
-        assertThat(isSupport).isEqualTo(true);
+        assertThat(isSupport).isTrue();
     }
 
     @Test
@@ -49,7 +49,7 @@ class UserDetailArgumentResolverTest {
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
 
         // then
-        assertThat(isSupport).isEqualTo(true);
+        assertThat(isSupport).isTrue();
     }
 
     @Test
@@ -63,7 +63,7 @@ class UserDetailArgumentResolverTest {
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
 
         // then
-        assertThat(isSupport).isEqualTo(true);
+        assertThat(isSupport).isTrue();
     }
 
     @Test
@@ -77,7 +77,7 @@ class UserDetailArgumentResolverTest {
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
 
         // then
-        assertThat(isSupport).isEqualTo(true);
+        assertThat(isSupport).isTrue();
     }
 
     @Test
@@ -91,7 +91,7 @@ class UserDetailArgumentResolverTest {
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
 
         // then
-        assertThat(isSupport).isEqualTo(false);
+        assertThat(isSupport).isFalse();
     }
 
     @Test
@@ -180,7 +180,7 @@ class UserDetailArgumentResolverTest {
             Object resolveValue = userDetailArgumentResolver.resolveArgument(parameter, null, Mockito.mock(), null);
 
             // then
-            assertThat(((List<?>) resolveValue).contains(UserRoleType.USER)).isTrue();
+            assertThat(((List<?>) resolveValue).contains(UserRoleType.USER));
         }
     }
 }
