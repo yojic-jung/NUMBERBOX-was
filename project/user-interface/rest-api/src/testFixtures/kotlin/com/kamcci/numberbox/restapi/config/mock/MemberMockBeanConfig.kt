@@ -3,10 +3,8 @@ package com.kamcci.numberbox.restapi.config.mock
 import com.kamcci.numberbox.app.usecase.member.*
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import org.mockito.Mockito.mock
-import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
-@TestConfiguration
 class MemberMockBeanConfig {
     @Bean
     fun memberFollowReadUseCase(): MemberFollowReadCase = mock()

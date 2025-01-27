@@ -3,10 +3,8 @@ package com.kamcci.numberbox.restapi.config.mock
 import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
 import org.mockito.Mockito
-import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 
-@TestConfiguration
 class MathContentsMockBeanConfig {
     @Bean
     fun mathContentsIpsiReadCase(): MathContentsIpsiReadCase = Mockito.mock()

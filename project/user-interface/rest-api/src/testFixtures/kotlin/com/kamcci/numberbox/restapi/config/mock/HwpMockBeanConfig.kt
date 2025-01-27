@@ -8,13 +8,11 @@ import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
 import com.kamcci.numberbox.restapi.util.hwp.HwpConvertFileUtil
-import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.util.*
 
-@TestConfiguration
 class HwpMockBeanConfig {
     @Bean
     fun hwpSocketClient(): HwpSocketClient = object : HwpSocketClient {
