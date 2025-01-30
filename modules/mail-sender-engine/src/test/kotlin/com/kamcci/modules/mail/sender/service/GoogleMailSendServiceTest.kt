@@ -3,7 +3,7 @@ package com.kamcci.modules.mail.sender.service
 import com.kamcci.modules.mail.sender.auth.MailSenderAuthenticator
 import com.kamcci.modules.mail.sender.config.GoogleAccountProperty
 import com.kamcci.modules.mail.sender.config.GoogleMailProperty
-import com.kamcci.modules.mail.sender.processor.MockMailSendProcessor
+import com.kamcci.modules.mail.sender.processor.LocalMailSendProcessor
 import com.kamcci.modules.mail.sender.processor.ProdMailSendProcessor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -29,7 +29,7 @@ class GoogleMailSendServiceTest {
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
         val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
         googleMailSendService =
-            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
+            GoogleMailSendService(googleAccountProp, googleMailProp, LocalMailSendProcessor(), mailSenderAuthenticator)
 
         // when
         mockStatic(Transport::class.java).`when`<Unit> { Transport.send(any()) }.then { } // 실제 전송은 모킹
@@ -43,7 +43,7 @@ class GoogleMailSendServiceTest {
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
         val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
         googleMailSendService =
-            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
+            GoogleMailSendService(googleAccountProp, googleMailProp, LocalMailSendProcessor(), mailSenderAuthenticator)
 
         // when & then
         assertThrows<AddressException> {
@@ -58,7 +58,7 @@ class GoogleMailSendServiceTest {
         val googleMailProp = GoogleMailProperty("", "", "", "", "", "")
         val mailSenderAuthenticator = MailSenderAuthenticator(googleAccountProp)
         googleMailSendService =
-            GoogleMailSendService(googleAccountProp, googleMailProp, MockMailSendProcessor(), mailSenderAuthenticator)
+            GoogleMailSendService(googleAccountProp, googleMailProp, LocalMailSendProcessor(), mailSenderAuthenticator)
 
         // when & then
         assertThrows<AddressException> {

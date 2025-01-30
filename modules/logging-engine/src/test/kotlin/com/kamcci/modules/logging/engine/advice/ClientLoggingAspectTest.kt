@@ -1,9 +1,9 @@
 package com.kamcci.modules.logging.engine.advice
 
-import com.kammci.modules.logging.engine.base.MockEventPublisher
-import com.kammci.modules.logging.engine.base.MockProceedingJoinPoint
-import com.kammci.modules.logging.engine.service.MockHttpRequestLoggingService
-import com.kammci.modules.logging.engine.service.MockHttpResponseLoggingService
+import com.kammci.modules.logging.engine.stub.common.MockEventPublisher
+import com.kammci.modules.logging.engine.stub.common.MockProceedingJoinPoint
+import com.kammci.modules.logging.engine.stub.service.MockHttpRequestLoggingService
+import com.kammci.modules.logging.engine.stub.service.MockHttpResponseLoggingService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

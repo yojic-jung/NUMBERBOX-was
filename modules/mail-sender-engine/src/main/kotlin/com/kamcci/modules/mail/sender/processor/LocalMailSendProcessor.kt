@@ -10,7 +10,7 @@ import javax.mail.Message
  */
 @Profile("!prod")
 @Service
-class MockMailSendProcessor : MailSendProcessor {
+class LocalMailSendProcessor : MailSendProcessor {
     override fun send(message: Message) {
         // 아무것도 하지 않음
     }

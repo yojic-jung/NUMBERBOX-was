@@ -1,8 +1,11 @@
-package com.kammci.modules.logging.engine.base
+package com.kammci.modules.logging.engine.stub.common
 
 import org.springframework.context.ApplicationEventPublisher
 
 
+/**
+ * ApplicationEventPublisher 스텁
+ */
 class MockEventPublisher(
     private val throwException: Boolean
 ) : ApplicationEventPublisher {

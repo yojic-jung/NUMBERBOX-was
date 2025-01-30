@@ -1,9 +1,12 @@
-package com.kammci.modules.logging.engine.config
+package com.kammci.modules.logging.engine.dummy.config
 
 import com.kamcci.modules.logging.engine.config.LoggingTargetProperty
 
 
-object MockLoggingTargetProperty {
+/**
+ * 테스트용 데이터
+ */
+object LoggingDummyData {
     fun getLoggingTargetProperty(
         contentType: List<String> = listOf(""),
         exceptUri: List<String>? = null,

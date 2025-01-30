@@ -1,9 +1,12 @@
-package com.kammci.modules.logging.engine.service
+package com.kammci.modules.logging.engine.stub.service
 
 import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
 import com.kamcci.modules.logging.control.service.RequestLoggingService
 import java.util.*
 
+/**
+ * RequestLoggingService 스텁
+ */
 class MockHttpRequestLoggingService(private val throwException: Boolean) : RequestLoggingService {
 
 

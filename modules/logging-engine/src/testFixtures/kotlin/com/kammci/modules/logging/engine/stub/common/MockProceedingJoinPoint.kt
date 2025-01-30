@@ -1,4 +1,4 @@
-package com.kammci.modules.logging.engine.base
+package com.kammci.modules.logging.engine.stub.common
 
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.ProceedingJoinPoint
@@ -6,6 +6,9 @@ import org.aspectj.lang.Signature
 import org.aspectj.lang.reflect.SourceLocation
 import org.aspectj.runtime.internal.AroundClosure
 
+/**
+ * ProceedingJoinPoint 스텁
+ */
 class MockProceedingJoinPoint(private val returnValue: Any?) : ProceedingJoinPoint {
     override fun proceed(): Any? {
         return returnValue
