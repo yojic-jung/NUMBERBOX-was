@@ -45,7 +45,7 @@ class GoogleMailSendService(
         val session = Session.getInstance(mailProps, authenticator)
         session.debug = true
 
-        // 3. message 작성 및 발송
+        // 3. message 작성
         val message = MimeMessage(session)
         message.apply {
             // 발신자 셋팅

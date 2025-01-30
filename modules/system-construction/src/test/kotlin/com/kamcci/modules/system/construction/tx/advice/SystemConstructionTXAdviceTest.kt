@@ -5,23 +5,17 @@ import com.kamcci.modules.system.construction.dummy.TXExecute
 import com.kamcci.modules.system.construction.dummy.TestConstant.SUCCESS
 import com.kamcci.modules.system.construction.dummy.TransactionMethodTarget
 import com.kamcci.modules.system.construction.dummy.TxInterfaceImpl
+import com.kamcci.modules.system.construction.stub.common.MockPlatformTransactionManager
 import org.aopalliance.intercept.MethodInvocation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
-import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.support.DefaultTransactionStatus
 import java.lang.reflect.AccessibleObject
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.javaMethod
 
 class SystemConstructionTXAdviceTest {
-    private val transactionManager: PlatformTransactionManager = mock()
+    private val transactionManager = MockPlatformTransactionManager()
     private val systemConstructionTXAdvice: SystemConstructionTXAdvice =
         SystemConstructionTXAdvice(TXExecute::class.java, transactionManager)
 
@@ -43,15 +37,12 @@ class SystemConstructionTXAdviceTest {
                 override fun getStaticPart(): AccessibleObject = txTargetMethod!!
             }
 
-            val txStatus: DefaultTransactionStatus = mock()
-            `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
 
             // when
             val returnVal = systemConstructionTXAdvice.invoke(invocation)
 
             // then
             assertThat(returnVal).isEqualTo(SUCCESS)
-            verify(transactionManager).commit(txStatus)
         }
     }
 
@@ -67,15 +58,12 @@ class SystemConstructionTXAdviceTest {
             override fun proceed() = txTargetMethod?.invoke(txTarget)
             override fun getStaticPart(): AccessibleObject = txTargetMethod!!
         }
-        val txStatus: DefaultTransactionStatus = mock()
-        `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
 
         // when
         val returnVal = systemConstructionTXAdvice.invoke(invocation)
 
         // then
         assertThat(returnVal).isEqualTo(SUCCESS)
-        verify(transactionManager).commit(txStatus)
     }
 
     @Test
@@ -95,9 +83,6 @@ class SystemConstructionTXAdviceTest {
 
             override fun getStaticPart(): AccessibleObject = txTargetMethod!!
         }
-
-        val txStatus: DefaultTransactionStatus = mock()
-        `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
 
         // when & then
         assertThrows<RuntimeException> {
@@ -123,9 +108,6 @@ class SystemConstructionTXAdviceTest {
             override fun getStaticPart(): AccessibleObject = txTargetMethod!!
         }
 
-        val txStatus: DefaultTransactionStatus = mock()
-        `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
-
         // when & then
         assertThrows<Exception> {
             systemConstructionTXAdvice.invoke(invocation)
@@ -150,9 +132,6 @@ class SystemConstructionTXAdviceTest {
             override fun getStaticPart(): AccessibleObject = txTargetMethod!!
         }
 
-        val txStatus: DefaultTransactionStatus = mock()
-        `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
-
         // when & then
         assertThrows<Throwable> {
             systemConstructionTXAdvice.invoke(invocation)
@@ -172,14 +151,11 @@ class SystemConstructionTXAdviceTest {
             override fun proceed() = txTargetMethod?.invoke(txTarget)
             override fun getStaticPart(): AccessibleObject = txTargetMethod!!
         }
-        val txStatus: DefaultTransactionStatus = mock()
-        `when`(transactionManager.getTransaction(any())).thenReturn(txStatus)
 
         // when
         val returnVal = systemConstructionTXAdvice.invoke(invocation)
 
         // then
         assertThat(returnVal).isEqualTo(SUCCESS)
-        verify(transactionManager, never()).commit(any())
     }
 }

@@ -1,11 +1,9 @@
 package com.kamcci.modules.system.construction.di.registrar
 
 import com.kamcci.modules.system.construction.dummy.CustomQualifier
+import com.kamcci.modules.system.construction.stub.common.MockQualifierAnnotationAutowireCandidateResolver
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.verify
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.beans.factory.support.SimpleAutowireCandidateResolver
@@ -17,7 +15,7 @@ class CustomQualifierAnnotationRegistrarTest {
     fun `Qualifier 역할 진행할 커스텀 어노테이션 설정 - 성공`() {
         // given
         val beanFactory = DefaultListableBeanFactory()
-        val qualifierResolver: QualifierAnnotationAutowireCandidateResolver = mock()
+        val qualifierResolver = MockQualifierAnnotationAutowireCandidateResolver()
         beanFactory.autowireCandidateResolver = qualifierResolver
         val customAnnot = CustomQualifier::class
 
@@ -25,8 +23,10 @@ class CustomQualifierAnnotationRegistrarTest {
         customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)
 
         // then
-        verify(qualifierResolver).addQualifierType(Qualifier::class.java)
-        verify(qualifierResolver).addQualifierType(customAnnot.java)
+        val resolver = beanFactory.autowireCandidateResolver
+        assertThat(resolver).isInstanceOf(QualifierAnnotationAutowireCandidateResolver::class.java)
+        resolver as MockQualifierAnnotationAutowireCandidateResolver
+        assertThat(resolver.hasQualifier(customAnnot.java)).isTrue()
     }
 
     @Test
@@ -41,7 +41,7 @@ class CustomQualifierAnnotationRegistrarTest {
         customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)
 
         // then
-        assertThat(qualifierResolver !is QualifierAnnotationAutowireCandidateResolver).isTrue()
+        assertThat(qualifierResolver).isNotInstanceOf(QualifierAnnotationAutowireCandidateResolver::class.java)
     }
 }
 

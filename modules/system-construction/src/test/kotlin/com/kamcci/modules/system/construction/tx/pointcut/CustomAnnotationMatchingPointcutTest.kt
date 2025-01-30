@@ -21,7 +21,7 @@ class CustomAnnotationMatchingPointcutTest {
         val methodMatcher = customAnnotationMatchingPointcut.methodMatcher
 
         // then
-        assertThat(methodMatcher is MethodMatcher).isTrue()
+        assertThat(methodMatcher).isInstanceOf(MethodMatcher::class.java)
     }
 
     @Test

@@ -1,11 +1,12 @@
 package com.kamcci.modules.system.construction.di.processor
 
 import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
+import com.kamcci.modules.system.construction.dummy.NonAnnotatedClass
 import com.kamcci.modules.system.construction.dummy.TestBean
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
-import org.springframework.beans.factory.support.BeanDefinitionBuilder
-import org.springframework.beans.factory.support.GenericBeanDefinition
+import org.springframework.beans.factory.support.AutowireCandidateQualifier
+import org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition
 
 class AnnotationBeanDefinitionPropertyProcessorTest {
     private val annotationBeanDefinitionModifyProcessor = AnnotationBeanDefinitionPropertyProcessor()
@@ -13,8 +14,7 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
     @Test
     fun `Primary 및 Qualifier 속성 설정 - 성공`() {
         // given
-        val beanDefBuilder = mock(BeanDefinitionBuilder::class.java)
-        `when`(beanDefBuilder.beanDefinition).thenReturn(GenericBeanDefinition())
+        val beanDefBuilder = genericBeanDefinition()
 
         // when
         annotationBeanDefinitionModifyProcessor.modify(
@@ -24,24 +24,26 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
         )
 
         // then
-        verify(beanDefBuilder).setPrimary(true)
-        verify(beanDefBuilder).beanDefinition
+        assertThat(beanDefBuilder.beanDefinition.isPrimary).isTrue()
+        beanDefBuilder.beanDefinition.qualifiers.forEach {
+            assertThat(it).isInstanceOf(AutowireCandidateQualifier::class.java)
+        }
     }
 
     @Test
     fun `Primary 및 Qualifier 속성 설정 - 실패`() {
         // given
-        val beanDefBuilder = mock(BeanDefinitionBuilder::class.java)
+        val beanDefBuilder = genericBeanDefinition()
 
         // when
         annotationBeanDefinitionModifyProcessor.modify(
             getCustomAnnotationProperty(),
-            Any::class.java,
+            NonAnnotatedClass::class.java,
             beanDefBuilder
         )
 
         // then
-        verify(beanDefBuilder, never()).setPrimary(true)
-        verify(beanDefBuilder, never()).beanDefinition
+        assertThat(beanDefBuilder.beanDefinition.isPrimary).isFalse()
+        assertThat(beanDefBuilder.beanDefinition.qualifiers).isEmpty()
     }
 }
