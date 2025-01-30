@@ -14,20 +14,17 @@ import org.springframework.web.util.ContentCachingRequestWrapper
 
 @WebMvcTest(controllers = [TestLoggingController::class]) // 컨트롤러 설정
 class HttpRequestLoggingFilterTest {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-
     @Test
-    fun `should wrap request in ContentCachingRequestWrapper`() {
+    fun `ContentCachingRequestWrapper 래핑 테스트 - 성공`() {
         // when
         mockMvc.perform(
             MockMvcRequestBuilders
                 .get("/test")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isOk)
-
     }
 }
 
