@@ -4,10 +4,10 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
-import com.kamcci.numberbox.app.service.math.MathContentsFixture.getMathConIpsiSrcModifyDto
-import com.kamcci.numberbox.app.service.math.MathContentsFixture.getMathConLicenseModifyDto
-import com.kamcci.numberbox.app.service.math.MathContentsFixture.getMathConSimilarSrcCreateDto
-import com.kamcci.numberbox.app.service.math.MathContentsFixture.getMathContentsModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConIpsiSrcModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConLicenseModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConSimilarSrcCreateDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsModifyDto
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

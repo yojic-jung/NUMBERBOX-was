@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.port.orm.member.MemberPrivateWriteOrmPort
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberPhoneUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPhoneUpdtDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

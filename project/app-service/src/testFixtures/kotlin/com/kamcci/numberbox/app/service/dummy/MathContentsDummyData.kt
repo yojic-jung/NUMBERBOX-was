@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.math
+package com.kamcci.numberbox.app.service.dummy
 
 import com.kamcci.numberbox.app.domain.dto.math.*
 import com.kamcci.numberbox.app.domain.enumeration.math.IpsiManageInsType
@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
 import com.kamcci.numberbox.app.domain.enumeration.math.MathTypeClassifyType
 import java.util.*
 
-object MathContentsFixture {
+object MathContentsDummyData {
     fun getMathContentsRepoModifyDto() = MathContentsRepoModifyDto(
         contentsId = 1L,
         memberId = UUID.randomUUID()

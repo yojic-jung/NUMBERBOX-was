@@ -1,9 +1,9 @@
-package com.kamcci.numberbox.app.service.member
+package com.kamcci.numberbox.app.service.dummy
 
 import com.kamcci.numberbox.app.domain.dto.member.*
 import java.util.*
 
-object MemberFixture {
+object MemberDummyData {
     fun getMemberSignupDto() = MemberSignUpDto(
         email = "signup@test.com",
         password = "1234"

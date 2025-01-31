@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.app.domain.vo.member.MemberProfileImgVo
 import com.kamcci.numberbox.app.port.orm.member.MemberProfileWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberProfileImgUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

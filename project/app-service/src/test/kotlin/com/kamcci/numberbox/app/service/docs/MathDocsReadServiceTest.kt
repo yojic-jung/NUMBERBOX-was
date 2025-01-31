@@ -4,7 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsReadOrmPort
-import com.kamcci.numberbox.app.service.docs.MathDocsFixture.getMathIpsiDocsReadDto
+import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData
+import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathIpsiDocsReadDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -22,7 +23,7 @@ class MathDocsReadServiceTest {
             val unitIdAndTypeId = "21001-1,21001-2"
             val count = 10
             val readDto = MathDocsReadDto(unitIdAndTypeId, quesLevel, count)
-            val docsVoList = MathDocsFixture.getMathDocsVoList()
+            val docsVoList = MathDocsDummyData.getMathDocsVoList()
 
             Mockito.`when`(mathDocsReadOrmPort.countGroupByUnitAndType(any(), any(), any())).thenReturn(listOf(1, 1))
             Mockito.`when`(mathDocsReadOrmPort.readAllInHouseDocsVoBy(any(), any(), any(), any()))
@@ -43,7 +44,7 @@ class MathDocsReadServiceTest {
         val quesLevel = 1
         val count = 1
         val readDto = MathDocsReadDto(unitIdAndTypeId, quesLevel, count)
-        val docsVoList = MathDocsFixture.getMathDocsVoList()
+        val docsVoList = MathDocsDummyData.getMathDocsVoList()
 
         Mockito.`when`(mathDocsReadOrmPort.countGroupByUnitAndType(any(), any(), any())).thenReturn(listOf(1, 1))
         Mockito.`when`(mathDocsReadOrmPort.readAllInHouseDocsVoBy(any(), any(), any(), any())).thenReturn(docsVoList)

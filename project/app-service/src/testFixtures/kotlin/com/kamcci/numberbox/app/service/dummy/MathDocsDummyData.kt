@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.docs
+package com.kamcci.numberbox.app.service.dummy
 
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperCreateDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsPaperUpdtDto
@@ -10,7 +10,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
 import java.time.LocalDateTime
 
-object MathDocsFixture {
+object MathDocsDummyData {
     fun getMathDocsVoList() = listOf(
         MathDocsVo(
             1L,

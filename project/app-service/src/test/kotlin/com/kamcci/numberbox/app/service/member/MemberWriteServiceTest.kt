@@ -3,10 +3,10 @@ package com.kamcci.numberbox.app.service.member
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
 import com.kamcci.numberbox.app.port.orm.member.*
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberPasswdConfirmDto
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberPasswdUpdtDto
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberPrivateSignUpDto
-import com.kamcci.numberbox.app.service.member.MemberFixture.getMemberSignupDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPasswdConfirmDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPasswdUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPrivateSignUpDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberSignupDto
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

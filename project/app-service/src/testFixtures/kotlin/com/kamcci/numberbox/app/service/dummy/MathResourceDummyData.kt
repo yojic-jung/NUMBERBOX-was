@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.resource
+package com.kamcci.numberbox.app.service.dummy
 
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
@@ -7,7 +7,7 @@ import com.kamcci.numberbox.app.domain.vo.resource.MathResourceFileVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceImgVo
 import java.util.*
 
-object MathResourceFixture {
+object MathResourceDummyData {
 
     fun getMathResourceCreateDto() = MathResourceCreateDto(
         memberId = UUID.randomUUID(),

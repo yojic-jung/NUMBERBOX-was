@@ -3,9 +3,9 @@ package com.kamcci.numberbox.app.service.resource
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.resource.MathResourceWriteOrmPort
 import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
-import com.kamcci.numberbox.app.service.resource.MathResourceFixture.getMathResourceCreateDto
-import com.kamcci.numberbox.app.service.resource.MathResourceFixture.getMathResourceFileVo
-import com.kamcci.numberbox.app.service.resource.MathResourceFixture.getMathResourceUpdateDtoList
+import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceCreateDto
+import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceFileVo
+import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceUpdateDtoList
 import com.kamcci.numberbox.app.service.resource.MathResourceWriteService.Companion.NOT_MY_CONTENTS
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import org.assertj.core.api.Assertions.assertThat

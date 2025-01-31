@@ -2,8 +2,8 @@ package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperWriteOrmPort
-import com.kamcci.numberbox.app.service.docs.MathDocsFixture.getMathDocsPaperCreateDto
-import com.kamcci.numberbox.app.service.docs.MathDocsFixture.getMathDocsPaperUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathDocsPaperCreateDto
+import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathDocsPaperUpdtDto
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

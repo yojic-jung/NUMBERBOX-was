@@ -2,7 +2,7 @@ package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
-import com.kamcci.numberbox.app.service.math.MathContentsFixture.getMathContentsRepoModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsRepoModifyDto
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

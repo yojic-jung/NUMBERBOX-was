@@ -2,7 +2,7 @@ package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.docs.MathDocsUsageWriteOrmPort
-import com.kamcci.numberbox.app.service.docs.MathDocsFixture.getMathDocsUsageCreateDto
+import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathDocsUsageCreateDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
