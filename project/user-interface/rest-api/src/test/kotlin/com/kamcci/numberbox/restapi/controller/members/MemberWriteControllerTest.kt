@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.members
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.resolver.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
+import com.kamcci.numberbox.restapi.stub.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`

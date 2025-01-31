@@ -46,8 +46,10 @@ dependencies {
     testImplementation(project(":project:infrastructure:storage-adapter"))
     testImplementation(project(":project:infrastructure:email-adapter"))
     testImplementation(project(":project:infrastructure:orm-jpa-adapter"))
+    testImplementation(testFixtures(project(":project:app-service")))
     testImplementation(testFixtures(project(":project:infrastructure:orm-jpa-adapter")))
     testImplementation(project(":modules:system-construction"))
+    testFixturesImplementation(testFixtures(project(":project:app-service")))
     testFixturesImplementation(project(":modules:mail-sender-control"))
 }
 
