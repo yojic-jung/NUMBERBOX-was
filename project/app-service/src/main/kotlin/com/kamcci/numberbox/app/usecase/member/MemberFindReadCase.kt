@@ -10,7 +10,7 @@ interface MemberFindReadCase {
     fun readMyEmail(userName: String, phoneNumber: String): String?
 
     /**
-     * 비밀번호 찾기
+     * 임시 비밀번호 발급
      */
-    fun readMyPassword(email: String)
+    fun sendNewTempPassword(email: String)
 }

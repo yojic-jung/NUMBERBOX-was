@@ -43,7 +43,7 @@ class MemberFindServiceTest {
     }
 
     @Test
-    fun `내 비밀번호 조회 - 성공`() {
+    fun `임시 비밀번호 발급 - 성공`() {
         // given
         val email = "email@email.net"
         val encodedPassword = "encodedPassword"
@@ -51,18 +51,18 @@ class MemberFindServiceTest {
         Mockito.`when`(passwordEncoder.encode(any())).thenReturn(encodedPassword)
 
         // when
-        memberFindService.readMyPassword(email)
+        memberFindService.sendNewTempPassword(email)
     }
 
     @Test
-    fun `내 비밀번호 조회 - 실패`() {
+    fun `임시 비밀번호 발급 - 실패`() {
         // given
         val email = "email@email.net"
         Mockito.`when`(memberReadCase.existsByEmail(email)).thenReturn(false)
 
         // when
         val exception = assertThrows<BusinessInValidException> {
-            memberFindService.readMyPassword(email)
+            memberFindService.sendNewTempPassword(email)
         }
         assertThat(exception.msg).isEqualTo(MemberFindService.NOT_EXIST_USER)
     }

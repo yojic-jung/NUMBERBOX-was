@@ -27,13 +27,12 @@ class MemberFindService(
         const val NOT_EXIST_USER = "존재하지 않는 계정입니다."
     }
 
-    @TXExecute
     override fun readMyEmail(userName: String, phoneNumber: String): String? {
         return memberReadCase.readEmailByUsernameAndPhone(userName, phoneNumber)
     }
 
     @TXExecute
-    override fun readMyPassword(email: String) {
+    override fun sendNewTempPassword(email: String) {
         memberReadCase.existsByEmail(email).let {
             if (!it) throw BusinessInValidException(NOT_EXIST_USER)
         }
@@ -54,5 +53,4 @@ class MemberFindService(
             .map { chars.random() }
             .joinToString("")
     }
-
 }

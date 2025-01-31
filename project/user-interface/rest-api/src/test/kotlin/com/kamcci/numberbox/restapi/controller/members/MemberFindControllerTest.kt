@@ -62,12 +62,12 @@ class MemberFindControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `비밀번호 찾기 - 실패(유효하지 않은 이메일)`() {
+    fun `임시 비밀번호 발급 - 실패(유효하지 않은 이메일)`() {
         // given
-        val queryString = mapOf("email" to "email")
+        val reqBody = mapOf("email" to "email")
 
         //when
-        val resultAction = getRequest(FIND_PASSWD_URL, queryString)
+        val resultAction = putRequest(FIND_PASSWD_URL, reqBody)
 
         // then
         assert4xx(resultAction)
@@ -75,12 +75,12 @@ class MemberFindControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `비밀번호 찾기 - 성공`() {
+    fun `임시 비밀번호 발급 - 성공`() {
         // given
         val reqBody = mapOf("email" to "test@test.com")
 
         //when
-        val resultAction = getRequest(FIND_PASSWD_URL, reqBody)
+        val resultAction = putRequest(FIND_PASSWD_URL, reqBody)
 
         // then
         assert2xx(resultAction)
