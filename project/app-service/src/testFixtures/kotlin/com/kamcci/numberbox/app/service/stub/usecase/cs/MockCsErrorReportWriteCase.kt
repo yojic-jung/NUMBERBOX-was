@@ -5,6 +5,6 @@ import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase
 
 class MockCsErrorReportWriteCase : CsErrorReportWriteCase {
     override fun createReport(createDto: CsErrorReportCreateDto): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 }

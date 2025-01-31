@@ -1,9 +1,9 @@
-package com.kamcci.numberbox.restapi.config.mock
+package com.kamcci.numberbox.restapi.stub
 
 import com.kamcci.numberbox.restapi.config.WebConfig
-import com.kamcci.numberbox.restapi.resolver.MockUserDetailArgumentResolver
+import jakarta.servlet.Filter
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.catalina.security.SecurityConfig
-import org.mockito.Mockito
 import org.springframework.context.annotation.Bean
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -11,10 +11,18 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 class SecurityWebMockBeanConfig {
 
     @Bean
-    fun securityConfig(): SecurityConfig = Mockito.mock()
+    fun securityConfig(): SecurityConfig = SecurityConfig.newInstance()
 
     @Bean
-    fun securityFilterChain(): SecurityFilterChain = Mockito.mock()
+    fun securityFilterChain(): SecurityFilterChain = object : SecurityFilterChain {
+        override fun matches(request: HttpServletRequest?): Boolean {
+            return true
+        }
+
+        override fun getFilters(): MutableList<Filter> {
+            return mutableListOf()
+        }
+    }
 
     @Bean
     fun handlerMethodArgumentResolver(): HandlerMethodArgumentResolver {

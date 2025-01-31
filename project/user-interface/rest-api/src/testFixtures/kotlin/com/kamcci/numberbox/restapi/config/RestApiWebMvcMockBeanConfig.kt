@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.config
 
-import com.kamcci.numberbox.restapi.config.mock.*
+import com.kamcci.numberbox.restapi.stub.*
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Import
 
@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Import
     SecurityWebMockBeanConfig::class,
     CsMockBeanConfig::class,
     FileMockBeanConfig::class,
-    MathCategoryMockBeanConfig::class,
-    MathContentsMockBeanConfig::class,
+    MockMathContentsBeanConfig::class,
     MathDocsMockBeanConfig::class,
     MathResourceMockBeanConfig::class,
     MemberMockBeanConfig::class,

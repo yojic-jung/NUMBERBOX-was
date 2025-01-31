@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.config
 import com.kamcci.modules.auth.control.service.TokenResponseService
 import com.kamcci.modules.mail.sender.service.MailSendService
 import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
-import com.kamcci.numberbox.restapi.resolver.MockUserDetailArgumentResolver
+import com.kamcci.numberbox.restapi.stub.MockUserDetailArgumentResolver
 import com.kamcci.numberbox.restapi.util.auth.AuthPasswordEncoderWrapper
 import org.mockito.Mockito
 import org.springframework.boot.test.context.TestConfiguration

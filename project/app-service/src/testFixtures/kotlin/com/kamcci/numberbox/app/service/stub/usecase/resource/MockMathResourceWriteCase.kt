@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.stub.usecase.member
+package com.kamcci.numberbox.app.service.stub.usecase.resource
 
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto

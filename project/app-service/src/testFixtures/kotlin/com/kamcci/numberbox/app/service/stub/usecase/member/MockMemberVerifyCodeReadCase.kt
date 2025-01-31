@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.stub.usecase.math
+package com.kamcci.numberbox.app.service.stub.usecase.member
 
 import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.usecase.member.MemberVerifyCodeReadCase
