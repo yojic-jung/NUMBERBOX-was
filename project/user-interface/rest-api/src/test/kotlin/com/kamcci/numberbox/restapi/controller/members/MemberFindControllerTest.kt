@@ -4,7 +4,6 @@ import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
 import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @WebMvcUnitTest
 class MemberFindControllerTest : BaseMockMvcTest() {
@@ -71,7 +70,7 @@ class MemberFindControllerTest : BaseMockMvcTest() {
 
         // then
         assert4xx(resultAction)
-        assertException(resultAction, HandlerMethodValidationException::class)
+        assertException(resultAction, MethodArgumentNotValidException::class)
     }
 
     @Test
