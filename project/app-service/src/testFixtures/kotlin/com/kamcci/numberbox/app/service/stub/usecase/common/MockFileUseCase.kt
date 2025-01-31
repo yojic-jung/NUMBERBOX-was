@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.app.service.common
+package com.kamcci.numberbox.app.service.stub.usecase.common
 
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
