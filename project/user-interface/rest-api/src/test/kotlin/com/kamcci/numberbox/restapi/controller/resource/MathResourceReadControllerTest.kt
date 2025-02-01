@@ -3,8 +3,8 @@ package com.kamcci.numberbox.restapi.controller.resource
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.resource.MathResourceFixture.getMathResourceDetailVoList
-import com.kamcci.numberbox.restapi.dummy.resource.MathResourceFixture.getMathResourceVoList
+import com.kamcci.numberbox.restapi.dummy.resource.MathResourceDummyData.getMathResourceDetailVoList
+import com.kamcci.numberbox.restapi.dummy.resource.MathResourceDummyData.getMathResourceVoList
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.any

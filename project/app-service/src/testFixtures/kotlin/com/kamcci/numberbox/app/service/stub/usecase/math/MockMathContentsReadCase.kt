@@ -3,20 +3,28 @@ package com.kamcci.numberbox.app.service.stub.usecase.math
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.*
+import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVo
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVoList
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsOnlyVo
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsVo
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsVoList
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathInHouseContentsVo
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathIpsiContentsVo
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import java.util.*
 
 class MockMathContentsReadCase : MathContentsReadCase {
     override fun readById(contentsId: Long): MathContentsVo? {
-        TODO("Not yet implemented")
+        return if (contentsId == FAIL_ID) null else getMathContentsVo(contentsId)
     }
 
     override fun readById(contentsId: List<Long>, pageReq: PageRequest): List<MathContentsVo> {
-        TODO("Not yet implemented")
+        return getMathContentsVoList()
     }
 
-    override fun readDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo? {
-        TODO("Not yet implemented")
+    override fun readDetailByContentsIdAndMemberId(id: Long, memberId: UUID): MathContentsDetailVo {
+        return getMathContentsDetailVo()
     }
 
     override fun readDetailByMemberId(
@@ -24,7 +32,7 @@ class MockMathContentsReadCase : MathContentsReadCase {
         svcPosbSttsType: ContentsSvcPosbSttsType?,
         pageReq: PageRequest
     ): List<MathContentsDetailVo> {
-        TODO("Not yet implemented")
+        return getMathContentsDetailVoList()
     }
 
     override fun readDetailByMemberId(
@@ -33,7 +41,7 @@ class MockMathContentsReadCase : MathContentsReadCase {
         svcPosbSttsType: ContentsSvcPosbSttsType?,
         pageReq: PageRequest
     ): List<MathContentsDetailVo> {
-        TODO("Not yet implemented")
+        return getMathContentsDetailVoList()
     }
 
     override fun readDetailByUnitId(
@@ -41,31 +49,31 @@ class MockMathContentsReadCase : MathContentsReadCase {
         unitId: List<Int>,
         pageReq: PageRequest
     ): List<MathContentsDetailVo> {
-        TODO("Not yet implemented")
+        return getMathContentsDetailVoList()
     }
 
     override fun readInHouseContentsById(contentsId: Long): MathInHouseContentsVo? {
-        TODO("Not yet implemented")
+        return if (contentsId == FAIL_ID) null else getMathInHouseContentsVo()
     }
 
     override fun readIpsiContentsById(contentsId: Long): MathIpsiContentsVo? {
-        TODO("Not yet implemented")
+        return if (contentsId == FAIL_ID) null else getMathIpsiContentsVo()
     }
 
     override fun readTransContCntById(id: Long): Int? {
-        TODO("Not yet implemented")
+        return if (id == FAIL_ID) null else 1
     }
 
     override fun readContentsOnly(contentsId: Long, memberId: UUID): MathContentsOnlyVo? {
-        TODO("Not yet implemented")
+        return if (contentsId == FAIL_ID) null else getMathContentsOnlyVo()
     }
 
     override fun countByUnitId(unitId: List<Int>): Long {
-        TODO("Not yet implemented")
+        return 10L
     }
 
     override fun existById(id: Long): Boolean {
-        TODO("Not yet implemented")
+        return id != FAIL_ID
     }
 
 }

@@ -1,21 +1,14 @@
 package com.kamcci.numberbox.restapi.controller.math
 
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @WebMvcUnitTest
-class MathContentsRepoWriteControllerTest(
-    @Autowired
-    private val mathContentsReadCase: MathContentsReadCase
-) : BaseMockMvcTest() {
+class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/math/like/content"
     }
@@ -24,7 +17,6 @@ class MathContentsRepoWriteControllerTest(
     fun `문제 좋아요 - 성공`() {
         // given
         val reqBody = mapOf("contentsId" to "1")
-        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(true)
 
         // when
         val resultAction = postRequest(PREFIX, reqBody)
@@ -36,8 +28,7 @@ class MathContentsRepoWriteControllerTest(
     @Test
     fun `문제 좋아요 - 실패`() {
         // given
-        val reqBody = mapOf("contentsId" to "1")
-        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(false)
+        val reqBody = mapOf("contentsId" to "2")
 
         // when
         val resultAction = postRequest(PREFIX, reqBody)
@@ -53,7 +44,6 @@ class MathContentsRepoWriteControllerTest(
         // given
         val contentsId = 1
         val reqBody = mapOf("contentsId" to contentsId)
-        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(true)
 
         // when
         val resultAction = delRequest("$PREFIX/$contentsId", reqBody)
@@ -65,8 +55,7 @@ class MathContentsRepoWriteControllerTest(
     @Test
     fun `문제 좋아요 취소 - 실패`() {
         // given
-        val contentsId = 1
-        Mockito.`when`(mathContentsReadCase.existById(any())).thenReturn(false)
+        val contentsId = 2
 
         // when
         val resultAction = delRequest("$PREFIX/$contentsId")

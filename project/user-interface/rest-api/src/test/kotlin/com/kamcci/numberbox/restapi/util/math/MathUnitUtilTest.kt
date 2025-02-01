@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.util.math
 
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathCategoryFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,7 +9,7 @@ class MathUnitUtilTest {
     @Test
     fun `전체 단원 정보 반환 - 성공`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitGroupMap = MathUnitUtil.extractUnitMap(unitCategoryDummy)
@@ -23,7 +23,7 @@ class MathUnitUtilTest {
     @Test
     fun `학년 같은 단원 id 추출 - 성공`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -36,7 +36,7 @@ class MathUnitUtilTest {
     @Test
     fun `학년 같은 단원 id 추출 - 실패`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -49,7 +49,7 @@ class MathUnitUtilTest {
     @Test
     fun `대단원 같은 단원 id 추출 - 성공`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -62,7 +62,7 @@ class MathUnitUtilTest {
     @Test
     fun `대단원 같은 단원 id 추출 - 실패`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -75,7 +75,7 @@ class MathUnitUtilTest {
     @Test
     fun `중단원 같은 단원 id 추출 - 성공`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -88,7 +88,7 @@ class MathUnitUtilTest {
     @Test
     fun `중단원 같은 단원 id 추출 - 실패`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =
@@ -101,7 +101,7 @@ class MathUnitUtilTest {
     @Test
     fun `소단원 같은 단원 id 추출 - 성공`() {
         // given
-        val unitCategoryDummy = MathCategoryFixture.getMathCategoryUnitVo()
+        val unitCategoryDummy = getMathCategoryUnitVo()
 
         // when
         val unitIdList =

@@ -1,14 +1,15 @@
 package com.kamcci.numberbox.app.service.stub.usecase.math
 
+import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_ID
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import java.util.*
 
 class MockMathContentsRepoReadCase : MathContentsRepoReadCase {
     override fun readContentsIdByMemberId(memberId: UUID): List<Long> {
-        TODO("Not yet implemented")
+        return listOf(1L, 2L)
     }
 
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
-        TODO("Not yet implemented")
+        return contentsId != FAIL_ID
     }
 }

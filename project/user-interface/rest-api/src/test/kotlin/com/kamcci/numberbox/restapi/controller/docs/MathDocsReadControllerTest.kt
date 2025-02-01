@@ -7,23 +7,14 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.IL
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.ILLEGAL_WRONG_RATIO
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.usecase.docs.MathDocsPaperReadCase
-import com.kamcci.numberbox.app.usecase.docs.MathDocsReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.math.MathDocsFixture.getMathDocsPaperVo
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.any
 import org.springframework.beans.BeanInstantiationException
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.MethodArgumentNotValidException
 
 @WebMvcUnitTest
-class MathDocsReadControllerTest @Autowired constructor(
-    private val mathDocsPaperReadCase: MathDocsPaperReadCase,
-    private val mathDocsReadCase: MathDocsReadCase
-) : BaseMockMvcTest() {
+class MathDocsReadControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/math/docs"
 
@@ -182,10 +173,6 @@ class MathDocsReadControllerTest @Autowired constructor(
     fun `나의 학습지 조회 - 성공`() {
         // given
         val docsId = 1L
-        val mathDocsPaperVo = getMathDocsPaperVo()
-        Mockito.`when`(mathDocsPaperReadCase.readByIdAndMemberId(any(), any())).thenReturn(mathDocsPaperVo)
-        Mockito.`when`(mathDocsReadCase.readDocsByDocsPaperId(any())).thenReturn(null)
-
 
         // when
         val resultAction = getRequest("$DOCS_BY_ID/$docsId")
@@ -197,7 +184,7 @@ class MathDocsReadControllerTest @Autowired constructor(
     @Test
     fun `나의 학습지 조회 - 실퍠(나의 학습지 아님)`() {
         // given
-        val docsId = 1L
+        val docsId = 2L
 
         // when
         val resultAction = getRequest("$DOCS_BY_ID/$docsId")

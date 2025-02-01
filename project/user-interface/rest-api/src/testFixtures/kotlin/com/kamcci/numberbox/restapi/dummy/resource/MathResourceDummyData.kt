@@ -4,11 +4,9 @@ import com.kamcci.numberbox.app.domain.vo.resource.MathResourceCateVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceDetailVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceImgVo
 import com.kamcci.numberbox.app.domain.vo.resource.MathResourceVo
-import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
-import com.kamcci.numberbox.restapi.dummy.file.FileFixture.getMultipartFile
 import java.time.LocalDateTime
 
-object MathResourceFixture {
+object MathResourceDummyData {
     fun getMathResourceVo(id: Long?) =
         MathResourceVo(
             id = id ?: 1L,
@@ -56,5 +54,5 @@ object MathResourceFixture {
             getMathResourceDetailVo(4L),
             getMathResourceDetailVo(5L),
         )
-    
+
 }

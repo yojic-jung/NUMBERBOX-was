@@ -1,20 +1,13 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.numberbox.app.usecase.member.MemberPrivateWriteCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.MethodArgumentNotValidException
 import java.util.*
 
 @WebMvcUnitTest
-class MemberPrivateWriteControllerTest(
-    @Autowired
-    private val memberPrivateWriteCase: MemberPrivateWriteCase
-) : BaseMockMvcTest() {
+class MemberPrivateWriteControllerTest : BaseMockMvcTest() {
 
     companion object {
         const val UPDATE_PHONE_URL = "/member/phone"
@@ -28,7 +21,6 @@ class MemberPrivateWriteControllerTest(
             "verifyCode" to verifyCode,
             "phoneNumber" to "01012345678"
         )
-        `when`(memberPrivateWriteCase.updatePhoneNumber(any())).thenReturn(true)
 
         //when
         val resultAction = putRequest(UPDATE_PHONE_URL, reqBody)

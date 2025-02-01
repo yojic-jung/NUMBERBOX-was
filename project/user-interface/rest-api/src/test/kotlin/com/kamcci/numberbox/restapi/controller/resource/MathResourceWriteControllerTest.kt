@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.file.FileFixture.getMultipartFile
+import com.kamcci.numberbox.restapi.dummy.file.FileDummyData.getMultipartFile
 import com.kamcci.numberbox.restapi.util.file.FileUtil
 import io.mockk.every
 import io.mockk.mockkObject

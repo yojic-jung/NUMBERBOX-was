@@ -1,32 +1,13 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
-import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathCategoryFixture.getMathCategoryUnitVo
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathContentsOnlyVo
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathContentsVo
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathInHouseContentsVo
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsFixture.getMathIpsiContentsVo
-import com.kamcci.numberbox.restapi.dummy.member.MemberProfileFixture.getMemberProfileVo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class MathContentsReadControllerTest @Autowired constructor(
-    private val memberProfileReadCase: MemberProfileReadCase,
-    private val mathContentsReadCase: MathContentsReadCase,
-    private val mathCategoryUnitReadCase: MathCategoryUnitReadCase,
-    private val mathContentsRepoReadCase: MathContentsRepoReadCase,
-) : BaseMockMvcTest() {
+class MathContentsReadControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/math/content"
         const val CONTENTS_URL = PREFIX
@@ -34,11 +15,6 @@ class MathContentsReadControllerTest @Autowired constructor(
         const val USER_CONTENTS_URL = "$PREFIX/user"
         const val LIST_CONTENTS_URL = "$PREFIX/list"
         const val REPO_CONTENTS_URL = "$PREFIX/repo"
-    }
-
-    @BeforeEach
-    fun setUp() {
-        Mockito.reset(mathContentsReadCase) // Mock 상태 리셋
     }
 
     @Test
@@ -49,8 +25,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "contentsOnly" to "true",
             "contentsClassify" to "InHouse"
         )
-        Mockito.`when`(mathContentsReadCase.readContentsOnly(any(), any()))
-            .thenReturn(getMathContentsOnlyVo())
 
         // when
         val resultAction = getRequest("$CONTENTS_URL/$contentsId", reqBody)
@@ -70,8 +44,6 @@ class MathContentsReadControllerTest @Autowired constructor(
 
         // when
         val resultAction = getRequest("$CONTENTS_URL/$contentsId", reqBody)
-        Mockito.`when`(mathContentsReadCase.readContentsOnly(any(), any()))
-            .thenReturn(null)
 
         // then
         assert4xx(resultAction)
@@ -87,8 +59,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "contentsOnly" to "false",
             "contentsClassify" to "InHouse"
         )
-        Mockito.`when`(mathContentsReadCase.readInHouseContentsById(any()))
-            .thenReturn(getMathInHouseContentsVo())
 
         // when
         val resultAction = getRequest("$CONTENTS_URL/$contentsId", reqBody)
@@ -104,8 +74,6 @@ class MathContentsReadControllerTest @Autowired constructor(
         val reqBody = mapOf(
             "contentsClassify" to "Ipsi"
         )
-        Mockito.`when`(mathContentsReadCase.readIpsiContentsById(any()))
-            .thenReturn(getMathIpsiContentsVo())
         // when
         val resultAction = getRequest("$CONTENTS_URL/$contentsId", reqBody)
 
@@ -121,8 +89,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "contentsOnly" to "false",
             "contentsClassify" to "UserCustom"
         )
-        Mockito.`when`(mathContentsReadCase.readById(any()))
-            .thenReturn(getMathContentsVo())
 
         // when
         val resultAction = getRequest("$CONTENTS_URL/$contentsId", reqBody)
@@ -133,9 +99,6 @@ class MathContentsReadControllerTest @Autowired constructor(
 
     @Test
     fun `나의 문제 - 성공`() {
-        // given
-        Mockito.`when`(mathContentsReadCase.readById(any())).thenReturn(getMathContentsVo())
-
         // when
         val resultAction = getRequest(MY_CONTENTS_URL)
 
@@ -162,8 +125,6 @@ class MathContentsReadControllerTest @Autowired constructor(
     fun `사용자 문제 - 성공`() {
         // given
         val profileId = 1
-        Mockito.`when`(memberProfileReadCase.readByProfileId(any()))
-            .thenReturn(getMemberProfileVo())
 
         // when
         val resultAction = getRequest("$USER_CONTENTS_URL/$profileId")
@@ -180,8 +141,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "pageNum" to "0",
             "pageVolume" to "100",
         )
-        Mockito.`when`(memberProfileReadCase.readByProfileId(any()))
-            .thenReturn(getMemberProfileVo())
 
         // when
         val resultAction = getRequest("$USER_CONTENTS_URL/$profileId", reqBody)
@@ -193,9 +152,7 @@ class MathContentsReadControllerTest @Autowired constructor(
     @Test
     fun `사용자 문제 - 실패`() {
         // given
-        val profileId = 1
-        Mockito.`when`(memberProfileReadCase.readByProfileId(any()))
-            .thenReturn(null)
+        val profileId = 2 // 미존재 프로필
 
         // when
         val resultAction = getRequest("$USER_CONTENTS_URL/$profileId")
@@ -214,7 +171,6 @@ class MathContentsReadControllerTest @Autowired constructor(
                 "searchType" to srchType.name,
                 "unitId" to "21001",
             )
-            Mockito.`when`(mathCategoryUnitReadCase.readAll()).thenReturn(getMathCategoryUnitVo())
 
             // when
             val resultAction = getRequest(LIST_CONTENTS_URL, reqBody)
@@ -233,7 +189,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "pageNum" to "0",
             "pageVolume" to "100",
         )
-        Mockito.`when`(mathCategoryUnitReadCase.readAll()).thenReturn(getMathCategoryUnitVo())
 
         // when
         val resultAction = getRequest(LIST_CONTENTS_URL, reqBody)
@@ -244,9 +199,6 @@ class MathContentsReadControllerTest @Autowired constructor(
 
     @Test
     fun `내 저장소 문제 조회 - 성공`() {
-        // given
-        Mockito.`when`(mathContentsRepoReadCase.readContentsIdByMemberId(any())).thenReturn(listOf(1, 2, 3))
-
         // when
         val resultAction = getRequest(REPO_CONTENTS_URL)
 
@@ -261,7 +213,6 @@ class MathContentsReadControllerTest @Autowired constructor(
             "pageNum" to "0",
             "pageVolume" to "100",
         )
-        Mockito.`when`(mathContentsRepoReadCase.readContentsIdByMemberId(any())).thenReturn(listOf(1, 2, 3))
 
         // when
         val resultAction = getRequest(REPO_CONTENTS_URL, reqBody)

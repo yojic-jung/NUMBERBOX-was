@@ -6,13 +6,51 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathDocsUsageCreateDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
+import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
+import com.kamcci.numberbox.app.domain.vo.docs.MathAllTypeDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathDocsPaperVo
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsVo
+import com.kamcci.numberbox.app.domain.vo.docs.MathIpsiDocsVo
 import java.time.LocalDateTime
 
 object MathDocsDummyData {
+
+    fun getMathDocsVo() = MathDocsVo(
+        1L,
+        1,
+        1,
+        "contents",
+        "contentsImg",
+        "imgPath",
+        "solution",
+        "solutionImg",
+        "solutionImgPath",
+        "firNo",
+        "secNo",
+        "thrNo",
+        "fourNo",
+        "fifNo",
+        MultiChoiceType.Essay,
+        "answer",
+        "choiceAnswer",
+        1,
+        true,
+        ContentsClassifyType.Ipsi,
+        "subject",
+        "firUnit",
+        "secUnit",
+        "thrUnit",
+        "quesType",
+        LocalDateTime.now()
+    )
+
     fun getMathDocsVoList() = listOf(
-        MathDocsVo(
+        getMathDocsVo()
+    )
+
+    fun getMathAllTypeDocsVoList() = listOf(
+        MathAllTypeDocsVo(
             1L,
             1,
             1,
@@ -37,8 +75,49 @@ object MathDocsDummyData {
             "firUnit",
             "secUnit",
             "thrUnit",
+            "quesType",
+            LocalDateTime.now(),
+            2011,
+            11,
+            1,
+            20,
+            IpsiPaperType.Ka
+        )
+    )
+
+    fun getMathIpsiDocsVoList() = listOf(
+        MathIpsiDocsVo(
+            1L,
+            1,
+            1,
+            "contents",
+            "contentsImg",
+            "imgPath",
+            "solution",
+            "solutionImg",
+            "solutionImgPath",
+            "firNo",
+            "secNo",
+            "thrNo",
+            "fourNo",
+            "fifNo",
+            MultiChoiceType.Essay,
+            "answer",
+            "choiceAnswer",
+            1,
+            true,
+            ContentsClassifyType.Ipsi,
+            "subject",
+            "firUnit",
             "secUnit",
-            LocalDateTime.now()
+            "thrUnit",
+            "quesType",
+            LocalDateTime.now(),
+            2011,
+            11,
+            1,
+            20,
+            IpsiPaperType.Ka
         )
     )
 
@@ -79,4 +158,24 @@ object MathDocsDummyData {
         docsOwner = "호랑이 샘",
         docsStts = DocsStatusType.None,
     )
+
+    fun getMathDocsPaperVo() = MathDocsPaperVo(
+        id = 1L,
+        contentsIdList = listOf(1L, 2L, 3L),
+        docsGrade = "중1",
+        docsTitle = "소인수분해",
+        docsSubTitle = "최대공약수",
+        docsOwner = "호랑이 샘",
+        docsSttsType = DocsStatusType.None,
+        sysCreateDate = LocalDateTime.now(),
+        sysUpdateDate = LocalDateTime.now()
+    )
+
+    fun getMathDocsPaperVoList(size: Long = 1): List<MathDocsPaperVo> {
+        val docsPaperList: MutableList<MathDocsPaperVo> = mutableListOf()
+        for (i in 1..size) {
+            docsPaperList.add(getMathDocsPaperVo())
+        }
+        return docsPaperList
+    }
 }

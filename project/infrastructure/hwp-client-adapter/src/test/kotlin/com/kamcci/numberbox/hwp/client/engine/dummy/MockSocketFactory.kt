@@ -41,21 +41,21 @@ object MockSocketFactory {
 
         inner class MockOutputStream : OutputStream() {
             override fun write(b: Int) {
-                throw RuntimeException("모킹 에러")
+                throw RuntimeException()
             }
 
             override fun write(b: ByteArray) {
-                throw RuntimeException("모킹 에러")
+                throw RuntimeException()
             }
         }
 
         inner class MockInputStream : InputStream() {
             override fun read(): Int {
-                throw RuntimeException("모킹 에러")
+                throw RuntimeException()
             }
 
             override fun read(b: ByteArray): Int {
-                throw RuntimeException("모킹 에러")
+                throw RuntimeException()
 
             }
         }

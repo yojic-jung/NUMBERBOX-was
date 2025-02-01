@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 import com.kamcci.numberbox.app.domain.vo.docs.MathDocsPaperVo
 import java.time.LocalDateTime
 
-object MathDocsFixture {
+object MathDocsDummyData {
     fun getMathDocsPaperVo() = MathDocsPaperVo(
         id = 1L,
         contentsIdList = listOf(1L, 2L),

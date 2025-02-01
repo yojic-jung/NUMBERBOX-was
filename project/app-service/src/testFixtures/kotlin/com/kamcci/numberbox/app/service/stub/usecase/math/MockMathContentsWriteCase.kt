@@ -12,25 +12,25 @@ class MockMathContentsWriteCase : MathContentsWriteCase {
         contentsModifyDto: MathContentsModifyDto,
         licenseCreateDto: MathConLicenseModifyDto
     ): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 
     override fun createInHouseContents(
         contentsModifyDto: MathContentsModifyDto,
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 
     override fun createTransContents(orgContentsId: Long, contentsModifyDto: MathContentsModifyDto): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 
     override fun createIpsiContents(
         contentsModifyDto: MathContentsModifyDto,
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 
     override fun updateUserCustomContents(
@@ -38,7 +38,6 @@ class MockMathContentsWriteCase : MathContentsWriteCase {
         contentsModifyDto: MathContentsModifyDto,
         licenseCreateDto: MathConLicenseModifyDto
     ) {
-        TODO("Not yet implemented")
     }
 
     override fun updateInHouseContents(
@@ -46,11 +45,9 @@ class MockMathContentsWriteCase : MathContentsWriteCase {
         contentsModifyDto: MathContentsModifyDto,
         similarSrcDto: MathConSimilarSrcCreateDto
     ) {
-        TODO("Not yet implemented")
     }
 
     override fun updateTransContents(contentsId: Long, contentsModifyDto: MathContentsModifyDto) {
-        TODO("Not yet implemented")
     }
 
     override fun updateIpsiContents(
@@ -58,15 +55,12 @@ class MockMathContentsWriteCase : MathContentsWriteCase {
         contentsModifyDto: MathContentsModifyDto,
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ) {
-        TODO("Not yet implemented")
     }
 
     override fun delete(contentsId: Long, memberId: UUID) {
-        TODO("Not yet implemented")
     }
 
     override fun delete(memberId: UUID) {
-        TODO("Not yet implemented")
     }
 
 }

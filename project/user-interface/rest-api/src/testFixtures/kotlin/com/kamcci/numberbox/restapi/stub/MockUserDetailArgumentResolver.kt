@@ -3,6 +3,7 @@ package com.kamcci.numberbox.restapi.stub
 import com.kamcci.modules.auth.control.annotation.UserEmail
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.modules.auth.control.annotation.UserRole
+import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_MEMBER_ID
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
@@ -16,9 +17,9 @@ import java.util.*
 @Qualifier("mockUserDetail")
 class MockUserDetailArgumentResolver : HandlerMethodArgumentResolver {
     companion object {
-        var ID_FROM_RESOLVER = UUID.randomUUID()
-        var EMAIL_FROM_RESOLVER = "test@test.com"
-        var ROLE_FROM_RESOLVER = listOf("USER")
+        val ID_FROM_RESOLVER = UUID.randomUUID()
+        val EMAIL_FROM_RESOLVER = "test@test.com"
+        val ROLE_FROM_RESOLVER = listOf("USER")
     }
 
     override fun supportsParameter(parameter: MethodParameter) =
@@ -38,7 +39,11 @@ class MockUserDetailArgumentResolver : HandlerMethodArgumentResolver {
 
         return when {
             // @UserID 적용
-            hasUserIDAnnot -> ID_FROM_RESOLVER
+            hasUserIDAnnot -> if (webRequest.getAttribute(
+                    "fail",
+                    1
+                ) != null
+            ) FAIL_MEMBER_ID else ID_FROM_RESOLVER
 
             // @UserEmail 적용
             hasUserEmailAnnot -> EMAIL_FROM_RESOLVER

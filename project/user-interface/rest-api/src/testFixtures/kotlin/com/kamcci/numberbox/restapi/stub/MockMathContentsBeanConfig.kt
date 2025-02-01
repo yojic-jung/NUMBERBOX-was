@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.stub
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsModifyDto
 import com.kamcci.numberbox.app.service.stub.usecase.math.*
 import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsModifyRequest
@@ -45,7 +46,7 @@ class MockMathContentsBeanConfig {
     @Bean
     fun mathContentsMapper(): MathContentsMapper = object : MathContentsMapper {
         override fun toContents(memberId: UUID, request: MathContentsModifyRequest): MathContentsModifyDto {
-            TODO("Not yet implemented")
+            return getMathContentsModifyDto()
         }
     }
 }

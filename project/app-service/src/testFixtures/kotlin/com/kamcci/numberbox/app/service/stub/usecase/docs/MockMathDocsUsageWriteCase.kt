@@ -6,7 +6,7 @@ import java.util.*
 
 class MockMathDocsUsageWriteCase : MathDocsUsageWriteCase {
     override fun create(memberId: UUID, createDto: MathDocsUsageCreateDto): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 
 }

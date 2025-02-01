@@ -4,19 +4,19 @@ import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 
 class MockMemberFollowReadCase : MemberFollowReadCase {
     override fun readFollowingByFollower(profileId: Long): List<Long> {
-        TODO("Not yet implemented")
+        return if (profileId != 2L) listOf(1L, 2L, 3L) else listOf()
     }
 
     override fun readFollowerByFollowing(profileId: Long): List<Long> {
-        TODO("Not yet implemented")
+        return if (profileId != 2L) listOf(1L, 2L, 3L) else listOf()
     }
 
     override fun countFollower(followingId: Long): Long {
-        TODO("Not yet implemented")
+        return 10L
     }
 
     override fun existFollow(followingId: Long, followerId: Long): Boolean {
-        TODO("Not yet implemented")
+        return followingId != 2L
     }
 
 }

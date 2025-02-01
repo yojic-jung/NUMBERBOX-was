@@ -21,6 +21,9 @@ class HwpSocketClientService(
 
         // 입출력 파일 버퍼 크기
         const val BUFFER_SIZE = 8192
+
+        // 통신 메시지
+        const val SOCKET_ERR_MSG = "hwp 서버 통신 중 오류 발생"
     }
 
     /**
@@ -49,7 +52,7 @@ class HwpSocketClientService(
         } catch (e: Exception) {
             // 예외 발생 시 처리
             e.printStackTrace()
-            throw RuntimeException("hwp 서버 통신 중 오류 발생", e)
+            throw RuntimeException(SOCKET_ERR_MSG, e)
         } finally {
             socketInp.close()
             socketOup.close()
@@ -93,7 +96,7 @@ class HwpSocketClientService(
         } catch (e: Exception) {
             // 예외 발생 시 처리
             e.printStackTrace()
-            throw RuntimeException("hwp 서버 통신 중 오류 발생", e)
+            throw RuntimeException(SOCKET_ERR_MSG, e)
         } finally {
             socketInp.close()
             socketOup.close()
