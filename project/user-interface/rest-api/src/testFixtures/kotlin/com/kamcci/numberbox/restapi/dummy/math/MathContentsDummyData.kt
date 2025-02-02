@@ -10,38 +10,39 @@ object MathContentsDummyData {
     val choiceAnswerValues = listOf("①", "②", "③", "④", "⑤")
 
 
-    fun getMathContentsModifyRequest(choiceAnswer: List<String>?, quesLevel: Int?) = MathContentsModifyRequest(
-        unitId = 21001,
-        typeId = 1,
-        contents = "",
-        solution = "",
-        answer = "",
-        choiceAnswer = choiceAnswer ?: choiceAnswerValues,
-        firNo = "1",
-        secNo = "2",
-        thrNo = "3",
-        fourNo = "4",
-        fifNo = "5",
-        quesLevel = quesLevel ?: 1,
-    )
+    fun getMathContentsModifyRequest(choiceAnswer: List<String> = choiceAnswerValues, quesLevel: Int = 1) =
+        MathContentsModifyRequest(
+            unitId = 21001,
+            typeId = 1,
+            contents = "",
+            solution = "",
+            answer = "",
+            choiceAnswer = choiceAnswer,
+            firNo = "1",
+            secNo = "2",
+            thrNo = "3",
+            fourNo = "4",
+            fifNo = "5",
+            quesLevel = quesLevel,
+        )
 
 
     fun getMathConSimilarSrcCreateRequest() = MathConSimilarSrcCreateRequest(
-        contents = getMathContentsModifyRequest(null, null),
+        contents = getMathContentsModifyRequest(),
         similarSrc = getMathConSimilarSrcCreateDto(),
     )
 
 
     fun getMathConIpsiSrcCreateRequest() =
         MathConIpsiSrcCreateRequest(
-            contents = getMathContentsModifyRequest(null, null),
+            contents = getMathContentsModifyRequest(),
             ipsiSrc = getMathConIpsiSrcModifyDto()
         )
 
 
     fun getMathConLicenseCreateRequest() =
         MathConLicenseCreateRequest(
-            contents = getMathContentsModifyRequest(null, null),
+            contents = getMathContentsModifyRequest(),
             license = getMathConLicenseModifyDto()
         )
 
@@ -54,18 +55,18 @@ object MathContentsDummyData {
     fun getMathConLicenseUpdtRequest() =
         MathConLicenseUpdtRequest(
             contentsId = 1L,
-            contents = getMathContentsModifyRequest(null, null),
+            contents = getMathContentsModifyRequest(),
             license = getMathConLicenseModifyDto()
         )
 
     fun getMathConTransUpdtRequest() = MathConTransUpdtRequest(
         contentsId = 1L,
-        contents = getMathContentsModifyRequest(null, null),
+        contents = getMathContentsModifyRequest(),
     )
 
     fun getMathConTransCreateRequest() = MathConTransCreateRequest(
         orgContentsId = 1L,
-        contents = getMathContentsModifyRequest(null, null),
+        contents = getMathContentsModifyRequest(),
     )
 
 

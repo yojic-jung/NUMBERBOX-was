@@ -1,32 +1,23 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.dto.port.email.EmailMessageTemplate
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.port.email.member.MemberVerifyCodeEmailPort
-import com.kamcci.numberbox.app.port.etc.MemberPasswordEncoder
-import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
-import com.kamcci.numberbox.app.usecase.member.MemberReadCase
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_EMAIL
+import com.kamcci.numberbox.app.service.stub.port.email.MockEmailMessageTemplate
+import com.kamcci.numberbox.app.service.stub.port.email.member.MockMemberVerifyCodeEmailPort
+import com.kamcci.numberbox.app.service.stub.port.etc.MockMemberPasswordEncoder
+import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
 
 class MemberFindServiceTest {
-    private val memberReadCase: MemberReadCase = mock()
-    private val memberWriteOrmPort: MemberWriteOrmPort = mock()
-    private val memberVerifyCodeEmailPort: MemberVerifyCodeEmailPort = mock()
-    private val passwordEncoder: MemberPasswordEncoder = mock()
-    private val emailMessageTemplate: EmailMessageTemplate = mock()
-
     private val memberFindService = MemberFindService(
-        memberReadCase,
-        memberWriteOrmPort,
-        memberVerifyCodeEmailPort,
-        passwordEncoder,
-        emailMessageTemplate,
+        MockMemberReadCase(),
+        MockMemberWriteOrmPort(),
+        MockMemberVerifyCodeEmailPort(),
+        MockMemberPasswordEncoder(),
+        MockEmailMessageTemplate(),
     )
 
     @Test
@@ -36,19 +27,16 @@ class MemberFindServiceTest {
         val phoneNumber = "01012341234"
 
         // when
-        memberFindService.readMyEmail(userName, phoneNumber)
+        val email = memberFindService.readMyEmail(userName, phoneNumber)
 
         // then
-        verify(memberReadCase).readEmailByUsernameAndPhone(userName, phoneNumber)
+        assertThat(email).isNotNull()
     }
 
     @Test
     fun `임시 비밀번호 발급 - 성공`() {
         // given
-        val email = "email@email.net"
-        val encodedPassword = "encodedPassword"
-        Mockito.`when`(memberReadCase.existsByEmail(email)).thenReturn(true)
-        Mockito.`when`(passwordEncoder.encode(any())).thenReturn(encodedPassword)
+        val email = EXIST_EMAIL
 
         // when
         memberFindService.sendNewTempPassword(email)
@@ -57,8 +45,7 @@ class MemberFindServiceTest {
     @Test
     fun `임시 비밀번호 발급 - 실패`() {
         // given
-        val email = "email@email.net"
-        Mockito.`when`(memberReadCase.existsByEmail(email)).thenReturn(false)
+        val email = EXIST_EMAIL.reversed()
 
         // when
         val exception = assertThrows<BusinessInValidException> {

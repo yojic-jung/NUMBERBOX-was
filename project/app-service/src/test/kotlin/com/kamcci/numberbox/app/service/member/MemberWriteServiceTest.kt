@@ -2,6 +2,8 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_EMAIL
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_STRING
 import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPasswdConfirmDto
 import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPasswdUpdtDto
 import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPrivateSignUpDto
@@ -12,8 +14,6 @@ import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.Mockito.verify
 import java.util.*
 
 class MemberWriteServiceTest {
@@ -54,31 +54,23 @@ class MemberWriteServiceTest {
     @Test
     fun `회원가입(개인정보 미존재) - 성공`() {
         // given
-        val signUpDto = getMemberSignupDto(EXIST_EMAIL)
+        val notExistEmail = EXIST_EMAIL.reversed()
+        val signUpDto = getMemberSignupDto(notExistEmail)
         val privateSignUpDto = null
-        val encodedPassword = "encodedPassword"
-        val id = UUID.randomUUID()
-        val roleList = listOf("USER")
-
-        Mockito.`when`(memberReadCase.existsByEmail(signUpDto.email)).thenReturn(false)
-        Mockito.`when`(memberPasswordEncoder.encode(signUpDto.password)).thenReturn(encodedPassword)
-        Mockito.`when`(memberWriteOrmPort.save(signUpDto.email, encodedPassword)).thenReturn(id)
-        Mockito.`when`(roleReadRepo.readRoleByMemberId(id)).thenReturn(roleList)
 
         // when
         val signUpResult = memberWriteService.signup(signUpDto, privateSignUpDto)
 
         // then
-        assertThat(signUpResult.uuid).isEqualTo(id)
+        assertThat(signUpResult.email).isEqualTo(signUpDto.email)
     }
 
     @Test
-    fun `회원가입 - 실패`() {
+    fun `회원가입 - 실패(이미 존재하는 이메일)`() {
         // given
-        val signUpDto = getMemberSignupDto()
+        val signUpDto = getMemberSignupDto(EXIST_EMAIL)
         val privateSignUpDto = null
 
-        Mockito.`when`(memberReadCase.existsByEmail(signUpDto.email)).thenReturn(true)
 
         // when
         assertThrows<BusinessInValidException> {
@@ -90,13 +82,6 @@ class MemberWriteServiceTest {
     fun `비밀번호 변경 - 성공`() {
         // given
         val updtDto = getMemberPasswdUpdtDto()
-        val existPW = updtDto.previousPassword
-        val encodedPW = "sdfadf"
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(updtDto.memberId)).thenReturn(existPW)
-        Mockito.`when`(memberPasswordEncoder.matches(updtDto.previousPassword, existPW)).thenReturn(true)
-        Mockito.`when`(memberPasswordEncoder.encode(updtDto.password)).thenReturn(encodedPW)
-        Mockito.`when`(memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPW)).thenReturn(1)
 
         // when
         val isUpdated = memberWriteService.updatePassword(updtDto)
@@ -108,9 +93,7 @@ class MemberWriteServiceTest {
     @Test
     fun `비밀번호 변경(이전 비밀번호 미존재) - 실패`() {
         // given
-        val updtDto = getMemberPasswdUpdtDto()
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(updtDto.memberId)).thenReturn(null)
+        val updtDto = getMemberPasswdUpdtDto(memberId = FAIL_MEMBER_ID)
 
         // when
         val isUpdated = memberWriteService.updatePassword(updtDto)
@@ -122,11 +105,7 @@ class MemberWriteServiceTest {
     @Test
     fun `비밀번호 변경(이전 비밀번호 불일치) - 실패`() {
         // given
-        val updtDto = getMemberPasswdUpdtDto()
-        val existPW = updtDto.previousPassword
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(updtDto.memberId)).thenReturn(existPW)
-        Mockito.`when`(memberPasswordEncoder.matches(updtDto.previousPassword, existPW)).thenReturn(false)
+        val updtDto = getMemberPasswdUpdtDto(prevPW = FAIL_STRING)
 
         // when
         val isUpdated = memberWriteService.updatePassword(updtDto)
@@ -138,17 +117,20 @@ class MemberWriteServiceTest {
     @Test
     fun `비밀번호 변경(update 실패) - 실패`() {
         // given
-        val updtDto = getMemberPasswdUpdtDto()
-        val existPW = updtDto.previousPassword
-        val encodedPW = "sdfadf"
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(updtDto.memberId)).thenReturn(existPW)
-        Mockito.`when`(memberPasswordEncoder.matches(updtDto.previousPassword, existPW)).thenReturn(true)
-        Mockito.`when`(memberPasswordEncoder.encode(updtDto.password)).thenReturn(encodedPW)
-        Mockito.`when`(memberWriteOrmPort.updatePassword(updtDto.memberId, encodedPW)).thenReturn(0)
+        val mockMemberWriteOrmPort = MockMemberWriteOrmPort()
+        val memberWriteService = MemberWriteService(
+            mockMemberWriteOrmPort,
+            memberReadCase,
+            memberPasswordEncoder,
+            roleModifyRepo,
+            roleReadRepo,
+            profileModifyOrmPort,
+            privateModifyRepo,
+        )
+        mockMemberWriteOrmPort.isUpdateFail = true
 
         // when
-        val isUpdated = memberWriteService.updatePassword(updtDto)
+        val isUpdated = memberWriteService.updatePassword(getMemberPasswdUpdtDto())
 
         // then
         assertThat(isUpdated).isEqualTo(false)
@@ -158,10 +140,6 @@ class MemberWriteServiceTest {
     fun `비밀번호 확인 - 성공`() {
         // given
         val confirmDto = getMemberPasswdConfirmDto()
-        val encodedPW = "encodedPW"
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(confirmDto.memberId)).thenReturn(encodedPW)
-        Mockito.`when`(memberPasswordEncoder.matches(confirmDto.password, encodedPW)).thenReturn(true)
 
         // when
         val isEqual = memberWriteService.confirmPassword(confirmDto)
@@ -173,9 +151,7 @@ class MemberWriteServiceTest {
     @Test
     fun `비밀번호 확인(이전 비밀번호 미존재) - 실패`() {
         // given
-        val confirmDto = getMemberPasswdConfirmDto()
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(confirmDto.memberId)).thenReturn(null)
+        val confirmDto = getMemberPasswdConfirmDto(FAIL_MEMBER_ID)
 
         // when
         val isEqual = memberWriteService.confirmPassword(confirmDto)
@@ -187,11 +163,7 @@ class MemberWriteServiceTest {
     @Test
     fun `비밀번호 확인(비밀번호 불일치) - 실패`() {
         // given
-        val confirmDto = getMemberPasswdConfirmDto()
-        val encodedPW = "encodedPW"
-
-        Mockito.`when`(memberReadCase.readPasswordByMemberId(confirmDto.memberId)).thenReturn(encodedPW)
-        Mockito.`when`(memberPasswordEncoder.matches(confirmDto.password, encodedPW)).thenReturn(false)
+        val confirmDto = getMemberPasswdConfirmDto(pw = FAIL_STRING)
 
         // when
         val isEqual = memberWriteService.confirmPassword(confirmDto)
@@ -203,12 +175,23 @@ class MemberWriteServiceTest {
     @Test
     fun `임시 비밀번호 발급 - 성공`() {
         // given
+        val mockMemberWriteOrmPort = MockMemberWriteOrmPort()
+        val memberWriteService = MemberWriteService(
+            mockMemberWriteOrmPort,
+            memberReadCase,
+            memberPasswordEncoder,
+            roleModifyRepo,
+            roleReadRepo,
+            profileModifyOrmPort,
+            privateModifyRepo,
+        )
+
         val ids = listOf(UUID.randomUUID(), UUID.randomUUID())
 
         // when
         memberWriteService.updateTmpPassword(ids)
 
         // then
-        verify(memberWriteOrmPort).updatePassword(ids, null)
+        assertThat(mockMemberWriteOrmPort.executeCnt).isEqualTo(1)
     }
 }

@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.hwp.client.engine.dummy
 
 import com.kamcci.numberbox.hwp.client.engine.service.SocketFactory
-import org.mockito.kotlin.mock
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -31,8 +30,6 @@ object MockSocketFactory {
         }
 
         inner class StubSocket : Socket() {
-            private val inputStream: InputStream = mock()
-
             override fun getInputStream() = MockInputStream()
 
             override fun getOutputStream() = MockOutputStream()

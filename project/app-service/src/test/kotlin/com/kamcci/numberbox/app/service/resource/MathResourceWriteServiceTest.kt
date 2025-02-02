@@ -1,26 +1,23 @@
 package com.kamcci.numberbox.app.service.resource
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.port.orm.resource.MathResourceWriteOrmPort
-import com.kamcci.numberbox.app.port.orm.sys.SysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceCreateDto
-import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceFileVo
 import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceUpdateDtoList
 import com.kamcci.numberbox.app.service.resource.MathResourceWriteService.Companion.NOT_MY_CONTENTS
-import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
+import com.kamcci.numberbox.app.service.stub.port.orm.resource.MockMathResourceWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.sys.MockSysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.usecase.resource.MockMathResourceReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.verify
 import java.util.*
 
 class MathResourceWriteServiceTest {
-    private val mathResourceReadOrmPort: MathResourceReadCase = mock()
-    private val mathResourceWriteOrmPort: MathResourceWriteOrmPort = mock()
-    private val sysGarbageFileWriteOrmPort: SysGarbageFileWriteOrmPort = mock()
+    private val mathResourceReadOrmPort = MockMathResourceReadCase()
+    private val mathResourceWriteOrmPort = MockMathResourceWriteOrmPort()
+    private val sysGarbageFileWriteOrmPort = MockSysGarbageFileWriteOrmPort()
 
     private val mathResourceWriteService =
         MathResourceWriteService(mathResourceReadOrmPort, mathResourceWriteOrmPort, sysGarbageFileWriteOrmPort)
@@ -31,22 +28,18 @@ class MathResourceWriteServiceTest {
         // given
         val createDto = getMathResourceCreateDto()
 
-        // when
-        mathResourceWriteService.create(createDto)
-
-        // then
-        verify(mathResourceWriteOrmPort).create(createDto)
+        // when & then
+        assertDoesNotThrow {
+            mathResourceWriteService.create(createDto)
+        }
     }
 
     @Test
     fun `학습 자료 수정 - 성공`() {
         // given
         val updateDtoList = getMathResourceUpdateDtoList()
-        val resourceFileVo = getMathResourceFileVo()
 
         for (updateDto in updateDtoList) {
-            Mockito.`when`(mathResourceReadOrmPort.readFileById(updateDto.resourceId)).thenReturn(resourceFileVo)
-
             // when & then
             assertDoesNotThrow {
                 mathResourceWriteService.update(updateDto)
@@ -60,8 +53,6 @@ class MathResourceWriteServiceTest {
         val id = 1L
         val memberId = UUID.randomUUID()
 
-        Mockito.`when`(mathResourceWriteOrmPort.deleteByIdAndMemberId(id, memberId)).thenReturn(1L)
-
         // when & then
         assertDoesNotThrow {
             mathResourceWriteService.deleteByIdAndMemberId(id, memberId)
@@ -71,10 +62,8 @@ class MathResourceWriteServiceTest {
     @Test
     fun `학습 자료 삭제 - 실패`() {
         // given
-        val id = 1L
+        val id = FAIL_ID
         val memberId = UUID.randomUUID()
-
-        Mockito.`when`(mathResourceWriteOrmPort.deleteByIdAndMemberId(id, memberId)).thenReturn(0L)
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {

@@ -18,25 +18,25 @@ object MemberDummyData {
         birth = "930123",
     )
 
-    fun getMemberPasswdUpdtDto() = MemberPasswdUpdtDto(
-        UUID.randomUUID(),
-        "prevPW",
+    fun getMemberPasswdUpdtDto(memberId: UUID = UUID.randomUUID(), prevPW: String = "prevPW") = MemberPasswdUpdtDto(
+        memberId,
+        prevPW,
         "newPW",
         "newPW",
     )
 
-    fun getMemberPasswdConfirmDto() = MemberPasswdConfirmDto(
-        UUID.randomUUID(),
-        "prevPW"
+    fun getMemberPasswdConfirmDto(memberId: UUID = UUID.randomUUID(), pw: String = "pw") = MemberPasswdConfirmDto(
+        memberId,
+        pw
     )
 
-    fun getMemberPhoneUpdtDto() = MemberPhoneUpdtDto(
-        UUID.randomUUID(),
+    fun getMemberPhoneUpdtDto(memberId: UUID = UUID.randomUUID()) = MemberPhoneUpdtDto(
+        memberId,
         "01012341234"
     )
 
-    fun getMemberProfileImgUpdtDto() = MemberProfileImgUpdtDto(
-        memberId = UUID.randomUUID(),
+    fun getMemberProfileImgUpdtDto(memberId: UUID = UUID.randomUUID()) = MemberProfileImgUpdtDto(
+        memberId = memberId,
         profileImgPath = "path",
         profileImgName = "name",
     )

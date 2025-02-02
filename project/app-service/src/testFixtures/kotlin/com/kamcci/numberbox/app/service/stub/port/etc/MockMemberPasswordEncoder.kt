@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_STRING
 
 class MockMemberPasswordEncoder : MemberPasswordEncoder {
     override fun encode(rawPassword: CharSequence): String {
-        return "encoded"
+        return rawPassword.toString()
     }
 
     override fun matches(rawPassword: CharSequence, encodedPassword: String): Boolean {

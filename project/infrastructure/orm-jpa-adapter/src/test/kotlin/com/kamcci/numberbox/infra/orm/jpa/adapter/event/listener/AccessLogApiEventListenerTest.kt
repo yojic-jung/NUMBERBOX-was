@@ -4,13 +4,18 @@ import com.kamcci.modules.logging.control.dto.ClientLoggingInfoEventDto
 import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
 import com.kamcci.modules.logging.control.dto.HttpResponseLoggingDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.log.LogClientApiRepository
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import java.util.*
 
 class AccessLogApiEventListenerTest {
-    private val logClientApiRepository: LogClientApiRepository = mock()
+    private val logClientApiRepository = object : LogClientApiRepository() {
+        var executeCnt = 0
+        override fun save(loggingEventDto: ClientLoggingInfoEventDto): Long {
+            executeCnt++
+            return 1L
+        }
+    }
 
     private val accessLogApiEventListener = AccessLogApiEventListener(logClientApiRepository)
 
@@ -33,7 +38,6 @@ class AccessLogApiEventListenerTest {
         accessLogApiEventListener.handle(loggingDto)
 
         // then -> 이벤트 리스너 동작 확인
-        verify(logClientApiRepository).save(loggingDto)
-
+        assertThat(logClientApiRepository.executeCnt).isEqualTo(1L)
     }
 }

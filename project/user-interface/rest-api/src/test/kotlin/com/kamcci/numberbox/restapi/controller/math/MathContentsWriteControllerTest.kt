@@ -6,6 +6,7 @@ import com.kamcci.numberbox.restapi.dto.request.math.MathContestGrammarModifyReq
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConLicenseCreateRequest
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConLicenseUpdtRequest
 import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConTransCreateRequest
+import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConTransUpdtRequest
 import org.junit.jupiter.api.Test
 
 @WebMvcUnitTest
@@ -58,7 +59,7 @@ class MathContentsWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `변형문제 수정 - 성공`() {
         // given
-        val updateReq = getMathConTransCreateRequest()
+        val updateReq = getMathConTransUpdtRequest()
 
         // when
         val resultAction = putRequest(TRANS_CONTENTS_URL, updateReq)

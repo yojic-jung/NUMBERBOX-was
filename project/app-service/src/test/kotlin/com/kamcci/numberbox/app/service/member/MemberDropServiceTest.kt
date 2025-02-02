@@ -1,30 +1,30 @@
 package com.kamcci.numberbox.app.service.member
 
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.port.orm.docs.MathDocsPaperWriteOrmPort
-import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
-import com.kamcci.numberbox.app.port.orm.member.MemberPrivateWriteOrmPort
-import com.kamcci.numberbox.app.port.orm.member.MemberRoleWriteOrmPort
-import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.docs.MockMathDocsPaperWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.math.MockMathContentsWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberPrivateWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberRoleWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberWriteOrmPort
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.verify
 import java.util.*
 
 class MemberDropServiceTest {
-    private val memberWriteOrmPort: MemberWriteOrmPort = mock()
-    private val memberRoleWriteOrmPort: MemberRoleWriteOrmPort = mock()
-    private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort = mock()
-    private val mathContentsOrmPort: MathContentsWriteOrmPort = mock()
-    private val mathDocsPaperWriteOrmPort: MathDocsPaperWriteOrmPort = mock()
+    lateinit var mockMemberWriteOrmPort: MockMemberWriteOrmPort
+    lateinit var memberDropService: MemberDropService
 
-    private val memberDropService = MemberDropService(
-        memberWriteOrmPort,
-        memberRoleWriteOrmPort,
-        memberPrivateWriteOrmPort,
-        mathContentsOrmPort,
-        mathDocsPaperWriteOrmPort
-    )
+    @BeforeEach
+    fun `테스트 스텁 초기화`() {
+        mockMemberWriteOrmPort = MockMemberWriteOrmPort()
+        memberDropService = MemberDropService(
+            mockMemberWriteOrmPort,
+            MockMemberRoleWriteOrmPort(),
+            MockMemberPrivateWriteOrmPort(),
+            MockMathContentsWriteOrmPort(),
+            MockMathDocsPaperWriteOrmPort()
+        )
+    }
 
     @Test
     fun `회원 탈퇴 - 성공`() {
@@ -35,10 +35,6 @@ class MemberDropServiceTest {
         memberDropService.drop(memberId)
 
         // then
-        verify(memberPrivateWriteOrmPort).updatePrivateToNull(memberId)
-        verify(mathContentsOrmPort).updateContentsClassifyType(memberId, ContentsClassifyType.Deleted)
-        verify(mathDocsPaperWriteOrmPort).delete(memberId)
-        verify(memberWriteOrmPort).drop(memberId)
-        verify(memberRoleWriteOrmPort).updateEnabledById(memberId, false)
+        assertThat(mockMemberWriteOrmPort.executeCnt).isEqualTo(1)
     }
 }

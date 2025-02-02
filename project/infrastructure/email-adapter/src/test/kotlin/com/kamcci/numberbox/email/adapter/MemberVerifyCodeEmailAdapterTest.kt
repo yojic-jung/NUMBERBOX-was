@@ -6,7 +6,6 @@ import com.kamcci.numberbox.email.template.EmailVerifyMessageTemplate
 import com.kamcci.numberbox.email.template.PasswordMessageTemplate
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.Mockito.mock
 
 class MemberVerifyCodeEmailAdapterTest {
 
@@ -15,7 +14,11 @@ class MemberVerifyCodeEmailAdapterTest {
         const val code = "temp-code"
     }
 
-    private val mailSendService: MailSendService = mock()
+    private val mailSendService = object : MailSendService {
+        override fun sendHTMLMessage(recipientEmail: String, title: String, contents: String) {
+
+        }
+    }
     private val memberVerifyCodeEmailAdapter = MemberVerifyCodeEmailAdapter(mailSendService)
 
     @Test
