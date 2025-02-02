@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.stub
+package com.kamcci.numberbox.restapi.config.stub
 
 import com.kamcci.modules.auth.control.service.TokenResponseService
 import org.springframework.context.annotation.Bean

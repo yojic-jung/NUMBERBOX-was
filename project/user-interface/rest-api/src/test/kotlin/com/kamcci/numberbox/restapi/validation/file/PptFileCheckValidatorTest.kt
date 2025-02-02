@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.file
 
+import com.kamcci.numberbox.restapi.stub.common.MockCustomMultipartFile
 import com.kamcci.numberbox.restapi.validation.file.PptFileCheckValidator.Companion.MAX_FILE_SIZE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -55,7 +56,7 @@ class PptFileCheckValidatorTest {
     @Test
     fun `파일 확장자 없음 체크 - 성공`() {
         // given
-        val mockMultipartFile = MockMultipartFile(
+        val mockMultipartFile = MockCustomMultipartFile(
             "file", // 파라미터 이름
             null, // 파일 이름
             "application/vnd.openxmlformats-officedocument.presentationml.presentation", // MIME 타입

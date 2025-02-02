@@ -11,11 +11,11 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @WebMvcUnitTest
 class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     companion object {
-        const val PREFIX = "/math/like/content"
+        const val PREFIX = "/math/repo/content"
     }
 
     @Test
-    fun `문제 좋아요 - 성공`() {
+    fun `문제 저장소 - 성공`() {
         // given
         val reqBody = mapOf("contentsId" to "1")
 
@@ -27,7 +27,7 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `문제 좋아요 - 실패`() {
+    fun `문제 저장소 - 실패`() {
         // given
         val reqBody = mapOf("contentsId" to FAIL_ID)
 
@@ -41,7 +41,7 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `문제 좋아요 취소 - 성공`() {
+    fun `문제 저장소 취소 - 성공`() {
         // given
         val contentsId = 1
         val reqBody = mapOf("contentsId" to contentsId)
@@ -54,7 +54,7 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `문제 좋아요 취소 - 실패`() {
+    fun `문제 저장소 취소 - 실패`() {
         // given
         val contentsId = FAIL_ID
 
@@ -65,5 +65,4 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
         assert4xx(resultAction)
         assertException(resultAction, HandlerMethodValidationException::class)
     }
-
 }

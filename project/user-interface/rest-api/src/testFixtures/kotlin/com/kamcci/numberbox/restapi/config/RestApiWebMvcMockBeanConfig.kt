@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.config
 
-import com.kamcci.numberbox.restapi.stub.*
+import com.kamcci.numberbox.restapi.config.stub.*
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Import
 

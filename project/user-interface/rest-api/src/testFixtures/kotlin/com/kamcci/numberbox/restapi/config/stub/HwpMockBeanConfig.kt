@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.stub
+package com.kamcci.numberbox.restapi.config.stub
 
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
 import com.kamcci.numberbox.app.service.stub.port.hwp.MockHwpSocketClient
@@ -6,6 +6,7 @@ import com.kamcci.numberbox.app.service.stub.usecase.hwp.MockHwpConvertContentsR
 import com.kamcci.numberbox.app.service.stub.usecase.hwp.MockHwpConvertContentsWriteCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
+import com.kamcci.numberbox.restapi.stub.hwp.MockHwpConvertFileUtil
 import com.kamcci.numberbox.restapi.util.hwp.HwpConvertFileUtil
 import org.springframework.context.annotation.Bean
 
@@ -20,9 +21,5 @@ class HwpMockBeanConfig {
     fun hwpConvertContentsReadCase(): HwpConvertContentsReadCase = MockHwpConvertContentsReadCase()
 
     @Bean
-    fun hwpConvertFileUtil(): HwpConvertFileUtil = object : HwpConvertFileUtil() {
-        override fun unzip(zipBytes: ByteArray): Pair<String?, Map<String, ByteArray>> {
-            return Pair("index.xhtml", mutableMapOf("BIN001.png" to "".toByteArray()))
-        }
-    }
+    fun hwpConvertFileUtil(): HwpConvertFileUtil = MockHwpConvertFileUtil()
 }

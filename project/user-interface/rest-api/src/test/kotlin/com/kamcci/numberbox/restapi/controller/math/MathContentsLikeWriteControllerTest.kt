@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.math
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.validation.math.ContentsCheck.Companion.NOT_EXIST_CONTENT
+import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import org.junit.jupiter.api.Test
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.method.annotation.HandlerMethodValidationException
@@ -14,8 +14,9 @@ class MathContentsLikeWriteControllerTest : BaseMockMvcTest() {
         const val PREFIX = "/math/like/content"
     }
 
+
     @Test
-    fun `문제 저장소 - 성공`() {
+    fun `문제 좋아요 - 성공`() {
         // given
         val reqBody = mapOf("contentsId" to "1")
 
@@ -27,7 +28,7 @@ class MathContentsLikeWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `문제 저장소 - 실패`() {
+    fun `문제 좋아요 - 실패`() {
         // given
         val reqBody = mapOf("contentsId" to FAIL_ID)
 
@@ -37,11 +38,11 @@ class MathContentsLikeWriteControllerTest : BaseMockMvcTest() {
         // then
         assert4xx(resultAction)
         assertException(resultAction, MethodArgumentNotValidException::class)
-        assertExMsg(resultAction, NOT_EXIST_CONTENT)
+        assertExMsg(resultAction, ContentsCheck.NOT_EXIST_CONTENT)
     }
 
     @Test
-    fun `문제 저장소 취소 - 성공`() {
+    fun `문제 좋아요 취소 - 성공`() {
         // given
         val contentsId = 1
         val reqBody = mapOf("contentsId" to contentsId)
@@ -54,7 +55,7 @@ class MathContentsLikeWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `문제 저장소 취소 - 실패`() {
+    fun `문제 좋아요 취소 - 실패`() {
         // given
         val contentsId = FAIL_ID
 
@@ -65,5 +66,6 @@ class MathContentsLikeWriteControllerTest : BaseMockMvcTest() {
         assert4xx(resultAction)
         assertException(resultAction, HandlerMethodValidationException::class)
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.file
 
+import com.kamcci.numberbox.restapi.stub.common.MockCustomMultipartFile
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockMultipartFile
@@ -54,7 +55,7 @@ class ImgFileCheckValidatorTest {
     @Test
     fun `파일 확장자 없음 체크 - 성공`() {
         // given
-        val mockMultipartFile = MockMultipartFile(
+        val mockMultipartFile = MockCustomMultipartFile(
             "file", // 파라미터 이름
             null, // 파일 이름
             "image/jpeg", // MIME 타입

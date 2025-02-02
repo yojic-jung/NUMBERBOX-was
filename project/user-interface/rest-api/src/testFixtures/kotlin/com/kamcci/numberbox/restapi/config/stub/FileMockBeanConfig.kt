@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.stub
+package com.kamcci.numberbox.restapi.config.stub
 
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.service.stub.port.storage.MockFileStoragePort

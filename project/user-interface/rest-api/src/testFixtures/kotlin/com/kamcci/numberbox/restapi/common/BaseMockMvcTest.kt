@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kamcci.numberbox.restapi.stub.MockUserDetailArgumentResolver
+import com.kamcci.numberbox.restapi.stub.common.MockUserDetailArgumentResolver
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -34,7 +34,7 @@ open class BaseMockMvcTest {
         val queryString = queryMap?.entries?.joinToString("&") { (key, value) -> "${key}=${value}" }
         val reqBuilder = MockMvcRequestBuilders.get("${url}?$queryString")
         if (withFailMember) setFailMember(reqBuilder)
-        
+
         return mockMvc
             .perform(reqBuilder)
     }

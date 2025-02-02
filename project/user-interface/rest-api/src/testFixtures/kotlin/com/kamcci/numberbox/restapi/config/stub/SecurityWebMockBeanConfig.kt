@@ -1,6 +1,7 @@
-package com.kamcci.numberbox.restapi.stub
+package com.kamcci.numberbox.restapi.config.stub
 
 import com.kamcci.numberbox.restapi.config.WebConfig
+import com.kamcci.numberbox.restapi.stub.common.MockUserDetailArgumentResolver
 import jakarta.servlet.Filter
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.catalina.security.SecurityConfig

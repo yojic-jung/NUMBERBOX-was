@@ -1,13 +1,10 @@
-package com.kamcci.numberbox.restapi.stub
+package com.kamcci.numberbox.restapi.config.stub
 
-import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
-import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsModifyDto
 import com.kamcci.numberbox.app.service.stub.usecase.math.*
 import com.kamcci.numberbox.app.usecase.math.*
-import com.kamcci.numberbox.restapi.dto.request.math.MathContentsModifyRequest
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
+import com.kamcci.numberbox.restapi.stub.math.MockMathContentsMapper
 import org.springframework.context.annotation.Bean
-import java.util.*
 
 class MockMathContentsBeanConfig {
     @Bean
@@ -44,9 +41,5 @@ class MockMathContentsBeanConfig {
     fun mathFormulaKeyReadCase(): MathFormulaKeyReadCase = MockMathFormulaKeyReadCase()
 
     @Bean
-    fun mathContentsMapper(): MathContentsMapper = object : MathContentsMapper {
-        override fun toContents(memberId: UUID, request: MathContentsModifyRequest): MathContentsModifyDto {
-            return getMathContentsModifyDto()
-        }
-    }
+    fun mathContentsMapper(): MathContentsMapper = MockMathContentsMapper()
 }
