@@ -1,20 +1,11 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
-import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.resource.MathResourceDummyData.getMathResourceDetailVoList
-import com.kamcci.numberbox.restapi.dummy.resource.MathResourceDummyData.getMathResourceVoList
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 
 @WebMvcUnitTest
-class MathResourceReadControllerTest(
-    @Autowired
-    private val mathResourceReadCase: MathResourceReadCase,
-) : BaseMockMvcTest() {
+class MathResourceReadControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/math/resource"
         const val MY_URL = "$PREFIX/my"
@@ -28,7 +19,6 @@ class MathResourceReadControllerTest(
             "pageNum" to "0",
             "pageVolume" to "100",
         )
-        Mockito.`when`(mathResourceReadCase.readByMainCateId(any(), any())).thenReturn(getMathResourceVoList())
 
         // when
         val resultAction = getRequest("$PREFIX/$mainCateId", reqBody)
@@ -45,7 +35,6 @@ class MathResourceReadControllerTest(
             "pageNum" to "0",
             "pageVolume" to "2",
         )
-        Mockito.`when`(mathResourceReadCase.readByMainCateId(any(), any())).thenReturn(getMathResourceVoList())
 
         // when
         val resultAction = getRequest("$PREFIX/$mainCateId", reqBody)
@@ -61,7 +50,6 @@ class MathResourceReadControllerTest(
             "pageNum" to "0",
             "pageVolume" to "100",
         )
-        Mockito.`when`(mathResourceReadCase.readByMemberId(any(), any())).thenReturn(getMathResourceDetailVoList())
 
         // when
         val resultAction = getRequest(MY_URL, reqBody)
@@ -77,7 +65,6 @@ class MathResourceReadControllerTest(
             "pageNum" to "0",
             "pageVolume" to "2",
         )
-        Mockito.`when`(mathResourceReadCase.readByMemberId(any(), any())).thenReturn(getMathResourceDetailVoList())
 
         // when
         val resultAction = getRequest(MY_URL, reqBody)

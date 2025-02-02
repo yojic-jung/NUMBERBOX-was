@@ -1,8 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
-import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dummy.file.FileDummyData.getMultipartFile
@@ -10,16 +8,10 @@ import com.kamcci.numberbox.restapi.util.file.FileUtil
 import io.mockk.every
 import io.mockk.mockkObject
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 import java.io.ByteArrayInputStream
 
 @WebMvcUnitTest
-class MathResourceWriteControllerTest(
-    @Autowired
-    private val fileUseCase: FileUseCase,
-) : BaseMockMvcTest() {
+class MathResourceWriteControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/math/resource"
     }
@@ -36,7 +28,6 @@ class MathResourceWriteControllerTest(
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val imgFile = getMultipartFile("imgFile", "name.png")
         val fileList = listOf(pptFile, imgFile)
-        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("pptName", "pptPath"))
         mockkObject(FileUtil)
         every { FileUtil.toPptSlide(pptFile) } returns
                 listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
@@ -59,7 +50,6 @@ class MathResourceWriteControllerTest(
         )
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val fileList = listOf(pptFile)
-        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("pptName", "pptPath"))
         mockkObject(FileUtil)
         every { FileUtil.toPptSlide(pptFile) } returns
                 listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
@@ -84,7 +74,6 @@ class MathResourceWriteControllerTest(
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val imgFile = getMultipartFile("imgFile", "name.png")
         val fileList = listOf(pptFile, imgFile)
-        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("pptName", "pptPath"))
         mockkObject(FileUtil)
         every { FileUtil.toPptSlide(pptFile) } returns
                 listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
@@ -108,7 +97,6 @@ class MathResourceWriteControllerTest(
         )
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val fileList = listOf(pptFile)
-        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(FileNameVo("pptName", "pptPath"))
         mockkObject(FileUtil)
         every { FileUtil.toPptSlide(pptFile) } returns
                 listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
@@ -130,7 +118,6 @@ class MathResourceWriteControllerTest(
             "midCateId" to "1",
             "cateList" to "1-1,1-2",
         )
-        Mockito.`when`(fileUseCase.upload(any(), any())).thenReturn(null)
 
         // when
         val resultAction = putMultipartForm(PREFIX, req, listOf())

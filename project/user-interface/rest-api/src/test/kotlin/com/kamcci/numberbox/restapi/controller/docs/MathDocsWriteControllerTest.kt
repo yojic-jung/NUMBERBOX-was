@@ -109,9 +109,9 @@ class MathDocsWriteControllerTest : BaseMockMvcTest() {
     }
 
     @Test
-    fun `학습지 삭제 - 실패(필수값 미기재)`() {
+    fun `학습지 삭제 - 실패(id 양수아님)`() {
         // given
-        val docsId = 0L
+        val docsId = 0
 
         // when
         val resultAction = delRequest("$DOCS_DELETE_URL/$docsId")

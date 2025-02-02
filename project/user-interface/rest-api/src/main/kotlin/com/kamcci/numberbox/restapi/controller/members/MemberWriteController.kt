@@ -7,7 +7,6 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdConfirmRequest
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
-import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -21,7 +20,6 @@ import java.util.*
 @RequestMapping("/member")
 class MemberWriteController(
     private val memberWriteCase: MemberWriteCase,
-    private val memberMapper: MemberMapper,
 ) {
     // 비밀번호 변경
     @PutMapping("/password")

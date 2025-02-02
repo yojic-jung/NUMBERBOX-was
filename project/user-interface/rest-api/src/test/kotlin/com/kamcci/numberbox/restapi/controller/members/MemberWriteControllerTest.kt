@@ -1,35 +1,16 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.stub.MockUserDetailArgumentResolver.Companion.EMAIL_FROM_RESOLVER
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.HttpMessageNotReadableException
 
 @WebMvcUnitTest
-class MemberWriteControllerTest(
-    @Autowired
-    private val memberWriteCase: MemberWriteCase
-) : BaseMockMvcTest() {
+class MemberWriteControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/member"
-        const val EMAIl_URL = "$PREFIX/email"
         const val PASSWORD_URL = "$PREFIX/password"
         const val PASSWORD_CONFIRM_URL = "$PREFIX/password-confirm"
-    }
-
-    @Test
-    fun `이메일 조회 - 성공`() {
-        // when
-        val resultAction = getRequest(EMAIl_URL)
-
-        // then
-        assertThat(removeQuotes(takeJsonResponseData(resultAction).get("email"))).isEqualTo(EMAIL_FROM_RESOLVER)
     }
 
     @Test
@@ -58,7 +39,6 @@ class MemberWriteControllerTest(
             "password" to "abcdefgh1234!",
             "passwordConfirm" to "abcdefgh1234!",
         )
-        `when`(memberWriteCase.updatePassword(any())).thenReturn(true)
 
         // when
         val resultAction = putRequest(PASSWORD_URL, req)

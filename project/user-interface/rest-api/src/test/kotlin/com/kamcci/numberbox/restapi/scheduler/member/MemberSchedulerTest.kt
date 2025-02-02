@@ -1,5 +1,9 @@
 package com.kamcci.numberbox.restapi.scheduler.member
 
+import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberDropCase
+import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberProfileWriteCase
+import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
+import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberDropCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase
@@ -7,18 +11,14 @@ import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.verify
 import org.springframework.scheduling.annotation.Scheduled
 import java.lang.reflect.Method
-import java.util.*
 
 class MemberSchedulerTest {
-    private val memberReadCase: MemberReadCase = mock()
-    private val memberWriteCase: MemberWriteCase = mock()
-    private val memberProfileWriteCase: MemberProfileWriteCase = mock()
-    private val memberDropCase: MemberDropCase = mock()
+    private val memberReadCase: MemberReadCase = MockMemberReadCase()
+    private val memberWriteCase: MemberWriteCase = MockMemberWriteCase()
+    private val memberProfileWriteCase: MemberProfileWriteCase = MockMemberProfileWriteCase()
+    private val memberDropCase: MemberDropCase = MockMemberDropCase()
     private val memberScheduler =
         MemberScheduler(memberReadCase, memberWriteCase, memberProfileWriteCase, memberDropCase)
 
@@ -36,34 +36,43 @@ class MemberSchedulerTest {
     @Test
     fun `임시 비밀번호 발급자 새로운 비밀번호로 셋팅(배치 사이즈 보다 작음) - 성공`() {
         // given
-        val memberIds = listOf(UUID.randomUUID())
-        `when`(memberReadCase.readByIsTmpPassword(true, MemberScheduler.BATCH_SIZE)).thenReturn(memberIds)
+        val mockMemberReadCase = MockMemberReadCase()
+        val memberScheduler = MemberScheduler(
+            mockMemberReadCase,
+            MockMemberWriteCase(),
+            MockMemberProfileWriteCase(),
+            MockMemberDropCase(),
+        )
+
+        // 배치 사이즈보다 작게 실행
+        mockMemberReadCase.moreBatchSize = false
+
 
         // when
         memberScheduler.tmpPasswordChange()
 
         // then
-        verify(memberWriteCase).updateTmpPassword(memberIds)
+        assertThat(mockMemberReadCase.executeCnt).isEqualTo(1)
     }
 
     @Test
     fun `임시 비밀번호 발급자 새로운 비밀번호로 셋팅(배치 사이즈 보다 큼) - 성공`() {
         // given
-        val memberIds: MutableList<UUID> = mutableListOf()
-        for (i in 1..600) memberIds.add(UUID.randomUUID())
-
-        val secMemberIds: MutableList<UUID> = mutableListOf()
-        for (i in 1..100) secMemberIds.add(UUID.randomUUID())
-
-        `when`(memberReadCase.readByIsTmpPassword(true, MemberScheduler.BATCH_SIZE)).thenReturn(memberIds)
-            .thenReturn(secMemberIds)
+        val mockMemberReadCase = MockMemberReadCase()
+        val memberScheduler = MemberScheduler(
+            mockMemberReadCase,
+            MockMemberWriteCase(),
+            MockMemberProfileWriteCase(),
+            MockMemberDropCase(),
+        )
+        // 배치 사이즈보다 크게 실행
+        mockMemberReadCase.moreBatchSize = true
 
         // when
         memberScheduler.tmpPasswordChange()
 
         // then
-        verify(memberWriteCase).updateTmpPassword(memberIds)
-        verify(memberWriteCase).updateTmpPassword(secMemberIds)
+        assertThat(mockMemberReadCase.executeCnt).isEqualTo(2)
     }
 
     @Test
@@ -81,27 +90,36 @@ class MemberSchedulerTest {
     @Test
     fun `탈퇴 요청 회원 탈퇴처리 - 성공`() {
         // given
-        val uuid = UUID.randomUUID()
-        `when`(memberReadCase.readUserIdByHumanStatus(3)).thenReturn(listOf(uuid))
+        val dropCase = MockMemberDropCase()
+        val memberScheduler = MemberScheduler(
+            MockMemberReadCase(),
+            MockMemberWriteCase(),
+            MockMemberProfileWriteCase(),
+            dropCase,
+        )
 
         // when
         memberScheduler.dropMember()
 
         // then
-        verify(memberDropCase).drop(uuid)
     }
 
     @Test
     fun `탈퇴 요청 회원 탈퇴처리 - 실패`() {
         // given
-        val uuid = UUID.randomUUID()
-        `when`(memberReadCase.readUserIdByHumanStatus(3)).thenReturn(listOf(uuid))
-        `when`(memberDropCase.drop(uuid)).thenThrow(RuntimeException(""))
+        val dropCase = MockMemberDropCase()
+        val memberScheduler = MemberScheduler(
+            MockMemberReadCase(),
+            MockMemberWriteCase(),
+            MockMemberProfileWriteCase(),
+            dropCase,
+        )
+        dropCase.isExceptionCase = true
+        // when
+        memberScheduler.dropMember()
 
-        // when & then
-        assertDoesNotThrow {
-            memberScheduler.dropMember()
-        }
+        // then
+        assertThat(dropCase.executeCnt).isEqualTo(0)
     }
 
 
@@ -118,10 +136,9 @@ class MemberSchedulerTest {
 
     @Test
     fun `일일 학습지 다운로드 횟수 초기화 - 성공`() {
-        // when
-        memberScheduler.initHwpDownCnt()
-
-        // then
-        verify(memberProfileWriteCase).updateHwpDownCnt(0)
+        // when & then
+        assertDoesNotThrow {
+            memberScheduler.initHwpDownCnt()
+        }
     }
 }

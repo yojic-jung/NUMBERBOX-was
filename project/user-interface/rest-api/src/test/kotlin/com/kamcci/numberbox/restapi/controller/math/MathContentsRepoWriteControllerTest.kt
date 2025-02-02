@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
@@ -28,7 +29,7 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 좋아요 - 실패`() {
         // given
-        val reqBody = mapOf("contentsId" to "2")
+        val reqBody = mapOf("contentsId" to FAIL_ID)
 
         // when
         val resultAction = postRequest(PREFIX, reqBody)
@@ -55,7 +56,7 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 좋아요 취소 - 실패`() {
         // given
-        val contentsId = 2
+        val contentsId = FAIL_ID
 
         // when
         val resultAction = delRequest("$PREFIX/$contentsId")

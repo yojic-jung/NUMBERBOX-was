@@ -4,6 +4,10 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPasswdUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPasswdUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPhoneUpdtDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPrivateSignUpDto
+import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberSignupDto
 import com.kamcci.numberbox.app.service.stub.usecase.member.*
 import com.kamcci.numberbox.app.usecase.member.*
 import com.kamcci.numberbox.restapi.dto.request.member.MemberPasswdUpdtRequest
@@ -36,19 +40,19 @@ class MemberMockBeanConfig {
     @Bean
     fun memberMapper(): MemberMapper = object : MemberMapper {
         override fun toSignupDto(req: MemberSignupRequest): MemberSignUpDto {
-            TODO("Not yet implemented")
+            return getMemberSignupDto()
         }
 
-        override fun toSignupPrivateDto(req: MemberPrivateSignupRequest?): MemberPrivateSignUpDto? {
-            TODO("Not yet implemented")
+        override fun toSignupPrivateDto(req: MemberPrivateSignupRequest?): MemberPrivateSignUpDto {
+            return getMemberPrivateSignUpDto()
         }
 
         override fun toPasswdUpdtDto(memberId: UUID, req: MemberPasswdUpdtRequest): MemberPasswdUpdtDto {
-            TODO("Not yet implemented")
+            return getMemberPasswdUpdtDto()
         }
 
         override fun toPhoneUpdtDto(memberId: UUID, req: MemberPhoneUpdtRequest): MemberPhoneUpdtDto {
-            TODO("Not yet implemented")
+            return getMemberPhoneUpdtDto()
         }
     }
 

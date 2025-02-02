@@ -1,11 +1,8 @@
 package com.kamcci.numberbox.restapi.dummy.math
 
-import com.kamcci.numberbox.app.domain.dto.math.MathConIpsiSrcModifyDto
-import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
-import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
-import com.kamcci.numberbox.app.domain.enumeration.math.IpsiManageInsType
-import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
-import com.kamcci.numberbox.app.domain.enumeration.math.MathTypeClassifyType
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConIpsiSrcModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConLicenseModifyDto
+import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConSimilarSrcCreateDto
 import com.kamcci.numberbox.restapi.dto.request.math.*
 
 object MathContentsDummyData {
@@ -28,28 +25,12 @@ object MathContentsDummyData {
         quesLevel = quesLevel ?: 1,
     )
 
-    fun getMathConSimilarSrcCreateDto() = MathConSimilarSrcCreateDto(
-        orgSrcRef = "N명의수학 출판",
-        orgSrcNo = 100,
-        orgSrcPage = 10,
-        copyrightYear = "copyrightYear",
-        mathTypeClassify = MathTypeClassifyType.Simple,
-    )
 
     fun getMathConSimilarSrcCreateRequest() = MathConSimilarSrcCreateRequest(
         contents = getMathContentsModifyRequest(null, null),
         similarSrc = getMathConSimilarSrcCreateDto(),
     )
 
-    fun getMathConIpsiSrcModifyDto() = MathConIpsiSrcModifyDto(
-        manageIns = IpsiManageInsType.Kice,
-        impYear = 2012,
-        impMonth = 9,
-        wrongRatio = 10,
-        paperType = IpsiPaperType.Ka,
-        oddQuesNum = 1,
-        evenQuesNum = 1,
-    )
 
     fun getMathConIpsiSrcCreateRequest() =
         MathConIpsiSrcCreateRequest(
@@ -57,13 +38,6 @@ object MathContentsDummyData {
             ipsiSrc = getMathConIpsiSrcModifyDto()
         )
 
-    fun getMathConLicenseModifyDto() =
-        MathConLicenseModifyDto(
-            shareStts = true,
-            onlineLicStts = true,
-            perLicStts = true,
-            entLicStts = true,
-        )
 
     fun getMathConLicenseCreateRequest() =
         MathConLicenseCreateRequest(

@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.stub.usecase.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteCase
 
 class MockMathContentsLikeWriteCase : MathContentsLikeWriteCase {

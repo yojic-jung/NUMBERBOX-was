@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
@@ -36,7 +37,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 id로 조회 - 실패`() {
         // given
-        val contentsId = 2
+        val contentsId = FAIL_ID
         val reqBody = mapOf(
             "contentsOnly" to "true",
             "contentsClassify" to "InHouse"
@@ -152,7 +153,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `사용자 문제 - 실패`() {
         // given
-        val profileId = 2 // 미존재 프로필
+        val profileId = FAIL_ID
 
         // when
         val resultAction = getRequest("$USER_CONTENTS_URL/$profileId")

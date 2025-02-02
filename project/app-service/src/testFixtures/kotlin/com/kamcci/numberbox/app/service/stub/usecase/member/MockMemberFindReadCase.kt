@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.service.stub.usecase.member
 
-import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_EMAIL
-import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_USER_NAME
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXCEPTION_EMAIL
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_USER_NAME
 import com.kamcci.numberbox.app.usecase.member.MemberFindReadCase
 
 class MockMemberFindReadCase : MemberFindReadCase {
@@ -10,6 +10,6 @@ class MockMemberFindReadCase : MemberFindReadCase {
     }
 
     override fun sendNewTempPassword(email: String) {
-        if (email == FAIL_EMAIL) throw RuntimeException()
+        if (email == EXCEPTION_EMAIL) throw RuntimeException()
     }
 }

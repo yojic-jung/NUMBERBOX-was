@@ -4,9 +4,9 @@ import com.kamcci.numberbox.app.domain.exception.BusinessErrCodeException
 import com.kamcci.numberbox.restapi.exception.code.RestApiErrCodeType
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.springframework.http.HttpStatus
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.web.context.request.ServletWebRequest
 import org.springframework.web.context.request.WebRequest
 import java.time.LocalDateTime
 
@@ -36,8 +36,9 @@ class ResponseUtilTest {
     fun `WebRequest를 사용하는 경우 에러 응답 - 성공`() {
         // given
         val sttsCode = HttpStatus.BAD_REQUEST
-        val mockWebRequest: WebRequest = mock(WebRequest::class.java)
-        Mockito.`when`(mockWebRequest.contextPath).thenReturn("URI")
+        val mockServletRequest = MockHttpServletRequest()
+        val mockWebRequest: WebRequest = ServletWebRequest(mockServletRequest)
+        mockServletRequest.contextPath = "URI"
         val now = LocalDateTime.now()
 
         // when
@@ -53,8 +54,9 @@ class ResponseUtilTest {
     fun `HttpServletRequest를 사용하는 경우 에러 응답 - 성공`() {
         // given
         val sttsCode = HttpStatus.BAD_REQUEST
-        val mockWebRequest: WebRequest = mock(WebRequest::class.java)
-        Mockito.`when`(mockWebRequest.contextPath).thenReturn("URI")
+        val mockServletRequest = MockHttpServletRequest()
+        val mockWebRequest: WebRequest = ServletWebRequest(mockServletRequest)
+        mockServletRequest.contextPath = "URI"
 
         // when
         val errRes = ResponseUtil.error(RuntimeException(""), sttsCode, mockWebRequest)
@@ -68,8 +70,9 @@ class ResponseUtilTest {
         // given
         val errType = RestApiErrCodeType.DISABLE_USER
         val sttsCode = HttpStatus.BAD_REQUEST
-        val mockWebRequest: WebRequest = mock(WebRequest::class.java)
-        Mockito.`when`(mockWebRequest.contextPath).thenReturn("URI")
+        val mockServletRequest = MockHttpServletRequest()
+        val mockWebRequest: WebRequest = ServletWebRequest(mockServletRequest)
+        mockServletRequest.contextPath = "URI"
 
         // when
         val errRes = ResponseUtil.error(BusinessErrCodeException(errType), sttsCode, mockWebRequest)

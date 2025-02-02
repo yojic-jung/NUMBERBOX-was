@@ -3,8 +3,8 @@ package com.kamcci.numberbox.app.service.dummy
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceFileVo
-import com.kamcci.numberbox.app.domain.vo.resource.MathResourceImgVo
+import com.kamcci.numberbox.app.domain.vo.resource.*
+import java.time.LocalDateTime
 import java.util.*
 
 object MathResourceDummyData {
@@ -139,4 +139,72 @@ object MathResourceDummyData {
             imgList = listOf(FileNameVo("", "")),
         ),
     )
+
+    fun getMathResourceMenuVo(id: Long = 1L): MathResourceMenuVo {
+        return MathResourceMenuVo(
+            id = id,
+            mainCateId = 1,
+            mainCateName = "mainCateName",
+            midCateId = 1,
+            midCateName = "midCateName",
+            alignOrder = 1,
+        )
+    }
+
+    fun getMathResourceMenuVoList(size: Int = 100): List<MathResourceMenuVo> {
+        val resourceMenuVoList: MutableList<MathResourceMenuVo> = mutableListOf()
+        for (i in 1..size) {
+            resourceMenuVoList.add(getMathResourceMenuVo(i.toLong()))
+        }
+        return resourceMenuVoList
+    }
+
+
+    fun getMathResourceDetailVo(id: Long = 1L) =
+        MathResourceDetailVo(
+            id = id,
+            title = "title",
+            imgPath = "imgPath",
+            imgName = "imgName",
+            pptPath = "pptPath",
+            pptName = "pptName",
+            pptPageCnt = 1,
+            downCnt = 1,
+            imgList = listOf(MathResourceImgVo("", "")),
+            cateList = listOf(MathResourceCateVo(1, 1)),
+            sysCreateDate = LocalDateTime.now(),
+            sysUpdateDate = LocalDateTime.now(),
+        )
+
+    fun getMathResourceDetailVoList() =
+        listOf(
+            getMathResourceDetailVo(1L),
+            getMathResourceDetailVo(2L),
+            getMathResourceDetailVo(3L),
+            getMathResourceDetailVo(4L),
+            getMathResourceDetailVo(5L),
+        )
+
+    fun getMathResourceVo(id: Long = 1L) =
+        MathResourceVo(
+            id = id,
+            title = "title",
+            imgPath = "imgPath",
+            imgName = "imgName",
+            pptPath = "pptPath",
+            pptName = "pptName",
+            pptPageCnt = 1,
+            downCnt = 1,
+            sysCreateDate = LocalDateTime.now(),
+            sysUpdateDate = LocalDateTime.now(),
+        )
+
+
+    fun getMathResourceVoList(size: Int = 100): List<MathResourceVo> {
+        val categoryVoList: MutableList<MathResourceVo> = mutableListOf()
+        for (i in 1..size) {
+            categoryVoList.add(getMathResourceVo(i.toLong()))
+        }
+        return categoryVoList
+    }
 }

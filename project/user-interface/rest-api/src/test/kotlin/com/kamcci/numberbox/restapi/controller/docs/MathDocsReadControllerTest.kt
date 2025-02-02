@@ -7,6 +7,7 @@ import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.IL
 import com.kamcci.numberbox.app.domain.dto.docs.MathIpsiDocsReadDto.Companion.ILLEGAL_WRONG_RATIO
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -184,7 +185,7 @@ class MathDocsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `나의 학습지 조회 - 실퍠(나의 학습지 아님)`() {
         // given
-        val docsId = 2L
+        val docsId = FAIL_ID
 
         // when
         val resultAction = getRequest("$DOCS_BY_ID/$docsId")

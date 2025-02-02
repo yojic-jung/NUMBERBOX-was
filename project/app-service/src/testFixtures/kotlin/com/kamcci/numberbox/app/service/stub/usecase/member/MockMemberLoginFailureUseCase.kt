@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.service.stub.usecase.member
 
-import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_EMAIL
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
 import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 
 class MockMemberLoginFailureUseCase : MemberLoginFailureUseCase {

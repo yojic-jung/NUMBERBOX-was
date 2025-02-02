@@ -3,9 +3,7 @@ package com.kamcci.numberbox.restapi.validation.file
 import com.kamcci.numberbox.restapi.validation.file.PptFileCheckValidator.Companion.MAX_FILE_SIZE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.web.multipart.MultipartFile
 
 class PptFileCheckValidatorTest {
     @Test
@@ -57,11 +55,12 @@ class PptFileCheckValidatorTest {
     @Test
     fun `파일 확장자 없음 체크 - 성공`() {
         // given
-        val mockMultipartFile = Mockito.mock(MultipartFile::class.java).apply {
-            Mockito.`when`(this.originalFilename).thenReturn(null) // 명시적으로 null 반환 설정
-            Mockito.`when`(this.size).thenReturn(123L)
-            Mockito.`when`(this.isEmpty).thenReturn(false)
-        }
+        val mockMultipartFile = MockMultipartFile(
+            "file", // 파라미터 이름
+            null, // 파일 이름
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation", // MIME 타입
+            "123".toByteArray()// 실제 파일 데이터
+        )
 
         // when
         val isTrue = PptFileCheckValidator.isValidPpt(mockMultipartFile)

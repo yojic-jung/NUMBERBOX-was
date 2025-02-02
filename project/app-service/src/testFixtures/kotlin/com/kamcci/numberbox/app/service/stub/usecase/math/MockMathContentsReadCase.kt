@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.service.stub.usecase.math
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.*
-import com.kamcci.numberbox.app.service.constant.FailConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVo
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVoList
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsOnlyVo

@@ -1,12 +1,14 @@
 package com.kamcci.numberbox.restapi.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.kamcci.numberbox.restapi.stub.MockUserDetailArgumentResolver
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import kotlin.reflect.KClass
@@ -25,21 +27,27 @@ open class BaseMockMvcTest {
     fun getRequest(url: String) =
         getRequest(url, mapOf())
 
-    fun getRequest(url: String, queryMap: Map<String, String?>?): ResultActions {
+    fun getRequestWithFailMemberId(url: String) =
+        getRequest(url, mapOf(), withFailMember = true)
+
+    fun getRequest(url: String, queryMap: Map<String, String?>?, withFailMember: Boolean = false): ResultActions {
         val queryString = queryMap?.entries?.joinToString("&") { (key, value) -> "${key}=${value}" }
+        val reqBuilder = MockMvcRequestBuilders.get("${url}?$queryString")
+        if (withFailMember) setFailMember(reqBuilder)
+        
         return mockMvc
-            .perform(
-                MockMvcRequestBuilders.get("${url}?$queryString")
-            )
+            .perform(reqBuilder)
     }
 
     // json POST 요청
-    fun postRequest(url: String, reqBody: Any?): ResultActions {
+    fun postRequest(url: String, reqBody: Any?, withFailMember: Boolean = false): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.post(url)
             .contentType(MediaType.APPLICATION_JSON)
         if (reqBody != null) {
             reqBuilder.content(objectMapper.writeValueAsString(reqBody))
         }
+        if (withFailMember) setFailMember(reqBuilder)
+
         return mockMvc.perform(reqBuilder)
     }
 
@@ -108,13 +116,23 @@ open class BaseMockMvcTest {
 
     // json DELETE 요청
     fun delRequest(url: String) = delRequest(url, null)
-    fun delRequest(url: String, reqBody: Map<String, Any>?): ResultActions {
+    fun delRequest(url: String, reqBody: Map<String, Any>?, withFailMember: Boolean = false): ResultActions {
         val reqBuilder = MockMvcRequestBuilders.delete(url)
             .contentType(MediaType.APPLICATION_JSON)
         if (reqBody != null) {
             reqBuilder.content(objectMapper.writeValueAsString(reqBody))
         }
+
+        if (withFailMember) setFailMember(reqBuilder)
         return mockMvc.perform(reqBuilder)
+    }
+
+    private fun setFailMember(reqBuilder: MockHttpServletRequestBuilder) {
+        reqBuilder.with { request ->
+            // 실패 memberId가 주입되기 위한 설정
+            request.setAttribute(MockUserDetailArgumentResolver.FAIL_REQ_SETTING, "")
+            request
+        }
     }
 
     /**

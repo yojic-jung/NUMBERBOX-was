@@ -1,29 +1,16 @@
 package com.kamcci.numberbox.restapi.controller.members
 
-import com.kamcci.numberbox.app.domain.dto.member.MemberSignUpDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.vo.member.MemberSignUpResultVo
-import com.kamcci.numberbox.app.usecase.member.MemberReadCase
-import com.kamcci.numberbox.app.usecase.member.MemberWriteCase
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
-import java.util.*
 
 @WebMvcUnitTest
-class MemberSignUpControllerTest @Autowired constructor(
-    private val memberReadCase: MemberReadCase,
-    private val memberWriteCase: MemberWriteCase,
-    private val memberMapper: MemberMapper,
-) : BaseMockMvcTest() {
+class MemberSignUpControllerTest : BaseMockMvcTest() {
     companion object {
         const val PREFIX = "/public/member"
         const val SIGNUP_URL = "$PREFIX/signup"
@@ -42,10 +29,9 @@ class MemberSignUpControllerTest @Autowired constructor(
     fun `회원가입 목적 인증 코드 생성 요청 - 성공`() {
         // given
         val reqBody = mapOf(
-            "email" to EMAIL,
+            "email" to FAIL_EMAIL,
             "codeType" to VerifyCodeType.SignUp
         )
-        `when`(memberReadCase.existEmail(any())).thenReturn(false)
 
         //when
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
@@ -61,7 +47,6 @@ class MemberSignUpControllerTest @Autowired constructor(
             "email" to EMAIL,
             "codeType" to VerifyCodeType.SignUp
         )
-        `when`(memberReadCase.existEmail(any())).thenReturn(true)
 
         //when
         val resultAction = postRequest(CREATE_VERIFY_CODE_URL, reqBody)
@@ -96,11 +81,6 @@ class MemberSignUpControllerTest @Autowired constructor(
             "password" to PW,
             "confirmPassword" to PW,
             "emailVerifyCode" to VERIFY_CODE,
-        )
-        val memberSignupDto = MemberSignUpDto("", "")
-        `when`(memberMapper.toSignupDto(any())).thenReturn(memberSignupDto)
-        `when`(memberWriteCase.signup(any(), anyOrNull())).thenReturn(
-            MemberSignUpResultVo(UUID.randomUUID(), "", listOf(""))
         )
 
         //when

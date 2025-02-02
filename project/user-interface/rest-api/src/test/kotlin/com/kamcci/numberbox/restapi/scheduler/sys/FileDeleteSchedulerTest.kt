@@ -1,24 +1,20 @@
 package com.kamcci.numberbox.restapi.scheduler.sys
 
-import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
-import com.kamcci.numberbox.app.domain.vo.sys.SysGarbageFileVo
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
+import com.kamcci.numberbox.app.service.stub.port.storage.MockFileStoragePort
+import com.kamcci.numberbox.app.service.stub.usecase.sys.MockSysGarbageFileReadCase
+import com.kamcci.numberbox.app.service.stub.usecase.sys.MockSysGarbageFileWriteCase
 import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadCase
 import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteCase
-import com.kamcci.numberbox.restapi.scheduler.member.MemberScheduler.Companion.BATCH_SIZE
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.verify
 import org.springframework.scheduling.annotation.Scheduled
 import java.lang.reflect.Method
 
 class FileDeleteSchedulerTest {
-    private val fileStoragePort: FileStoragePort = mock()
-    private val sysGarbageFileReadCase: SysGarbageFileReadCase = mock()
-    private val sysGarbageFileWriteCase: SysGarbageFileWriteCase = mock()
+    private val fileStoragePort: FileStoragePort = MockFileStoragePort()
+    private val sysGarbageFileReadCase: SysGarbageFileReadCase = MockSysGarbageFileReadCase()
+    private val sysGarbageFileWriteCase: SysGarbageFileWriteCase = MockSysGarbageFileWriteCase()
     private val fileDeleteScheduler =
         FileDeleteScheduler(fileStoragePort, sysGarbageFileReadCase, sysGarbageFileWriteCase)
 
@@ -36,46 +32,47 @@ class FileDeleteSchedulerTest {
     @Test
     fun `삭제 대상 파일 제거 - 성공(배치 사이즈 보다 작은 경우)`() {
         // given
-        val garbageList: MutableList<SysGarbageFileVo> = mutableListOf()
-        for (i in 0..100) garbageList.add(SysGarbageFileVo(1L, GarbageFileType.S3, "", "", 0))
-        `when`(sysGarbageFileReadCase.readAllByType(GarbageFileType.S3, BATCH_SIZE)).thenReturn(garbageList)
+        val mockSysGarbageFileReadCase = MockSysGarbageFileReadCase()
+        val fileDeleteScheduler =
+            FileDeleteScheduler(fileStoragePort, mockSysGarbageFileReadCase, sysGarbageFileWriteCase)
+        // 배치사이즈보다 작게 조회되도록 설정
+        mockSysGarbageFileReadCase.moreBatchSize = false
 
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
+
+        assertThat(mockSysGarbageFileReadCase.executeCnt).isEqualTo(1)
     }
 
     @Test
     fun `삭제 대상 파일 제거 - 성공(배치 사이즈 보다 큰 경우)`() {
         // given
-        val garbageList: MutableList<SysGarbageFileVo> = mutableListOf()
-        val secGarbageList: MutableList<SysGarbageFileVo> = mutableListOf()
-        for (i in 0..600) garbageList.add(SysGarbageFileVo(1L, GarbageFileType.S3, "", "", 0))
-        for (i in 0..100) garbageList.add(SysGarbageFileVo(1L, GarbageFileType.S3, "", "", 0))
-        `when`(sysGarbageFileReadCase.readAllByType(GarbageFileType.S3, BATCH_SIZE)).thenReturn(garbageList)
-            .thenReturn(secGarbageList)
+        val mockSysGarbageFileReadCase = MockSysGarbageFileReadCase()
+        val fileDeleteScheduler =
+            FileDeleteScheduler(fileStoragePort, mockSysGarbageFileReadCase, sysGarbageFileWriteCase)
+        // 배치사이즈보다 작게 조회되도록 설정
+        mockSysGarbageFileReadCase.moreBatchSize = true
 
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
 
-        // then
-        verify(sysGarbageFileWriteCase, times(2)).deleteById(any())
+        assertThat(mockSysGarbageFileReadCase.executeCnt).isEqualTo(2)
     }
 
     @Test
     fun `삭제 대상 파일 제거 - 실패`() {
         // given
-        val garbageList: MutableList<SysGarbageFileVo> = mutableListOf()
-        garbageList.add(SysGarbageFileVo(1L, GarbageFileType.S3, "", "", 0))
-        `when`(sysGarbageFileReadCase.readAllByType(GarbageFileType.S3, BATCH_SIZE)).thenReturn(garbageList)
-        `when`(fileStoragePort.delete(any())).thenThrow(RuntimeException(""))
+        val mockFileStoragePort = MockFileStoragePort()
+        val mockSysGarbageFileWriteCase = MockSysGarbageFileWriteCase()
+        val fileDeleteScheduler =
+            FileDeleteScheduler(mockFileStoragePort, sysGarbageFileReadCase, mockSysGarbageFileWriteCase)
+        // 배치사이즈보다 작게 조회되도록 설정
+        mockFileStoragePort.isThrowException = true
 
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
 
-        // then -> 성공 횟수 = 0
-        val successIdList = argumentCaptor<MutableList<Long>>()
-        verify(sysGarbageFileWriteCase).deleteById(successIdList.capture())
-        println(successIdList.allValues)
-        assert(successIdList.allValues[0].isEmpty())
+        // then -> 성공 케이스 없으므로 성공 후처리 실행 안됨
+        assertThat(mockSysGarbageFileWriteCase.excutedCnt).isEqualTo(0)
     }
 }
