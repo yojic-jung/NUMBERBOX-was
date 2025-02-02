@@ -1,92 +1,74 @@
 package com.kamcci.numberbox.app.service.math
 
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConIpsiSrcModifyDto
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConLicenseModifyDto
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsModifyDto
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
+import com.kamcci.numberbox.app.service.stub.port.orm.math.MockMathContentsWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.usecase.math.MockMathContentsReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.verify
 import java.util.*
 
 class MathContentsWriteServiceTest {
-    private val mathContentsReadOrmPort: MathContentsReadCase = mock()
-    private val mathContentsWriteOrmPort: MathContentsWriteOrmPort = mock()
-
+    private val mathContentsReadOrmPort = MockMathContentsReadCase()
+    private val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
     private val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
-
-    private val orgContentsId = 1L
-    private val returnValue = 10L
-    private val svcPosbSttsType = ContentsSvcPosbSttsType.Release
-    private val mathContentsModifyDto = getMathContentsModifyDto()
 
     @Test
     fun `사용자 수학문제 등록 - 성공`() {
         // given
-        val contentsModifyDto = getMathContentsModifyDto()
-        val licenseDto = getMathConLicenseModifyDto()
+        val mathContentsReadOrmPort = MockMathContentsReadCase()
+        val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
+        val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createUserCustomContents(contentsModifyDto, licenseDto)
+        mathContentsWriteService.createUserCustomContents(getMathContentsModifyDto(), getMathConLicenseModifyDto())
 
         // then
-        verify(mathContentsWriteOrmPort).saveWithLicense(
-            ContentsSvcPosbSttsType.Release,
-            contentsModifyDto,
-            licenseDto
-        )
+        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
     }
 
     @Test
     fun `자체 수학문제 등록 - 성공`() {
         // given
-        val contentsModifyDto = getMathContentsModifyDto()
-        val similarSrcDto = getMathConSimilarSrcCreateDto()
+        val mathContentsReadOrmPort = MockMathContentsReadCase()
+        val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
+        val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createInHouseContents(contentsModifyDto, similarSrcDto)
+        mathContentsWriteService.createInHouseContents(getMathContentsModifyDto(), getMathConSimilarSrcCreateDto())
 
         // then
-        verify(mathContentsWriteOrmPort).saveWithSimilarSrc(
-            ContentsSvcPosbSttsType.NotRelease,
-            contentsModifyDto,
-            similarSrcDto
-        )
+        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
     }
 
     @Test
     fun `변형문제 등록 - 성공`() {
         // given
-        Mockito.`when`(mathContentsReadOrmPort.existById(orgContentsId)).thenReturn(true)
-        Mockito.`when`(mathContentsReadOrmPort.readTransContCntById(orgContentsId)).thenReturn(1)
-        Mockito.`when`(
-            mathContentsWriteOrmPort.saveTransContents(orgContentsId, svcPosbSttsType, mathContentsModifyDto)
-        ).thenReturn(returnValue)
+        val orgContentsId = 1L
 
         // when
-        val contentsId = mathContentsWriteService.createTransContents(orgContentsId, mathContentsModifyDto)
+        val contentsId = mathContentsWriteService.createTransContents(orgContentsId, getMathContentsModifyDto())
 
         // then
-        assertThat(contentsId).isEqualTo(returnValue)
+        assertThat(contentsId).isEqualTo(1L)
     }
 
     @Test
     fun `변형문제 등록 - 실패(원본 문제 미존재)`() {
         // given
-        Mockito.`when`(mathContentsReadOrmPort.existById(orgContentsId)).thenReturn(false)
+        val notExistId = EXIST_ID + 1L
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.createTransContents(orgContentsId, mathContentsModifyDto)
+            mathContentsWriteService.createTransContents(notExistId, getMathContentsModifyDto())
         }
         assertThat(exception.msg).isEqualTo(MathContentsWriteService.NOT_EXIST_CONTENTS)
     }
@@ -94,57 +76,44 @@ class MathContentsWriteServiceTest {
     @Test
     fun `입시 수학문제 등록 - 성공`() {
         // given
-        val contentsModifyDto = getMathContentsModifyDto()
-        val ipsiSrcCreateDto = getMathConIpsiSrcModifyDto()
+        val mathContentsReadOrmPort = MockMathContentsReadCase()
+        val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
+        val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createIpsiContents(contentsModifyDto, ipsiSrcCreateDto)
+        mathContentsWriteService.createIpsiContents(getMathContentsModifyDto(), getMathConIpsiSrcModifyDto())
 
         // then
-        verify(mathContentsWriteOrmPort).saveWithIpsiSrc(
-            ContentsSvcPosbSttsType.Release,
-            contentsModifyDto,
-            ipsiSrcCreateDto
-        )
+        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
     }
 
     @Test
     fun `사용자 수학 문제 수정 - 성공`() {
         // given
         val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val licenseCreateDto = getMathConLicenseModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithLicense(
-                contentsId,
-                ContentsSvcPosbSttsType.Release, contentsModifyDto, licenseCreateDto
-            )
-        ).thenReturn(1L)
 
         // when
         assertDoesNotThrow {
-            mathContentsWriteService.updateUserCustomContents(contentsId, contentsModifyDto, licenseCreateDto)
+            mathContentsWriteService.updateUserCustomContents(
+                contentsId,
+                getMathContentsModifyDto(),
+                getMathConLicenseModifyDto()
+            )
         }
     }
 
     @Test
     fun `사용자 수학 문제 수정 - 실패`() {
         // given
-        val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val licenseCreateDto = getMathConLicenseModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithLicense(
-                contentsId,
-                ContentsSvcPosbSttsType.Release, contentsModifyDto, licenseCreateDto
-            )
-        ).thenReturn(0L)
+        val contentsId = FAIL_ID
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.updateUserCustomContents(contentsId, contentsModifyDto, licenseCreateDto)
+            mathContentsWriteService.updateUserCustomContents(
+                contentsId,
+                getMathContentsModifyDto(),
+                getMathConLicenseModifyDto()
+            )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
     }
@@ -153,24 +122,13 @@ class MathContentsWriteServiceTest {
     fun `자체제작 수학 문제 수정 - 성공`() {
         // given
         val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val similarSrcDto = getMathConSimilarSrcCreateDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithSimilarSrc(
-                contentsId,
-                ContentsSvcPosbSttsType.Release,
-                contentsModifyDto,
-                similarSrcDto
-            )
-        ).thenReturn(1L)
 
         // when & then
         assertDoesNotThrow {
             mathContentsWriteService.updateInHouseContents(
                 contentsId,
-                contentsModifyDto,
-                similarSrcDto
+                getMathContentsModifyDto(),
+                getMathConSimilarSrcCreateDto()
             )
         }
     }
@@ -178,23 +136,14 @@ class MathContentsWriteServiceTest {
     @Test
     fun `자체제작 수학 문제 수정 - 실패`() {
         // given
-        val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val similarSrcDto = getMathConSimilarSrcCreateDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithSimilarSrc(
-                contentsId,
-                ContentsSvcPosbSttsType.Release, contentsModifyDto, similarSrcDto
-            )
-        ).thenReturn(0L)
+        val contentsId = FAIL_ID
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateInHouseContents(
                 contentsId,
-                contentsModifyDto,
-                similarSrcDto
+                getMathContentsModifyDto(),
+                getMathConSimilarSrcCreateDto()
             )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
@@ -205,24 +154,13 @@ class MathContentsWriteServiceTest {
     fun `입시 문제 수정 - 성공`() {
         // given
         val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val ipsiSrcCreateDto = getMathConIpsiSrcModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithIpsiSrc(
-                contentsId,
-                ContentsSvcPosbSttsType.Release,
-                contentsModifyDto,
-                ipsiSrcCreateDto,
-            )
-        ).thenReturn(1L)
 
         // when & then
         assertDoesNotThrow {
             mathContentsWriteService.updateIpsiContents(
                 contentsId,
-                contentsModifyDto,
-                ipsiSrcCreateDto,
+                getMathContentsModifyDto(),
+                getMathConIpsiSrcModifyDto(),
             )
         }
     }
@@ -230,25 +168,14 @@ class MathContentsWriteServiceTest {
     @Test
     fun `입시 문제 수정 - 실패`() {
         // given
-        val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-        val ipsiSrcCreateDto = getMathConIpsiSrcModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateWithIpsiSrc(
-                contentsId,
-                ContentsSvcPosbSttsType.Release,
-                contentsModifyDto,
-                ipsiSrcCreateDto,
-            )
-        ).thenReturn(0L)
+        val contentsId = FAIL_ID
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateIpsiContents(
                 contentsId,
-                contentsModifyDto,
-                ipsiSrcCreateDto,
+                getMathContentsModifyDto(),
+                getMathConIpsiSrcModifyDto(),
             )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
@@ -258,21 +185,12 @@ class MathContentsWriteServiceTest {
     fun `변형 문제 수정 - 성공`() {
         // given
         val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateTransContents(
-                contentsId,
-                ContentsSvcPosbSttsType.Release,
-                contentsModifyDto,
-            )
-        ).thenReturn(1L)
 
         // when & then
         assertDoesNotThrow {
             mathContentsWriteService.updateTransContents(
                 contentsId,
-                contentsModifyDto,
+                getMathContentsModifyDto(),
             )
         }
     }
@@ -280,21 +198,13 @@ class MathContentsWriteServiceTest {
     @Test
     fun `변형 문제 수정 - 실패`() {
         // given
-        val contentsId = 1L
-        val contentsModifyDto = getMathContentsModifyDto()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateTransContents(
-                contentsId,
-                ContentsSvcPosbSttsType.Release, contentsModifyDto,
-            )
-        ).thenReturn(0L)
+        val contentsId = FAIL_ID
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateTransContents(
                 contentsId,
-                contentsModifyDto,
+                getMathContentsModifyDto(),
             )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
@@ -305,14 +215,6 @@ class MathContentsWriteServiceTest {
         // given
         val contentsId = 1L
         val memberId = UUID.randomUUID()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateContentsClassifyType(
-                contentsId,
-                memberId,
-                ContentsClassifyType.Deleted,
-            )
-        ).thenReturn(1L)
 
         // when & then
         assertDoesNotThrow {
@@ -326,16 +228,8 @@ class MathContentsWriteServiceTest {
     @Test
     fun `수학 문제 삭제 - 실패`() {
         // given
-        val contentsId = 1L
+        val contentsId = FAIL_ID
         val memberId = UUID.randomUUID()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateContentsClassifyType(
-                contentsId,
-                memberId,
-                ContentsClassifyType.Deleted,
-            )
-        ).thenReturn(0L)
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
@@ -352,13 +246,6 @@ class MathContentsWriteServiceTest {
         // given
         val memberId = UUID.randomUUID()
 
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateContentsClassifyType(
-                memberId,
-                ContentsClassifyType.Deleted,
-            )
-        ).thenReturn(1L)
-
         // when & then
         assertDoesNotThrow {
             mathContentsWriteService.delete(
@@ -370,14 +257,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `수학 문제 삭제(사용자 모든 문제) - 실패`() {
         // given
-        val memberId = UUID.randomUUID()
-
-        Mockito.`when`(
-            mathContentsWriteOrmPort.updateContentsClassifyType(
-                memberId,
-                ContentsClassifyType.Deleted,
-            )
-        ).thenReturn(0L)
+        val memberId = FAIL_MEMBER_ID
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {

@@ -7,8 +7,8 @@ import com.kamcci.numberbox.app.domain.vo.member.MemberProfileVo
 import java.util.*
 
 object MemberDummyData {
-    fun getMemberSignupDto() = MemberSignUpDto(
-        email = "signup@test.com",
+    fun getMemberSignupDto(email: String = "signup@test.com") = MemberSignUpDto(
+        email = email,
         password = "1234"
     )
 

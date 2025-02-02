@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.app.service.stub.usecase.member
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_EMAIL
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_USER_NAME
@@ -39,7 +40,7 @@ class MockMemberReadCase : MemberReadCase {
     }
 
     override fun existsByEmail(email: String): Boolean {
-        return email != FAIL_EMAIL
+        return email == EXIST_EMAIL
     }
 
     override fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID> {

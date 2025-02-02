@@ -14,11 +14,17 @@ object MockTestConstant {
     // 실패 id
     val FAIL_ID = 2L
 
+    // exist 쿼리에서 true 반환할 ID
+    val EXIST_ID = 1L
+
     // 예외 터트리는 ID
     val EXCEPTION_ID = 3L
 
     // 실패 email
     val FAIL_EMAIL = "fail@test.com"
+
+    // exist 쿼리에서 true 반환할 email
+    val EXIST_EMAIL = "exist@test.com"
 
     // 예외 터트리는 email
     val EXCEPTION_EMAIL = "exception@test.com"

@@ -3,6 +3,7 @@ package com.kamcci.numberbox.app.service.stub.usecase.math
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.vo.math.*
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVo
 import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsDetailVoList
@@ -73,7 +74,7 @@ class MockMathContentsReadCase : MathContentsReadCase {
     }
 
     override fun existById(id: Long): Boolean {
-        return id != FAIL_ID
+        return id == EXIST_ID
     }
 
 }

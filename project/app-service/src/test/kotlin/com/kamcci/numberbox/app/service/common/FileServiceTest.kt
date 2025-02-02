@@ -2,13 +2,13 @@ package com.kamcci.numberbox.app.service.common
 
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
+import com.kamcci.numberbox.app.service.stub.port.storage.MockFileStoragePort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 
 class FileServiceTest {
-    private val fileService = FileService(mock())
+    private val fileService = FileService(MockFileStoragePort())
 
     companion object {
         const val MAX_FILE_NAME_LENGTH = 70

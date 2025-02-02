@@ -10,6 +10,7 @@ class MockSysGarbageFileReadCase : SysGarbageFileReadCase {
      */
     var moreBatchSize = false // 배치 사이즈 이상 조회 여부
     var executeCnt = 0 // 실행 횟수
+    
     override fun readAllByType(type: GarbageFileType, limit: Long): List<SysGarbageFileVo> {
         executeCnt++
         val garbageList: MutableList<SysGarbageFileVo> = mutableListOf()

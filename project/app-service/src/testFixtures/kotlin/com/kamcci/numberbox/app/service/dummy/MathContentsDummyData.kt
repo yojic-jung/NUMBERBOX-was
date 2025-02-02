@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 import java.util.*
 
 object MathContentsDummyData {
-    fun getMathContentsRepoModifyDto() = MathContentsRepoModifyDto(
-        contentsId = 1L,
+    fun getMathContentsRepoModifyDto(contentsId: Long = 1L) = MathContentsRepoModifyDto(
+        contentsId = contentsId,
         memberId = UUID.randomUUID()
     )
 

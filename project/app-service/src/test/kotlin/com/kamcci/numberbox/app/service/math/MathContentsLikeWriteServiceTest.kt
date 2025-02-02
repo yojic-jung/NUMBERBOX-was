@@ -2,30 +2,27 @@ package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeWriteOrmPort
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
+import com.kamcci.numberbox.app.service.stub.port.orm.math.MockMathContentsLikeWriteOrmPort
+import com.kamcci.numberbox.app.service.stub.usecase.math.MockMathContentsLikeReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import java.util.*
 
 class MathContentsLikeWriteServiceTest {
-    private val mathConLikeReadCase: MathContentsLikeReadCase = mock()
-    private val mathConLikeModifyPort: MathContentsLikeWriteOrmPort = mock()
+    private val mathConLikeReadCase = MockMathContentsLikeReadCase()
+    private val mathConLikeModifyPort = MockMathContentsLikeWriteOrmPort()
 
     private val mathContentsLikeWriteService =
         MathContentsLikeWriteService(mathConLikeReadCase, mathConLikeModifyPort)
 
-    private val modifyDto = MathContentsLikeModifyDto(1L, UUID.randomUUID())
 
     @Test
     fun `좋아요 - 성공`() {
         // given
-        Mockito.`when`(mathConLikeReadCase.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId))
-            .thenReturn(false)
+        val modifyDto = MathContentsLikeModifyDto(EXIST_ID + 1L, UUID.randomUUID())
 
         // when & then
         assertDoesNotThrow {
@@ -34,10 +31,9 @@ class MathContentsLikeWriteServiceTest {
     }
 
     @Test
-    fun `좋아요 - 실패(수학문제 미존재)`() {
+    fun `좋아요 - 실패(이미 좋아요 누름)`() {
         // given
-        Mockito.`when`(mathConLikeReadCase.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId))
-            .thenReturn(true)
+        val modifyDto = MathContentsLikeModifyDto(EXIST_ID, UUID.randomUUID())
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
@@ -49,8 +45,7 @@ class MathContentsLikeWriteServiceTest {
     @Test
     fun `좋아요 삭제 - 성공`() {
         // given
-        Mockito.`when`(mathConLikeReadCase.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId))
-            .thenReturn(true)
+        val modifyDto = MathContentsLikeModifyDto(1L, UUID.randomUUID())
 
         // when & then
         assertDoesNotThrow {
@@ -59,10 +54,9 @@ class MathContentsLikeWriteServiceTest {
     }
 
     @Test
-    fun `좋아요 삭제(수학문제 미존재) - 실패`() {
+    fun `좋아요 삭제(좋아요 누른적 없음) - 실패`() {
         // given
-        Mockito.`when`(mathConLikeReadCase.existByContentsIdAndMemberId(modifyDto.contentsId, modifyDto.memberId))
-            .thenReturn(false)
+        val modifyDto = MathContentsLikeModifyDto(EXIST_ID + 1L, UUID.randomUUID())
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
