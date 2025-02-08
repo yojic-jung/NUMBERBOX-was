@@ -98,14 +98,14 @@ class MemberReadRepositoryTest(
         val failCount = memberReadRepo.readFailCountById(id)
 
         // then
-        assertThat(failCount).isNotNull
+        assertThat(failCount).isNull()
 
     }
 
     @Test
     fun `존재하지 않는 id로 failCount 조회 - 성공`() {
         // given
-        val id = UUID.fromString(EXIST_ID)
+        val id = UUID.fromString(NONE_EXIST_ID)
 
         // when
         val failCount = memberReadRepo.readFailCountById(id)
