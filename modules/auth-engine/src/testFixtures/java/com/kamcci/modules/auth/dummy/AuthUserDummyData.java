@@ -19,7 +19,7 @@ public class AuthUserDummyData {
         AuthUserRole role = new AuthUserRole("USER", true);
         List<AuthUserRole> roleList = new ArrayList<>();
         roleList.add(role);
-        return new AuthUserInfo("username", UUID.randomUUID(), "", roleList);
+        return new AuthUserInfo("username", UUID.fromString("11cf5466-cda8-ea4d-9bc7-037cb86fdb20"), "", roleList);
     }
 
     public static AuthUserInfo getDisableAuthUserInfo() {

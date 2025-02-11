@@ -55,12 +55,12 @@ public class JwtRequestAuthProvider implements AuthenticationProvider {
         final String email = authTokenUtil.getEmail(accessToken);
         final AuthUserDetail user = (AuthUserDetail) userDetailsService.loadUserByUsername(email);
 
-        // check3. refreshToken 소유자 체크(액세스 토큰 소유자와 같아야함)
+        // check3. enabled 체크해야함
+        if(!user.isEnabled()) throw new DisabledException("비활성 계정입니다.");
+
+        // check4. refreshToken 소유자 체크(액세스 토큰 소유자와 같아야함)
         final String accessTokenOwner = authTokenUtil.getUserId(accessToken).toString();
         checkTokenOwner(accessTokenOwner, refreshToken);
-
-        // check4. enabled 체크해야함
-        if(!user.isEnabled()) throw new DisabledException("비활성 계정입니다.");
 
         // Authentication 객체 반환
         return makeAuthentication(user, reCreateRefreshToken ? refreshToken : null);
