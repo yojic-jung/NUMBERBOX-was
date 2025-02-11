@@ -1,6 +1,6 @@
-package com.kamcci.numberbox.hwp.client.engine.dummy
+package com.kamcci.numberbox.hwp.client.adapter.dummy
 
-import com.kamcci.numberbox.hwp.client.engine.service.SocketFactory
+import com.kamcci.numberbox.hwp.client.adapter.service.SocketFactory
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream

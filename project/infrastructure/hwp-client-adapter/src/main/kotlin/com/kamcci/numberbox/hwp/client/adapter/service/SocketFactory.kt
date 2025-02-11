@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.hwp.client.engine.service
+package com.kamcci.numberbox.hwp.client.adapter.service
 
 import java.net.Socket
 

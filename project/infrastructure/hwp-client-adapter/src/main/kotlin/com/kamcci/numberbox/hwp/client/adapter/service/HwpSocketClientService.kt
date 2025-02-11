@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.hwp.client.engine.service
+package com.kamcci.numberbox.hwp.client.adapter.service
 
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpRequestType

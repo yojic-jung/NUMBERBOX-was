@@ -1,6 +1,6 @@
-package com.kamcci.numberbox.hwp.client.engine.service
+package com.kamcci.numberbox.hwp.client.adapter.service
 
-import com.kamcci.numberbox.hwp.client.engine.config.HwpSocketClientProperty
+import com.kamcci.numberbox.hwp.client.adapter.config.HwpSocketClientProperty
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.hwp.client.engine.config
+package com.kamcci.numberbox.hwp.client.adapter.config
 
 import org.junit.jupiter.api.Test
 

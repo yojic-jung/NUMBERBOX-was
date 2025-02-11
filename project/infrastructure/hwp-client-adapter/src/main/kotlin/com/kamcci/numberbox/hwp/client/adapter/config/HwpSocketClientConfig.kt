@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.hwp.client.engine.config
+package com.kamcci.numberbox.hwp.client.adapter.config
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
