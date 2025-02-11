@@ -1,21 +1,27 @@
 package com.kamcci.modules.auth.engine.util;
 
+import com.kamcci.modules.auth.stub.MockPasswordEncoder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class PasswordEncoderWrapperTest {
-    private final PasswordEncoder passwordEncoder = mock();
-    private final PasswordEncoderWrapper authPasswordEncoderWrapper = new PasswordEncoderWrapper(passwordEncoder);
+    private MockPasswordEncoder passwordEncoder;
+    private PasswordEncoderWrapper authPasswordEncoderWrapper;
+
+    @BeforeEach
+    void 테스트_대상_초기화() {
+        passwordEncoder = new MockPasswordEncoder();
+        authPasswordEncoderWrapper = new PasswordEncoderWrapper(passwordEncoder);
+    }
 
     @Test
     void matches_동작_성공() {
         authPasswordEncoderWrapper.matches("", "");
 
         // then
-        verify(passwordEncoder).matches("", "");
+        assertThat(passwordEncoder.executeCnt).isEqualTo(1);
     }
 
     @Test
@@ -23,6 +29,6 @@ class PasswordEncoderWrapperTest {
         authPasswordEncoderWrapper.encode("");
 
         // then
-        verify(passwordEncoder).encode("");
+        assertThat(passwordEncoder.executeCnt).isEqualTo(1);
     }
 }

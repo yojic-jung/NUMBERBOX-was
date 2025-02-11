@@ -14,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 
-import static com.kamcci.modules.auth.user.AuthUserFixture.getAuthUserDetail;
-import static com.kamcci.modules.auth.user.AuthUserFixture.getDisableAuthUserDetail;
+import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserDetail;
+import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getDisableAuthUserDetail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

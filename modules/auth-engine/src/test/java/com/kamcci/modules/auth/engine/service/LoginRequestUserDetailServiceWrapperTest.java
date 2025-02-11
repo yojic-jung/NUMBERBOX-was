@@ -5,7 +5,7 @@ import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 
-import static com.kamcci.modules.auth.user.AuthUserFixture.getAuthUserInfo;
+import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserInfo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

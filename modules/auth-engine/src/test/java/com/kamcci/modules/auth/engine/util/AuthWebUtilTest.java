@@ -1,8 +1,8 @@
 package com.kamcci.modules.auth.engine.util;
 
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
+import com.kamcci.modules.auth.stub.MockHttpServletExceptionResponse;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -10,14 +10,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import static com.kamcci.modules.auth.engine.util.AuthWebUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class AuthWebUtilTest {
     private final MockHttpServletResponse response = new MockHttpServletResponse();
@@ -79,11 +76,10 @@ class AuthWebUtilTest {
     }
 
     @Test
-    void 응답_반환_중_IOException_실패() throws IOException {
+    void 응답_반환_중_IOException_실패() {
         // given
-        HttpServletResponse mockResponse = mock(HttpServletResponse.class);
+        MockHttpServletExceptionResponse mockResponse = new MockHttpServletExceptionResponse();
         String msg = "input";
-        when(mockResponse.getWriter()).thenThrow(new IOException("Test IOException"));
 
         // when
         assertThrows(AuthInternalException.class, () -> {
