@@ -115,18 +115,19 @@ class JwtRequestAuthProviderTest {
 
     @Test
     void 인증_성공() {
+        // given
         final String accessTokenUserId = "10ed5466-cda8-ea4d-9bc7-037cb86fdb20";
         authentication = new JwtAuthenticationToken(accessTokenUserId, null, null);
         details.put("refreshToken", accessTokenUserId);
         authentication.setDetails(details);
-
-        final AuthUserDetail user = getAuthUserDetail();
+        authTokenUtil.isExpire = false;
 
         // when
         Authentication actualAuth = jwtRequestAuthProvider.authenticate(authentication);
 
         // then
         Map<String, Object> detail = (Map<String, Object>) actualAuth.getDetails();
+        final AuthUserDetail user = getAuthUserDetail();
         assertThat(detail).containsEntry(UserId.ATTR_NAME, user.getUserId());
     }
 

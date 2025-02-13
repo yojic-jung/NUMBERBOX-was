@@ -2,25 +2,30 @@ package com.kamcci.modules.auth.engine.service;
 
 import com.kamcci.modules.auth.control.dto.AuthUserInfo;
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
+import com.kamcci.modules.auth.stub.MockLoginRequestUserDetailService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 
+import static com.kamcci.modules.auth.constant.MockAuthTestConstant.NULL_USER;
 import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserInfo;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class LoginRequestUserDetailServiceWrapperTest {
-    private final LoginRequestUserDetailService loginRequestUserService = mock();
-    private final LoginRequestUserDetailServiceWrapper userDetailsServiceWrapper =
-            new LoginRequestUserDetailServiceWrapper(loginRequestUserService);
+    private LoginRequestUserDetailService loginRequestUserService;
+    private LoginRequestUserDetailServiceWrapper userDetailsServiceWrapper;
+
+    @BeforeEach
+    void 테스트_초기화() {
+        loginRequestUserService = new MockLoginRequestUserDetailService();
+        userDetailsServiceWrapper = new LoginRequestUserDetailServiceWrapper(loginRequestUserService);
+    }
 
     @Test
     void 유저조회_성공() {
         // given
         final String username = "abc";
         final AuthUserInfo authUserInfo = getAuthUserInfo();
-        when(loginRequestUserService.loadUserByUsername(username)).thenReturn(authUserInfo);
 
         // when
         User user = this.userDetailsServiceWrapper.loadUserByUsername(username);
@@ -33,7 +38,7 @@ class LoginRequestUserDetailServiceWrapperTest {
     @Test
     void null_유저조회_성공() {
         // given
-        final String username = "abc";
+        final String username = NULL_USER;
 
         // when
         User user = this.userDetailsServiceWrapper.loadUserByUsername(username);

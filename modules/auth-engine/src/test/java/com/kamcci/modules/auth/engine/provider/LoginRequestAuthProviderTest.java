@@ -1,7 +1,6 @@
 package com.kamcci.modules.auth.engine.provider;
 
 import com.kamcci.modules.auth.control.annotation.UserId;
-import com.kamcci.modules.auth.engine.dto.AuthUserDetail;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.stub.MockPasswordEncoder;
 import com.kamcci.modules.auth.stub.MockUserDetailsService;
@@ -15,13 +14,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Map;
 
+import static com.kamcci.modules.auth.constant.MockAuthTestConstant.FAIL_STRING;
 import static com.kamcci.modules.auth.constant.MockAuthTestConstant.NULL_USER;
-import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserDetail;
-import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getDisableAuthUserDetail;
+import static com.kamcci.modules.auth.dummy.AuthUserDummyData.AUTH_USER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 class LoginRequestAuthProviderTest {
     private Authentication authentication;
@@ -50,9 +47,7 @@ class LoginRequestAuthProviderTest {
     @Test
     void 인증_실패_비밀번호_불일치() {
         // given
-        AuthUserDetail userDetail = getAuthUserDetail();
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetail);
-        when(passwordEncoder.matches(any(), any())).thenReturn(false);
+        authentication = new UsernamePasswordAuthenticationToken("user", "password");
 
         // when
         assertThrows(BadCredentialsException.class, () -> {
@@ -63,9 +58,7 @@ class LoginRequestAuthProviderTest {
     @Test
     void 인증_실패_비활성_계정() {
         // given
-        AuthUserDetail userDetail = getDisableAuthUserDetail();
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetail);
-        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        authentication = new UsernamePasswordAuthenticationToken(FAIL_STRING, "");
 
         // when
         assertThrows(DisabledException.class, () -> {
@@ -76,16 +69,14 @@ class LoginRequestAuthProviderTest {
     @Test
     void 인증_성공() {
         // given
-        AuthUserDetail userDetail = getAuthUserDetail();
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(userDetail);
-        when(passwordEncoder.matches(any(), any())).thenReturn(true);
+        authentication = new UsernamePasswordAuthenticationToken("user", "");
 
         // when
         Authentication actualAuth = loginRequestAuthProvider.authenticate(authentication);
 
         // then
         Map<String, Object> authDetails = (Map<String, Object>) actualAuth.getDetails();
-        assertThat(authDetails).containsEntry(UserId.ATTR_NAME, userDetail.getUserId());
+        assertThat(authDetails).containsEntry(UserId.ATTR_NAME, AUTH_USER_ID);
     }
 
     @Test

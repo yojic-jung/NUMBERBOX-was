@@ -13,13 +13,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class AuthUserDummyData {
+    // 테스트용 클라이언트 id
+    public static final UUID AUTH_USER_ID = UUID.fromString("11cf5466-cda8-ea4d-9bc7-037cb86fdb20");
+
     private AuthUserDummyData() { }
 
     public static AuthUserInfo getAuthUserInfo() {
         AuthUserRole role = new AuthUserRole("USER", true);
         List<AuthUserRole> roleList = new ArrayList<>();
         roleList.add(role);
-        return new AuthUserInfo("username", UUID.fromString("11cf5466-cda8-ea4d-9bc7-037cb86fdb20"), "", roleList);
+        return new AuthUserInfo("username", AUTH_USER_ID, "", roleList);
     }
 
     public static AuthUserInfo getDisableAuthUserInfo() {

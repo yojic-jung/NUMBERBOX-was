@@ -15,6 +15,6 @@ public class MockPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
         executeCnt++;
-        return false;
+        return rawPassword == encodedPassword;
     }
 }

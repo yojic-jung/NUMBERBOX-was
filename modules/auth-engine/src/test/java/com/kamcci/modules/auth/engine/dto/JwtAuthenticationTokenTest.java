@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JwtAuthenticationTokenTest {
-    final String principal = "principal";
-    final String credential = "credential";
-    final JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(principal, credential, null);
+    private final String principal = "principal";
+    private final String credential = "credential";
+    private final JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(principal, credential,
+            null);
 
     @Test
     void getCredentials_성공() {

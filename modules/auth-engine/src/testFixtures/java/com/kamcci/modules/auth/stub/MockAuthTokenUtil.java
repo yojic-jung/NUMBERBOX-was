@@ -8,6 +8,8 @@ import java.util.UUID;
 import static com.kamcci.modules.auth.constant.MockAuthTestConstant.*;
 
 public class MockAuthTokenUtil implements AuthTokenUtil {
+    public boolean isExpire = true;
+
     @Override
     public String reCreateAccessToken(String email, UUID userUniqId, List<String> roleList) {
         return null;
@@ -15,7 +17,7 @@ public class MockAuthTokenUtil implements AuthTokenUtil {
 
     @Override
     public String reCreateAccessToken(String oldAccessToken) {
-        return null;
+        return oldAccessToken;
     }
 
     @Override
@@ -57,6 +59,6 @@ public class MockAuthTokenUtil implements AuthTokenUtil {
 
     @Override
     public boolean isExpiredToken(String jwtToken) {
-        return !FAIL_STRING.equals(jwtToken);
+        return isExpire;
     }
 }

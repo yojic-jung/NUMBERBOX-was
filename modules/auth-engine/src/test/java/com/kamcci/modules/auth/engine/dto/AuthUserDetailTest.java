@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AuthUserDetailTest {
     // 테스트 데이터
-    AuthUserInfo user;
-    List<AuthUserRole> roleList;
+    private AuthUserInfo user;
+    private List<AuthUserRole> roleList;
 
     @BeforeEach
     void 테스트데이터_초기화() {
