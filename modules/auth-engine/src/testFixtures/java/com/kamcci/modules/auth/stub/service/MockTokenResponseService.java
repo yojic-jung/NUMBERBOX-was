@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.service;
 
 import com.kamcci.modules.auth.control.service.TokenResponseService;
 

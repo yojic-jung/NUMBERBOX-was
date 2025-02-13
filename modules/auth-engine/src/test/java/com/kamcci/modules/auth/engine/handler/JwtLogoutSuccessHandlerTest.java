@@ -1,6 +1,6 @@
 package com.kamcci.modules.auth.engine.handler;
 
-import com.kamcci.modules.auth.stub.MockApplicationEventPublisher;
+import com.kamcci.modules.auth.stub.common.MockApplicationEventPublisher;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationEventPublisher;

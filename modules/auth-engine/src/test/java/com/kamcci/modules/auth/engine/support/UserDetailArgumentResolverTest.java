@@ -4,7 +4,7 @@ import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.enumeration.UserRoleType;
 import com.kamcci.modules.auth.dummy.UserParameterInfo;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
-import com.kamcci.modules.auth.stub.MockNativeWebRequest;
+import com.kamcci.modules.auth.stub.common.MockNativeWebRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;

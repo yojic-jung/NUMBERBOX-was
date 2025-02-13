@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.common;
 
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
 import com.kamcci.modules.auth.engine.exception.TokenException;

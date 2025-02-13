@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

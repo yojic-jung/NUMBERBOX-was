@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.util;
 
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
 

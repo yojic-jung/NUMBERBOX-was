@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.util;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 

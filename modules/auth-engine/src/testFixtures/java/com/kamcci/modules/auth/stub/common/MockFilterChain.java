@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.common;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +10,6 @@ import java.io.IOException;
 public class MockFilterChain implements FilterChain {
     @Override
     public void doFilter(ServletRequest var1, ServletResponse var2) throws IOException, ServletException {
-        
+
     }
 }

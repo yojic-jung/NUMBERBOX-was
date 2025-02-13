@@ -2,8 +2,8 @@ package com.kamcci.modules.auth.engine.provider;
 
 import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
-import com.kamcci.modules.auth.stub.MockPasswordEncoder;
-import com.kamcci.modules.auth.stub.MockUserDetailsService;
+import com.kamcci.modules.auth.stub.util.MockPasswordEncoder;
+import com.kamcci.modules.auth.stub.service.MockUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;

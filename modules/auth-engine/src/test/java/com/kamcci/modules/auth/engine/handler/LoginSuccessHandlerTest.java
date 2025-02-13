@@ -3,7 +3,7 @@ package com.kamcci.modules.auth.engine.handler;
 import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.enumeration.UserRoleType;
 import com.kamcci.modules.auth.control.service.TokenResponseService;
-import com.kamcci.modules.auth.stub.MockTokenResponseService;
+import com.kamcci.modules.auth.stub.service.MockTokenResponseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

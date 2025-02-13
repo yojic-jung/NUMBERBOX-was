@@ -1,7 +1,7 @@
 package com.kamcci.modules.auth.engine.util;
 
 import com.kamcci.modules.auth.engine.exception.AuthInternalException;
-import com.kamcci.modules.auth.stub.MockHttpServletExceptionResponse;
+import com.kamcci.modules.auth.stub.common.MockHttpServletExceptionResponse;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

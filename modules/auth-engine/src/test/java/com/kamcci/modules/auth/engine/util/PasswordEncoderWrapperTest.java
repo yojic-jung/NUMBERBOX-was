@@ -1,6 +1,6 @@
 package com.kamcci.modules.auth.engine.util;
 
-import com.kamcci.modules.auth.stub.MockPasswordEncoder;
+import com.kamcci.modules.auth.stub.util.MockPasswordEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

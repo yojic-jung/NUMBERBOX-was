@@ -2,7 +2,7 @@ package com.kamcci.modules.auth.engine.service;
 
 import com.kamcci.modules.auth.control.dto.AuthUserInfo;
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
-import com.kamcci.modules.auth.stub.MockLoginRequestUserDetailService;
+import com.kamcci.modules.auth.stub.service.MockLoginRequestUserDetailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;

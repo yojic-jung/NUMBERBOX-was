@@ -1,4 +1,4 @@
-package com.kamcci.modules.auth.stub;
+package com.kamcci.modules.auth.stub.common;
 
 import org.springframework.context.ApplicationEventPublisher;
 

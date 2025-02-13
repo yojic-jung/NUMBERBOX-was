@@ -1,8 +1,8 @@
 package com.kamcci.modules.auth.engine.service;
 
 import com.kamcci.modules.auth.engine.util.AuthTokenUtil;
-import com.kamcci.modules.auth.stub.MockApplicationEventPublisher;
-import com.kamcci.modules.auth.stub.MockAuthTokenUtil;
+import com.kamcci.modules.auth.stub.common.MockApplicationEventPublisher;
+import com.kamcci.modules.auth.stub.util.MockAuthTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
