@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: orm-jpa-adapter-tc-test
   jpa:
     database: mysql
     open-in-view: false

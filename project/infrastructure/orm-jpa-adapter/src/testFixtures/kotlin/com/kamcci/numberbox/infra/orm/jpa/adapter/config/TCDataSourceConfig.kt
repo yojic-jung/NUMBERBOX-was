@@ -1,16 +1,14 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.config
 
 import com.zaxxer.hikari.HikariDataSource
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.jdbc.DataSourceBuilder
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 /**
  * TestContainer가 생성한 DB로 connection연결
  */
-@ConditionalOnProperty(value = ["custom.test-container.enabled"], havingValue = "true", matchIfMissing = false)
-@Configuration
+@TestConfiguration
 class TCDataSourceConfig {
     @Bean
     fun dataSource(): HikariDataSource {

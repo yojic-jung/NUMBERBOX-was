@@ -337,7 +337,7 @@ object MathContentsDummyData {
     }
 
     fun getMathCategoryTypeVo(unitId: Int = 21001) = MathCategoryTypeVo(
-        unitId = 21001,
+        unitId = unitId,
         typeId = 1,
         quesType = "dsajlkf",
         typeOrder = 1
