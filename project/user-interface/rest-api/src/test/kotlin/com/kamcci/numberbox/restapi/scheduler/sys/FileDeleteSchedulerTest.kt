@@ -41,7 +41,7 @@ class FileDeleteSchedulerTest {
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
 
-        assertThat(mockSysGarbageFileReadCase.executeCnt).isEqualTo(1)
+        assertThat(mockSysGarbageFileReadCase.executeCnt).isOne()
     }
 
     @Test
@@ -73,6 +73,6 @@ class FileDeleteSchedulerTest {
         fileDeleteScheduler.deleteS3GarbageFile()
 
         // then -> 성공 케이스 없으므로 성공 후처리 실행 안됨
-        assertThat(mockSysGarbageFileWriteCase.excutedCnt).isEqualTo(0)
+        assertThat(mockSysGarbageFileWriteCase.excutedCnt).isZero()
     }
 }

@@ -52,7 +52,7 @@ class MemberSchedulerTest {
         memberScheduler.tmpPasswordChange()
 
         // then
-        assertThat(mockMemberReadCase.executeCnt).isEqualTo(1)
+        assertThat(mockMemberReadCase.executeCnt).isOne()
     }
 
     @Test
@@ -119,7 +119,7 @@ class MemberSchedulerTest {
         memberScheduler.dropMember()
 
         // then
-        assertThat(dropCase.executeCnt).isEqualTo(0)
+        assertThat(dropCase.executeCnt).isZero()
     }
 
 

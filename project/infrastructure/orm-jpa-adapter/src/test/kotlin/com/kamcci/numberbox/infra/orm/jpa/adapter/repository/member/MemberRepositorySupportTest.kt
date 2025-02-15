@@ -15,7 +15,16 @@ class MemberRepositorySupportTest(
     private val memberRepositorySupport: MemberRepositorySupport
 ) {
     companion object {
+        const val EXIST_EMAIL = "dywlr@test.com"
         const val EXIST_ID = "10ed5466-cda8-ea4d-9bc7-037cb86fdb20"
+    }
+
+    @Test
+    fun `멤버엔티티 이메일로 조회 - 성공`() {
+        val memberEntity = memberRepositorySupport.findByEmail(EXIST_EMAIL)
+
+        // then
+        assertThat(memberEntity).isNotNull
     }
 
     @Test

@@ -64,10 +64,10 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, null);
 
         // then
-        HttpServletResponse response =
+        HttpServletResponse servletResponse =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        assertThat(response).isNull();
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(0);
+        assertThat(servletResponse).isNull();
+        assertThat(applicationEventPublisher.executeCnt).isZero();
     }
 
     @Test
@@ -80,7 +80,7 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, oldRefreshToken);
 
         // then
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(1);
+        assertThat(applicationEventPublisher.executeCnt).isOne();
     }
 
     @Test
@@ -106,7 +106,7 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.responseAuthToken("", UUID.randomUUID(), new ArrayList<>());
 
         // then
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(1);
+        assertThat(applicationEventPublisher.executeCnt).isOne();
     }
 
     @Test
@@ -119,10 +119,10 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.responseAuthToken("", UUID.randomUUID(), new ArrayList<>());
 
         // then
-        HttpServletResponse response =
+        HttpServletResponse servletResponse =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(1);
-        assertThat(response).isNull();
+        assertThat(applicationEventPublisher.executeCnt).isOne();
+        assertThat(servletResponse).isNull();
     }
 
     @Test
@@ -149,8 +149,8 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.setTokenToResponse("", "", new ArrayList<>());
 
         // then
-        HttpServletResponse response =
+        HttpServletResponse servletResponse =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
-        assertThat(response).isNull();
+        assertThat(servletResponse).isNull();
     }
 }

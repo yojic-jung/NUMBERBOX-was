@@ -52,9 +52,9 @@ class MemberProfileWriteRepositoryTest(
         assertThat(memberProfileEntity.profileImgName).isNull()
         assertThat(memberProfileEntity.profileImgPath).isNull()
         assertThat(memberProfileEntity.profileType).isEqualTo(ProfileType.None)
-        assertThat(memberProfileEntity.hwpDownCnt).isEqualTo(0)
-        assertThat(memberProfileEntity.unitMappingCnt).isEqualTo(0)
-        assertThat(memberProfileEntity.aiContentsCnt).isEqualTo(0)
+        assertThat(memberProfileEntity.hwpDownCnt).isZero()
+        assertThat(memberProfileEntity.unitMappingCnt).isZero()
+        assertThat(memberProfileEntity.aiContentsCnt).isZero()
         assertThat(memberProfileEntity.sysUpdateTime).isNotNull
         assertThat(memberProfileEntity.sysCreateTime).isNotNull
     }

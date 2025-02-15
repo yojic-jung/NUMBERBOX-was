@@ -11,7 +11,6 @@ import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDateTime
 
 @TcDBJpaTest
 class MathContentsEntityTest(
@@ -30,7 +29,7 @@ class MathContentsEntityTest(
         // then
         assertThat(mathContentsEntity.id).isEqualTo(id)
         assertThat(mathContentsEntity.unitId).isEqualTo(22003)
-        assertThat(mathContentsEntity.typeId).isEqualTo(1)
+        assertThat(mathContentsEntity.typeId).isOne()
         assertThat(mathContentsEntity.memberId).isEqualTo(MembersFixture.getMemberId1())
         assertThat(mathContentsEntity.contents).isNotNull()
         assertThat(mathContentsEntity.solution).isNotNull()
@@ -47,12 +46,12 @@ class MathContentsEntityTest(
         assertThat(mathContentsEntity.answer).isEqualTo("1")
         assertThat(mathContentsEntity.choiceAnswer).isNull()
         assertThat(mathContentsEntity.orgSrcRef).isNull()
-        assertThat(mathContentsEntity.orgSrcNo).isEqualTo(0)
+        assertThat(mathContentsEntity.orgSrcNo).isZero()
         assertThat(mathContentsEntity.quesLevel).isEqualTo(2)
-        assertThat(mathContentsEntity.transConCnt).isEqualTo(0)
+        assertThat(mathContentsEntity.transConCnt).isZero()
         assertThat(mathContentsEntity.contentsClassify).isEqualTo(ContentsClassifyType.InHouse)
         assertThat(mathContentsEntity.svcPosbStts).isEqualTo(ContentsSvcPosbSttsType.Release)
-        assertThat(mathContentsEntity.orgContentsId).isEqualTo(0)
+        assertThat(mathContentsEntity.orgContentsId).isZero()
         assertThat(mathContentsEntity.ansExistStts).isTrue()
         assertThat(mathContentsEntity.sysCreateDate).isNotNull()
         assertThat(mathContentsEntity.sysUpdateDate).isNotNull()
@@ -74,7 +73,7 @@ class MathContentsEntityTest(
         // then
         assertThat(mathContentsEntity.id).isGreaterThan(0)
     }
-    
+
     @Test
     fun `MathContentsEntity 연관관계 - 성공`() {
         // given
@@ -84,8 +83,8 @@ class MathContentsEntityTest(
         val mathContentsEntity = em.find(MathContentsEntity::class.java, id)
 
         // then
-        assertThat(mathContentsEntity.mathContentsSimilarSrc.get(0).id).isEqualTo(1)
-        assertThat(mathContentsEntity.mathContentsLicenses.get(0).id).isEqualTo(1)
-        assertThat(mathContentsEntity.mathContentsIpsiSrc.size).isEqualTo(0)
+        assertThat(mathContentsEntity.mathContentsSimilarSrc.get(0).id).isOne()
+        assertThat(mathContentsEntity.mathContentsLicenses.get(0).id).isOne()
+        assertThat(mathContentsEntity.mathContentsIpsiSrc.size).isZero()
     }
 }

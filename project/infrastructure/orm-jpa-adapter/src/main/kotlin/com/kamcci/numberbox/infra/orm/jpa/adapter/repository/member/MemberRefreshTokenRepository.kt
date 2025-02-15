@@ -6,7 +6,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTo
 import org.springframework.stereotype.Repository
 
 @Repository
-class MemberRefreshTokenJpaRepository : BaseRepository() {
+class MemberRefreshTokenRepository : BaseRepository() {
 
     fun save(memberRefreshTokenEntity: MemberRefreshTokenEntity): Long {
         em.persist(memberRefreshTokenEntity)

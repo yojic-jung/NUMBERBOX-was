@@ -55,7 +55,7 @@ class MathDocsReadServiceTest {
         mathDocsReadService.readDocsByDocsPaperId(contentsIdList)
 
         // then
-        assertThat(mockMathDocsReadOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mockMathDocsReadOrmPort.executeCnt).isOne()
     }
 
     @Test
@@ -69,7 +69,7 @@ class MathDocsReadServiceTest {
         mathDocsReadService.readIpsiDocs(readDto)
 
         // then
-        assertThat(mockMathDocsReadOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mockMathDocsReadOrmPort.executeCnt).isOne()
     }
 
     @Test
@@ -83,6 +83,6 @@ class MathDocsReadServiceTest {
         mathDocsReadService.readAdditionalContents(readDto)
 
         // then
-        assertThat(mockMathDocsReadOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mockMathDocsReadOrmPort.executeCnt).isOne()
     }
 }

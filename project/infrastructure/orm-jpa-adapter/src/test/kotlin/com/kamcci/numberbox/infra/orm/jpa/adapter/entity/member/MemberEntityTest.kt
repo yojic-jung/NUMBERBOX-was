@@ -24,8 +24,8 @@ class MemberEntityTest(
         // then
         Assertions.assertThat(memberEntity.email).isEqualTo("dywlr@test.com")
         Assertions.assertThat(memberEntity.password).isNotNull()
-        Assertions.assertThat(memberEntity.humanStatus).isEqualTo(0)
-        Assertions.assertThat(memberEntity.failCount).isEqualTo(0)
+        Assertions.assertThat(memberEntity.humanStatus).isZero()
+        Assertions.assertThat(memberEntity.failCount).isZero()
         Assertions.assertThat(memberEntity.lastFailTime).isNotNull()
         Assertions.assertThat(memberEntity.isTmpPassword).isFalse()
         Assertions.assertThat(memberEntity.lastLoginTime).isNotNull()

@@ -65,7 +65,7 @@ class JwtRequestAuthFilterTest {
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertThat(tokenResponseService.executeCnt).isEqualTo(1);
+        assertThat(tokenResponseService.executeCnt).isOne();
     }
 
     @Test

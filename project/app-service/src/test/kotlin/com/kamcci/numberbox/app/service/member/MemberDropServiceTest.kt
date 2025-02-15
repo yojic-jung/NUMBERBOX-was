@@ -35,6 +35,6 @@ class MemberDropServiceTest {
         memberDropService.drop(memberId)
 
         // then
-        assertThat(mockMemberWriteOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mockMemberWriteOrmPort.executeCnt).isOne()
     }
 }

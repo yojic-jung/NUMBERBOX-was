@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LogoutSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenJpaRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenRepository
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class LogoutSuccessEventListener(
-    private val memberRefreshTokenRepo: MemberRefreshTokenJpaRepository
+    private val memberRefreshTokenRepo: MemberRefreshTokenRepository
 ) {
     @Transactional
     @EventListener

@@ -97,7 +97,7 @@ class MathContentsWriteRepositoryTest(
         val executeRowCnt = mathContentsWriteRepository.incrementTransConCntById(contentsId)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 
     @Test

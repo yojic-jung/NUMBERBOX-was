@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenJpaRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRepositorySupport
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,7 +13,7 @@ class LoginSuccessEventListenerTest {
     @BeforeEach
     fun `초기화`() {
         loginSuccessEventListener =
-            LoginSuccessEventListener(MockMemberRepositorySupport(), MockMemberRefreshTokenJpaRepository())
+            LoginSuccessEventListener(MockMemberRepositorySupport(), MockMemberRefreshTokenRepository())
 
     }
 

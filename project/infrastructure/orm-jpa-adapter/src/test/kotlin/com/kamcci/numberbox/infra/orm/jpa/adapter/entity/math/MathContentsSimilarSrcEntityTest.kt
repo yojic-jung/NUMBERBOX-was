@@ -20,6 +20,6 @@ class MathContentsSimilarSrcEntityTest(
         val mathContentsSimilarSrcEntity = em.find(MathContentsSimilarSrcEntity::class.java, id)
 
         // then
-        assertThat(mathContentsSimilarSrcEntity.mathContents?.id).isEqualTo(1)
+        assertThat(mathContentsSimilarSrcEntity.mathContents?.id).isOne()
     }
 }

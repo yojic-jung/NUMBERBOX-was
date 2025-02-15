@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LogoutSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenJpaRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -12,7 +12,7 @@ class LogoutSuccessEventListenerTest {
     @BeforeEach
     fun `초기화`() {
         logoutSuccessEventListener =
-            LogoutSuccessEventListener(MockMemberRefreshTokenJpaRepository())
+            LogoutSuccessEventListener(MockMemberRefreshTokenRepository())
 
     }
 

@@ -8,7 +8,7 @@ import com.kamcci.modules.logging.control.service.IPAddressService
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.log.QLogClientApiEntity.logClientApiEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
-import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberJpaRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
@@ -16,11 +16,11 @@ import java.util.*
 @Repository
 class AuthUserInfoRepository(
     private val ipAddressService: IPAddressService,
-    private val memberJpaRepository: MemberJpaRepository,
+    private val memberRepositorySupport: MemberRepositorySupport,
 ) : LoginRequestUserDetailService, JwtRequestUserDetailService, BaseRepository() {
 
     override fun loadUserByUsername(username: String): AuthUserInfo? {
-        val member = memberJpaRepository.findByEmail(username) ?: return null
+        val member = memberRepositorySupport.findByEmail(username) ?: return null
 
         val roles = member.role.map { AuthUserRole(it.roleName, it.enabled) }
         return AuthUserInfo(member.email, member.id, member.password, roles)

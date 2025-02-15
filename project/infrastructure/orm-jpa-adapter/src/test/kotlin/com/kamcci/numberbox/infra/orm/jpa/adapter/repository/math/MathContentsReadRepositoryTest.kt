@@ -161,7 +161,7 @@ class MathContentsReadRepositoryTest(
         val transContentCnt = mathContentsReadRepository.readTransContCntById(contentsId)
 
         // then
-        assertThat(transContentCnt).isEqualTo(0)
+        assertThat(transContentCnt).isZero()
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberRefreshTokenFactory
-import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenJpaRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
@@ -16,7 +16,7 @@ import java.util.*
 @Component
 class LoginSuccessEventListener(
     private val memberRepository: MemberRepositorySupport,
-    private val memberRefreshTokenRepo: MemberRefreshTokenJpaRepository,
+    private val memberRefreshTokenRepo: MemberRefreshTokenRepository,
 ) {
 
     companion object {

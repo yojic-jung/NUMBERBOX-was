@@ -7,6 +7,8 @@ import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.stub.common.MockNativeWebRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,37 +34,12 @@ class UserDetailArgumentResolverTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Test
-    void supportsParameter_UserId_부착_성공() throws NoSuchMethodException {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2})
+    void 실행_가능_어노테이션_부착_여부_검증_성공(int paramIdx) throws NoSuchMethodException {
         // given
         MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 0);
-
-        // when
-        boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
-
-        // then
-        assertThat(isSupport).isTrue();
-    }
-
-    @Test
-    void supportsParameter_UserEmail_부착_성공() throws NoSuchMethodException {
-        // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 1);
-
-        // when
-        boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
-
-        // then
-        assertThat(isSupport).isTrue();
-    }
-
-    @Test
-    void supportsParameter_UserRole_부착_성공() throws NoSuchMethodException {
-        // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 2);
+                UUID.class, String.class, List.class), paramIdx);
 
         // when
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);

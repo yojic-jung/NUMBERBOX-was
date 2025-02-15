@@ -16,7 +16,7 @@ class AuthPasswordEncoderWrapperTest {
         authPasswordEncoderWrapper.matches("", "")
 
         // then
-        assertThat(authPasswordEncoder.excuteCnt).isEqualTo(1)
+        assertThat(authPasswordEncoder.excuteCnt).isOne()
     }
 
     @Test
@@ -29,7 +29,7 @@ class AuthPasswordEncoderWrapperTest {
         authPasswordEncoderWrapper.encode("")
 
         // then
-        assertThat(authPasswordEncoder.excuteCnt).isEqualTo(1)
+        assertThat(authPasswordEncoder.excuteCnt).isOne()
     }
 
 }

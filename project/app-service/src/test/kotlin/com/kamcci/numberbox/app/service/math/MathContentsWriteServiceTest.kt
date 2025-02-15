@@ -32,7 +32,7 @@ class MathContentsWriteServiceTest {
         mathContentsWriteService.createUserCustomContents(getMathContentsModifyDto(), getMathConLicenseModifyDto())
 
         // then
-        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
     }
 
     @Test
@@ -46,7 +46,7 @@ class MathContentsWriteServiceTest {
         mathContentsWriteService.createInHouseContents(getMathContentsModifyDto(), getMathConSimilarSrcCreateDto())
 
         // then
-        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
     }
 
     @Test
@@ -84,7 +84,7 @@ class MathContentsWriteServiceTest {
         mathContentsWriteService.createIpsiContents(getMathContentsModifyDto(), getMathConIpsiSrcModifyDto())
 
         // then
-        assertThat(mathContentsWriteOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
     }
 
     @Test

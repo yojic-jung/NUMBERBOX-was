@@ -192,6 +192,6 @@ class MemberWriteServiceTest {
         memberWriteService.updateTmpPassword(ids)
 
         // then
-        assertThat(mockMemberWriteOrmPort.executeCnt).isEqualTo(1)
+        assertThat(mockMemberWriteOrmPort.executeCnt).isOne()
     }
 }

@@ -4,8 +4,8 @@ import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
-import com.kamcci.modules.auth.stub.handler.MockAuthenticationFailureHandler;
 import com.kamcci.modules.auth.stub.common.MockAuthenticationManager;
+import com.kamcci.modules.auth.stub.handler.MockAuthenticationFailureHandler;
 import com.kamcci.modules.auth.stub.handler.MockAuthenticationSuccessHandler;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,6 @@ import static com.kamcci.modules.auth.config.AuthConfigFixture.getAuthLoginUrlPr
 import static com.kamcci.modules.auth.stub.common.MockAuthenticationManager.AUTH_EXCEPTION_TYPE;
 import static com.kamcci.modules.auth.stub.common.MockAuthenticationManager.RUNTIME_EXCEPTION_TYPE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LoginRequestAuthFilterTest {
@@ -54,7 +53,7 @@ class LoginRequestAuthFilterTest {
         loginRequestAuthFilter.attemptAuthentication(request, response);
 
         // then
-        assertEquals(authenticationManager.executeCnt, 1);
+        assertThat(authenticationManager.executeCnt).isOne();
     }
 
     @Test
@@ -121,7 +120,7 @@ class LoginRequestAuthFilterTest {
         loginRequestAuthFilter.successfulAuthentication(request, response, null, null);
 
         // then
-        assertThat(authenticationSuccessHandler.executeCnt).isEqualTo(1);
+        assertThat(authenticationSuccessHandler.executeCnt).isOne();
     }
 
     @Test
@@ -136,7 +135,7 @@ class LoginRequestAuthFilterTest {
         loginRequestAuthFilter.successfulAuthentication(request, response, null, authResult);
 
         // then
-        assertThat(authenticationSuccessHandler.executeCnt).isEqualTo(1);
+        assertThat(authenticationSuccessHandler.executeCnt).isOne();
     }
 
     @Test
@@ -145,6 +144,6 @@ class LoginRequestAuthFilterTest {
         loginRequestAuthFilter.unsuccessfulAuthentication(request, response, null);
 
         // then
-        assertThat(authenticationFailureHandler.executeCnt).isEqualTo(1);
+        assertThat(authenticationFailureHandler.executeCnt).isOne();
     }
 }

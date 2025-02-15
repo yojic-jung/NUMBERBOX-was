@@ -21,6 +21,6 @@ class HwpConvertContentsReadRepositoryTest(
         val hwpList = hwpConvertContentsReadRepository.readAllByMemberId(memberId)
 
         // then
-        assertThat(hwpList.size).isEqualTo(1)
+        assertThat(hwpList.size).isOne()
     }
 }

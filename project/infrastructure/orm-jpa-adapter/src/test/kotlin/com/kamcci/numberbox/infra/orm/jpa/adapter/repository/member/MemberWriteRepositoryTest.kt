@@ -42,7 +42,7 @@ class MemberWriteRepositoryTest(
         val executeRowCnt = memberModifyRepository.drop(memberId)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 
     @Test
@@ -83,7 +83,7 @@ class MemberWriteRepositoryTest(
         val executeRowCnt = memberModifyRepository.updatePassword(memberId, password)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 
     @Test

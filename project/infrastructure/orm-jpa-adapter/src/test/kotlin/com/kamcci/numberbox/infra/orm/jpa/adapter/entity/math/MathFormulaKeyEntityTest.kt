@@ -22,7 +22,7 @@ class MathFormulaKeyEntityTest(
 
         // then
         assertThat(mathFormulaKeyEntity.id).isEqualTo(id)
-        assertThat(mathFormulaKeyEntity.formulOrder).isEqualTo(1)
+        assertThat(mathFormulaKeyEntity.formulOrder).isOne()
         assertThat(mathFormulaKeyEntity.formulName).isEqualTo("파이")
         assertThat(mathFormulaKeyEntity.formulUi).isEqualTo("&#960;")
         assertThat(mathFormulaKeyEntity.shortcutKey).isEqualTo("1")
@@ -31,7 +31,7 @@ class MathFormulaKeyEntityTest(
         assertThat(mathFormulaKeyEntity.guide).isEqualTo("")
         assertThat(mathFormulaKeyEntity.shortcutKeycode).isEqualTo("49")
         assertThat(mathFormulaKeyEntity.texGrammer).isEqualTo("PI")
-        assertThat(mathFormulaKeyEntity.lineChange).isEqualTo(0)
+        assertThat(mathFormulaKeyEntity.lineChange).isZero()
         assertThat(mathFormulaKeyEntity.classification).isEqualTo(FormulaClassificationType.Main)
     }
 }

@@ -29,6 +29,6 @@ class HwpConvertFileUtilTest {
 
         // then
         assertThat(indexXhtml).isNull()
-        assertThat(images.size).isEqualTo(0)
+        assertThat(images.size).isZero()
     }
 }

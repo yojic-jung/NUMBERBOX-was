@@ -26,7 +26,7 @@ class CsErrorReportEntityTest(
         // then
         Assertions.assertThat(csErrorReportEntity.id).isEqualTo(id)
         Assertions.assertThat(csErrorReportEntity.errType).isEqualTo(CSErrorType.Etc)
-        Assertions.assertThat(csErrorReportEntity.contentsId).isEqualTo(0)
+        Assertions.assertThat(csErrorReportEntity.contentsId).isZero()
         Assertions.assertThat(csErrorReportEntity.reportContents).isEqualTo("문의 사항 운영 테스트")
         Assertions.assertThat(csErrorReportEntity.replyMemberId).isNull()
         Assertions.assertThat(csErrorReportEntity.replyContents).isNull()

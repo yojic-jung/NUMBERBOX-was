@@ -83,6 +83,6 @@ class MemberPrivateWriteRepositoryTest(
         val executeRowCnt = memberPrivateWriteOrmPort.updatePrivateToNull(memberId)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 }

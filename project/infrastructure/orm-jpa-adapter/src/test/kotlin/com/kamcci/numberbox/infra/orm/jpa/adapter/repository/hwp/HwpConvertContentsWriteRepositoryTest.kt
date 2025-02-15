@@ -48,7 +48,7 @@ class HwpConvertContentsWriteRepositoryTest(
         val executeRowCnt = hwpConvertContentsWriteRepository.update(udpateDto)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 
     @Test
@@ -61,6 +61,6 @@ class HwpConvertContentsWriteRepositoryTest(
         val executeRowCnt = hwpConvertContentsWriteRepository.delete(id, memberId)
 
         // then
-        assertThat(executeRowCnt).isEqualTo(1)
+        assertThat(executeRowCnt).isOne()
     }
 }

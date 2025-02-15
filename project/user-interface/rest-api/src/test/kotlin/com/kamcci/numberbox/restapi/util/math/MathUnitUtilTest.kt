@@ -14,8 +14,8 @@ class MathUnitUtilTest {
         // when
         val unitGroupMap = MathUnitUtil.extractUnitMap(unitCategoryDummy)
 
-        assertThat(unitGroupMap.get("subjectList")!!.size).isEqualTo(1)
-        assertThat(unitGroupMap.get("firUnitList")!!.size).isEqualTo(1)
+        assertThat(unitGroupMap.get("subjectList")!!.size).isOne()
+        assertThat(unitGroupMap.get("firUnitList")!!.size).isOne()
         assertThat(unitGroupMap.get("secUnitList")!!.size).isEqualTo(2)
         assertThat(unitGroupMap.get("thrUnitList")!!.size).isEqualTo(4)
     }
@@ -43,7 +43,7 @@ class MathUnitUtilTest {
             MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.Subject, 41001)
 
         // then
-        assertThat(unitIdList.size).isEqualTo(0)
+        assertThat(unitIdList.size).isZero()
     }
 
     @Test
@@ -69,7 +69,7 @@ class MathUnitUtilTest {
             MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.FirUnit, 41001)
 
         // then
-        assertThat(unitIdList.size).isEqualTo(0)
+        assertThat(unitIdList.size).isZero()
     }
 
     @Test
@@ -95,7 +95,7 @@ class MathUnitUtilTest {
             MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.SecUnit, 41001)
 
         // then
-        assertThat(unitIdList.size).isEqualTo(0)
+        assertThat(unitIdList.size).isZero()
     }
 
     @Test
@@ -108,6 +108,6 @@ class MathUnitUtilTest {
             MathUnitUtil.getUnitIdList(unitCategoryDummy, MathContentsSearchRequest.SearchType.ThrUnit, 21001)
 
         // then
-        assertThat(unitIdList.size).isEqualTo(1)
+        assertThat(unitIdList.size).isOne()
     }
 }
