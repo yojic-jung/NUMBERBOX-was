@@ -1,10 +1,20 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
+import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberRefreshTokenEntity
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.*
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
+import org.springframework.stereotype.Repository
 
-interface MemberRefreshTokenJpaRepository : JpaRepository<MemberRefreshTokenEntity, UUID> {
+@Repository
+class MemberRefreshTokenJpaRepository : BaseRepository() {
 
-    fun deleteByToken(token: String)
+    fun save(memberRefreshTokenEntity: MemberRefreshTokenEntity): Long {
+        em.persist(memberRefreshTokenEntity)
+        return memberRefreshTokenEntity.id
+    }
+
+    fun deleteByToken(token: String) {
+        queryFactory.delete(memberRefreshTokenEntity)
+            .where(memberRefreshTokenEntity.token.eq(token))
+    }
 }

@@ -1,8 +1,9 @@
 package com.kamcci.modules.mail.sender.processor
 
+import com.kamcci.modules.mail.sender.exception.MailSendFailException
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
-import javax.annotation.processing.Generated
 import javax.mail.Message
 import javax.mail.Transport
 
@@ -10,11 +11,17 @@ import javax.mail.Transport
  * Def. 운영 환경에서 주입되는 메일 전송 처리기
  * Desc. 운영 환경에서만 메일을 전송함
  */
-@Generated
 @Profile("prod")
 @Service
 class ProdMailSendProcessor : MailSendProcessor {
+    private val log = LoggerFactory.getLogger(this::class.java)
+
     override fun send(message: Message) {
-        Transport.send(message)
+        try {
+            Transport.send(message)
+        } catch (e: Exception) {
+            log.warn("메일 발송 중 예외 발생 : ${e.stackTrace}")
+            throw MailSendFailException()
+        }
     }
 }

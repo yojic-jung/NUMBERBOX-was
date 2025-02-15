@@ -51,7 +51,7 @@ class JwtResponseHeaderCookieServiceTest {
 
         // then
         assertThat(response.getHeader(ACCESS_TOKEN_NAME)).contains(TOKEN_STANDARD_PREFIX);
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(0);
+        assertThat(applicationEventPublisher.executeCnt).isZero();
     }
 
     @Test
@@ -93,7 +93,7 @@ class JwtResponseHeaderCookieServiceTest {
         jwtResponseHeaderCookieService.responseAuthToken(oldAccessToken, null);
 
         // then
-        assertThat(applicationEventPublisher.executeCnt).isEqualTo(0);
+        assertThat(applicationEventPublisher.executeCnt).isZero();
     }
 
     @Test

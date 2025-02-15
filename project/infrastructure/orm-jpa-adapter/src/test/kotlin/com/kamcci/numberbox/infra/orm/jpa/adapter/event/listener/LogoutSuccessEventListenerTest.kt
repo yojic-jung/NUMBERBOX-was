@@ -1,17 +1,21 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LogoutSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBSpringMockConfigTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenJpaRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.transaction.annotation.Transactional
 
-@TcDBSpringMockConfigTest
-class LogoutSuccessEventListenerTest @Autowired constructor(
-    private val logoutSuccessEventListener: LogoutSuccessEventListener
-) {
-    @Transactional
+class LogoutSuccessEventListenerTest {
+    private lateinit var logoutSuccessEventListener: LogoutSuccessEventListener
+
+    @BeforeEach
+    fun `초기화`() {
+        logoutSuccessEventListener =
+            LogoutSuccessEventListener(MockMemberRefreshTokenJpaRepository())
+
+    }
+
     @Test
     fun `로그아웃 성공 이벤트 리스너 검증`() {
         // given

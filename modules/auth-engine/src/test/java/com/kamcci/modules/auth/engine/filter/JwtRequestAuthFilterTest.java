@@ -41,7 +41,7 @@ class JwtRequestAuthFilterTest {
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertThat(authenticationManager.executeCnt).isEqualTo(0);
+        assertThat(authenticationManager.executeCnt).isZero();
     }
 
     @Test
@@ -53,7 +53,7 @@ class JwtRequestAuthFilterTest {
         jwtRequestAuthFilter.doFilterInternal(request, response, filterChain);
 
         // then
-        assertThat(authenticationManager.executeCnt).isEqualTo(0);
+        assertThat(authenticationManager.executeCnt).isZero();
     }
 
     @Test

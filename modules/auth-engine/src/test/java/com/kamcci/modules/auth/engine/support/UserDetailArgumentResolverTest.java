@@ -118,7 +118,7 @@ class UserDetailArgumentResolverTest {
                 null);
 
         // then
-        assertThat(resolveValue).isEqualTo(0);
+        assertThat(resolveValue).isNull();
     }
 
     @Test
