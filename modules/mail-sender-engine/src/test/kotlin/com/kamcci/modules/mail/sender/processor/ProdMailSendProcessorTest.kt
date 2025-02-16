@@ -1,19 +1,58 @@
 package com.kamcci.modules.mail.sender.processor
 
 import com.kamcci.modules.mail.sender.enums.HttpContentType
+import com.kamcci.modules.mail.sender.exception.MailSendFailException
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
+import io.mockk.verify
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.context.annotation.Profile
 import javax.mail.Authenticator
+import javax.mail.Message
 import javax.mail.Session
+import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 import kotlin.reflect.full.findAnnotation
 
 class ProdMailSendProcessorTest {
     @Test
-    fun `ProdMailSendProcessor 인스턴스화 가능 구조 - 성공`() {
+    fun `ProdMailSendProcessor 실행 여부 검증 - 성공`() {
         // given
+        val session = Session.getInstance(System.getProperties(), object : Authenticator() {
+        })
+        val message = MimeMessage(session)
+
+        // 모킹
+        mockkStatic(Transport::class)
+        every { Transport.send(message) } returns Unit
+
+
+        // when
+        ProdMailSendProcessor().send(message)
+
+        // then
+        verify {
+            Transport.send(message)
+        }
+        cleanUp()
+    }
+
+    @Test
+    fun `메시지 전송 실패 예외 반환 - 성공`() {
+        // given
+        val message = makeMessage()
+
+        // when & then
+        assertThrows<MailSendFailException> {
+            ProdMailSendProcessor().send(message)
+        }
+    }
+
+    private fun makeMessage(): Message {
         val mailProps = System.getProperties()
         mailProps["mail.smtp.host"] = ""
         mailProps["mail.smtp.port"] = ""
@@ -29,8 +68,7 @@ class ProdMailSendProcessorTest {
         session.debug = true
 
         // 3. message 작성
-        val message = MimeMessage(session)
-        message.apply {
+        return MimeMessage(session).apply {
             // 발신자 셋팅
             setFrom(InternetAddress("test@test.com"))
             // 수신자셋팅
@@ -39,22 +77,19 @@ class ProdMailSendProcessorTest {
             // 내용셋팅
             setContent("contents", HttpContentType.HTML.type)
         }
-
-        // config는 스프링이 내부적으로 인스턴스화 진행
-        try {
-            ProdMailSendProcessor().send(message)
-        } catch (e: Exception) {
-
-        }
     }
 
     @Test
-    fun `ProdMailSendProcessor는 prod에서만 사용 가능 - 성공`() {
+    fun `ProdMailSendProcessor는 prod에서만 사용 가능 설정 - 성공`() {
         val annotation = ProdMailSendProcessor::class.findAnnotation<Profile>() as Profile
 
         // then
         Assertions.assertThat(annotation).isNotNull
         Assertions.assertThat(annotation.value).contains("prod")
+    }
+
+    private fun cleanUp() {
+        unmockkStatic(Transport::class)
     }
 
 }

@@ -9,7 +9,7 @@ class MockMemberRefreshTokenRepository : MemberRefreshTokenRepository() {
         return 1
     }
 
-    override fun deleteByToken(token: String) {
-
+    override fun deleteByToken(token: String): Long {
+        return 1L
     }
 }

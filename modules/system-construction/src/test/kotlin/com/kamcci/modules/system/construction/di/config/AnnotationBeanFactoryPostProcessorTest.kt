@@ -1,32 +1,46 @@
 package com.kamcci.modules.system.construction.di.config
 
-import com.kamcci.modules.system.construction.MockBeanConfig
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.mock.env.MockEnvironment
 
-@ContextConfiguration(classes = [MockBeanConfig::class])
-@ActiveProfiles("system-construction")
-@SpringBootTest
-class AnnotationBeanFactoryPostProcessorTest @Autowired constructor(
-    // auto config의 ConfigurableListableBeanFactory 구현체
-    private val beanFactory: ConfigurableListableBeanFactory,
-) {
+class AnnotationBeanFactoryPostProcessorTest {
 
     @Test
-    fun `ConfigurableListableBeanFactory 구현체는 DefaultListableBeanFactory - 성공`() {
-        /**
-         * 스프링 autoConfig의 ConfigurableListableBeanFactory 구현체가
-         * BeanDefinitionRegistry, DefaultListableBeanFactory 이어야함
-         *
-         * 스프링 의존설정에 따라 ConfigurableListableBeanFactory의 구현체가 달라질 수 있음
-         * 모듈 사용처의 구현체가 중요함
-         */
-        assertTrue(beanFactory is DefaultListableBeanFactory)
+    fun `BeanFactoryPostProcessor 정상 실행 - 성공`() {
+        // given
+        val beanFactory = MockDefaultListableBeanFactory()
+        val beanFactoryPostProcessor = AnnotationBeanFactoryPostProcessor()
+
+        // when & then
+        assertDoesNotThrow {
+            beanFactoryPostProcessor.postProcessBeanFactory(beanFactory)
+        }
+    }
+}
+
+// AnnotationBeanFactoryPostProcessor 클래스의 postProcessBeanFactory에 인자값으로 들어갈 스텁
+class MockDefaultListableBeanFactory : DefaultListableBeanFactory() {
+    override fun <T : Any?> getBean(requiredType: Class<T>): T & Any {
+        val environment = MockEnvironment()
+        environment.setProperty(
+            "system.construction.di.class-path.customBean",
+            "com.kamcci.modules.system.construction.dummy.CustomBean"
+        )
+        environment.setProperty(
+            "system.construction.di.class-path.basePackage",
+            "com.kamcci.modules.system.construction.dummy"
+        )
+        environment.setProperty("system.construction.di.class-path.beanScope", "")
+        environment.setProperty(
+            "system.construction.di.class-path.primary",
+            "com.kamcci.modules.system.construction.dummy.CustomPrimary"
+        )
+        environment.setProperty(
+            "system.construction.di.class-path.qualifier",
+            "com.kamcci.modules.system.construction.dummy.CustomQualifier"
+        )
+        return environment as (T & Any)
     }
 }

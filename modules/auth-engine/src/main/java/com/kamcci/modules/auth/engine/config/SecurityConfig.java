@@ -50,14 +50,12 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                        // 모든 http에 public
                         // 내부 에러 처리 컨트롤러로 전달
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         // 로그인 요청
                         .requestMatchers(HttpMethod.POST, authLoginUrlProperty.process()).permitAll()
                         // 로그인 실패시
                         .requestMatchers(HttpMethod.POST, authLoginUrlProperty.fail()).permitAll()
-                        //                        .requestMatchers(HttpMethod.POST, "/accessDenied").permitAll()
                         // 전체 허용 디폴트
                         .requestMatchers("/public/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -80,17 +78,15 @@ public class SecurityConfig {
     //현재 cors 설정 사실상 의미 없음, web서버와 was 같은 서버에서 동작되고
     //web서버의 로컬에서 경로에 따라 같은 서버의 was로 연결되게끔 설정 (도메인 설정하지 않음)
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {    //cors 추가
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // - (3)
         configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        configuration.addExposedHeader(ACCESS_TOKEN_NAME);            // 추가한 코드
-        configuration.addExposedHeader(ROLE_NAME);            // 추가한 코드
-        //configuration.addExposedHeader("Set-Cookie");			// 추가한 코드
+        configuration.addExposedHeader(ACCESS_TOKEN_NAME);
+        configuration.addExposedHeader(ROLE_NAME);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AnnotationBeanFactoryPostProcessor : BeanFactoryPostProcessor {
+    // BeanFactoryPostProcessor는 빈 생성 이전에 실행 되므로 의존성을 스스로 갖춰야함
     private val annotationCapableBeanRegistrar: AnnotationCapableBeanRegistrar = getAnnotationCapableBeanFactory()
     private val qualifierAnnotationRegistrar: QualifierAnnotationRegistrar = getDICapableAnnotationResolver()
 

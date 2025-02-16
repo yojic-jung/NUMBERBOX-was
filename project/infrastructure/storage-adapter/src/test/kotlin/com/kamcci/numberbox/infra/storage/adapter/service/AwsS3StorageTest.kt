@@ -1,19 +1,25 @@
 package com.kamcci.numberbox.infra.storage.adapter.service
 
+import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.services.s3.model.PutObjectRequest
+import com.amazonaws.services.s3.model.PutObjectResult
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
+import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import java.io.File
 
-@SpringBootTest
-@ActiveProfiles("storage", "storage-env")
 class AwsS3StorageTest {
-    @Autowired
-    lateinit var awsS3UploadStorage: AwsS3Storage
+    private lateinit var awsS3UploadStorage: AwsS3Storage
+
+    @BeforeEach
+    fun `초기화`() {
+        val awsS3Property = AwsS3Property(AwsS3Property.Credentials("", ""), "", "")
+        val s3Client = MockAmazonS3Client()
+        awsS3UploadStorage = AwsS3Storage(awsS3Property, s3Client)
+    }
 
     @AfterEach
     fun `테스트 데이터 후처리`() {
@@ -61,5 +67,14 @@ class AwsS3StorageTest {
 
         // then
         assertThat(fileUrl).isNotNull()
+    }
+}
+
+class MockAmazonS3Client : AmazonS3Client() {
+    override fun putObject(putObjectRequest: PutObjectRequest): PutObjectResult? {
+        return null
+    }
+
+    override fun deleteObject(bucketName: String?, key: String) {
     }
 }

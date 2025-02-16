@@ -92,7 +92,7 @@ hwp-client-adapter-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
 storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]
 storage-adapter-test = ["mockito-kotlin", "spring-boot-starter-test"]
 
-boot-strap = ["spring-boot-starter", "spring-boot-devtools"]
+boot-strap = ["spring-boot-starter", "spring-boot-devtools", "io-mockk"]
 boot-strap-test = ["junit-jupiter"]
 
 ui-rest-api = ["spring-boot-starter", "spring-boot-starter-web", "spring-boot-starter-security", "spring-boot-starter-validation",
@@ -105,12 +105,13 @@ app-service-test = ["junit-jupiter", "assertj-core", "mockito-kotlin", "mockito-
 modules-auth-engine = ["kotlin-stdlib", "spring-boot-starter-web", "spring-boot-starter-security", "jsonwebtoken",
     "java-uuid-generator", "jaxb-api"]
 modules-auth-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
+modules-auth-engine-test-fixture = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-logging-engine = ["kotlin-reflect", "spring-boot-starter-web", "aspect-j-weaver"]
 modules-logging-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
 
 modules-mail-sender-engine = ["kotlin-reflect", "spring-boot-starter", "javax-mail"]
-modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin"]
+modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin", "io-mockk"]
 
 modules-system-construction = ["kotlin-reflect", "spring-boot-starter", "spring-tx"]
 modules-system-construction-test = ["spring-boot-starter-test", "mockito-kotlin"]

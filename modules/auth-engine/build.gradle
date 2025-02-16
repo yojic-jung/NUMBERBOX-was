@@ -21,6 +21,7 @@ dependencies {
 
     implementation libs.bundles.modules.auth.engine
     testImplementation libs.bundles.modules.auth.engine.test
+    testFixturesImplementation libs.bundles.modules.auth.engine.test.fixture
 }
 
 // engine 모듈에서 control 모듈 테스트 커버리지까지 측정
