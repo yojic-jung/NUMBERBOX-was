@@ -22,10 +22,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Def. Security config 테스트를 위한 stub
+ * Desc. Security 기본 동작에서 의존객체 필로한 타입별 생성
+ */
 public class MockObjectPostProcessor implements ObjectPostProcessor<Object> {
     @Override
     public <O> O postProcess(O object) {
-        // security 기본 프로세스에서 사용될 수 있도록 반환
         if(object instanceof CompositeSessionAuthenticationStrategy)
             return (O) new ChangeSessionIdAuthenticationStrategy();
         else if(object instanceof DaoAuthenticationProvider) return (O) new DaoAuthenticationProvider();
