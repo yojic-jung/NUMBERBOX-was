@@ -5,8 +5,8 @@ import com.kamcci.numberbox.app.domain.enumeration.cs.BrowserType
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
-import com.kamcci.numberbox.app.service.stub.port.orm.cs.MockCsErrorReportWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.port.orm.docs.MockMathDocsPaperWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.cs.MockCsErrorReportWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.docs.MockMathDocsPaperWriteOrmPort
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*

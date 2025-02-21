@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource
 
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceFixture.getMathResourceUpdateDto
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.resource.MathResourceSampleData.getMathResourceUpdateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

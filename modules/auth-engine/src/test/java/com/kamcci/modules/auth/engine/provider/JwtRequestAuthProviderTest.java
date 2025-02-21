@@ -6,9 +6,9 @@ import com.kamcci.modules.auth.engine.dto.AuthUserDetail;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.TokenExpirationException;
 import com.kamcci.modules.auth.engine.exception.TokenOwnerNotMatchingException;
-import com.kamcci.modules.auth.stub.util.MockAuthTokenUtil;
-import com.kamcci.modules.auth.stub.service.MockJwtRequestUserDetailService;
-import com.kamcci.modules.auth.stub.service.MockUserDetailsService;
+import com.kamcci.modules.auth.mock.service.MockJwtRequestUserDetailService;
+import com.kamcci.modules.auth.mock.service.MockUserDetailsService;
+import com.kamcci.modules.auth.mock.util.MockAuthTokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.DisabledException;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static com.kamcci.modules.auth.constant.MockAuthTestConstant.FAIL_STRING;
 import static com.kamcci.modules.auth.constant.MockAuthTestConstant.FAIL_TOKEN;
-import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserDetail;
+import static com.kamcci.modules.auth.sample.AuthUserSampleData.getAuthUserDetail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

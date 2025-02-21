@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.restapi.config.stub
 
-import com.kamcci.numberbox.app.service.stub.usecase.math.*
+import com.kamcci.numberbox.app.service.mock.usecase.math.*
 import com.kamcci.numberbox.app.usecase.math.*
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
-import com.kamcci.numberbox.restapi.stub.math.MockMathContentsMapper
+import com.kamcci.numberbox.restapi.mock.math.MockMathContentsMapper
 import org.springframework.context.annotation.Bean
 
 class MockMathContentsBeanConfig {

@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.restapi.scheduler.sys
 
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
-import com.kamcci.numberbox.app.service.stub.port.storage.MockFileStoragePort
-import com.kamcci.numberbox.app.service.stub.usecase.sys.MockSysGarbageFileReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.sys.MockSysGarbageFileWriteCase
+import com.kamcci.numberbox.app.service.mock.port.storage.MockFileStoragePort
+import com.kamcci.numberbox.app.service.mock.usecase.sys.MockSysGarbageFileReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.sys.MockSysGarbageFileWriteCase
 import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileReadCase
 import com.kamcci.numberbox.app.usecase.sys.SysGarbageFileWriteCase
 import org.assertj.core.api.AssertionsForClassTypes.assertThat

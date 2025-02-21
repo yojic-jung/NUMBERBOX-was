@@ -2,11 +2,11 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_EMAIL
-import com.kamcci.numberbox.app.service.stub.port.email.MockEmailMessageTemplate
-import com.kamcci.numberbox.app.service.stub.port.email.member.MockMemberVerifyCodeEmailPort
-import com.kamcci.numberbox.app.service.stub.port.etc.MockMemberPasswordEncoder
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
+import com.kamcci.numberbox.app.service.mock.port.email.MockEmailMessageTemplate
+import com.kamcci.numberbox.app.service.mock.port.email.member.MockMemberVerifyCodeEmailPort
+import com.kamcci.numberbox.app.service.mock.port.etc.MockMemberPasswordEncoder
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

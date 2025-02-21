@@ -1,7 +1,7 @@
 package com.kamcci.modules.system.construction.di.registrar
 
-import com.kamcci.modules.system.construction.dummy.CustomQualifier
-import com.kamcci.modules.system.construction.stub.common.MockQualifierAnnotationAutowireCandidateResolver
+import com.kamcci.modules.system.construction.mock.common.MockQualifierAnnotationAutowireCandidateResolver
+import com.kamcci.modules.system.construction.sample.CustomQualifier
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver

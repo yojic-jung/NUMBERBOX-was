@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.util.auth
 
-import com.kamcci.numberbox.restapi.stub.auth.MockAuthPasswordEncoder
+import com.kamcci.numberbox.restapi.mock.auth.MockAuthPasswordEncoder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

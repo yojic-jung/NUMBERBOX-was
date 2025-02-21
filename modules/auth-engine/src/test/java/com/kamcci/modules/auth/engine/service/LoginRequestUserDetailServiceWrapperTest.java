@@ -2,13 +2,13 @@ package com.kamcci.modules.auth.engine.service;
 
 import com.kamcci.modules.auth.control.dto.AuthUserInfo;
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService;
-import com.kamcci.modules.auth.stub.service.MockLoginRequestUserDetailService;
+import com.kamcci.modules.auth.mock.service.MockLoginRequestUserDetailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 
 import static com.kamcci.modules.auth.constant.MockAuthTestConstant.NULL_USER;
-import static com.kamcci.modules.auth.dummy.AuthUserDummyData.getAuthUserInfo;
+import static com.kamcci.modules.auth.sample.AuthUserSampleData.getAuthUserInfo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LoginRequestUserDetailServiceWrapperTest {

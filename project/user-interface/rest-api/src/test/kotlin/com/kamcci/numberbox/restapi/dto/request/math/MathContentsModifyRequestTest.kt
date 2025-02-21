@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.dto.request.math
 
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathContentsModifyRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathContentsModifyRequest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

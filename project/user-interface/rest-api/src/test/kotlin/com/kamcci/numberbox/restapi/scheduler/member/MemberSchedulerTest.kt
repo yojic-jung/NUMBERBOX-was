@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.restapi.scheduler.member
 
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberDropCase
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberProfileWriteCase
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberWriteCase
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberDropCase
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberProfileWriteCase
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberDropCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberReadCase

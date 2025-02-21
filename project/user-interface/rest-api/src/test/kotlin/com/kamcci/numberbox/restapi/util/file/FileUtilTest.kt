@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.util.file
 
-import com.kamcci.numberbox.restapi.dummy.file.FileDummyData
+import com.kamcci.numberbox.restapi.sample.file.FileSampleData
 import org.apache.poi.xslf.usermodel.XMLSlideShow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,7 +12,7 @@ class FileUtilTest {
     @Test
     fun `multipartFile to uploadDto - 성공`() {
         // given
-        val multipartFile = FileDummyData.getMultipartFile("name", "name.png")
+        val multipartFile = FileSampleData.getMultipartFile("name", "name.png")
 
         // when
         val fileUploadDto = FileUtil.toFile(multipartFile)

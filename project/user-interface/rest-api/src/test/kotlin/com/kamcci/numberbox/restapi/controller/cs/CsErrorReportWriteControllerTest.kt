@@ -2,7 +2,7 @@ package com.kamcci.numberbox.restapi.controller.cs
 
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.file.FileDummyData.getMultipartFile
+import com.kamcci.numberbox.restapi.sample.file.FileSampleData.getMultipartFile
 import org.junit.jupiter.api.Test
 import org.springframework.web.bind.MethodArgumentNotValidException
 

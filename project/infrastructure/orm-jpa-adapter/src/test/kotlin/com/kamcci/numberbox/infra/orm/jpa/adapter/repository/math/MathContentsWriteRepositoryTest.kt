@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathConLicenseModifyDto
 import com.kamcci.numberbox.app.domain.dto.math.MathConSimilarSrcCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.math.*
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsFixture
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ class MathContentsWriteRepositoryTest(
         val id =
             mathContentsWriteRepository.saveWithLicense(
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
                 licenseCreateDto
             )
         em.flush()
@@ -45,7 +45,7 @@ class MathContentsWriteRepositoryTest(
     @Test
     fun `자체제작 수학문제 제작`() {
         // given
-        val modifyDto = MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")) // 주관식, 객관식 정답 존재
+        val modifyDto = MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")) // 주관식, 객관식 정답 존재
 
         // when
         val id =
@@ -62,7 +62,7 @@ class MathContentsWriteRepositoryTest(
         val id =
             mathContentsWriteRepository.saveWithIpsiSrc(
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
                 ipsiCreateDto
             )
         em.flush()
@@ -79,7 +79,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.saveTransContents(
                 1L,
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2"))
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2"))
             )
         em.flush()
         em.clear()
@@ -110,7 +110,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithLicense(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
                 licenseCreateDto
             )
         em.flush()
@@ -130,7 +130,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithSimilarSrc(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
                 similarSrcDto
             )
         em.flush()
@@ -150,7 +150,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateWithIpsiSrc(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
                 ipsiCreateDto
             )
         em.flush()
@@ -170,7 +170,7 @@ class MathContentsWriteRepositoryTest(
             mathContentsWriteRepository.updateTransContents(
                 contentsId,
                 ContentsSvcPosbSttsType.Release,
-                MathContentsFixture.getMathContentsModifyDto("123", listOf("1", "2")),
+                MathContentsSampleData.getMathContentsModifyDto("123", listOf("1", "2")),
             )
         em.flush()
         em.clear()

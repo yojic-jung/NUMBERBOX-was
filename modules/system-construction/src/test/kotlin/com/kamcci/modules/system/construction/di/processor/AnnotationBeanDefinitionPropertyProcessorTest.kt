@@ -1,8 +1,8 @@
 package com.kamcci.modules.system.construction.di.processor
 
-import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
-import com.kamcci.modules.system.construction.dummy.NonAnnotatedClass
-import com.kamcci.modules.system.construction.dummy.TestBean
+import com.kamcci.modules.system.construction.sample.DiTestFixture.getCustomAnnotationProperty
+import com.kamcci.modules.system.construction.sample.NonAnnotatedClass
+import com.kamcci.modules.system.construction.sample.TestBean
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.support.AutowireCandidateQualifier

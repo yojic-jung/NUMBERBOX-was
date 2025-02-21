@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import com.kamcci.numberbox.app.service.stub.port.email.MockEmailMessageTemplate
-import com.kamcci.numberbox.app.service.stub.port.email.member.MockMemberVerifyCodeEmailPort
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberVerifyCodeWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.email.MockEmailMessageTemplate
+import com.kamcci.numberbox.app.service.mock.port.email.member.MockMemberVerifyCodeEmailPort
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeWriteOrmPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

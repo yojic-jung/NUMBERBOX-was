@@ -1,6 +1,6 @@
 package com.kamcci.modules.system.construction
 
-import com.kamcci.modules.system.construction.stub.common.MockPlatformTransactionManager
+import com.kamcci.modules.system.construction.mock.common.MockPlatformTransactionManager
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 

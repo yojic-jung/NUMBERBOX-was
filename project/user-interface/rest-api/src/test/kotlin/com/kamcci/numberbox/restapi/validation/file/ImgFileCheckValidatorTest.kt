@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.file
 
-import com.kamcci.numberbox.restapi.stub.common.MockCustomMultipartFile
+import com.kamcci.numberbox.restapi.mock.common.MockCustomMultipartFile
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockMultipartFile

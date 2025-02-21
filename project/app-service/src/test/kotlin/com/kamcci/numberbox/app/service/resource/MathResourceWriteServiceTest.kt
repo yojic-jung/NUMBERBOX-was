@@ -2,12 +2,12 @@ package com.kamcci.numberbox.app.service.resource
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
-import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceCreateDto
-import com.kamcci.numberbox.app.service.dummy.MathResourceDummyData.getMathResourceUpdateDtoList
+import com.kamcci.numberbox.app.service.mock.port.orm.resource.MockMathResourceWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.sys.MockSysGarbageFileWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceReadCase
 import com.kamcci.numberbox.app.service.resource.MathResourceWriteService.Companion.NOT_MY_CONTENTS
-import com.kamcci.numberbox.app.service.stub.port.orm.resource.MockMathResourceWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.port.orm.sys.MockSysGarbageFileWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.usecase.resource.MockMathResourceReadCase
+import com.kamcci.numberbox.app.service.sample.MathResourceSampleData.getMathResourceCreateDto
+import com.kamcci.numberbox.app.service.sample.MathResourceSampleData.getMathResourceUpdateDtoList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

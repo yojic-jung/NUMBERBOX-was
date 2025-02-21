@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.restapi.config.stub
 
-import com.kamcci.numberbox.app.service.stub.usecase.resource.MockMathResourceMenuReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.resource.MockMathResourceReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.resource.MockMathResourceWriteCase
+import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceMenuReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceWriteCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceMenuReadCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteCase

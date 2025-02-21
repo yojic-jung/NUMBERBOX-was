@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberVerifyCodeDto
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberVerifyCodeReadOrmPort
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.EXPIRE_CODE_EMAIL
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.EXPIRE_CODE_EMAIL
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

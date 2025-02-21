@@ -2,8 +2,8 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsFixture
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsFixture.getMathContentsModifyDto
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData.getMathContentsModifyDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -49,7 +49,7 @@ class MathContentsFactoryTest {
         for (modifyDto in modifyDtoList) {
             val saveEntity =
                 MathContentsFactory.getUpdtEntity(
-                    MathContentsFixture.getSaveEntity(),
+                    MathContentsSampleData.getSaveEntity(),
                     ContentsSvcPosbSttsType.Release,
                     modifyDto.first
                 )

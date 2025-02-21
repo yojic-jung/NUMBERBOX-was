@@ -1,8 +1,8 @@
 package com.kamcci.modules.logging.engine.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kammci.modules.logging.engine.dummy.config.LoggingDummyData.getLoggingTargetProperty
-import com.kammci.modules.logging.engine.stub.util.MockIPAddressUtil
+import com.kammci.modules.logging.engine.mock.util.MockIPAddressUtil
+import com.kammci.modules.logging.engine.sample.config.LoggingSampleData.getLoggingTargetProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

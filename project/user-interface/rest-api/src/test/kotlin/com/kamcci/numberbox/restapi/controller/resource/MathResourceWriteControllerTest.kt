@@ -3,7 +3,7 @@ package com.kamcci.numberbox.restapi.controller.resource
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.file.FileDummyData.getMultipartFile
+import com.kamcci.numberbox.restapi.sample.file.FileSampleData.getMultipartFile
 import com.kamcci.numberbox.restapi.util.file.FileUtil
 import io.mockk.every
 import io.mockk.mockkObject

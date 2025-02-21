@@ -1,9 +1,9 @@
 package com.kamcci.modules.system.construction.tx.pointcut
 
-import com.kamcci.modules.system.construction.dummy.NonTxInterfaceImpl
-import com.kamcci.modules.system.construction.dummy.TransactionMethodTarget
-import com.kamcci.modules.system.construction.dummy.TxFixture.getCustomAnnotationMatchingPointcut
-import com.kamcci.modules.system.construction.dummy.TxInterfaceImpl
+import com.kamcci.modules.system.construction.sample.NonTxInterfaceImpl
+import com.kamcci.modules.system.construction.sample.TransactionMethodTarget
+import com.kamcci.modules.system.construction.sample.TxFixture.getCustomAnnotationMatchingPointcut
+import com.kamcci.modules.system.construction.sample.TxInterfaceImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.aop.MethodMatcher

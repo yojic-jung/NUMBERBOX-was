@@ -1,10 +1,10 @@
 package com.kamcci.modules.system.construction.di.config
 
-import com.kamcci.modules.system.construction.dummy.CustomBean
-import com.kamcci.modules.system.construction.dummy.CustomPrimary
-import com.kamcci.modules.system.construction.dummy.CustomQualifier
-import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
-import com.kamcci.modules.system.construction.dummy.DiTestFixture.getNonAnnotationProperty
+import com.kamcci.modules.system.construction.sample.CustomBean
+import com.kamcci.modules.system.construction.sample.CustomPrimary
+import com.kamcci.modules.system.construction.sample.CustomQualifier
+import com.kamcci.modules.system.construction.sample.DiTestFixture.getCustomAnnotationProperty
+import com.kamcci.modules.system.construction.sample.DiTestFixture.getNonAnnotationProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

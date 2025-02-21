@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.validation.file
 
-import com.kamcci.numberbox.restapi.stub.common.MockCustomMultipartFile
+import com.kamcci.numberbox.restapi.mock.common.MockCustomMultipartFile
 import com.kamcci.numberbox.restapi.validation.file.PptFileCheckValidator.Companion.MAX_FILE_SIZE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

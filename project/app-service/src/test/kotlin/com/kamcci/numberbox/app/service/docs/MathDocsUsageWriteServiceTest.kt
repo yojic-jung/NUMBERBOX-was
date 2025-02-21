@@ -2,8 +2,8 @@ package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
-import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathDocsUsageCreateDto
-import com.kamcci.numberbox.app.service.stub.port.orm.docs.MockMathDocsUsageWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.docs.MockMathDocsUsageWriteOrmPort
+import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsUsageCreateDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

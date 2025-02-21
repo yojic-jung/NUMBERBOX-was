@@ -4,9 +4,9 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsFixture
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsLicenseFixture
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MembersFixture
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsLicenseSampleData
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.member.MembersSampleData
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -30,7 +30,7 @@ class MathContentsEntityTest(
         assertThat(mathContentsEntity.id).isEqualTo(id)
         assertThat(mathContentsEntity.unitId).isEqualTo(22003)
         assertThat(mathContentsEntity.typeId).isOne()
-        assertThat(mathContentsEntity.memberId).isEqualTo(MembersFixture.getMemberId1())
+        assertThat(mathContentsEntity.memberId).isEqualTo(MembersSampleData.getMemberId1())
         assertThat(mathContentsEntity.contents).isNotNull()
         assertThat(mathContentsEntity.solution).isNotNull()
         assertThat(mathContentsEntity.contentsImg).isNull()
@@ -60,8 +60,8 @@ class MathContentsEntityTest(
     @Test
     fun `MathContentsEntity with licenceEntity 영속화 - 성공`() {
         // given
-        val mathContentsEntity = MathContentsFixture.getSaveEntity()
-        val licenseEntity = MathContentsLicenseFixture.getSaveEntity()
+        val mathContentsEntity = MathContentsSampleData.getSaveEntity()
+        val licenseEntity = MathContentsLicenseSampleData.getSaveEntity()
         mathContentsEntity.mathContentsLicenses = mutableListOf(licenseEntity)
         licenseEntity.mathContents = mathContentsEntity
 

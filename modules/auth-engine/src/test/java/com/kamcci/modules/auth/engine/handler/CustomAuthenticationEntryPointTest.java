@@ -6,7 +6,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import static com.kamcci.modules.auth.control.dto.AuthResponse.ACCESS_DENIED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 class CustomAuthenticationEntryPointTest {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint = new CustomAuthenticationEntryPoint();
@@ -18,7 +17,7 @@ class CustomAuthenticationEntryPointTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         // when
-        customAuthenticationEntryPoint.commence(request, response, mock());
+        customAuthenticationEntryPoint.commence(request, response, null);
 
         // then
         assertThat(response.getStatus()).isEqualTo(ACCESS_DENIED.statusCode);

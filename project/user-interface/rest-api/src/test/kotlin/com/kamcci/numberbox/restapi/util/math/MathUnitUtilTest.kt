@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.restapi.util.math
 
-import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathCategoryUnitVo
+import com.kamcci.numberbox.app.service.sample.MathContentsSampleData.getMathCategoryUnitVo
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

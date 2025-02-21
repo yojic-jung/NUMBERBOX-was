@@ -2,8 +2,8 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConIpsiSrcCreateRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConSimilarSrcCreateRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConIpsiSrcCreateRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConSimilarSrcCreateRequest
 import org.junit.jupiter.api.Test
 
 @WebMvcUnitTest

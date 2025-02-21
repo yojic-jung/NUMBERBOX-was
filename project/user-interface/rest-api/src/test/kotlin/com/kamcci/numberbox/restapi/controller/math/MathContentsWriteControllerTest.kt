@@ -3,10 +3,10 @@ package com.kamcci.numberbox.restapi.controller.math
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContestGrammarModifyRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConLicenseCreateRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConLicenseUpdtRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConTransCreateRequest
-import com.kamcci.numberbox.restapi.dummy.math.MathContentsDummyData.getMathConTransUpdtRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConLicenseCreateRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConLicenseUpdtRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConTransCreateRequest
+import com.kamcci.numberbox.restapi.sample.math.MathContentsSampleData.getMathConTransUpdtRequest
 import org.junit.jupiter.api.Test
 
 @WebMvcUnitTest

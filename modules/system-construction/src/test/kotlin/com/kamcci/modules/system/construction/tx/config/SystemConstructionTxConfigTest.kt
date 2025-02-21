@@ -1,6 +1,6 @@
 package com.kamcci.modules.system.construction.tx.config
 
-import com.kamcci.modules.system.construction.stub.common.MockPlatformTransactionManager
+import com.kamcci.modules.system.construction.mock.common.MockPlatformTransactionManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.mock.env.MockEnvironment
@@ -12,7 +12,7 @@ class SystemConstructionTxConfigTest {
         val env = MockEnvironment()
         env.setProperty(
             "system.construction.tx.class-path.transaction",
-            "com.kamcci.modules.system.construction.dummy.TXExecute"
+            "com.kamcci.modules.system.construction.sample.TXExecute"
         )
         val txConfig = SystemConstructionTxConfig(MockPlatformTransactionManager(), env)
 

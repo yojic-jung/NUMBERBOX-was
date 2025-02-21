@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenRepository
-import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRepositorySupport
+import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockMemberRefreshTokenRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockMemberRepositorySupport
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*

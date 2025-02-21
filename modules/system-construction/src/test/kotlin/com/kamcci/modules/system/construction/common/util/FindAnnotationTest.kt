@@ -2,10 +2,10 @@ package com.kamcci.modules.system.construction.common.util
 
 import com.kamcci.modules.system.construction.common.util.FindAnnotation.findInterfaceAnnotation
 import com.kamcci.modules.system.construction.common.util.FindAnnotation.getAnnotationClass
-import com.kamcci.modules.system.construction.dummy.CustomBean
-import com.kamcci.modules.system.construction.dummy.NonTxInterfaceImpl
-import com.kamcci.modules.system.construction.dummy.TXExecute
-import com.kamcci.modules.system.construction.dummy.TxInterfaceImpl
+import com.kamcci.modules.system.construction.sample.CustomBean
+import com.kamcci.modules.system.construction.sample.NonTxInterfaceImpl
+import com.kamcci.modules.system.construction.sample.TXExecute
+import com.kamcci.modules.system.construction.sample.TxInterfaceImpl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,7 +16,7 @@ class FindAnnotationTest {
     @Test
     fun `클래스 경로를 통해 어노테이션 타입 반환 - 성공`() {
         // given
-        val customBeanClass = "com.kamcci.modules.system.construction.dummy.CustomBean"
+        val customBeanClass = "com.kamcci.modules.system.construction.sample.CustomBean"
 
         // when
         val annotation = getAnnotationClass(customBeanClass)
@@ -28,7 +28,7 @@ class FindAnnotationTest {
     @Test
     fun `클래스 경로를 통해 어노테이션 타입 반환 - 실패(클래스 미존재)`() {
         // given
-        val customBeanClass = "com.kamcci.modules.system.construction.dummy.NonAnnotatedClass"
+        val customBeanClass = "com.kamcci.modules.system.construction.sample.NonAnnotatedClass"
 
         // when & then
         assertThrows<ClassNotFoundException> {

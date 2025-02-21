@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.member.MemberFollowWriteService.Companion.NOT_CANCELD
 import com.kamcci.numberbox.app.service.member.MemberFollowWriteService.Companion.NOT_FOLLOWED
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberFollowWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberFollowWriteOrmPort
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

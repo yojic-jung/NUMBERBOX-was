@@ -1,15 +1,21 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.auth
 
+import com.kamcci.modules.logging.control.dto.ClientLoggingInfoEventDto
+import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
+import com.kamcci.modules.logging.control.dto.HttpResponseLoggingDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.log.LogClientApiRepository
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class AuthUserInfoRepositoryTest(
-    @Autowired
-    private val authUserInfoRepository: AuthUserInfoRepository
+class AuthUserInfoRepositoryTest @Autowired constructor(
+    private val em: EntityManager,
+    private val authUserInfoRepository: AuthUserInfoRepository,
+    private val logClientApiRepository: LogClientApiRepository,
 ) {
     @Test
     fun `멤버엔티티 조회 - 존재`() {
@@ -51,7 +57,11 @@ class AuthUserInfoRepositoryTest(
     @Test
     fun `리프레시 토큰 재발급 여부 - true`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = UUID.randomUUID()
+        val reqLoggingDto = HttpRequestLoggingDto(memberId, "Chrome", "Mac", "127.0.0.1", "GET", "/sdfa/adf", "sadf")
+        logClientApiRepository.save(ClientLoggingInfoEventDto(reqLoggingDto, HttpResponseLoggingDto(200)))
+        em.flush()
+        em.clear()
 
         // when
         val canReCreate = authUserInfoRepository.canReCreateRefreshToken(memberId)

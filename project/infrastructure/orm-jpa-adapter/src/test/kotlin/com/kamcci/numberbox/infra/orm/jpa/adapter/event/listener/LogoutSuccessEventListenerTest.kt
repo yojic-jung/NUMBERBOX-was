@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 
 import com.kamcci.modules.auth.control.dto.LogoutSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.stub.MockMemberRefreshTokenRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockMemberRefreshTokenRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

@@ -1,9 +1,9 @@
 package com.kamcci.modules.auth.engine.filter;
 
 import com.kamcci.modules.auth.control.config.AuthConstantConfig;
-import com.kamcci.modules.auth.stub.common.MockAuthenticationManager;
-import com.kamcci.modules.auth.stub.common.MockFilterChain;
-import com.kamcci.modules.auth.stub.service.MockTokenResponseService;
+import com.kamcci.modules.auth.mock.common.MockAuthenticationManager;
+import com.kamcci.modules.auth.mock.common.MockFilterChain;
+import com.kamcci.modules.auth.mock.service.MockTokenResponseService;
 import jakarta.servlet.FilterChain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import static com.kamcci.modules.auth.control.config.AuthConstantConfig.TOKEN_STANDARD_PREFIX;
-import static com.kamcci.modules.auth.stub.common.MockAuthenticationManager.*;
+import static com.kamcci.modules.auth.mock.common.MockAuthenticationManager.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JwtRequestAuthFilterTest {

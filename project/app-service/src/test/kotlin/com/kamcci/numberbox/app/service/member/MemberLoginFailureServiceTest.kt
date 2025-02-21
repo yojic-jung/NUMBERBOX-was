@@ -2,11 +2,11 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberRoleWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase.Companion.BEFORE_20m_AGO_FAIL_EMAIL
-import com.kamcci.numberbox.app.service.stub.usecase.member.MockMemberReadCase.Companion.DISABLE_MEMBER
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberRoleWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase.Companion.BEFORE_20m_AGO_FAIL_EMAIL
+import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase.Companion.DISABLE_MEMBER
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

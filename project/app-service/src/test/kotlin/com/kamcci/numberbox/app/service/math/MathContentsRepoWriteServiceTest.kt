@@ -3,9 +3,9 @@ package com.kamcci.numberbox.app.service.math
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
-import com.kamcci.numberbox.app.service.dummy.MathContentsDummyData.getMathContentsRepoModifyDto
-import com.kamcci.numberbox.app.service.stub.port.orm.math.MockMathContentsRepoWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.usecase.math.MockMathContentsRepoReadCase
+import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsRepoWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsRepoReadCase
+import com.kamcci.numberbox.app.service.sample.MathContentsSampleData.getMathContentsRepoModifyDto
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

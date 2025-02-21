@@ -1,12 +1,12 @@
 package com.kamcci.numberbox.restapi.config.stub
 
 import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
-import com.kamcci.numberbox.app.service.stub.port.hwp.MockHwpSocketClient
-import com.kamcci.numberbox.app.service.stub.usecase.hwp.MockHwpConvertContentsReadCase
-import com.kamcci.numberbox.app.service.stub.usecase.hwp.MockHwpConvertContentsWriteCase
+import com.kamcci.numberbox.app.service.mock.port.hwp.MockHwpSocketClient
+import com.kamcci.numberbox.app.service.mock.usecase.hwp.MockHwpConvertContentsReadCase
+import com.kamcci.numberbox.app.service.mock.usecase.hwp.MockHwpConvertContentsWriteCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
-import com.kamcci.numberbox.restapi.stub.hwp.MockHwpConvertFileUtil
+import com.kamcci.numberbox.restapi.mock.hwp.MockHwpConvertFileUtil
 import com.kamcci.numberbox.restapi.util.hwp.HwpConvertFileUtil
 import org.springframework.context.annotation.Bean
 

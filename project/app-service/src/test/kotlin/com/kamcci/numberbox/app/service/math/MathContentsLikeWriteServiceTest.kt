@@ -3,8 +3,8 @@ package com.kamcci.numberbox.app.service.math
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
-import com.kamcci.numberbox.app.service.stub.port.orm.math.MockMathContentsLikeWriteOrmPort
-import com.kamcci.numberbox.app.service.stub.usecase.math.MockMathContentsLikeReadCase
+import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsLikeWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsLikeReadCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

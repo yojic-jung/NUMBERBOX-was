@@ -4,9 +4,9 @@ import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
 import com.kamcci.modules.auth.engine.exception.BadInputRequestException;
-import com.kamcci.modules.auth.stub.common.MockAuthenticationManager;
-import com.kamcci.modules.auth.stub.handler.MockAuthenticationFailureHandler;
-import com.kamcci.modules.auth.stub.handler.MockAuthenticationSuccessHandler;
+import com.kamcci.modules.auth.mock.common.MockAuthenticationManager;
+import com.kamcci.modules.auth.mock.handler.MockAuthenticationFailureHandler;
+import com.kamcci.modules.auth.mock.handler.MockAuthenticationSuccessHandler;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.kamcci.modules.auth.config.AuthConfigFixture.getAuthLoginUrlProperty;
-import static com.kamcci.modules.auth.stub.common.MockAuthenticationManager.AUTH_EXCEPTION_TYPE;
-import static com.kamcci.modules.auth.stub.common.MockAuthenticationManager.RUNTIME_EXCEPTION_TYPE;
+import static com.kamcci.modules.auth.mock.common.MockAuthenticationManager.AUTH_EXCEPTION_TYPE;
+import static com.kamcci.modules.auth.mock.common.MockAuthenticationManager.RUNTIME_EXCEPTION_TYPE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

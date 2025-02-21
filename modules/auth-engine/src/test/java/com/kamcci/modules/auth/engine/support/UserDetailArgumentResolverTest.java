@@ -2,9 +2,9 @@ package com.kamcci.modules.auth.engine.support;
 
 import com.kamcci.modules.auth.control.annotation.UserId;
 import com.kamcci.modules.auth.control.enumeration.UserRoleType;
-import com.kamcci.modules.auth.dummy.UserParameterInfo;
 import com.kamcci.modules.auth.engine.dto.JwtAuthenticationToken;
-import com.kamcci.modules.auth.stub.common.MockNativeWebRequest;
+import com.kamcci.modules.auth.mock.common.MockNativeWebRequest;
+import com.kamcci.modules.auth.sample.UserParameterSampleData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,8 +38,8 @@ class UserDetailArgumentResolverTest {
     @ValueSource(ints = {0, 1, 2})
     void 실행_가능_어노테이션_부착_여부_검증_성공(int paramIdx) throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), paramIdx);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), paramIdx);
 
         // when
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
@@ -51,8 +51,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void supportsParameter_실패() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("notSupportAnnot",
-                UUID.class), 0);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "notSupportAnnot", UUID.class), 0);
 
         // when
         boolean isSupport = userDetailArgumentResolver.supportsParameter(parameter);
@@ -64,8 +64,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void UserId_추출_성공() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 0);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 0);
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("principal", "credentials",
                 new ArrayList<>());
         authentication.setDetails(details);
@@ -83,8 +83,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void UserId_추출_실패_익명사용자() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 0);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 0);
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("anonymousUser", "credentials",
                 new ArrayList<>());
         authentication.setDetails(details);
@@ -101,8 +101,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void UserEmail_추출_성공() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 1);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 1);
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("principal", "credentials",
                 new ArrayList<>());
         authentication.setDetails(details);
@@ -120,8 +120,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void UserEmail_추출_실패_익명사용자() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 1);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 1);
         JwtAuthenticationToken authentication = new JwtAuthenticationToken("anonymousUser", "credentials",
                 new ArrayList<>());
         authentication.setDetails(details);
@@ -138,8 +138,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void userRole_추출_성공() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 2);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 2);
         List<SimpleGrantedAuthority> roles = List.of(new SimpleGrantedAuthority(UserRoleType.USER.name()));
         Authentication auth = new JwtAuthenticationToken("test", "", roles);
         securityContext.setAuthentication(auth);
@@ -155,8 +155,8 @@ class UserDetailArgumentResolverTest {
     @Test
     void userRole_추출_실패_익명사용자() throws NoSuchMethodException {
         // given
-        MethodParameter parameter = new MethodParameter(UserParameterInfo.class.getDeclaredMethod("supportAllAnnot",
-                UUID.class, String.class, List.class), 2);
+        MethodParameter parameter = new MethodParameter(UserParameterSampleData.class.getDeclaredMethod(
+                "supportAllAnnot", UUID.class, String.class, List.class), 2);
         Authentication auth = new JwtAuthenticationToken("anonymousUser", "", null);
         securityContext.setAuthentication(auth);
 

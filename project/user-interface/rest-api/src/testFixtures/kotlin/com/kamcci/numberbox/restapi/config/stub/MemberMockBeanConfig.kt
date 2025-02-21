@@ -1,9 +1,9 @@
 package com.kamcci.numberbox.restapi.config.stub
 
-import com.kamcci.numberbox.app.service.stub.usecase.member.*
+import com.kamcci.numberbox.app.service.mock.usecase.member.*
 import com.kamcci.numberbox.app.usecase.member.*
 import com.kamcci.numberbox.restapi.mapper.member.MemberMapper
-import com.kamcci.numberbox.restapi.stub.member.MockMemberMapper
+import com.kamcci.numberbox.restapi.mock.member.MockMemberMapper
 import org.springframework.context.annotation.Bean
 
 class MemberMockBeanConfig {

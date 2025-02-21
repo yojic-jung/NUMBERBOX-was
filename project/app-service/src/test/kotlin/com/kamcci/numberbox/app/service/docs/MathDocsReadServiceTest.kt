@@ -3,8 +3,8 @@ package com.kamcci.numberbox.app.service.docs
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsAdditionalReadDto
 import com.kamcci.numberbox.app.domain.dto.docs.MathDocsReadDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import com.kamcci.numberbox.app.service.dummy.MathDocsDummyData.getMathIpsiDocsReadDto
-import com.kamcci.numberbox.app.service.stub.port.orm.cs.MockMathDocsReadOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.cs.MockMathDocsReadOrmPort
+import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathIpsiDocsReadDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

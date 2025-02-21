@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.restapi.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kamcci.numberbox.restapi.stub.common.MockUserDetailArgumentResolver
+import com.kamcci.numberbox.restapi.mock.common.MockUserDetailArgumentResolver
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType

@@ -1,11 +1,11 @@
 package com.kamcci.modules.system.construction.tx.advice
 
-import com.kamcci.modules.system.construction.dummy.NonTxClass
-import com.kamcci.modules.system.construction.dummy.TXExecute
-import com.kamcci.modules.system.construction.dummy.TestConstant.SUCCESS
-import com.kamcci.modules.system.construction.dummy.TransactionMethodTarget
-import com.kamcci.modules.system.construction.dummy.TxInterfaceImpl
-import com.kamcci.modules.system.construction.stub.common.MockPlatformTransactionManager
+import com.kamcci.modules.system.construction.mock.common.MockPlatformTransactionManager
+import com.kamcci.modules.system.construction.sample.NonTxClass
+import com.kamcci.modules.system.construction.sample.TXExecute
+import com.kamcci.modules.system.construction.sample.TestConstant.SUCCESS
+import com.kamcci.modules.system.construction.sample.TransactionMethodTarget
+import com.kamcci.modules.system.construction.sample.TxInterfaceImpl
 import org.aopalliance.intercept.MethodInvocation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

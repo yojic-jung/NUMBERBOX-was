@@ -26,20 +26,20 @@ class MockDefaultListableBeanFactory : DefaultListableBeanFactory() {
         val environment = MockEnvironment()
         environment.setProperty(
             "system.construction.di.class-path.customBean",
-            "com.kamcci.modules.system.construction.dummy.CustomBean"
+            "com.kamcci.modules.system.construction.sample.CustomBean"
         )
         environment.setProperty(
             "system.construction.di.class-path.basePackage",
-            "com.kamcci.modules.system.construction.dummy"
+            "com.kamcci.modules.system.construction.sample"
         )
         environment.setProperty("system.construction.di.class-path.beanScope", "")
         environment.setProperty(
             "system.construction.di.class-path.primary",
-            "com.kamcci.modules.system.construction.dummy.CustomPrimary"
+            "com.kamcci.modules.system.construction.sample.CustomPrimary"
         )
         environment.setProperty(
             "system.construction.di.class-path.qualifier",
-            "com.kamcci.modules.system.construction.dummy.CustomQualifier"
+            "com.kamcci.modules.system.construction.sample.CustomQualifier"
         )
         return environment as (T & Any)
     }

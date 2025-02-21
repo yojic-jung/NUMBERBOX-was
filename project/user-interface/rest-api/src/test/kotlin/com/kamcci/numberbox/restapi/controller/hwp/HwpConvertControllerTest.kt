@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.dummy.file.FileDummyData
+import com.kamcci.numberbox.restapi.sample.file.FileSampleData
 import org.junit.jupiter.api.Test
 
 @WebMvcUnitTest
@@ -32,7 +32,7 @@ class HwpConvertControllerTest : BaseMockMvcTest() {
     @Test
     fun `hwp to html `() {
         // given
-        val multipartFile = FileDummyData.getMultipartFile("hwpFile", "test.hwp")
+        val multipartFile = FileSampleData.getMultipartFile("hwpFile", "test.hwp")
 
         // when
         val resultAction = postMultipartForm(HWP_TO_HTML, multipartFile)

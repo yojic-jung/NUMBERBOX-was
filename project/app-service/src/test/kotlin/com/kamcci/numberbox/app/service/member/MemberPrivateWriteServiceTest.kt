@@ -1,8 +1,8 @@
 package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
-import com.kamcci.numberbox.app.service.dummy.MemberDummyData.getMemberPhoneUpdtDto
-import com.kamcci.numberbox.app.service.stub.port.orm.member.MockMemberPrivateWriteOrmPort
+import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberPrivateWriteOrmPort
+import com.kamcci.numberbox.app.service.sample.MemberSampleData.getMemberPhoneUpdtDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

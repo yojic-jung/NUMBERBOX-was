@@ -1,8 +1,8 @@
 package com.kamcci.modules.system.construction.di.registrar
 
 import com.kamcci.modules.system.construction.di.processor.BeanDefinitionPropertyProcessor
-import com.kamcci.modules.system.construction.dummy.DiTestFixture.getCustomAnnotationProperty
-import com.kamcci.modules.system.construction.stub.common.MockBeanDefinitionPropertyProcessor
+import com.kamcci.modules.system.construction.mock.common.MockBeanDefinitionPropertyProcessor
+import com.kamcci.modules.system.construction.sample.DiTestFixture.getCustomAnnotationProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
