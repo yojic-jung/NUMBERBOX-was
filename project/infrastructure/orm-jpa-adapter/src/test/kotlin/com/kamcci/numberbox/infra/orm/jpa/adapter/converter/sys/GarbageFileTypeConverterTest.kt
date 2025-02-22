@@ -8,20 +8,22 @@ class GarbageFileTypeConverterTest {
     private val garbageFileTypeConverter = GarbageFileTypeConverter()
 
     @Test
-    fun `to GarbageFileType`() {
-        // given
-        val garbageFileTypeList: MutableList<Pair<String?, GarbageFileType?>> = mutableListOf()
-        GarbageFileType.entries.forEach {
-            garbageFileTypeList.add(Pair(it.dbData, it))
-        }
-        garbageFileTypeList.add(Pair(null, null))
-
+    fun `dbData to GarbageFileType`() {
         // when
-        for (garbageFileType in garbageFileTypeList) {
-            val type = garbageFileTypeConverter.convertToEntityAttribute(garbageFileType.first)
+        GarbageFileType.entries.forEach { garbageType ->
+            val type = garbageFileTypeConverter.convertToEntityAttribute(garbageType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(garbageFileType.second)
+            Assertions.assertThat(type).isEqualTo(garbageType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = garbageFileTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

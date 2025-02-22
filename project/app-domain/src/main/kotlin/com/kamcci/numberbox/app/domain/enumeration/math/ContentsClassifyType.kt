@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.enumeration.math
 /**
  * 수학 문제 타입
  */
-enum class ContentsClassifyType(val id: Int, val title: String) {
+enum class ContentsClassifyType(val dbData: Int, val title: String) {
     InHouse(0, "자체 제작"),
     UserCustom(1, "사용자 제작"),
     Modified(2, "변형문제"),

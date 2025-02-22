@@ -8,21 +8,23 @@ class ReportSttsTypeConverterTest {
     private val reportSttsTypeConverter = ReportSttsTypeConverter()
 
     @Test
-    fun `to ReportSttsType`() {
-        // given
-        val reportSttsTypeList: MutableList<Pair<Int?, ReportSttsType?>> = mutableListOf()
-        ReportSttsType.entries.forEach {
-            reportSttsTypeList.add(Pair(it.dbData, it))
-        }
-        reportSttsTypeList.add(Pair(null, null))
-
+    fun `dbData to ReportSttsType`() {
         // when
-        for (reportSttsType in reportSttsTypeList) {
-            val type = reportSttsTypeConverter.convertToEntityAttribute(reportSttsType.first)
+        ReportSttsType.entries.forEach { reportSttsType ->
+            val type = reportSttsTypeConverter.convertToEntityAttribute(reportSttsType.dbData)
 
             // then
-            assertThat(type).isEqualTo(reportSttsType.second)
+            assertThat(type).isEqualTo(reportSttsType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = reportSttsTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        assertThat(type).isEqualTo(null)
     }
 
 }

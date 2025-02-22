@@ -121,9 +121,12 @@ object MathDocsSampleData {
         )
     )
 
-    fun getMathIpsiDocsReadDto() = MathIpsiDocsReadDto(
-        unitIdAndTypeId = listOf("21001-1"),
-        quesLevel = listOf(3, 4, 5),
+    fun getMathIpsiDocsReadDto(
+        unitIdAndTypeId: List<String> = listOf("21001-1"),
+        quesLevel: List<Int> = listOf(3, 4, 5)
+    ) = MathIpsiDocsReadDto(
+        unitIdAndTypeId = unitIdAndTypeId,
+        quesLevel = quesLevel,
         wrongRatioMin = 50,
         wrongRatioMax = 100,
         ipsiYearStrt = 2019,
@@ -149,8 +152,8 @@ object MathDocsSampleData {
         docsStts = DocsStatusType.None,
     )
 
-    fun getMathDocsPaperUpdtDto() = MathDocsPaperUpdtDto(
-        id = 1L,
+    fun getMathDocsPaperUpdtDto(id: Long = 1L) = MathDocsPaperUpdtDto(
+        id = id,
         contentsIdList = listOf(1L, 2L, 3L),
         docsGrade = "중1",
         docsTitle = "소인수분해",

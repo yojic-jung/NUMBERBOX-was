@@ -8,20 +8,22 @@ class ContentsSvcPosbSttsTypeConverterTest {
     private val contentsSvcPosbSttsTypeConverter = ContentsSvcPosbSttsTypeConverter()
 
     @Test
-    fun `to IpsiPaperType`() {
-        // given
-        val contentsSvcPosbSttsTypeList: MutableList<Pair<Int?, ContentsSvcPosbSttsType?>> = mutableListOf()
-        ContentsSvcPosbSttsType.entries.forEach {
-            contentsSvcPosbSttsTypeList.add(Pair(it.id, it))
-        }
-        contentsSvcPosbSttsTypeList.add(Pair(null, null))
-
+    fun `dbData to ContentsSvcPosbSttsType`() {
         // when
-        for (contentsSvcPosbSttsType in contentsSvcPosbSttsTypeList) {
-            val type = contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(contentsSvcPosbSttsType.first)
+        ContentsSvcPosbSttsType.entries.forEach { contentsSvcPosbSttsType ->
+            val type = contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(contentsSvcPosbSttsType.dbData)
 
             // then
-            assertThat(type).isEqualTo(contentsSvcPosbSttsType.second)
+            assertThat(type).isEqualTo(contentsSvcPosbSttsType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        assertThat(type).isEqualTo(null)
     }
 }

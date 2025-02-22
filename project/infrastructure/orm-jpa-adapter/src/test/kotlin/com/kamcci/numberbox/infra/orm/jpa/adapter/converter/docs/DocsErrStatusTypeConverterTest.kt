@@ -8,20 +8,22 @@ class DocsErrStatusTypeConverterTest {
     private val docsErrStatusTypeConverter = DocsErrStatusTypeConverter()
 
     @Test
-    fun `to DocsStatusType`() {
-        // given
-        val docsStatusTypeList: MutableList<Pair<Int?, DocsStatusType?>> = mutableListOf()
-        DocsStatusType.entries.forEach {
-            docsStatusTypeList.add(Pair(it.id, it))
-        }
-        docsStatusTypeList.add(Pair(null, null))
-
+    fun `dbData to DocsStatusType`() {
         // when
-        for (docsStatusType in docsStatusTypeList) {
-            val type = docsErrStatusTypeConverter.convertToEntityAttribute(docsStatusType.first)
+        DocsStatusType.entries.forEach { docsStatusType ->
+            val type = docsErrStatusTypeConverter.convertToEntityAttribute(docsStatusType.dbData)
 
             // then
-            assertThat(type).isEqualTo(docsStatusType.second)
+            assertThat(type).isEqualTo(docsStatusType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = docsErrStatusTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        assertThat(type).isEqualTo(null)
     }
 }

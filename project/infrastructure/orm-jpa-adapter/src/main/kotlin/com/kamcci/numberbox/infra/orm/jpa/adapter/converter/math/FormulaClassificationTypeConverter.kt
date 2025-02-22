@@ -11,6 +11,6 @@ class FormulaClassificationTypeConverter : AttributeConverter<FormulaClassificat
     }
 
     override fun convertToDatabaseColumn(property: FormulaClassificationType): String {
-        return property.name.lowercase()
+        return property.dbData
     }
 }

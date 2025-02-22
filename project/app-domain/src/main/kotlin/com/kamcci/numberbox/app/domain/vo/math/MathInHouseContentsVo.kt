@@ -92,5 +92,5 @@ data class MathInHouseContentsVo(
     // 소단원
     val thrUnit: String,
 ) {
-    fun getMathTypeClassifyVal() = mathTypeClassify?.id
+    fun getMathTypeClassifyVal() = mathTypeClassify?.dbData
 }

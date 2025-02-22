@@ -7,10 +7,10 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class MathTypeClassifyTypeConverter : AttributeConverter<MathTypeClassifyType?, String?> {
     override fun convertToEntityAttribute(column: String?): MathTypeClassifyType? {
-        return MathTypeClassifyType.entries.find { it.id == column }
+        return MathTypeClassifyType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: MathTypeClassifyType?): String? {
-        return property?.id
+        return property?.dbData
     }
 }

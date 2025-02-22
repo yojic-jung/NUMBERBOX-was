@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.domain.enumeration.member
 
-enum class ProfileType(val id: Int, val desc: String) {
+enum class ProfileType(val dbData: Int, val desc: String) {
     None(0, "미등록"),
     HeadOfAcademy(1, "원장"),
     Instructor(2, "강사"),

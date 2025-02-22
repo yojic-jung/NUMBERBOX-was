@@ -7,10 +7,10 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class ContentsSvcPosbSttsTypeConverter : AttributeConverter<ContentsSvcPosbSttsType, Int> {
     override fun convertToEntityAttribute(column: Int?): ContentsSvcPosbSttsType? {
-        return ContentsSvcPosbSttsType.entries.find { it.id == column }
+        return ContentsSvcPosbSttsType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: ContentsSvcPosbSttsType): Int {
-        return property.id
+        return property.dbData
     }
 }

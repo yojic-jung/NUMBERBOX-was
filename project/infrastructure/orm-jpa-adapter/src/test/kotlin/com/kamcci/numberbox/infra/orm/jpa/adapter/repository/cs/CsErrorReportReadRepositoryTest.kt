@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.cs
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.cs.CsErrorReportEntityDummy.CS_ERR_REPORT_MEMBER_ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,19 +12,16 @@ class CsErrorReportReadRepositoryTest(
     @Autowired
     private val csErrorReportReadRepository: CsErrorReportReadRepository
 ) {
-    companion object {
-        const val EXIST_ID = "10ed5466-cda8-ea4d-9bc7-037cb86fdb20"
-    }
 
     @Test
     fun `문의자 id로 조회`() {
         // given
-        val memberId = UUID.fromString(EXIST_ID)
+        val existId = UUID.fromString(CS_ERR_REPORT_MEMBER_ID)
 
         // when
-        val csErrReportList = csErrorReportReadRepository.readByMemberId(memberId)
+        val csErrReportList = csErrorReportReadRepository.readByMemberId(existId)
 
         // then
-        assertThat(csErrReportList.size).isGreaterThan(0)
+        assertThat(csErrReportList).isNotEmpty
     }
 }

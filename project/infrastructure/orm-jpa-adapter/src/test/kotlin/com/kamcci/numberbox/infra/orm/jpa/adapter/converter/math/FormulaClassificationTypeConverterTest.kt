@@ -8,32 +8,34 @@ class FormulaClassificationTypeConverterTest {
     private val formulaClassificationTypeConverter = FormulaClassificationTypeConverter()
 
     @Test
-    fun `to FormulaClassificationType`() {
-        // given
-        val formulaClassificationTypeList: MutableList<Pair<String?, FormulaClassificationType?>> = mutableListOf()
-        FormulaClassificationType.entries.forEach {
-            formulaClassificationTypeList.add(Pair(it.dbData, it))
-        }
-        formulaClassificationTypeList.add(Pair(null, null))
-
+    fun `dbData to FormulaClassificationType`() {
         // when
-        for (formulaClassificationType in formulaClassificationTypeList) {
-            val type = formulaClassificationTypeConverter.convertToEntityAttribute(formulaClassificationType.first)
+        FormulaClassificationType.entries.forEach { formulaClassificationType ->
+            val type = formulaClassificationTypeConverter.convertToEntityAttribute(formulaClassificationType.dbData)
 
             // then
-            assertThat(type).isEqualTo(formulaClassificationType.second)
+            assertThat(type).isEqualTo(formulaClassificationType)
         }
     }
 
     @Test
-    fun `column to property`() {
-        // given
-        val converter = FormulaClassificationTypeConverter()
-
+    fun `null to null`() {
         // when
-        val column = converter.convertToDatabaseColumn(FormulaClassificationType.Main)
+        val type = formulaClassificationTypeConverter.convertToEntityAttribute(null)
 
         // then
-        assertThat(column).isEqualTo("main")
+        assertThat(type).isEqualTo(null)
+    }
+
+    @Test
+    fun `FormulaClassificationType to dbData`() {
+        // given
+        val type = FormulaClassificationType.Main
+
+        // when
+        val column = formulaClassificationTypeConverter.convertToDatabaseColumn(type)
+
+        // then
+        assertThat(column).isEqualTo(type.dbData)
     }
 }

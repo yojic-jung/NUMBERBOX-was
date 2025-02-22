@@ -7,10 +7,10 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class MultiChoiceTypeConverter : AttributeConverter<MultiChoiceType, String> {
     override fun convertToEntityAttribute(column: String?): MultiChoiceType? {
-        return MultiChoiceType.entries.find { it.id == column }
+        return MultiChoiceType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: MultiChoiceType): String {
-        return property.id
+        return property.dbData
     }
 }

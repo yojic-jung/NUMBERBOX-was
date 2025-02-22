@@ -8,10 +8,10 @@ import jakarta.persistence.Converter
 class DocsErrStatusTypeConverter : AttributeConverter<DocsStatusType, Int> {
     // LeftJoin으로 null 반환 가능
     override fun convertToEntityAttribute(column: Int?): DocsStatusType? {
-        return DocsStatusType.entries.find { it.id == column }
+        return DocsStatusType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: DocsStatusType): Int {
-        return property.id
+        return property.dbData
     }
 }

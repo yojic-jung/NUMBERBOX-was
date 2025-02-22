@@ -8,20 +8,22 @@ class IpsiPaperTypeConverterTest {
     private val ipsiPaperTypeConverter = IpsiPaperTypeConverter()
 
     @Test
-    fun `to ContentsSvcPosbSttsType`() {
-        // given
-        val ipsiPaperTypeList: MutableList<Pair<Int?, IpsiPaperType?>> = mutableListOf()
-        IpsiPaperType.entries.forEach {
-            ipsiPaperTypeList.add(Pair(it.id, it))
-        }
-        ipsiPaperTypeList.add(Pair(null, null))
-
+    fun `to IpsiPaperType`() {
         // when
-        for (ipsiPaperType in ipsiPaperTypeList) {
-            val type = ipsiPaperTypeConverter.convertToEntityAttribute(ipsiPaperType.first)
+        IpsiPaperType.entries.forEach { ipsiPaperType ->
+            val type = ipsiPaperTypeConverter.convertToEntityAttribute(ipsiPaperType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(ipsiPaperType.second)
+            Assertions.assertThat(type).isEqualTo(ipsiPaperType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = ipsiPaperTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

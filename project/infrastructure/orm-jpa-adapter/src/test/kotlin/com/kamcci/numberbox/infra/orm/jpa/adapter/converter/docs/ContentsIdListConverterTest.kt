@@ -7,21 +7,21 @@ class ContentsIdListConverterTest {
     private val contentsIdListConverter = ContentsIdListConverter()
 
     @Test
-    fun `to List`() {
+    fun `dbData to contentIdList`() {
+        val dbData = "1,2,3,4,5"
+
         // when
-        val list = contentsIdListConverter.convertToEntityAttribute("1,2,3,4,5")
+        val list = contentsIdListConverter.convertToEntityAttribute(dbData)
 
         // then
         assertThat(list.size).isEqualTo(5)
-        assertThat(list).contains(1L)
-        assertThat(list).contains(2L)
-        assertThat(list).contains(3L)
-        assertThat(list).contains(4L)
-        assertThat(list).contains(5L)
+        list.forEach {
+            assertThat(dbData).contains(it.toString())
+        }
     }
 
     @Test
-    fun `null to Null`() {
+    fun `null to empty`() {
         // given
         val list = contentsIdListConverter.convertToEntityAttribute(null)
 

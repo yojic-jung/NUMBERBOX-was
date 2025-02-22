@@ -99,7 +99,7 @@ class MathDocsReadRepository(
             Any::class.java
         )
         mysqlQuery.setParameter("contentsClassify", ContentsClassifyType.InHouse)
-        mysqlQuery.setParameter("svcPosbStts", ContentsSvcPosbSttsType.Release.id)
+        mysqlQuery.setParameter("svcPosbStts", ContentsSvcPosbSttsType.Release.dbData)
         mysqlQuery.setParameter("quesLv", quesLv)
         mysqlQuery.setParameter("unitIdAndTypeId", unitIdAndTypeId)
         mysqlQuery.setParameter("countByType", countByType)

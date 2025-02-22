@@ -4,21 +4,22 @@ import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsCreateDto
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsUpdateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentEntityDummy.getHwpContents4Del
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentEntityDummy.getHwpContents4Updt
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberEntityDummy.MEMBER_ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @TcDBJpaTest
-class HwpConvertContentsWriteRepositoryTest(
-    @Autowired
+class HwpConvertContentsWriteRepositoryTest @Autowired constructor(
     private val hwpConvertContentsWriteRepository: HwpConvertContentsWriteRepository
 ) : BaseRepository() {
     @Test
     fun `변환 컨텐츠 저장 - 성공`() {
         // given
         val createDto = HwpConvertContentsCreateDto(
-            memberId = UUID.randomUUID(),
+            memberId = MEMBER_ID,
             isConverted = true,
             fileName = "",
             contents = "",
@@ -37,15 +38,16 @@ class HwpConvertContentsWriteRepositoryTest(
     @Test
     fun `변환 컨텐츠 수정 - 성공`() {
         // given
-        val udpateDto = HwpConvertContentsUpdateDto(
-            id = 1L,
-            memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"),
+        val existEntity = getHwpContents4Updt()
+        val updateDto = HwpConvertContentsUpdateDto(
+            id = existEntity.id,
+            memberId = existEntity.memberId,
             contents = "",
             isGrammarConverted = true
         )
 
         // when
-        val executeRowCnt = hwpConvertContentsWriteRepository.update(udpateDto)
+        val executeRowCnt = hwpConvertContentsWriteRepository.update(updateDto)
 
         // then
         assertThat(executeRowCnt).isOne()
@@ -54,11 +56,10 @@ class HwpConvertContentsWriteRepositoryTest(
     @Test
     fun `변환 컨텐츠 삭제 - 성공`() {
         // given
-        val id = 1L
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val existEntity = getHwpContents4Del()
 
         // when
-        val executeRowCnt = hwpConvertContentsWriteRepository.delete(id, memberId)
+        val executeRowCnt = hwpConvertContentsWriteRepository.delete(existEntity.id, existEntity.memberId)
 
         // then
         assertThat(executeRowCnt).isOne()

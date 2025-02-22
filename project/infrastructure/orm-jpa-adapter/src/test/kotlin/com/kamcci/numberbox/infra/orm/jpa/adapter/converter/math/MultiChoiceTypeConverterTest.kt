@@ -9,19 +9,21 @@ class MultiChoiceTypeConverterTest {
 
     @Test
     fun `to MultiChoiceType`() {
-        // given
-        val multiChoiceTypeList: MutableList<Pair<String?, MultiChoiceType?>> = mutableListOf()
-        MultiChoiceType.entries.forEach {
-            multiChoiceTypeList.add(Pair(it.id, it))
-        }
-        multiChoiceTypeList.add(Pair(null, null))
-
         // when
-        for (multiChoiceType in multiChoiceTypeList) {
-            val type = multiChoiceTypeConverter.convertToEntityAttribute(multiChoiceType.first)
+        MultiChoiceType.entries.forEach { multiChoiceType ->
+            val type = multiChoiceTypeConverter.convertToEntityAttribute(multiChoiceType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(multiChoiceType.second)
+            Assertions.assertThat(type).isEqualTo(multiChoiceType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = multiChoiceTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

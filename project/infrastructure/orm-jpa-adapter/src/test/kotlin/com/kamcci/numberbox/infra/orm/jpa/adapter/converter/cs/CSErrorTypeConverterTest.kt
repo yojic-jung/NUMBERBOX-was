@@ -8,20 +8,22 @@ class CSErrorTypeConverterTest {
     private val csErrorTypeConverter = CSErrorTypeConverter()
 
     @Test
-    fun `to CSErrorType`() {
-        // given
-        val csErrorTypeList: MutableList<Pair<Int?, CSErrorType?>> = mutableListOf()
-        CSErrorType.entries.forEach {
-            csErrorTypeList.add(Pair(it.dbData, it))
-        }
-        csErrorTypeList.add(Pair(null, null))
-
+    fun `dbData to CSErrorType`() {
         // when
-        for (csErrorType in csErrorTypeList) {
-            val type = csErrorTypeConverter.convertToEntityAttribute(csErrorType.first)
+        CSErrorType.entries.forEach { csErrorType ->
+            val type = csErrorTypeConverter.convertToEntityAttribute(csErrorType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(csErrorType.second)
+            Assertions.assertThat(type).isEqualTo(csErrorType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = csErrorTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

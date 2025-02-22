@@ -8,38 +8,43 @@ class MathTypeClassifyTypeConverterTest {
     private val mathTypeClassifyTypeConverter = MathTypeClassifyTypeConverter()
 
     @Test
-    fun `to MathTypeClassifyType`() {
-        // given
-        val mathTypeClassifyTypeList: MutableList<Pair<String?, MathTypeClassifyType?>> = mutableListOf()
-        MathTypeClassifyType.entries.forEach {
-            mathTypeClassifyTypeList.add(Pair(it.id, it))
-        }
-        mathTypeClassifyTypeList.add(Pair(null, null))
-
+    fun `dbData to MathTypeClassifyType`() {
         // when
-        for (mathTypeClassifyType in mathTypeClassifyTypeList) {
-            val type = mathTypeClassifyTypeConverter.convertToEntityAttribute(mathTypeClassifyType.first)
+        MathTypeClassifyType.entries.forEach { mathTypeClassifyType ->
+            val type = mathTypeClassifyTypeConverter.convertToEntityAttribute(mathTypeClassifyType.dbData)
 
             // then
-            assertThat(type).isEqualTo(mathTypeClassifyType.second)
+            assertThat(type).isEqualTo(mathTypeClassifyType)
         }
     }
 
     @Test
-    fun `to dbData - null`() {
+    fun `null(db) to null(attribute)`() {
+        // when
+        val type = mathTypeClassifyTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        assertThat(type).isEqualTo(null)
+    }
+
+    @Test
+    fun `MathTypeClassifyType to dbData`() {
         // given
+        val attrType = MathTypeClassifyType.Simple
+
+        // when
+        val dbData = mathTypeClassifyTypeConverter.convertToDatabaseColumn(attrType)
+
+        // then
+        assertThat(dbData).isEqualTo(attrType.dbData)
+    }
+
+    @Test
+    fun `null(attribute) to null(db)`() {
+        // when
         val dbData = mathTypeClassifyTypeConverter.convertToDatabaseColumn(null)
 
         // then
         assertThat(dbData).isEqualTo(null)
-    }
-
-    @Test
-    fun `to dbData - 값 존재`() {
-        // given
-        val dbData = mathTypeClassifyTypeConverter.convertToDatabaseColumn(MathTypeClassifyType.Simple)
-
-        // then
-        assertThat(dbData).isEqualTo(MathTypeClassifyType.Simple.id)
     }
 }

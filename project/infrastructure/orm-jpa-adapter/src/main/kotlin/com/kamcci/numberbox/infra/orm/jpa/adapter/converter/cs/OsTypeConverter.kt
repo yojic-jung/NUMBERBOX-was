@@ -8,10 +8,10 @@ import jakarta.persistence.Converter
 class OsTypeConverter : AttributeConverter<OsType, String> {
     // LeftJoin으로 null 반환 가능
     override fun convertToEntityAttribute(column: String?): OsType? {
-        return OsType.entries.find { it.id == column }
+        return OsType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: OsType): String {
-        return property.id
+        return property.dbData
     }
 }

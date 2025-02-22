@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.app.domain.enumeration.docs
 
-enum class DocsStatusType(val id: Int, val desc: String) {
+enum class DocsStatusType(val dbData: Int, val desc: String) {
     None(0, "에러 없음"),
     Self(1, "사용자 직접 신고"),
 

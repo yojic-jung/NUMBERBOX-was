@@ -1,10 +1,12 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.auth
 
-import com.kamcci.modules.logging.control.dto.ClientLoggingInfoEventDto
-import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
-import com.kamcci.modules.logging.control.dto.HttpResponseLoggingDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberEntityDummy.MEMBER_EMAIL
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberEntityDummy.NOT_EXIST_MEMBER_EMAIL
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberRefreshTokenEntityDummy
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberRefreshTokenEntityDummy.getExpiredTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.log.LogClientApiRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.common.CommonSampleData.getClientLoggingInfoEventDto
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -20,7 +22,7 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
     @Test
     fun `멤버엔티티 조회 - 존재`() {
         // given
-        val email = "dywlr@test.com"
+        val email = MEMBER_EMAIL
 
         // when
         val authUser = authUserInfoRepository.loadUserByUsername(email)
@@ -32,7 +34,7 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
     @Test
     fun `멤버엔티티 조회 - 미존재`() {
         // given
-        val email = "dywㄴㅇㅁㄹlr@test.com"
+        val email = NOT_EXIST_MEMBER_EMAIL
 
         // when
         val authUser = authUserInfoRepository.loadUserByUsername(email)
@@ -44,22 +46,22 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
     @Test
     fun `멤버 엔티티 토큰으로 조회 - 성공`() {
         // given
-        val token =
-            "eyJhbGciOiJIUzI1NiJ9.eyJuc29vaGFrLmNvbSI6dHJ1ZSwiaXNzIjoibnNvb2hhayIsInN1YiI6Im5zb29oYWtSZWZyZXNoVG9rZW4iLCJhdWQiOiJ1c2VyIiwiZXhwIjoxNzAxMTU1NjI3LCJpYXQiOjE2OTg1NjM2Mjd9.IRiJaK2jH-3DskfW4N2Rhm9eVzhB9Mswp8-JlfDN-Ws"
+        val existEntity = getExpiredTokenEntity()
+        val token = existEntity.token
 
         // when
-        val uuid = authUserInfoRepository.loadUserIdByRefreshToken(token)
+        val memberId = authUserInfoRepository.loadUserIdByRefreshToken(token)
 
         // then
-        assertThat(uuid.toString()).isEqualTo("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        assertThat(memberId).isEqualTo(existEntity.memberId)
     }
 
     @Test
     fun `리프레시 토큰 재발급 여부 - true`() {
         // given
         val memberId = UUID.randomUUID()
-        val reqLoggingDto = HttpRequestLoggingDto(memberId, "Chrome", "Mac", "127.0.0.1", "GET", "/sdfa/adf", "sadf")
-        logClientApiRepository.save(ClientLoggingInfoEventDto(reqLoggingDto, HttpResponseLoggingDto(200)))
+        val clientLoggingInfoEventDto = getClientLoggingInfoEventDto(memberId)
+        logClientApiRepository.save(clientLoggingInfoEventDto)
         em.flush()
         em.clear()
 
@@ -73,10 +75,10 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
     @Test
     fun `리프레시 토큰 재발급 여부 - false`() {
         // given
-        val memberId = UUID.fromString("12ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val existEntity = getExpiredTokenEntity()
 
         // when
-        val canReCreate = authUserInfoRepository.canReCreateRefreshToken(memberId)
+        val canReCreate = authUserInfoRepository.canReCreateRefreshToken(existEntity.memberId)
 
         // then
         assertThat(canReCreate).isFalse()

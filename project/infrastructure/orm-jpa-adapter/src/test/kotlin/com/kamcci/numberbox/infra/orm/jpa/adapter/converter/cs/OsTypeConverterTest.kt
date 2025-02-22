@@ -8,20 +8,22 @@ class OsTypeConverterTest {
     private val osTypeConverter = OsTypeConverter()
 
     @Test
-    fun `to BrowserType`() {
-        // given
-        val osTypeList: MutableList<Pair<String?, OsType?>> = mutableListOf()
-        OsType.entries.forEach {
-            osTypeList.add(Pair(it.id, it))
-        }
-        osTypeList.add(Pair(null, null))
-
+    fun `dbData to BrowserType`() {
         // when
-        for (osType in osTypeList) {
-            val type = osTypeConverter.convertToEntityAttribute(osType.first)
+        OsType.entries.forEach { osType ->
+            val type = osTypeConverter.convertToEntityAttribute(osType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(osType.second)
+            Assertions.assertThat(type).isEqualTo(osType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = osTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

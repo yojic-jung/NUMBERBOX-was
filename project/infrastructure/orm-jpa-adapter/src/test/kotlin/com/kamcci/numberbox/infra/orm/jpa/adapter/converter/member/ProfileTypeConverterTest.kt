@@ -8,20 +8,22 @@ class ProfileTypeConverterTest {
     private val profileTypeConverter = ProfileTypeConverter()
 
     @Test
-    fun `to ProfileType`() {
-        // given
-        val profileTypeList: MutableList<Pair<Int?, ProfileType?>> = mutableListOf()
-        ProfileType.entries.forEach {
-            profileTypeList.add(Pair(it.id, it))
-        }
-        profileTypeList.add(Pair(null, null))
-
+    fun `dbData to ProfileType`() {
         // when
-        for (profileType in profileTypeList) {
-            val type = profileTypeConverter.convertToEntityAttribute(profileType.first)
+        ProfileType.entries.forEach { profileType ->
+            val type = profileTypeConverter.convertToEntityAttribute(profileType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(profileType.second)
+            Assertions.assertThat(type).isEqualTo(profileType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = profileTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

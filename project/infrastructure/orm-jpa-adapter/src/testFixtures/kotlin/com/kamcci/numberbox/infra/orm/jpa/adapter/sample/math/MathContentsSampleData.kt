@@ -4,8 +4,8 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsModifyDto
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.member.MembersSampleData
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.member.MembersSampleData
 import java.time.LocalDateTime
 
 object MathContentsSampleData {
@@ -61,4 +61,5 @@ object MathContentsSampleData {
             quesLevel = 1
         )
     }
+
 }

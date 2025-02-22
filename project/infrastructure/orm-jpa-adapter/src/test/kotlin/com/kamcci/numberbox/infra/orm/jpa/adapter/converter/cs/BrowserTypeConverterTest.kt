@@ -8,20 +8,22 @@ class BrowserTypeConverterTest {
     private val browserTypeConverter = BrowserTypeConverter()
 
     @Test
-    fun `to BrowserType`() {
-        // given
-        val browserTypeList: MutableList<Pair<String?, BrowserType?>> = mutableListOf()
-        BrowserType.entries.forEach {
-            browserTypeList.add(Pair(it.dbData, it))
-        }
-        browserTypeList.add(Pair(null, null))
-
+    fun `dbData to BrowserType`() {
         // when
-        for (browserType in browserTypeList) {
-            val type = browserTypeConverter.convertToEntityAttribute(browserType.first)
+        BrowserType.entries.forEach { browserType ->
+            val type = browserTypeConverter.convertToEntityAttribute(browserType.dbData)
 
             // then
-            assertThat(type).isEqualTo(browserType.second)
+            assertThat(type).isEqualTo(browserType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = browserTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        assertThat(type).isEqualTo(null)
     }
 }

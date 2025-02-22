@@ -7,10 +7,10 @@ import jakarta.persistence.Converter
 @Converter(autoApply = true)
 class IpsiManageInsTypeConverter : AttributeConverter<IpsiManageInsType, Int> {
     override fun convertToEntityAttribute(column: Int?): IpsiManageInsType? {
-        return IpsiManageInsType.entries.find { it.id == column }
+        return IpsiManageInsType.entries.find { it.dbData == column }
     }
 
     override fun convertToDatabaseColumn(property: IpsiManageInsType): Int {
-        return property.id
+        return property.dbData
     }
 }

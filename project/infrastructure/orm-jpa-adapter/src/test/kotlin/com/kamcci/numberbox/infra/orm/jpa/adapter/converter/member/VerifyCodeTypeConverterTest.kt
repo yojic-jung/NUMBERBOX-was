@@ -8,20 +8,22 @@ class VerifyCodeTypeConverterTest {
     private val verifyCodeTypeConverter = VerifyCodeTypeConverter()
 
     @Test
-    fun `to VerifyCodeType`() {
-        // given
-        val verifyCodeTypeList: MutableList<Pair<Int?, VerifyCodeType?>> = mutableListOf()
-        VerifyCodeType.entries.forEach {
-            verifyCodeTypeList.add(Pair(it.id, it))
-        }
-        verifyCodeTypeList.add(Pair(null, null))
-
+    fun `dbData to VerifyCodeType`() {
         // when
-        for (verifyCodeType in verifyCodeTypeList) {
-            val type = verifyCodeTypeConverter.convertToEntityAttribute(verifyCodeType.first)
+        VerifyCodeType.entries.forEach { verifyCodeType ->
+            val type = verifyCodeTypeConverter.convertToEntityAttribute(verifyCodeType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(verifyCodeType.second)
+            Assertions.assertThat(type).isEqualTo(verifyCodeType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = verifyCodeTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }

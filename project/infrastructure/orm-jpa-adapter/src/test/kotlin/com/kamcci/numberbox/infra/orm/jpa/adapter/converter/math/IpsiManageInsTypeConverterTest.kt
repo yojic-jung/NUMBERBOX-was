@@ -9,19 +9,21 @@ class IpsiManageInsTypeConverterTest {
 
     @Test
     fun `to IpsiManageInsType`() {
-        // given
-        val ipsiManageInsTypeList: MutableList<Pair<Int?, IpsiManageInsType?>> = mutableListOf()
-        IpsiManageInsType.entries.forEach {
-            ipsiManageInsTypeList.add(Pair(it.id, it))
-        }
-        ipsiManageInsTypeList.add(Pair(null, null))
-
         // when
-        for (ipsiManageInsType in ipsiManageInsTypeList) {
-            val type = ipsiManageInsTypeConverter.convertToEntityAttribute(ipsiManageInsType.first)
+        IpsiManageInsType.entries.forEach { ipsiManageInsType ->
+            val type = ipsiManageInsTypeConverter.convertToEntityAttribute(ipsiManageInsType.dbData)
 
             // then
-            Assertions.assertThat(type).isEqualTo(ipsiManageInsType.second)
+            Assertions.assertThat(type).isEqualTo(ipsiManageInsType)
         }
+    }
+
+    @Test
+    fun `null to null`() {
+        // when
+        val type = ipsiManageInsTypeConverter.convertToEntityAttribute(null)
+
+        // then
+        Assertions.assertThat(type).isEqualTo(null)
     }
 }
