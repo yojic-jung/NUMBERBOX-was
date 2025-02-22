@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.config.stub
+package com.kamcci.numberbox.restapi.config.mock
 
 import com.kamcci.numberbox.restapi.config.WebConfig
 import com.kamcci.numberbox.restapi.mock.common.MockUserDetailArgumentResolver

@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.restapi.config.stub
+package com.kamcci.numberbox.restapi.config.mock
 
 import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceMenuReadCase
 import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceReadCase
