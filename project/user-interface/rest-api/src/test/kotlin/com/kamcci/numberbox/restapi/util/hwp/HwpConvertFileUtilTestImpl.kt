@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class HwpConvertFileUtilTest {
+class HwpConvertFileUtilTestImpl {
     private val hwpConvertFileUtil = HwpConvertFileUtil()
 
     @Test

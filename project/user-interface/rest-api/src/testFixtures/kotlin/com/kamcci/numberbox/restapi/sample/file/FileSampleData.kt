@@ -7,10 +7,10 @@ object FileSampleData {
     /**
      * MultipartFile 파일
      */
-    fun getMultipartFile(name: String, originFileName: String) = MockMultipartFile(
+    fun getMultipartFile(name: String, originFileName: String, content: String = "content") = MockMultipartFile(
         name,
         originFileName,
         MediaType.MULTIPART_FORM_DATA_VALUE,
-        "content".encodeToByteArray()
+        content.encodeToByteArray()
     )
 }

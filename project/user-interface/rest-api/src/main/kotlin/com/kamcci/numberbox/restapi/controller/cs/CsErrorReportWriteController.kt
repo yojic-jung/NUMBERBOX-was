@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
 import com.kamcci.numberbox.app.usecase.cs.CsErrorReportWriteCase
 import com.kamcci.numberbox.restapi.dto.request.cs.CsErrorReportCreateRequest
-import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
+import com.kamcci.numberbox.restapi.util.file.FileUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -28,7 +28,8 @@ import java.util.*
 @RequestMapping("/cs/error")
 class CsErrorReportWriteController(
     private val fileUseCase: FileUseCase,
-    private val csErrorReportWriteCase: CsErrorReportWriteCase
+    private val csErrorReportWriteCase: CsErrorReportWriteCase,
+    private val fileUtil: FileUtil
 ) {
     /**
      * 고객센터 신고하기
@@ -41,13 +42,22 @@ class CsErrorReportWriteController(
     ): ResponseEntity<ResponseData<Any>> {
         // 이미지 업로드(최대 세장)
         val firImgNameVo =
-            if (reqBody.firstImgFile != null) fileUseCase.upload(toFile(reqBody.firstImgFile), FileType.CsErrIMG)
+            if (reqBody.firstImgFile != null) fileUseCase.upload(
+                fileUtil.toFile(reqBody.firstImgFile),
+                FileType.CsErrIMG
+            )
             else null
         val secImgVo =
-            if (reqBody.secondImgFile != null) fileUseCase.upload(toFile(reqBody.secondImgFile), FileType.CsErrIMG)
+            if (reqBody.secondImgFile != null) fileUseCase.upload(
+                fileUtil.toFile(reqBody.secondImgFile),
+                FileType.CsErrIMG
+            )
             else null
         val thrImgVo =
-            if (reqBody.thirdImgFile != null) fileUseCase.upload(toFile(reqBody.thirdImgFile), FileType.CsErrIMG)
+            if (reqBody.thirdImgFile != null) fileUseCase.upload(
+                fileUtil.toFile(reqBody.thirdImgFile),
+                FileType.CsErrIMG
+            )
             else null
 
         val createDto = toCreateDto(memberId, reqBody, firImgNameVo, secImgVo, thrImgVo)

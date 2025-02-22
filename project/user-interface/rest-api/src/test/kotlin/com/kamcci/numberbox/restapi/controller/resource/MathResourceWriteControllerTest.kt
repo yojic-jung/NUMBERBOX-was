@@ -1,14 +1,10 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
-import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
+import com.kamcci.numberbox.restapi.constant.RestApiTestConstant.PPT_SLIDE_RETURN_STR
 import com.kamcci.numberbox.restapi.sample.file.FileSampleData.getMultipartFile
-import com.kamcci.numberbox.restapi.util.file.FileUtil
-import io.mockk.every
-import io.mockk.mockkObject
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
 
 @WebMvcUnitTest
 class MathResourceWriteControllerTest : BaseMockMvcTest() {
@@ -28,9 +24,6 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val imgFile = getMultipartFile("imgFile", "name.png")
         val fileList = listOf(pptFile, imgFile)
-        mockkObject(FileUtil)
-        every { FileUtil.toPptSlide(pptFile) } returns
-                listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
 
         // when
         val resultAction = postMultipartForm(PREFIX, req, fileList)
@@ -48,11 +41,8 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
             "midCateId" to "1",
             "cateList" to "1-1,1-2",
         )
-        val pptFile = getMultipartFile("pptFile", "name.ppt")
+        val pptFile = getMultipartFile("pptFile", "name.ppt", PPT_SLIDE_RETURN_STR)
         val fileList = listOf(pptFile)
-        mockkObject(FileUtil)
-        every { FileUtil.toPptSlide(pptFile) } returns
-                listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
 
         // when
         val resultAction = postMultipartForm(PREFIX, req, fileList)
@@ -74,9 +64,6 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
         val pptFile = getMultipartFile("pptFile", "name.ppt")
         val imgFile = getMultipartFile("imgFile", "name.png")
         val fileList = listOf(pptFile, imgFile)
-        mockkObject(FileUtil)
-        every { FileUtil.toPptSlide(pptFile) } returns
-                listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
 
         // when
         val resultAction = putMultipartForm(PREFIX, req, fileList)
@@ -95,11 +82,8 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
             "midCateId" to "1",
             "cateList" to "1-1,1-2",
         )
-        val pptFile = getMultipartFile("pptFile", "name.ppt")
+        val pptFile = getMultipartFile("pptFile", "name.ppt", PPT_SLIDE_RETURN_STR)
         val fileList = listOf(pptFile)
-        mockkObject(FileUtil)
-        every { FileUtil.toPptSlide(pptFile) } returns
-                listOf(FileUploadDto("", "", 1, ByteArrayInputStream("1".toByteArray())))
 
         // when
         val resultAction = putMultipartForm(PREFIX, req, fileList)

@@ -10,8 +10,7 @@ import com.kamcci.numberbox.app.usecase.resource.MathResourceReadCase
 import com.kamcci.numberbox.app.usecase.resource.MathResourceWriteCase
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceCreateRequest
 import com.kamcci.numberbox.restapi.dto.request.resource.MathResourceUpdateRequest
-import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
-import com.kamcci.numberbox.restapi.util.file.FileUtil.toPptSlide
+import com.kamcci.numberbox.restapi.util.file.FileUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -24,6 +23,7 @@ import java.util.*
 @RequestMapping("/math/resource")
 @RestController
 class MathResourceWriteController(
+    private val fileUtil: FileUtil,
     private val fileUseCase: FileUseCase,
     private val mathResourceReadCase: MathResourceReadCase,
     private val mathResourceWriteCase: MathResourceWriteCase,
@@ -121,14 +121,14 @@ class MathResourceWriteController(
     private fun uploadPPT(pptFile: MultipartFile?): Pair<FileNameVo?, List<FileNameVo>> {
         // 1. ppt 파일 존재시 업로드(수정시에는 미존재일 수 있음)
         val pptFileNameVo = if (pptFile != null) {
-            fileUseCase.upload(toFile(pptFile), FileType.PptResource)
+            fileUseCase.upload(fileUtil.toFile(pptFile), FileType.PptResource)
         } else null
 
         // 2. ppt 슬라이드 업로드
         val slideImgNameList: MutableList<FileNameVo> = mutableListOf()
         if (pptFile != null) {
-            for (inpStream in toPptSlide(pptFile)) {
-                val imgFileNameVo = fileUseCase.upload(inpStream, FileType.PptImage)
+            for (uploadDto in fileUtil.toPptSlide(pptFile.inputStream)) {
+                val imgFileNameVo = fileUseCase.upload(uploadDto, FileType.PptImage)
                 slideImgNameList.add(imgFileNameVo)
             }
         }
@@ -138,6 +138,6 @@ class MathResourceWriteController(
     // 이미지 업로드
     private fun uploadImg(imgFile: MultipartFile?) =
         if (imgFile != null) {
-            fileUseCase.upload(toFile(imgFile), FileType.PptImage)
+            fileUseCase.upload(fileUtil.toFile(imgFile), FileType.PptImage)
         } else null
 }

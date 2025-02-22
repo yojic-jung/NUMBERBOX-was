@@ -8,7 +8,7 @@ import com.kamcci.numberbox.app.usecase.member.MemberProfileWriteCase
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileImgUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileNicknameUpdtRequest
 import com.kamcci.numberbox.restapi.dto.request.member.ProfileTypeUpdtRequest
-import com.kamcci.numberbox.restapi.util.file.FileUtil.toFile
+import com.kamcci.numberbox.restapi.util.file.FileUtil
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
 import jakarta.validation.Valid
@@ -21,6 +21,7 @@ import java.util.*
 @RestController
 @RequestMapping("/member/profile")
 class MemberProfileWriteController(
+    private val fileUtil: FileUtil,
     private val memberProfileWriteCase: MemberProfileWriteCase,
     private val fileUseCase: FileUseCase,
 ) {
@@ -48,7 +49,7 @@ class MemberProfileWriteController(
         req: ProfileImgUpdtRequest
     ): ResponseEntity<ResponseData<Map<String, Any?>>> {
         // 파일 업로드
-        val fileNameVo = fileUseCase.upload(toFile(req.imgFile), FileType.ProfileIMG)
+        val fileNameVo = fileUseCase.upload(fileUtil.toFile(req.imgFile), FileType.ProfileIMG)
         val updateDto = MemberProfileImgUpdtDto(memberId, fileNameVo.path, fileNameVo.name)
 
         //  프로필 저장

@@ -9,9 +9,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class AwsS3StorageTest {
+    companion object {
+        const val FILE_NAME = "test.txt"
+        const val S3_FILE_PATH = "test/$FILE_NAME"
+    }
+
     private lateinit var awsS3UploadStorage: AwsS3Storage
 
     @BeforeEach
@@ -23,32 +27,30 @@ class AwsS3StorageTest {
 
     @AfterEach
     fun `테스트 데이터 후처리`() {
-        awsS3UploadStorage.delete("test/test.txt")
+        awsS3UploadStorage.delete(S3_FILE_PATH)
     }
 
     @Test
     fun `파일 객체 업로드 - 성공`() {
-        // File 객체 생성
-        val name = "src/test/resources/dummy/test.txt"
-        val file = File(name)
+        val fileByte = "".toByteArray()
+        val contentType = "text/plain"
 
         // S3에 업로드
-        val fileUploadDto = FileUploadDto(name, "text/plain", file.length(), file.inputStream())
+        val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
         val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
 
         // then
         assertThat(fileUrl).isNotNull()
-
     }
 
     @Test
     fun `파일 객체(content-type=null) 업로드 - 성공`() {
         // File 객체 생성
-        val name = "src/test/resources/dummy/test.txt"
-        val file = File(name)
+        val fileByte = "".toByteArray()
+        val contentType = null
 
         // S3에 업로드
-        val fileUploadDto = FileUploadDto(name, null, file.length(), file.inputStream())
+        val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
         val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
 
         // then
@@ -58,11 +60,11 @@ class AwsS3StorageTest {
     @Test
     fun `파일 객체(content-type는 empty) 업로드 - 성공`() {
         // File 객체 생성
-        val name = "src/test/resources/dummy/test.txt"
-        val file = File(name)
+        val fileByte = "".toByteArray()
+        val contentType = ""
 
         // S3에 업로드
-        val fileUploadDto = FileUploadDto(name, "", file.length(), file.inputStream())
+        val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
         val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
 
         // then
