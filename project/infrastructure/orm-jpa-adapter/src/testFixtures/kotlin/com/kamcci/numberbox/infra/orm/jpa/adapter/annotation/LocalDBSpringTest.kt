@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ActiveProfiles
 
 /**
- * Def.  flyway 적용 DB (테스트 컨테이너로 제공)
+ * Def.  flyway 적용 DB (로컬 테스트용 db로 접근)
  * Desc. @Transactional 없이도 멱등성 보장함(flyway에 의해)
  */
 @SpringBootTest

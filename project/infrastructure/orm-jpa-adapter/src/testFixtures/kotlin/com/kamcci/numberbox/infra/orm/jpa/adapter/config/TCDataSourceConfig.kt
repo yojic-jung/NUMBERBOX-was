@@ -4,10 +4,12 @@ import com.zaxxer.hikari.HikariDataSource
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 
 /**
  * TestContainer가 생성한 DB로 connection연결
  */
+@Profile("orm-jpa-adapter-tc-test")
 @TestConfiguration
 class TCDataSourceConfig {
     @Bean
