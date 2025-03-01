@@ -2,6 +2,10 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member
 
 import java.util.*
 
+/**
+ * MemberProfileEntity 더미 데이터
+ * - flyway를 통해 반영한 테스트 목적 데이터 정보
+ */
 object MemberProfileDummyFactory {
 
     fun getExistProfileIdList() = listOf(1L, 2L)

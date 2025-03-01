@@ -3,18 +3,19 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.sys
 import com.kamcci.numberbox.app.domain.dto.sys.FileDeleteDto
 import com.kamcci.numberbox.app.domain.enumeration.sys.GarbageFileType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.sys.SysGarbageDummyFactory.getSysGarbageFileDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class SysGarbageFileWriteRepositoryTest(
-    @Autowired
+class SysGarbageFileWriteRepositoryTest @Autowired constructor(
     private val em: EntityManager,
-    @Autowired
     private val sysGarbageFileWriteRepository: SysGarbageFileWriteRepository
 ) {
+    private val sysGarbageDummmy = getSysGarbageFileDummyEntity()
+
     @Test
     fun `삭제 대상 파일 저장`() {
         // given
@@ -26,13 +27,13 @@ class SysGarbageFileWriteRepositoryTest(
         em.clear()
 
         // then
-        assertThat(id).isGreaterThan(0)
+        assertThat(id).isPositive()
     }
 
     @Test
     fun `삭제`() {
         // given
-        val idList = listOf(1L)
+        val idList = listOf(sysGarbageDummmy.id)
 
         // when
         val executeRowCnt = sysGarbageFileWriteRepository.deleteById(idList)
@@ -40,13 +41,13 @@ class SysGarbageFileWriteRepositoryTest(
         em.clear()
 
         // then
-        assertThat(executeRowCnt).isGreaterThan(0)
+        assertThat(executeRowCnt).isPositive()
     }
 
     @Test
     fun `파일 삭제 실패 카운트 변경`() {
         // given
-        val idList = listOf(1L)
+        val idList = listOf(sysGarbageDummmy.id)
 
         // when
         val executeRowCnt = sysGarbageFileWriteRepository.incrementFailCntById(idList)
@@ -54,6 +55,6 @@ class SysGarbageFileWriteRepositoryTest(
         em.clear()
 
         // then
-        assertThat(executeRowCnt).isGreaterThan(0)
+        assertThat(executeRowCnt).isPositive()
     }
 }

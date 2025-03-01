@@ -2,6 +2,10 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member
 
 import java.util.*
 
+/**
+ * MemberEntity 더미 데이터
+ * - flyway를 통해 반영한 테스트 목적 데이터 정보
+ */
 object MemberDummyFactory {
     const val NOT_EXIST_MEMBER_EMAIL = "not_exist@test.com"
     val NOT_EXIST_MEMBER_ID = UUID.fromString("88ed5466-cda8-ea4d-9bc7-037cb86fdb20")

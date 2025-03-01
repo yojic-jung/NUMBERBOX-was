@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MathResourceMenuReadRepositoryTest(
-    @Autowired
+class MathResourceMenuReadRepositoryTest @Autowired constructor(
     private val mathResourceMenuReadRepository: MathResourceMenuReadRepository
 ) {
     @Test
@@ -16,7 +15,7 @@ class MathResourceMenuReadRepositoryTest(
         val resourceMenuList = mathResourceMenuReadRepository.readAll()
 
         // then
-        assertThat(resourceMenuList.size).isGreaterThan(0)
+        assertThat(resourceMenuList.size).isPositive()
     }
 
 }

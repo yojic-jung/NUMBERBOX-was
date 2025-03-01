@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceCreateDto
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceDummyFactory.getMathResourceDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -11,30 +12,42 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MathResourceWriteRepositoryTest(
-    @Autowired
+class MathResourceWriteRepositoryTest @Autowired constructor(
     private val mathResourceWriteRepository: MathResourceWriteRepository
 ) {
+    private val mathResourceDummy = getMathResourceDummyEntity()
+
     @Test
     fun `학습자료 생성`() {
         // given
         val createDto =
-            MathResourceCreateDto(UUID.randomUUID(), "", "", "", 5, "", "", listOf("1-1"), listOf(FileNameVo("", "")))
+            MathResourceCreateDto(
+                UUID.randomUUID(),
+                "any",
+                "",
+                "",
+                5,
+                "",
+                "",
+                listOf("1-1"),
+                listOf(FileNameVo("", ""))
+            )
 
         // when
         val id = mathResourceWriteRepository.create(createDto)
 
         // then
-        assertThat(id).isGreaterThan(0)
+        assertThat(id).isPositive()
     }
 
     @Test
     fun `학습자료 수정`() {
         // given
+        val resourceId = mathResourceDummy.id
         val updateDtoList =
             listOf(
-                MathResourceUpdateDto(1L, "", "", "", 5, "", "", listOf("1-1"), listOf(FileNameVo("", ""))),
-                MathResourceUpdateDto(1L, "", "", "", 5, "", "", listOf("1-1"), listOf()),
+                MathResourceUpdateDto(resourceId, "any", "", "", 5, "", "", listOf("1-1"), listOf(FileNameVo("", ""))),
+                MathResourceUpdateDto(resourceId, "any", "", "", 5, "", "", listOf("1-1"), listOf()),
             )
 
         // when
@@ -47,14 +60,11 @@ class MathResourceWriteRepositoryTest(
 
     @Test
     fun `학습자료 삭제`() {
-        // given
-        val id = 1L
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
-
         // when
-        val executeRowCnt = mathResourceWriteRepository.deleteByIdAndMemberId(id, memberId)
+        val executeRowCnt =
+            mathResourceWriteRepository.deleteByIdAndMemberId(mathResourceDummy.id, mathResourceDummy.memberId)
 
         // then
-        assertThat(executeRowCnt).isGreaterThan(0)
+        assertThat(executeRowCnt).isPositive()
     }
 }

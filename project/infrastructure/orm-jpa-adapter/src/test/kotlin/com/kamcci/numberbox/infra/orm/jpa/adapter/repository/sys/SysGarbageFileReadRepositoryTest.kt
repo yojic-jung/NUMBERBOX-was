@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class SysGarbageFileReadRepositoryTest(
-    @Autowired
+class SysGarbageFileReadRepositoryTest @Autowired constructor(
     private val sysGarbageFileReadRepository: SysGarbageFileReadRepository
 ) {
     @Test
