@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_resource`;
+--
 INSERT INTO `numberbox_tc`.`math_resource` (`id`, `member_id`, `title`, `img_path`, `img_name`, `ppt_path`, `ppt_name`,
                                             `ppt_page_cnt`, `down_cnt`,
                                             `sys_create_date`, `sys_update_date`)

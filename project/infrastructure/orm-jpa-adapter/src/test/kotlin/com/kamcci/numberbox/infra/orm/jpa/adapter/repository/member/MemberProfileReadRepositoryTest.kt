@@ -1,20 +1,23 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberProfileDummyFactory.getExistProfileIdList
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberProfileDummyFactory.getMemberProfileDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @TcDBJpaTest
 class MemberProfileReadRepositoryTest(
     @Autowired
     private val memberProfileReadRepository: MemberProfileReadRepository
 ) {
+    private val memberProfileDummyEntity = getMemberProfileDummyEntity()
+
     @Test
     fun `멤버 id로 프로필 조회`() {
         // given
-        val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
+        val memberId = memberProfileDummyEntity.memberId
 
         // when
         val profile = memberProfileReadRepository.readByMemberId(memberId)
@@ -26,7 +29,7 @@ class MemberProfileReadRepositoryTest(
     @Test
     fun `프로필 id로 프로필 조회`() {
         // given
-        val profileId = 1L
+        val profileId = memberProfileDummyEntity.profileId
 
         // when
         val profile = memberProfileReadRepository.readByProfileId(profileId)
@@ -38,39 +41,34 @@ class MemberProfileReadRepositoryTest(
     @Test
     fun `멤버 id로 프로필 id 조회`() {
         // given
-        val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
+        val memberId = memberProfileDummyEntity.memberId
 
         // when
         val profileId = memberProfileReadRepository.readProfileIdByMemberId(memberId)
 
         // then
-        assertThat(profileId).isEqualTo(1L)
+        assertThat(profileId).isEqualTo(memberProfileDummyEntity.profileId)
     }
 
     @Test
     fun `멤버 id로 프로필 이미지 조회`() {
-        // given
-        val memberId = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
-        val path = "/test/path"
-        val name = "testImg.png"
-
         // when
-        val profileImg = memberProfileReadRepository.readProfileImgByMemberId(memberId)
+        val profileImg = memberProfileReadRepository.readProfileImgByMemberId(memberProfileDummyEntity.memberId)
 
         // then
-        assertThat(profileImg?.profileImgPath).isEqualTo(path)
-        assertThat(profileImg?.profileImgName).isEqualTo(name)
+        assertThat(profileImg?.profileImgPath).isEqualTo(memberProfileDummyEntity.profileImgPath)
+        assertThat(profileImg?.profileImgName).isEqualTo(memberProfileDummyEntity.profileImgName)
     }
 
     @Test
     fun `in절로 프로필 조회`() {
         // given
-        val profileIds = listOf(1L, 2L)
+        val profileIds = getExistProfileIdList()
 
         // when
         val profiles = memberProfileReadRepository.readByProfileIdList(profileIds)
 
         // then
-        assertThat(profiles.size).isEqualTo(2)
+        assertThat(profiles.size).isEqualTo(profileIds.size)
     }
 }

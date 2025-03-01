@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`members`;
+--
 INSERT INTO `numberbox_tc`.`members` (`user_uniq_id`, `email`, `password`, `human_status`, `fail_count`,
                                       `last_fail_time`,
                                       `is_tmp_password`, `signup_date`, `last_login_date`, `sys_update_time`)
@@ -15,4 +18,7 @@ VALUES (UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), 'wlrtl@test.com',
         '2023-08-26 15:05:16', '0', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23'),
        (UNHEX('32CA3122CDA8EA4D9BC7037CB86FDB20'), 'on2ey@test.com',
         '$2a$10$wgZBmAEiDcytMZSQ.iwJuONFFJAwWa/i9Djl41NDLn3cHpmlVFU3.', '1', '0',
+        '2023-08-26 15:05:16', '1', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23'),
+       (UNHEX('82CA3122CDA8EA4D9BC7037CB86FDB20'), 'sadl@test.com',
+        '$2a$10$wgZBmAEiDcytMZSQ.iwJuONFFJAwWa/i9Djl41NDLn3cHpmlVFU3.', '0', '0',
         '2023-08-26 15:05:16', '1', '2022-10-25 22:13:23', '2023-08-27 21:23:26', '2022-10-25 22:13:23');

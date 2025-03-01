@@ -2,15 +2,15 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData.getMathContentsModifyDto
+import com.kamcci.numberbox.app.service.sample.MathContentsSampleData.getMathContentsModifyDto
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class MathContentsFactoryTest {
 
     // given
-    val modifyDtoList = listOf(
+    private val modifyDtoList = listOf(
         // 주관식, 객관식 정답 존재
         Triple(getMathContentsModifyDto("123", listOf("1", "2")), MultiChoiceType.Multiple, true),
         // 주관식, 객관식 정답 미존재
@@ -49,7 +49,7 @@ class MathContentsFactoryTest {
         for (modifyDto in modifyDtoList) {
             val saveEntity =
                 MathContentsFactory.getUpdtEntity(
-                    MathContentsSampleData.getSaveEntity(),
+                    MathContentsEntity(),
                     ContentsSvcPosbSttsType.Release,
                     modifyDto.first
                 )

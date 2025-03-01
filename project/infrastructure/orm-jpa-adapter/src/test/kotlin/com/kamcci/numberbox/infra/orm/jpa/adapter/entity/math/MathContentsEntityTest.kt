@@ -4,13 +4,12 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsSampleData
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.math.MathContentsLicenseSampleData
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.member.MembersSampleData
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDateTime
+import java.util.*
 
 @TcDBJpaTest
 class MathContentsEntityTest(
@@ -30,7 +29,7 @@ class MathContentsEntityTest(
         assertThat(mathContentsEntity.id).isEqualTo(id)
         assertThat(mathContentsEntity.unitId).isEqualTo(22003)
         assertThat(mathContentsEntity.typeId).isOne()
-        assertThat(mathContentsEntity.memberId).isEqualTo(MembersSampleData.getMemberId1())
+        assertThat(mathContentsEntity.memberId).isEqualTo(UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"))
         assertThat(mathContentsEntity.contents).isNotNull()
         assertThat(mathContentsEntity.solution).isNotNull()
         assertThat(mathContentsEntity.contentsImg).isNull()
@@ -60,8 +59,8 @@ class MathContentsEntityTest(
     @Test
     fun `MathContentsEntity with licenceEntity 영속화 - 성공`() {
         // given
-        val mathContentsEntity = MathContentsSampleData.getSaveEntity()
-        val licenseEntity = MathContentsLicenseSampleData.getSaveEntity()
+        val mathContentsEntity = getMathContentsSaveEntity()
+        val licenseEntity = getContentsLicenseSaveEntity()
         mathContentsEntity.mathContentsLicenses = mutableListOf(licenseEntity)
         licenseEntity.mathContents = mathContentsEntity
 
@@ -87,4 +86,54 @@ class MathContentsEntityTest(
         assertThat(mathContentsEntity.mathContentsLicenses.get(0).id).isOne()
         assertThat(mathContentsEntity.mathContentsIpsiSrc.size).isZero()
     }
+
+
+    fun getMathContentsSaveEntity(): MathContentsEntity {
+        val now = LocalDateTime.now()
+
+        return MathContentsEntity().apply {
+            unitId = 22001
+            typeId = 1
+            memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+            contents = ""
+            contentsImg = ""
+            imgPath = ""
+            solution = ""
+            solutionImg = ""
+            solutionImgPath = ""
+            firNo = ""
+            secNo = ""
+            thrNo = ""
+            fourNo = ""
+            fifNo = ""
+            multiChoiceType = MultiChoiceType.Essay
+            answer = ""
+            choiceAnswer = "1"
+            orgSrcRef = ""
+            orgSrcNo = 1
+            quesLevel = 1
+            ansExistStts = true
+            svcPosbStts = ContentsSvcPosbSttsType.Release
+            contentsClassify = ContentsClassifyType.InHouse
+            orgContentsId = 0
+            transConCnt = 0
+            sysCreateDate = now
+            sysUpdateDate = now
+        }
+    }
+
+    fun getContentsLicenseSaveEntity(): MathContentsLicenseEntity {
+        val now = LocalDateTime.now()
+        return MathContentsLicenseEntity().apply {
+            onlineLicStts = true
+            perLicStts = true
+            perLicPrice = 10000
+            entLicStts = true
+            entLicPrice = 10000
+            shareStts = true
+            sysCreateDate = now
+            sysUpdateDate = now
+        }
+    }
+
 }

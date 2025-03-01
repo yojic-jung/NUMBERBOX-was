@@ -64,12 +64,12 @@ class MemberReadRepository : MemberReadCase, BaseRepository() {
             .where(memberEntity.email.eq(email))
             .fetchFirst() != null
 
-    override fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID> =
+    override fun readByIsTmpPassword(isTmpPwCond: Boolean, limit: Long): List<UUID> =
         queryFactory
             .select(memberEntity.id)
             .from(memberEntity)
             .limit(limit)
-            .where(memberEntity.isTmpPassword.eq(isTrue))
+            .where(memberEntity.isTmpPassword.eq(isTmpPwCond))
             .fetch()
 
     override fun readUserIdByHumanStatus(humanStatus: Int): List<UUID> =

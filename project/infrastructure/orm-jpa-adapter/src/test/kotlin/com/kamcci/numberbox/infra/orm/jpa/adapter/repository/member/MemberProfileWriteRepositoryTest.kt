@@ -3,6 +3,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 import com.kamcci.numberbox.app.domain.dto.member.MemberProfileImgUpdtDto
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberProfileDummyFactory.getMemberProfileDummyEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberProfileEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
@@ -13,17 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MemberProfileWriteRepositoryTest(
-    @Autowired
+class MemberProfileWriteRepositoryTest @Autowired constructor(
     private val entityManager: EntityManager,
-    @Autowired
     private val memberProfileModifyRepository: MemberProfileWriteRepository
 ) {
+    private val memberProfileDummyEntity = getMemberProfileDummyEntity()
 
     @Test
     fun `개인정보 영속화 테스트 - 성공`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberProfileDummyEntity.memberId
 
         // when
         val id = memberProfileModifyRepository.save(memberId, "nickname")
@@ -62,7 +62,7 @@ class MemberProfileWriteRepositoryTest(
     @Test
     fun `프로필 타입 변경`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberProfileDummyEntity.memberId
         val profileType = ProfileType.HeadOfAcademy
 
         // when
@@ -71,17 +71,18 @@ class MemberProfileWriteRepositoryTest(
         entityManager.clear()
 
         // then
-        val memberProfileEntity = entityManager.find(MemberProfileEntity::class.java, 1)
+        val memberProfileEntity =
+            entityManager.find(MemberProfileEntity::class.java, memberProfileDummyEntity.profileId)
         assertThat(memberProfileEntity.profileType).isEqualTo(profileType)
     }
 
     @Test
     fun `프로필 이미지 변경`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
-        val profileImgPath = "profileImgPath"
-        val profileImgName = "profileImgName"
-        val profileImgInfo = MemberProfileImgUpdtDto(memberId, profileImgPath, profileImgName)
+        val memberId = memberProfileDummyEntity.memberId
+        val newProfileImgPath = "newProfileImgPath"
+        val newProfileImgName = "newprofileImgName"
+        val profileImgInfo = MemberProfileImgUpdtDto(memberId, newProfileImgPath, newProfileImgName)
 
         // when
         memberProfileModifyRepository.updateImgByMemberId(profileImgInfo)
@@ -89,7 +90,8 @@ class MemberProfileWriteRepositoryTest(
         entityManager.clear()
 
         // then
-        val memberProfileEntity = entityManager.find(MemberProfileEntity::class.java, 1)
+        val memberProfileEntity =
+            entityManager.find(MemberProfileEntity::class.java, memberProfileDummyEntity.profileId)
         assertThat(memberProfileEntity.profileImgPath).isEqualTo(profileImgInfo.profileImgPath)
         assertThat(memberProfileEntity.profileImgName).isEqualTo(profileImgInfo.profileImgName)
     }
@@ -98,7 +100,7 @@ class MemberProfileWriteRepositoryTest(
     @Test
     fun `프로필 닉네임 변경`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberProfileDummyEntity.memberId
         val nickname = "닉네임"
 
         // when
@@ -107,7 +109,8 @@ class MemberProfileWriteRepositoryTest(
         entityManager.clear()
 
         // then
-        val memberProfileEntity = entityManager.find(MemberProfileEntity::class.java, 1)
+        val memberProfileEntity =
+            entityManager.find(MemberProfileEntity::class.java, memberProfileDummyEntity.profileId)
         assertThat(memberProfileEntity.nickname).isEqualTo(nickname)
     }
 
@@ -120,6 +123,6 @@ class MemberProfileWriteRepositoryTest(
         val executeRowCnt = memberProfileModifyRepository.updateHwpDownCntByMemberId(hwpDownCnt)
 
         // then
-        assertThat(executeRowCnt).isGreaterThan(0)
+        assertThat(executeRowCnt).isPositive()
     }
 }

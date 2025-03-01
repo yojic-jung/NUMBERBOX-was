@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.docs
 
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsUsageCreateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberEntityDummy.MEMBER_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,7 +16,7 @@ class MathDocsUsageWriteRepositoryTest @Autowired constructor(
     @Test
     fun `학습지 사용 집계 자료 영속화`() {
         // given
-        val memberId = MEMBER_ID
+        val memberId = getMemberDummyEntity().memberId
         val usageDto = getMathDocsUsageCreateDto()
 
         // when

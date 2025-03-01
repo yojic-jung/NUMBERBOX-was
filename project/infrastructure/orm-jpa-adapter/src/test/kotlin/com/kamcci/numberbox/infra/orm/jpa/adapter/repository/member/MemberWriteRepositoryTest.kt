@@ -1,6 +1,9 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.NOT_EXIST_MEMBER_EMAIL
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity4Disable
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
@@ -13,18 +16,17 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 
 @TcDBJpaTest
-class MemberWriteRepositoryTest(
-    @Autowired
+class MemberWriteRepositoryTest @Autowired constructor(
     private val em: EntityManager,
-    @Autowired
     private val memberModifyRepository: MemberWriteRepository
 ) {
+    private val memberDummyEntity = getMemberDummyEntity()
 
     @Test
     fun `멤버 영속화 성공 - 성공`() {
         // given
-        val email = "nonExsit@test123.com"
-        val password = "testPW"
+        val email = NOT_EXIST_MEMBER_EMAIL
+        val password = "any"
 
         // when
         val memberId = memberModifyRepository.save(email, password)
@@ -36,7 +38,7 @@ class MemberWriteRepositoryTest(
 
     @Test
     fun `회원 비활성화 - 성공`() {
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = getMemberDummyEntity4Disable()
 
         // when
         val executeRowCnt = memberModifyRepository.drop(memberId)
@@ -48,7 +50,7 @@ class MemberWriteRepositoryTest(
     @Test
     fun `중복 이메일 멤버 영속화 - 실패`() {
         // given
-        val duplicateEmail = "test@test.com"
+        val duplicateEmail = memberDummyEntity.email
         val password = "testPW"
 
         // when
@@ -62,7 +64,7 @@ class MemberWriteRepositoryTest(
     @Test
     fun `멤버 id로 비밀번호 변경 - 성공`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberDummyEntity.memberId
         val password = "tmp"
 
         // when
@@ -76,8 +78,8 @@ class MemberWriteRepositoryTest(
     @Test
     fun `멤버 id List로 비밀번호 변경 - 성공`() {
         // given
-        val memberId = listOf(UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"))
-        val password = "tmp"
+        val memberId = listOf(memberDummyEntity.memberId)
+        val password = "any"
 
         // when
         val executeRowCnt = memberModifyRepository.updatePassword(memberId, password)
@@ -89,8 +91,8 @@ class MemberWriteRepositoryTest(
     @Test
     fun `이메일로 비밀번호 변경 - 성공`() {
         // given
-        val email = "dywlr@test.com"
-        val password = "tmp"
+        val email = memberDummyEntity.email
+        val password = "any"
 
         // when
         memberModifyRepository.updatePassword(email, password)
@@ -104,7 +106,7 @@ class MemberWriteRepositoryTest(
     @Test
     fun `로그인 실패 카운트 변경 - 성공`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberDummyEntity.memberId
         val failCount = 0
 
         // when
@@ -118,7 +120,7 @@ class MemberWriteRepositoryTest(
     @Test
     fun `마지막 실패 시간 변경 - 성공`() {
         // given
-        val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+        val memberId = memberDummyEntity.memberId
         val failTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
 
         // when
@@ -128,8 +130,6 @@ class MemberWriteRepositoryTest(
 
         // then (DB 접근 시간 고려하여 1초 정도의 오차 범위 허용)
         val memberEntity = em.find(MemberEntity::class.java, memberId)
-        println(failTime)
-        println(memberEntity.lastFailTime)
         assertThat(failTime).isEqualTo(memberEntity.lastFailTime)
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class MathContentsGrammarWriteRepository : MathContentsGrammarWriteCase, BaseRepository() {
 
-    override fun createGrammar(contentsId: Long, grammar: String): Boolean {
+    override fun update(contentsId: Long, grammar: String): Boolean {
         val existEntity = em.find(MathContentsGrammarEntity::class.java, contentsId)
 
         val saveEntity =

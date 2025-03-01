@@ -31,7 +31,7 @@ interface MemberReadCase {
     /**
      * 임시 비밀번호 발급자 id 조회
      */
-    fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID>
+    fun readByIsTmpPassword(isTmpPwCond: Boolean, limit: Long): List<UUID>
 
     // 계정 활성 여부로 조회(관리자 제외)
     fun readUserIdByHumanStatus(humanStatus: Int): List<UUID>

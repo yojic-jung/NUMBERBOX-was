@@ -1,3 +1,5 @@
+DELETE
+FROM `numberbox_tc`.`math_contents`;
 -- 자체제작 수학문제
 INSERT INTO `numberbox_tc`.`math_contents` (`id`, `unit_id`, `type_id`, `contents`, `contents_img`, `img_path`,
                                             `solution`, `solution_img`, `solution_img_path`, `fir_no`, `sec_no`,

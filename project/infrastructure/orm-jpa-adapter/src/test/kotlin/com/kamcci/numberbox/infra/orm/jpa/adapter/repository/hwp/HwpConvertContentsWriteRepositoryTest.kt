@@ -4,9 +4,9 @@ import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsCreateDto
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsUpdateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentEntityDummy.getHwpContents4Del
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentEntityDummy.getHwpContents4Updt
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberEntityDummy.MEMBER_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentDummyFactory.getHwpContentsDummyEntity4Del
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentDummyFactory.getHwpContentsDummyEntity4Updt
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,11 +19,11 @@ class HwpConvertContentsWriteRepositoryTest @Autowired constructor(
     fun `변환 컨텐츠 저장 - 성공`() {
         // given
         val createDto = HwpConvertContentsCreateDto(
-            memberId = MEMBER_ID,
+            memberId = getMemberDummyEntity().memberId,
             isConverted = true,
-            fileName = "",
-            contents = "",
-            imgPath = ""
+            fileName = "any",
+            contents = "any",
+            imgPath = "any"
         )
 
         // when
@@ -38,11 +38,11 @@ class HwpConvertContentsWriteRepositoryTest @Autowired constructor(
     @Test
     fun `변환 컨텐츠 수정 - 성공`() {
         // given
-        val existEntity = getHwpContents4Updt()
+        val existEntity = getHwpContentsDummyEntity4Updt()
         val updateDto = HwpConvertContentsUpdateDto(
             id = existEntity.id,
             memberId = existEntity.memberId,
-            contents = "",
+            contents = "any",
             isGrammarConverted = true
         )
 
@@ -56,7 +56,7 @@ class HwpConvertContentsWriteRepositoryTest @Autowired constructor(
     @Test
     fun `변환 컨텐츠 삭제 - 성공`() {
         // given
-        val existEntity = getHwpContents4Del()
+        val existEntity = getHwpContentsDummyEntity4Del()
 
         // when
         val executeRowCnt = hwpConvertContentsWriteRepository.delete(existEntity.id, existEntity.memberId)

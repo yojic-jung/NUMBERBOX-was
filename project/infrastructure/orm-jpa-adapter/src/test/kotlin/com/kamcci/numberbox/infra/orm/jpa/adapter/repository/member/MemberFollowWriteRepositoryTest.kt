@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberFollowDummyFactory.getMemberFollowDummyEntity4Del
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.FollowUserDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberFollowEntity
 import jakarta.persistence.EntityManager
@@ -9,10 +10,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MemberFollowWriteRepositoryTest(
-    @Autowired
+class MemberFollowWriteRepositoryTest @Autowired constructor(
     private val em: EntityManager,
-    @Autowired
     private val memberFollowModifyRepository: MemberFollowWriteRepository
 ) {
     @Test
@@ -36,18 +35,16 @@ class MemberFollowWriteRepositoryTest(
     @Test
     fun `팔로우 삭제`() {
         // given
-        val followingId = 1L
-        val followerId = 2L
-        memberFollowModifyRepository.save(followingId, followerId)
-        em.flush()
-        em.clear()
-
+        val dummyEntity = getMemberFollowDummyEntity4Del()
+        val followingId = dummyEntity.followingUserNo
+        val followerId = dummyEntity.followerUserNo
+        
         // when
         val isDeleted = memberFollowModifyRepository.delete(followingId, followerId)
         em.flush()
         em.clear()
 
         // then
-        assertThat(isDeleted).isGreaterThan(0)
+        assertThat(isDeleted).isPositive()
     }
 }

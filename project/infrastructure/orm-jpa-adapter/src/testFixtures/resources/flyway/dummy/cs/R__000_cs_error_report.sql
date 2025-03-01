@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`cs_error_report`;
+--
 INSERT INTO `numberbox_tc`.`cs_error_report` (`id`, `err_type`, `contents_id`, `report_member_id`, `report_contents`,
                                               `client_os`, `client_browser`,
                                               `first_img_path`, `first_img_name`, `second_img_path`, `second_img_name`,

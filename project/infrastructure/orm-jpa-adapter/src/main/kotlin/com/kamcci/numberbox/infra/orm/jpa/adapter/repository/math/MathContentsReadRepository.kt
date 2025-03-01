@@ -168,7 +168,10 @@ class MathContentsReadRepository(
             .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
             .leftJoin(mathContentsSimilarSrcEntity)
             .on(mathContentsEntity.id.eq(mathContentsSimilarSrcEntity.mathContents.id))
-            .where(mathContentsEntity.id.eq(contentsId))
+            .where(
+                mathContentsEntity.id.eq(contentsId),
+                mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse)
+            )
             .fetchOne()
     }
 
@@ -182,7 +185,10 @@ class MathContentsReadRepository(
             .on(mathContentsEntity.memberId.eq(memberProfileEntity.memberId))
             .leftJoin(mathContentsIpsiSrcEntity)
             .on(mathContentsEntity.id.eq(mathContentsIpsiSrcEntity.mathContents.id))
-            .where(mathContentsEntity.id.eq(contentsId))
+            .where(
+                mathContentsEntity.id.eq(contentsId),
+                mathContentsEntity.contentsClassify.eq(ContentsClassifyType.Ipsi)
+            )
             .fetchOne()
     }
 

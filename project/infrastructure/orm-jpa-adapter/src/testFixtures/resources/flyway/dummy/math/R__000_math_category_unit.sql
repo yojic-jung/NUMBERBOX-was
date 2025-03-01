@@ -1,9 +1,3 @@
-/*
--- Query: SELECT * FROM numberbox.math_category_unit
-LIMIT 0, 1000
-
--- Date: 2024-11-29 19:14
-*/
 INSERT INTO `numberbox_tc`.`math_category_unit` (`id`, `subject`, `fir_unit`, `sec_unit`, `thr_unit`)
 VALUES (21001, '중등 1-1', '수와 연산', '소인수분해', '소인수분해'),
        (21002, '중등 1-1', '수와 연산', '소인수분해', '최대공약수와 최소공배수'),

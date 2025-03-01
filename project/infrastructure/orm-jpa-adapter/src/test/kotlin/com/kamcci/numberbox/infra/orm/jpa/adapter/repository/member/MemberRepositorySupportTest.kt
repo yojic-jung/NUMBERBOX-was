@@ -1,27 +1,26 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @TcDBJpaTest
-class MemberRepositorySupportTest(
-    @Autowired
+class MemberRepositorySupportTest @Autowired constructor(
     private val em: EntityManager,
-    @Autowired
     private val memberRepositorySupport: MemberRepositorySupport
 ) {
-    companion object {
-        const val EXIST_EMAIL = "dywlr@test.com"
-        const val EXIST_ID = "10ed5466-cda8-ea4d-9bc7-037cb86fdb20"
-    }
+    private val memberDummyEntity = getMemberDummyEntity()
 
     @Test
     fun `멤버엔티티 이메일로 조회 - 성공`() {
-        val memberEntity = memberRepositorySupport.findByEmail(EXIST_EMAIL)
+        // given
+        val email = memberDummyEntity.email
+
+        // when
+        val memberEntity = memberRepositorySupport.findByEmail(email)
 
         // then
         assertThat(memberEntity).isNotNull
@@ -30,14 +29,16 @@ class MemberRepositorySupportTest(
     @Test
     fun `로그인 실패 횟수 변경`() {
         // given
-        val memberId = UUID.fromString(EXIST_ID)
+        val memberId = memberDummyEntity.memberId
+        val failCount = 0 // 실패 횟수 초기화
+        val humanStatus = 1 // 비활성 계정
 
         // when
-        val executedRowCnt = memberRepositorySupport.updateSuccessUser(memberId, 0, 1)
+        val executedRowCnt = memberRepositorySupport.updateSuccessUser(memberId, failCount, humanStatus)
         em.flush()
         em.clear()
 
         // then
-        assertThat(executedRowCnt).isGreaterThan(0)
+        assertThat(executedRowCnt).isPositive()
     }
 }

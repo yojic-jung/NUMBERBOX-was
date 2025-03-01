@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_con_license`;
+--
 INSERT INTO `numberbox_tc`.`math_con_license` (`contents_id`, `online_lic_stts`, `per_lic_stts`, `per_lic_price`,
                                                `ent_lic_stts`,
                                                `ent_lic_price`,

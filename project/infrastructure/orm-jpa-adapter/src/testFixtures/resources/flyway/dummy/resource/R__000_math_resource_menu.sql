@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_resource_menu`;
+--
 INSERT INTO `numberbox_tc`.`math_resource_menu` (`id`, `main_cate_id`, `main_cate_name`, `mid_cate_id`, `mid_cate_name`,
                                                  `align_order`)
 VALUES (1, 1, '평면도형', 1, '삼각형', 1),

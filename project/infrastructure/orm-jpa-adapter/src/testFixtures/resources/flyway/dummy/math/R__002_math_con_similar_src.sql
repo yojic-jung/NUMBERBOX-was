@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_con_similar_src`;
+--
 INSERT INTO `numberbox_tc`.`math_con_similar_src` (`id`, `contents_id`, `org_src_ref`, `org_src_no`, `org_src_page`,
                                                    `copyright_year`,
                                                    `math_type_classify`, `sys_create_date`, `sys_update_date`)

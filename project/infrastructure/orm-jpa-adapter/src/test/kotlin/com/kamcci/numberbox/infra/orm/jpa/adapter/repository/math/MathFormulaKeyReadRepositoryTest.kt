@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MathFormulaKeyReadRepositoryTest(
-    @Autowired
+class MathFormulaKeyReadRepositoryTest @Autowired constructor(
     private val mathFormulaKeyReadRepository: MathFormulaKeyReadRepository
 ) {
     @Test
@@ -16,7 +15,6 @@ class MathFormulaKeyReadRepositoryTest(
         val formulKeyList = mathFormulaKeyReadRepository.readAll()
 
         // then
-        assertThat(formulKeyList.size).isGreaterThan(0)
+        assertThat(formulKeyList.size).isPositive()
     }
-
 }

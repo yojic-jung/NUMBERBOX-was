@@ -2,22 +2,24 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathConLikeDummyFactory.getMathConLikeDummyEntity4Del
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberDummyFactory.getMemberDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @TcDBJpaTest
 class MathContentsLikeWriteRepositoryTest(
     @Autowired
     private val mathContentsLikeWriteRepository: MathContentsLikeWriteRepository
 ) {
-    private val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
 
     @Test
     fun `좋아요 정보 저장`() {
         // given
-        val modifyDto = MathContentsLikeModifyDto(1L, memberId)
+        val anyContentsId = 111L
+        val existMemberId = getMemberDummyEntity().memberId
+        val modifyDto = MathContentsLikeModifyDto(anyContentsId, existMemberId)
 
         // when
         val isSaved = mathContentsLikeWriteRepository.save(modifyDto)
@@ -29,7 +31,8 @@ class MathContentsLikeWriteRepositoryTest(
     @Test
     fun `좋아요 정보 삭제`() {
         // given
-        val modifyDto = MathContentsLikeModifyDto(1L, memberId)
+        val dummyEntity = getMathConLikeDummyEntity4Del()
+        val modifyDto = MathContentsLikeModifyDto(dummyEntity.contentsId, dummyEntity.memberId)
 
         // when
         val executeRowCnt = mathContentsLikeWriteRepository.delete(modifyDto)

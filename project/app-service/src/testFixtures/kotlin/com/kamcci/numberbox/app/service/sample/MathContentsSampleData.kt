@@ -12,21 +12,23 @@ object MathContentsSampleData {
         memberId = UUID.randomUUID()
     )
 
-    fun getMathContentsModifyDto() = MathContentsModifyDto(
-        UUID.randomUUID(),
-        1,
-        1,
-        "",
-        "",
-        "",
-        listOf(""),
-        "",
-        "",
-        "",
-        "",
-        "",
-        1
-    )
+    fun getMathContentsModifyDto(answer: String?, choiceAnswer: List<String>?): MathContentsModifyDto {
+        return MathContentsModifyDto(
+            memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"),
+            unitId = 21001,
+            typeId = 1,
+            contents = "any",
+            solution = "any",
+            answer = answer,
+            choiceAnswer = choiceAnswer,
+            firNo = "1",
+            secNo = "2",
+            thrNo = "3",
+            fourNo = "4",
+            fifNo = "5",
+            quesLevel = 1
+        )
+    }
 
     fun getMathConSimilarSrcCreateDto() = MathConSimilarSrcCreateDto(
         orgSrcRef = "N명의수학 출판",

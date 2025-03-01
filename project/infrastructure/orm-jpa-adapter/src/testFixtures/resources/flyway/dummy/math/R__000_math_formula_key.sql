@@ -1,3 +1,7 @@
+DELETE
+FROM `numberbox_tc`.`math_formula_key`;
+--
+--
 INSERT INTO `numberbox_tc`.`math_formula_key` (`id`, `formul_order`, `formul_name`, `formul_ui`, `shortcut_key`,
                                                `latex_grammer`, `guide`,
                                                `shortcut_keycode`, `tex_grammer`, `line_change`, `nb_grammer`,

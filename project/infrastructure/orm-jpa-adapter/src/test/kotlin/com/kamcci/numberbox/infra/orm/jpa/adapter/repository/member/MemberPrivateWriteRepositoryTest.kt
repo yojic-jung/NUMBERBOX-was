@@ -4,29 +4,25 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import com.kamcci.numberbox.app.port.orm.member.MemberPrivateWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberPrivateDummyFactory.getMemberPrivateDummyEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.member.MemberPrivateDummyFactory.getMemberPrivateDummyEntity4Del
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberPrivateEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.hibernate.exception.ConstraintViolationException
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 @TcDBJpaTest
-class MemberPrivateWriteRepositoryTest(
-    @Autowired
+class MemberPrivateWriteRepositoryTest @Autowired constructor(
     private val em: EntityManager,
-    @Autowired
     private val memberPrivateWriteOrmPort: MemberPrivateWriteOrmPort
 ) {
-    private lateinit var privateSignUpDto: MemberPrivateSignUpDto
+    private val privateSignUpDto =
+        MemberPrivateSignUpDto(userName = "홍길동", phoneNumber = "01023456789", birth = "050123")
 
-    @BeforeEach
-    fun `초기화`() {
-        privateSignUpDto = MemberPrivateSignUpDto(userName = "홍길동", phoneNumber = "01023456789", birth = "050123")
-    }
 
     @Test
     fun `개인정보 영속화 테스트 - 성공`() {
@@ -61,7 +57,7 @@ class MemberPrivateWriteRepositoryTest(
     @Test
     fun `휴대폰 번호 변경`() {
         // given
-        val memberId = UUID.fromString("33CA3122-CDA8-EA4D-9BC7-037CB86FDB20")
+        val memberId = getMemberPrivateDummyEntity().memberId
         val phoneUpdtDto = MemberPhoneUpdtDto(memberId, "01098769876")
 
         // when
@@ -77,7 +73,7 @@ class MemberPrivateWriteRepositoryTest(
     @Test
     fun `개인정보 파기`() {
         // given
-        val memberId = UUID.fromString("33CA3122-CDA8-EA4D-9BC7-037CB86FDB20")
+        val memberId = getMemberPrivateDummyEntity4Del().memberId
 
         // when
         val executeRowCnt = memberPrivateWriteOrmPort.updatePrivateToNull(memberId)

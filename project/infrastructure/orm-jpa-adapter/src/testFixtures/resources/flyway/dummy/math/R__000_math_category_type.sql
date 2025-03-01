@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_category_type`;
+--
 INSERT INTO `numberbox_tc`.`math_category_type` (`unit_id`,`type_id`,`ques_type`,`type_order`)
 VALUES (21001,1,'약수와 배수',1),
  (21001,2,'소수와 합성수',2),

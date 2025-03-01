@@ -14,6 +14,6 @@ interface MathContentsGrammarWriteCase {
      * false : 신규
      */
     @TXExecute
-    fun createGrammar(contentsId: Long, grammar: String): Boolean
+    fun update(contentsId: Long, grammar: String): Boolean
 
 }

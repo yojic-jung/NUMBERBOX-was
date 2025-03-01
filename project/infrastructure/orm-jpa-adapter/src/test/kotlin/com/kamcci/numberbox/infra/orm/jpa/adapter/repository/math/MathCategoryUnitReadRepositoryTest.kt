@@ -14,6 +14,6 @@ class MathCategoryUnitReadRepositoryTest(
     fun `단원 조회`() {
         val cateList = mathCategoryUnitReadRepository.readAll()
 
-        assertThat(cateList.size).isGreaterThan(0)
+        assertThat(cateList.size).isPositive()
     }
 }

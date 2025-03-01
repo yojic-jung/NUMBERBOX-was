@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.cs
 
+import com.kamcci.numberbox.app.service.sample.CsSampleData.getCsErrorReportCreateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.sample.cs.CsSampleData.getCsErrorReportCreateDto
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test

@@ -1,3 +1,6 @@
+DELETE
+FROM `numberbox_tc`.`math_con_ipsi_src`;
+--
 INSERT INTO `numberbox_tc`.`math_con_ipsi_src` (`id`, `contents_id`, `manage_ins`, `imp_year`, `imp_month`,
                                                 `wrong_ratio`, `paper_type`, `odd_ques_num`,
                                                 `even_ques_num`, `sys_create_date`, `sys_update_date`)

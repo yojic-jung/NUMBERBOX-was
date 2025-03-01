@@ -2,7 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.hwp
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentEntityDummy.CONVERT_CON_MEM_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.hwp.HwpConvertContentDummyFactory.CONVERT_CON_MEM_ID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

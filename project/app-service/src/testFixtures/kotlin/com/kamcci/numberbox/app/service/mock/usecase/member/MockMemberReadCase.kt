@@ -64,7 +64,7 @@ class MockMemberReadCase : MemberReadCase {
         return email == EXIST_EMAIL
     }
 
-    override fun readByIsTmpPassword(isTrue: Boolean, limit: Long): List<UUID> {
+    override fun readByIsTmpPassword(isTmpPwCond: Boolean, limit: Long): List<UUID> {
         executeCnt++
         val memberIds: MutableList<UUID> = mutableListOf()
         if (moreBatchSize && executeCnt == 1) {

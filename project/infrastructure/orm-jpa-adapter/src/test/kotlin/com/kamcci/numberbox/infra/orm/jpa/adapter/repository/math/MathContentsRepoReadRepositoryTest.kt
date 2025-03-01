@@ -1,34 +1,35 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathConRepoDummyFactory.NOT_EXIST_CONTENTS_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathConRepoDummyFactory.getMathConRepoDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.*
 
 @TcDBJpaTest
-class MathContentsRepoReadRepositoryTest(
-    @Autowired
+class MathContentsRepoReadRepositoryTest @Autowired constructor(
     private val mathContentsRepoReadRepository: MathContentsRepoReadRepository
 ) {
-    private val memberId = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
+    private val mathConRepoDummyEntity = getMathConRepoDummyEntity()
 
     @Test
     fun `사용자의 저장소 내역 조회`() {
         // when
-        val contentsIdList = mathContentsRepoReadRepository.readContentsIdByMemberId(memberId)
+        val contentsIdList = mathContentsRepoReadRepository.readContentsIdByMemberId(mathConRepoDummyEntity.memberId)
 
         // then
-        assertThat(contentsIdList.size).isGreaterThan(0)
+        assertThat(contentsIdList.size).isPositive()
     }
 
     @Test
     fun `저장소 존재여부 확인 - 존재`() {
-        // given
-        val contentsId = 1L
-
         // when
-        val isExist = mathContentsRepoReadRepository.existByContentsIdAndMemberId(contentsId, memberId)
+        val isExist =
+            mathContentsRepoReadRepository.existByContentsIdAndMemberId(
+                mathConRepoDummyEntity.contentsId,
+                mathConRepoDummyEntity.memberId
+            )
 
         // then
         assertThat(isExist).isTrue()
@@ -37,7 +38,8 @@ class MathContentsRepoReadRepositoryTest(
     @Test
     fun `저장소 존재여부 확인 - 미존재`() {
         // given
-        val contentsId = 99999999L
+        val contentsId = NOT_EXIST_CONTENTS_ID
+        val memberId = mathConRepoDummyEntity.memberId
 
         // when
         val isExist = mathContentsRepoReadRepository.existByContentsIdAndMemberId(contentsId, memberId)

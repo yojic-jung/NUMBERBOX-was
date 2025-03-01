@@ -1,11 +1,13 @@
 package com.kamcci.numberbox.app.service.sample
 
+import com.kamcci.numberbox.app.domain.dto.cs.CsErrorReportCreateDto
 import com.kamcci.numberbox.app.domain.enumeration.cs.BrowserType
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
 import com.kamcci.numberbox.app.domain.vo.cs.CsErrReportVo
 import java.time.LocalDateTime
+import java.util.*
 
 object CsSampleData {
     fun getCsErrReportVo(id: Long): CsErrReportVo {
@@ -33,6 +35,22 @@ object CsSampleData {
     fun getCsErrReportVoList() = listOf(
         getCsErrReportVo(1L),
         getCsErrReportVo(2L)
+    )
+
+    fun getCsErrorReportCreateDto() = CsErrorReportCreateDto(
+        CSErrorType.Etc,
+        1L,
+        UUID.randomUUID(),
+        "",
+        OsType.Etc,
+        BrowserType.Etc,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ReportSttsType.Submit
     )
 
 }

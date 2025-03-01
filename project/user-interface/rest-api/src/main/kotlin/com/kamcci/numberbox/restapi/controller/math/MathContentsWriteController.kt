@@ -131,7 +131,7 @@ class MathContentsWriteController(
         // 문법 정보 저장
         return ResponseUtil.ok(
             mapOf(
-                "isUpdate" to mathConGrammarWriteCase.createGrammar(
+                "isUpdate" to mathConGrammarWriteCase.update(
                     modifyReq.contentsId,
                     modifyReq.grammar
                 )

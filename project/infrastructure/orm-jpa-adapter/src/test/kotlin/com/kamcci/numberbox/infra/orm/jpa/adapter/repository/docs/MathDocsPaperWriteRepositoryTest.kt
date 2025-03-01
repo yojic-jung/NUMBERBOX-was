@@ -4,10 +4,10 @@ import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsPaperCreateDto
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsPaperUpdtDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperEntityDummy.DOCS_PAPER_MEMBER_ID
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperEntityDummy.getDocsPaperEntity4AllDel
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperEntityDummy.getDocsPaperEntity4Del
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperEntityDummy.getDocsPaperEntity4Updt
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.DOCS_PAPER_MEMBER_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4AllDel
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4Del
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4Updt
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -36,7 +36,7 @@ class MathDocsPaperWriteRepositoryTest @Autowired constructor(
     @Test
     fun `학습지 수정`() {
         // given
-        val existEntityInfo = getDocsPaperEntity4Updt()
+        val existEntityInfo = getDocsPaperDummyEntity4Updt()
         val updateDto = getMathDocsPaperUpdtDto(existEntityInfo.id)
 
         // when
@@ -51,7 +51,7 @@ class MathDocsPaperWriteRepositoryTest @Autowired constructor(
     @Test
     fun `학습지 상태 변경`() {
         // given
-        val existEntity4Updt = getDocsPaperEntity4Updt()
+        val existEntity4Updt = getDocsPaperDummyEntity4Updt()
         val docsStatus = DocsStatusType.None
 
         // when
@@ -71,7 +71,7 @@ class MathDocsPaperWriteRepositoryTest @Autowired constructor(
     @Test
     fun `학습지 삭제`() {
         // given
-        val existEntity4Del = getDocsPaperEntity4Del()
+        val existEntity4Del = getDocsPaperDummyEntity4Del()
 
         // when
         val executeRowCnt = mathDocsPaperWriteRepository.delete(existEntity4Del.id, existEntity4Del.memberId)
@@ -85,7 +85,7 @@ class MathDocsPaperWriteRepositoryTest @Autowired constructor(
     @Test
     fun `사용자의 모든 학습지 삭제`() {
         // given
-        val existEntity4AllDel = getDocsPaperEntity4AllDel()
+        val existEntity4AllDel = getDocsPaperDummyEntity4AllDel()
 
         // when
         val executeRowCnt = mathDocsPaperWriteRepository.delete(existEntity4AllDel.memberId)
