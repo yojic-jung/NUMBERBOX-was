@@ -20,7 +20,7 @@ class MathResourceEntityTest(
         val mathResourceEntity = em.find(MathResourceEntity::class.java, id)
 
         // then
-        assertThat(mathResourceEntity.mathResourceCate.get(0).id).isOne()
-        assertThat(mathResourceEntity.mathResourceImg.get(0).id).isOne()
+        assertThat(mathResourceEntity.mathResourceCate[0].id).isOne()
+        assertThat(mathResourceEntity.mathResourceImg[0].id).isOne()
     }
 }

@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceCateDummyFactory.getMathResourceCateDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -14,8 +15,8 @@ class MathResourceCateEntityTest(
     @Test
     fun `MathResourceCateEntity 조회 테스트`() {
         // given
-        val id = 1L
-
+        val id = getMathResourceCateDummyEntity().id
+        
         // when
         val mathResourceCateEntity = em.find(MathResourceCateEntity::class.java, id)
 

@@ -8,6 +8,6 @@ import java.util.*
 
 class MockMathContentsMapper : MathContentsMapper {
     override fun toContents(memberId: UUID, request: MathContentsModifyRequest): MathContentsModifyDto {
-        return MathContentsSampleData.getMathContentsModifyDto()
+        return MathContentsSampleData.getMathContentsModifyDto("any", listOf())
     }
 }

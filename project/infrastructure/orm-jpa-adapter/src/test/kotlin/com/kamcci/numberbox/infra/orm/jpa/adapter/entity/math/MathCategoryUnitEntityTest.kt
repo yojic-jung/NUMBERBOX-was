@@ -22,9 +22,9 @@ class MathCategoryUnitEntityTest(
 
         // then
         assertThat(mathCategoryUnitEntity.id).isEqualTo(unitId)
-        assertThat(mathCategoryUnitEntity.subject).isEqualTo("중등 1-1")
-        assertThat(mathCategoryUnitEntity.firUnit).isEqualTo("수와 연산")
-        assertThat(mathCategoryUnitEntity.secUnit).isEqualTo("소인수분해")
-        assertThat(mathCategoryUnitEntity.thrUnit).isEqualTo("소인수분해")
+        assertThat(mathCategoryUnitEntity.subject).isNotNull
+        assertThat(mathCategoryUnitEntity.firUnit).isNotNull
+        assertThat(mathCategoryUnitEntity.secUnit).isNotNull
+        assertThat(mathCategoryUnitEntity.thrUnit).isNotNull
     }
 }

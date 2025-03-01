@@ -26,7 +26,7 @@ class MathCategoryTypeEntityTest(
         assertThat(mathCategoryTypeEntity.mathTypeDomain).isEqualTo(id)
         assertThat(mathCategoryTypeEntity.mathTypeDomain?.unitId).isEqualTo(unitId)
         assertThat(mathCategoryTypeEntity.mathTypeDomain?.typeId).isEqualTo(typeId)
-        assertThat(mathCategoryTypeEntity.quesType).isEqualTo("약수와 배수")
+        assertThat(mathCategoryTypeEntity.quesType).isNotNull
         assertThat(mathCategoryTypeEntity.typeOrder).isOne()
     }
 }

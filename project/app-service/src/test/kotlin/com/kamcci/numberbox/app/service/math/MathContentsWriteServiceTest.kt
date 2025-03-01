@@ -17,9 +17,15 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class MathContentsWriteServiceTest {
+    // 테스트 더블 및 대상 설정
     private val mathContentsReadOrmPort = MockMathContentsReadCase()
     private val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
     private val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
+
+    // 테스트 데이터
+    private val mathContentsModifyDto = getMathContentsModifyDto("any", listOf(""))
+    private val mathConLicModifyDto = getMathConLicenseModifyDto()
+    private val mathConIpsiSrcModifyDto = getMathConIpsiSrcModifyDto()
 
     @Test
     fun `사용자 수학문제 등록 - 성공`() {
@@ -29,7 +35,7 @@ class MathContentsWriteServiceTest {
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createUserCustomContents(getMathContentsModifyDto(), getMathConLicenseModifyDto())
+        mathContentsWriteService.createUserCustomContents(mathContentsModifyDto, mathConLicModifyDto)
 
         // then
         assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
@@ -43,7 +49,7 @@ class MathContentsWriteServiceTest {
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createInHouseContents(getMathContentsModifyDto(), getMathConSimilarSrcCreateDto())
+        mathContentsWriteService.createInHouseContents(mathContentsModifyDto, getMathConSimilarSrcCreateDto())
 
         // then
         assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
@@ -55,7 +61,7 @@ class MathContentsWriteServiceTest {
         val orgContentsId = 1L
 
         // when
-        val contentsId = mathContentsWriteService.createTransContents(orgContentsId, getMathContentsModifyDto())
+        val contentsId = mathContentsWriteService.createTransContents(orgContentsId, mathContentsModifyDto)
 
         // then
         assertThat(contentsId).isEqualTo(1L)
@@ -68,7 +74,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.createTransContents(notExistId, getMathContentsModifyDto())
+            mathContentsWriteService.createTransContents(notExistId, mathContentsModifyDto)
         }
         assertThat(exception.msg).isEqualTo(MathContentsWriteService.NOT_EXIST_CONTENTS)
     }
@@ -81,7 +87,7 @@ class MathContentsWriteServiceTest {
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
 
         // when
-        mathContentsWriteService.createIpsiContents(getMathContentsModifyDto(), getMathConIpsiSrcModifyDto())
+        mathContentsWriteService.createIpsiContents(mathContentsModifyDto, mathConIpsiSrcModifyDto)
 
         // then
         assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
@@ -96,8 +102,8 @@ class MathContentsWriteServiceTest {
         assertDoesNotThrow {
             mathContentsWriteService.updateUserCustomContents(
                 contentsId,
-                getMathContentsModifyDto(),
-                getMathConLicenseModifyDto()
+                mathContentsModifyDto,
+                mathConLicModifyDto
             )
         }
     }
@@ -111,8 +117,8 @@ class MathContentsWriteServiceTest {
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateUserCustomContents(
                 contentsId,
-                getMathContentsModifyDto(),
-                getMathConLicenseModifyDto()
+                mathContentsModifyDto,
+                mathConLicModifyDto
             )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
@@ -127,7 +133,7 @@ class MathContentsWriteServiceTest {
         assertDoesNotThrow {
             mathContentsWriteService.updateInHouseContents(
                 contentsId,
-                getMathContentsModifyDto(),
+                mathContentsModifyDto,
                 getMathConSimilarSrcCreateDto()
             )
         }
@@ -142,7 +148,7 @@ class MathContentsWriteServiceTest {
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateInHouseContents(
                 contentsId,
-                getMathContentsModifyDto(),
+                mathContentsModifyDto,
                 getMathConSimilarSrcCreateDto()
             )
         }
@@ -159,8 +165,8 @@ class MathContentsWriteServiceTest {
         assertDoesNotThrow {
             mathContentsWriteService.updateIpsiContents(
                 contentsId,
-                getMathContentsModifyDto(),
-                getMathConIpsiSrcModifyDto(),
+                mathContentsModifyDto,
+                mathConIpsiSrcModifyDto,
             )
         }
     }
@@ -174,8 +180,8 @@ class MathContentsWriteServiceTest {
         val ex = assertThrows<BusinessInValidException> {
             mathContentsWriteService.updateIpsiContents(
                 contentsId,
-                getMathContentsModifyDto(),
-                getMathConIpsiSrcModifyDto(),
+                mathContentsModifyDto,
+                mathConIpsiSrcModifyDto,
             )
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
@@ -188,10 +194,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         assertDoesNotThrow {
-            mathContentsWriteService.updateTransContents(
-                contentsId,
-                getMathContentsModifyDto(),
-            )
+            mathContentsWriteService.updateTransContents(contentsId, mathContentsModifyDto)
         }
     }
 
@@ -202,10 +205,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.updateTransContents(
-                contentsId,
-                getMathContentsModifyDto(),
-            )
+            mathContentsWriteService.updateTransContents(contentsId, mathContentsModifyDto)
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_UPDATED_CONTENTS)
     }
@@ -218,10 +218,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         assertDoesNotThrow {
-            mathContentsWriteService.delete(
-                contentsId,
-                memberId,
-            )
+            mathContentsWriteService.delete(contentsId, memberId)
         }
     }
 
@@ -233,10 +230,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.delete(
-                contentsId,
-                memberId,
-            )
+            mathContentsWriteService.delete(contentsId, memberId)
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_DELETED_CONTENTS)
     }
@@ -248,9 +242,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         assertDoesNotThrow {
-            mathContentsWriteService.delete(
-                memberId,
-            )
+            mathContentsWriteService.delete(memberId)
         }
     }
 
@@ -261,9 +253,7 @@ class MathContentsWriteServiceTest {
 
         // when & then
         val ex = assertThrows<BusinessInValidException> {
-            mathContentsWriteService.delete(
-                memberId,
-            )
+            mathContentsWriteService.delete(memberId)
         }
         assertThat(ex.msg).isEqualTo(MathContentsWriteService.NOT_DELETED_CONTENTS)
     }

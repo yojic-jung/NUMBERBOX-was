@@ -13,7 +13,6 @@ class LogoutSuccessEventListenerTest {
     fun `초기화`() {
         logoutSuccessEventListener =
             LogoutSuccessEventListener(MockMemberRefreshTokenRepository())
-
     }
 
     @Test
