@@ -31,13 +31,17 @@ class MathResourceFactoryTest {
             val updateEntity = MathResourceFactory.getUpdateEntity(MathResourceEntity(), updateDto)
 
             // then
-            assertThat(updateEntity.title).isEqualTo(updateDto.title)
-            assertThat(updateEntity.imgPath).isEqualTo(updateDto.imgPath)
-            assertThat(updateEntity.imgName).isEqualTo(updateDto.imgName)
-            assertThat(updateEntity.pptPath).isEqualTo(updateDto.pptFilePath)
-            assertThat(updateEntity.pptName).isEqualTo(updateDto.pptFileName)
-            assertThat(updateEntity.pptPageCnt).isEqualTo(updateDto.pptPageCnt ?: 0)
+            assertEntity(updateEntity, updateDto)
         }
+    }
+
+    private fun assertEntity(updateEntity: MathResourceEntity, updateDto: MathResourceUpdateDto) {
+        assertThat(updateEntity.title).isEqualTo(updateDto.title)
+        assertThat(updateEntity.imgPath).isEqualTo(updateDto.imgPath)
+        assertThat(updateEntity.imgName).isEqualTo(updateDto.imgName)
+        assertThat(updateEntity.pptPath).isEqualTo(updateDto.pptFilePath)
+        assertThat(updateEntity.pptName).isEqualTo(updateDto.pptFileName)
+        assertThat(updateEntity.pptPageCnt).isEqualTo(updateDto.pptPageCnt ?: 0)
     }
 
 }

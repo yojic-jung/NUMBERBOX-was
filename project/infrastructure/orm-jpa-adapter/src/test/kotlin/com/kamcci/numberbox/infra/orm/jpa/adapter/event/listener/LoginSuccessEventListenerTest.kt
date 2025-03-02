@@ -3,19 +3,12 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
 import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockMemberRefreshTokenRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockMemberRepositorySupport
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class LoginSuccessEventListenerTest {
-    private lateinit var loginSuccessEventListener: LoginSuccessEventListener
-
-    @BeforeEach
-    fun `초기화`() {
-        loginSuccessEventListener =
-            LoginSuccessEventListener(MockMemberRepositorySupport(), MockMemberRefreshTokenRepository())
-
-    }
+    private val loginSuccessEventListener =
+        LoginSuccessEventListener(MockMemberRepositorySupport(), MockMemberRefreshTokenRepository())
 
     @Test
     fun `로그인 성공 이벤트 리스너 검증`() {

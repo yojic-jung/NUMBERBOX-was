@@ -3,20 +3,13 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.event.listener
 import com.kamcci.modules.logging.control.dto.ClientLoggingInfoEventDto
 import com.kamcci.modules.logging.control.dto.HttpRequestLoggingDto
 import com.kamcci.modules.logging.control.dto.HttpResponseLoggingDto
-import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.log.LogClientApiRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.mock.MockLogClientApiRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class AccessLogApiEventListenerTest {
-    private val logClientApiRepository = object : LogClientApiRepository() {
-        var executeCnt = 0
-        override fun save(loggingEventDto: ClientLoggingInfoEventDto): Long {
-            executeCnt++
-            return 1L
-        }
-    }
-
+    private val logClientApiRepository = MockLogClientApiRepository()
     private val accessLogApiEventListener = AccessLogApiEventListener(logClientApiRepository)
 
     @Test

@@ -12,14 +12,17 @@ class HwpSocketClientServiceTest {
         const val RESPONSE_DATA = "TEST"
     }
 
+    // 테스트 대상 설정
     private val socketFactory: SocketFactory = getSocketFactory(RESPONSE_DATA)
+    private val hwpSocketClientService = HwpSocketClientService(socketFactory)
 
+    // 테스트 대상 설정 - 에러 케이스
     private val socketErrFactory: SocketFactory = getErrorSocketFactory()
+    private val hwpSocketClientServiceErrCase = HwpSocketClientService(socketErrFactory)
 
     @Test
     fun `jsonMsg to hwp 파일 변환 요청 - 성공`() {
         // given
-        val hwpSocketClientService = HwpSocketClientService(socketFactory)
         val jsonMsg = "{\"key\":\"val\"}"
 
         // when
@@ -32,12 +35,11 @@ class HwpSocketClientServiceTest {
     @Test
     fun `jsonMsg to hwp 파일 변환 요청 - 실패`() {
         // given
-        val hwpSocketClientService = HwpSocketClientService(socketErrFactory)
         val jsonMsg = "{\"key\":\"val\"}"
 
         // when & then
         assertThrows<RuntimeException> {
-            hwpSocketClientService.requestHwpFile(jsonMsg)
+            hwpSocketClientServiceErrCase.requestHwpFile(jsonMsg)
         }
     }
 
@@ -45,7 +47,6 @@ class HwpSocketClientServiceTest {
     @Test
     fun `hwp to html zip 파일 변환 요청 - 성공`() {
         // given
-        val hwpSocketClientService = HwpSocketClientService(socketFactory)
         val jsonMsg = "{\"key\":\"val\"}".byteInputStream()
 
         // when
@@ -63,12 +64,11 @@ class HwpSocketClientServiceTest {
     @Test
     fun `hwp to html zip 파일 변환 요청 - 실패`() {
         // given
-        val hwpSocketClientService = HwpSocketClientService(socketErrFactory)
         val jsonMsg = "{\"key\":\"val\"}".byteInputStream()
 
         // when & then
         assertThrows<RuntimeException> {
-            hwpSocketClientService.requestHtmlZip(
+            hwpSocketClientServiceErrCase.requestHtmlZip(
                 jsonMsg,
                 RESPONSE_DATA.toByteArray().size,
                 HwpExtensionType.HWP

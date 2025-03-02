@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
 class FileDeleteEventListenerTest {
+    private val sysGarbageFileWriteOrmPort = MockSysGarbageFileWriteOrmPort()
+    private val fileDeleteEventListener = FileDeleteEventListener(sysGarbageFileWriteOrmPort)
+
     @Test
     fun `파일 삭제 이벤트 리스너 검증`() {
-        val sysGarbageFileWriteOrmPort = MockSysGarbageFileWriteOrmPort()
-        val fileDeleteEventListener = FileDeleteEventListener(sysGarbageFileWriteOrmPort)
+
         // given
         val deleteDto = FileDeleteDto(GarbageFileType.S3, "", "")
 

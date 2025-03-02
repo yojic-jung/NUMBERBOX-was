@@ -1,10 +1,8 @@
 package com.kamcci.numberbox.infra.storage.adapter.service
 
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.services.s3.model.PutObjectRequest
-import com.amazonaws.services.s3.model.PutObjectResult
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
+import com.kamcci.numberbox.infra.storage.adapter.mock.MockAmazonS3Client
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -69,14 +67,5 @@ class AwsS3StorageTest {
 
         // then
         assertThat(fileUrl).isNotNull()
-    }
-}
-
-class MockAmazonS3Client : AmazonS3Client() {
-    override fun putObject(putObjectRequest: PutObjectRequest): PutObjectResult? {
-        return null
-    }
-
-    override fun deleteObject(bucketName: String?, key: String) {
     }
 }
