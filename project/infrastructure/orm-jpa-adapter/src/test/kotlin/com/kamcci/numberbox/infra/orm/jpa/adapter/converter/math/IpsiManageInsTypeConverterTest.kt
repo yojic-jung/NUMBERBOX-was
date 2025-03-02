@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.IpsiManageInsType
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -9,12 +10,8 @@ class IpsiManageInsTypeConverterTest {
 
     @Test
     fun `to IpsiManageInsType`() {
-        // when
-        IpsiManageInsType.entries.forEach { ipsiManageInsType ->
-            val type = ipsiManageInsTypeConverter.convertToEntityAttribute(ipsiManageInsType.dbData)
-
-            // then
-            Assertions.assertThat(type).isEqualTo(ipsiManageInsType)
+        assertDataToEnumMapping(IpsiManageInsType::class.java) { enum ->
+            ipsiManageInsTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
     }
 

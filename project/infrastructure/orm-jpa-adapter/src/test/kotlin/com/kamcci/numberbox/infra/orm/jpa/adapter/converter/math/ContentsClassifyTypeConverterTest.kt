@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
-import org.assertj.core.api.Assertions
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class ContentsClassifyTypeConverterTest {
@@ -9,21 +9,8 @@ class ContentsClassifyTypeConverterTest {
 
     @Test
     fun `to contentsClassifyType`() {
-        // when
-        ContentsClassifyType.entries.forEach { contentsClassifyType ->
-            val type = contentsClassifyTypeConverter.convertToEntityAttribute(contentsClassifyType.dbData)
-
-            // then
-            Assertions.assertThat(type).isEqualTo(contentsClassifyType)
+        assertDataToEnumMapping(ContentsClassifyType::class.java) { enum ->
+            contentsClassifyTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = contentsClassifyTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        Assertions.assertThat(type).isEqualTo(null)
     }
 }

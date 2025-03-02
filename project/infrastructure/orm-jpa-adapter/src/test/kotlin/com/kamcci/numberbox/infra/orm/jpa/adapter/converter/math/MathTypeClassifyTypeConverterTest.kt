@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.MathTypeClassifyType
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,22 +10,9 @@ class MathTypeClassifyTypeConverterTest {
 
     @Test
     fun `dbData to MathTypeClassifyType`() {
-        // when
-        MathTypeClassifyType.entries.forEach { mathTypeClassifyType ->
-            val type = mathTypeClassifyTypeConverter.convertToEntityAttribute(mathTypeClassifyType.dbData)
-
-            // then
-            assertThat(type).isEqualTo(mathTypeClassifyType)
+        assertDataToEnumMapping(MathTypeClassifyType::class.java) { enum ->
+            mathTypeClassifyTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null(db) to null(attribute)`() {
-        // when
-        val type = mathTypeClassifyTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        assertThat(type).isEqualTo(null)
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.cs
 
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
-import org.assertj.core.api.Assertions.assertThat
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class ReportSttsTypeConverterTest {
@@ -9,22 +9,8 @@ class ReportSttsTypeConverterTest {
 
     @Test
     fun `dbData to ReportSttsType`() {
-        // when
-        ReportSttsType.entries.forEach { reportSttsType ->
-            val type = reportSttsTypeConverter.convertToEntityAttribute(reportSttsType.dbData)
-
-            // then
-            assertThat(type).isEqualTo(reportSttsType)
+        assertDataToEnumMapping(ReportSttsType::class.java) { enum ->
+            reportSttsTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
     }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = reportSttsTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        assertThat(type).isEqualTo(null)
-    }
-
 }

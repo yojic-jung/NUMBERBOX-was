@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.FormulaClassificationType
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,22 +10,9 @@ class FormulaClassificationTypeConverterTest {
 
     @Test
     fun `dbData to FormulaClassificationType`() {
-        // when
-        FormulaClassificationType.entries.forEach { formulaClassificationType ->
-            val type = formulaClassificationTypeConverter.convertToEntityAttribute(formulaClassificationType.dbData)
-
-            // then
-            assertThat(type).isEqualTo(formulaClassificationType)
+        assertDataToEnumMapping(FormulaClassificationType::class.java) { enum ->
+            formulaClassificationTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = formulaClassificationTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        assertThat(type).isEqualTo(null)
     }
 
     @Test

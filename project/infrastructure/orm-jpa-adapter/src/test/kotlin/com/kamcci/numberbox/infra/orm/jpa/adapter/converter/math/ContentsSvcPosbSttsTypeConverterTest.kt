@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
-import org.assertj.core.api.Assertions.assertThat
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class ContentsSvcPosbSttsTypeConverterTest {
@@ -9,21 +9,8 @@ class ContentsSvcPosbSttsTypeConverterTest {
 
     @Test
     fun `dbData to ContentsSvcPosbSttsType`() {
-        // when
-        ContentsSvcPosbSttsType.entries.forEach { contentsSvcPosbSttsType ->
-            val type = contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(contentsSvcPosbSttsType.dbData)
-
-            // then
-            assertThat(type).isEqualTo(contentsSvcPosbSttsType)
+        assertDataToEnumMapping(ContentsSvcPosbSttsType::class.java) { enum ->
+            contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = contentsSvcPosbSttsTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        assertThat(type).isEqualTo(null)
     }
 }

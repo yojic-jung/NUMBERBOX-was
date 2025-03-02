@@ -18,8 +18,8 @@ class LogoutSuccessEventListenerTest {
     @Test
     fun `로그아웃 성공 이벤트 리스너 검증`() {
         // given
-        val refreshToken = "new-refresh-token"
-        val loginSuccessEvent = LogoutSuccessEvent(refreshToken)
+        val anyRefreshToken = "new-refresh-token"
+        val loginSuccessEvent = LogoutSuccessEvent(anyRefreshToken)
 
         // when & then
         assertDoesNotThrow {

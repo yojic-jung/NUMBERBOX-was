@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.member
 
 import com.kamcci.numberbox.app.domain.enumeration.member.ProfileType
-import org.assertj.core.api.Assertions
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class ProfileTypeConverterTest {
@@ -9,21 +9,8 @@ class ProfileTypeConverterTest {
 
     @Test
     fun `dbData to ProfileType`() {
-        // when
-        ProfileType.entries.forEach { profileType ->
-            val type = profileTypeConverter.convertToEntityAttribute(profileType.dbData)
-
-            // then
-            Assertions.assertThat(type).isEqualTo(profileType)
+        assertDataToEnumMapping(ProfileType::class.java) { enum ->
+            profileTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = profileTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        Assertions.assertThat(type).isEqualTo(null)
     }
 }

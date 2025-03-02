@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.member
 
 import com.kamcci.numberbox.app.domain.enumeration.member.VerifyCodeType
-import org.assertj.core.api.Assertions
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class VerifyCodeTypeConverterTest {
@@ -9,21 +9,8 @@ class VerifyCodeTypeConverterTest {
 
     @Test
     fun `dbData to VerifyCodeType`() {
-        // when
-        VerifyCodeType.entries.forEach { verifyCodeType ->
-            val type = verifyCodeTypeConverter.convertToEntityAttribute(verifyCodeType.dbData)
-
-            // then
-            Assertions.assertThat(type).isEqualTo(verifyCodeType)
+        assertDataToEnumMapping(VerifyCodeType::class.java) { enum ->
+            verifyCodeTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = verifyCodeTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        Assertions.assertThat(type).isEqualTo(null)
     }
 }

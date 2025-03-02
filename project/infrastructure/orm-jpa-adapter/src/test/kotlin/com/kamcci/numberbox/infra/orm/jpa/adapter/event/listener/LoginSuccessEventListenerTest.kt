@@ -20,12 +20,12 @@ class LoginSuccessEventListenerTest {
     @Test
     fun `로그인 성공 이벤트 리스너 검증`() {
         // given
-        val memberId = UUID.fromString("10ca3122-cda8-ea4d-9bc7-037cb86fdb20")
-        val refreshToken = "new-refresh-token"
+        val anyMemberId = UUID.fromString("10ca3122-cda8-ea4d-9bc7-037cb86fdb20")
+        val anyRefreshToken = "new-refresh-token"
         val remainedRefreshTokens = listOf("old-refresh-token", "", null)
 
         for (remainedRefreshToken in remainedRefreshTokens) {
-            val loginSuccessEvent = LoginSuccessEvent(memberId, refreshToken, remainedRefreshToken)
+            val loginSuccessEvent = LoginSuccessEvent(anyMemberId, anyRefreshToken, remainedRefreshToken)
             // when & then
             loginSuccessEventListener.handle(loginSuccessEvent)
         }

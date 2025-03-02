@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.converter.math
 
 import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
-import org.assertj.core.api.Assertions
+import com.kamcci.numberbox.infra.orm.jpa.adapter.util.CustomAssertUtil.assertDataToEnumMapping
 import org.junit.jupiter.api.Test
 
 class IpsiPaperTypeConverterTest {
@@ -9,21 +9,8 @@ class IpsiPaperTypeConverterTest {
 
     @Test
     fun `to IpsiPaperType`() {
-        // when
-        IpsiPaperType.entries.forEach { ipsiPaperType ->
-            val type = ipsiPaperTypeConverter.convertToEntityAttribute(ipsiPaperType.dbData)
-
-            // then
-            Assertions.assertThat(type).isEqualTo(ipsiPaperType)
+        assertDataToEnumMapping(IpsiPaperType::class.java) { enum ->
+            ipsiPaperTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
-    }
-
-    @Test
-    fun `null to null`() {
-        // when
-        val type = ipsiPaperTypeConverter.convertToEntityAttribute(null)
-
-        // then
-        Assertions.assertThat(type).isEqualTo(null)
     }
 }
