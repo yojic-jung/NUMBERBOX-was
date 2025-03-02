@@ -24,7 +24,9 @@ class HttpRequestLoggingFilterTest {
             MockMvcRequestBuilders
                 .get("/test")
                 .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(MockMvcResultMatchers.status().isOk)
+        )
+            // then
+            .andExpect(MockMvcResultMatchers.status().isOk)
     }
 }
 

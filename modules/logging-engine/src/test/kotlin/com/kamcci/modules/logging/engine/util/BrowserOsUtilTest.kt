@@ -9,171 +9,64 @@ import org.junit.jupiter.api.Test
 
 class BrowserOsUtilTest {
 
-    @Test
-    fun `브라우저 로깅 - 실패(브라우저 정보 null)`() {
-        // given
-        val browser = null
-        val osType = OsType.WINDOW
+    // 브라우저 로깅 테스트 케이스
+    private var browserLogTCList: MutableList<Triple<String?, OsType, BrowserType>> = mutableListOf()
 
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.ETC)
-    }
-
-
-    @Test
-    fun `브라우저 로깅 - 성공(os 윈도우, browser Safari)`() {
-        // given
-        val browser = "safari"
-        val osType = OsType.WINDOW
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.SAFARI)
+    private fun setUpBrowserTC() {
+        browserLogTCList.add(Triple(null, OsType.WINDOW, BrowserType.ETC))
+        browserLogTCList.add(Triple("safari", OsType.WINDOW, BrowserType.SAFARI))
+        browserLogTCList.add(Triple("chrome", OsType.WINDOW, BrowserType.CHROME))
+        browserLogTCList.add(Triple("", OsType.WINDOW, BrowserType.ETC))
+        browserLogTCList.add(Triple("safari", OsType.MAC, BrowserType.SAFARI))
+        browserLogTCList.add(Triple("chrome safari", OsType.MAC, BrowserType.CHROME))
+        browserLogTCList.add(Triple("FIREFOX", OsType.MAC, BrowserType.FIREFOX))
+        browserLogTCList.add(Triple("", OsType.MAC, BrowserType.ETC))
+        browserLogTCList.add(Triple("", OsType.ETC, BrowserType.ETC))
     }
 
     @Test
-    fun `브라우저 로깅 - 성공(os 윈도우, browser Chrome)`() {
+    fun `브라우저 로깅`() {
         // given
-        val browser = "chrome"
-        val osType = OsType.WINDOW
+        setUpBrowserTC()
 
-        // when
-        val browserType = browserLogging(browser, osType)
+        browserLogTCList.forEach {
+            val browserStr = it.first // 브라우저 문자열 추출 정보
+            val osType = it.second
 
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.CHROME)
+            // when
+            val browserType = browserLogging(browserStr, osType)
+
+            // then
+            val expectedType = it.third
+            assertThat(browserType).isEqualTo(expectedType)
+        }
+    }
+
+    // os 로깅 테스트 케이스
+    private var osLogTCList: MutableList<Pair<String?, OsType>> = mutableListOf()
+
+    private fun setUpOsTC() {
+        osLogTCList.add(Pair("window", OsType.WINDOW))
+        osLogTCList.add(Pair("MAC", OsType.MAC))
+        osLogTCList.add(Pair(null, OsType.ETC))
+        osLogTCList.add(Pair("", OsType.ETC))
     }
 
     @Test
-    fun `브라우저 로깅 - 성공(os 윈도우, browser 정보 없음)`() {
+    fun `OS 로깅`() {
         // given
-        val browser = ""
-        val osType = OsType.WINDOW
+        setUpOsTC()
 
         // when
-        val browserType = browserLogging(browser, osType)
+        osLogTCList.forEach {
+            val osStr = it.first // os 문자열 추출 정보
 
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.ETC)
+            // when
+            val osType = osLogging(osStr)
+
+            // then
+            val expectedType = it.second
+            assertThat(osType).isEqualTo(expectedType)
+        }
     }
-
-    @Test
-    fun `브라우저 로깅 - 성공(os Mac, browser Safari)`() {
-        // given
-        val browser = "safari"
-        val osType = OsType.MAC
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.SAFARI)
-    }
-
-    @Test
-    fun `브라우저 로깅 - 성공(os Mac, browser Chrome)`() {
-        // given
-        val browser = "chrome safari" // mac의 경우 chrome에 safari도 붙음
-        val osType = OsType.MAC
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.CHROME)
-    }
-
-
-    @Test
-    fun `브라우저 로깅 - 성공(os Mac, browser FIREFOX)`() {
-        // given
-        val browser = "FIREFOX"
-        val osType = OsType.MAC
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.FIREFOX)
-    }
-
-    @Test
-    fun `브라우저 로깅 - 성공(os MAC, browser 정보 없음)`() {
-        // given
-        val browser = ""
-        val osType = OsType.MAC
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.ETC)
-    }
-
-    @Test
-    fun `브라우저 로깅 - 성공(os 정보 없음)`() {
-        // given
-        val browser = ""
-        val osType = OsType.ETC
-
-        // when
-        val browserType = browserLogging(browser, osType)
-
-        // then
-        assertThat(browserType).isEqualTo(BrowserType.ETC)
-    }
-
-    @Test
-    fun `OS 로깅 - 성공(window)`() {
-        // given
-        val os = "window"
-
-        // when
-        val osType = osLogging(os)
-
-        // then
-        assertThat(osType).isEqualTo(OsType.WINDOW)
-    }
-
-    @Test
-    fun `OS 로깅 - 성공(MAC)`() {
-        // given
-        val os = "MAC"
-
-        // when
-        val osType = osLogging(os)
-
-        // then
-        assertThat(osType).isEqualTo(OsType.MAC)
-    }
-
-    @Test
-    fun `OS 로깅 - 성공(null)`() {
-        // given
-        val os = null
-
-        // when
-        val osType = osLogging(os)
-
-        // then
-        assertThat(osType).isEqualTo(OsType.ETC)
-    }
-
-    @Test
-    fun `OS 로깅 - 성공(정보 없음)`() {
-        // given
-        val os = ""
-
-        // when
-        val osType = osLogging(os)
-
-        // then
-        assertThat(osType).isEqualTo(OsType.ETC)
-    }
-
 }

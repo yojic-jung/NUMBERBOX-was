@@ -10,16 +10,29 @@ import org.junit.jupiter.api.assertDoesNotThrow
 
 class ClientLoggingAspectTest {
 
+    lateinit var reqLoggingService: MockHttpRequestLoggingService
+    lateinit var resLoggingService: MockHttpResponseLoggingService
+    lateinit var eventPublisher: MockEventPublisher
+    lateinit var loggingAspect: ClientLoggingAspect
+
+    // 테스트 더블 설정으로 인자값 true 설정시 해당 더블에서 예외 발생
+    private fun setUpMock(
+        isReqException: Boolean = false,
+        isResException: Boolean = false,
+        isEventException: Boolean = false
+    ) {
+        reqLoggingService = MockHttpRequestLoggingService(isReqException)
+        resLoggingService = MockHttpResponseLoggingService(isResException)
+        eventPublisher = MockEventPublisher(isEventException)
+
+        loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
+    }
+
     @Test
     fun `request 로깅 - 실패`() {
-        // given
-        // g1. request 예외 발생
-        val reqLoggingService = MockHttpRequestLoggingService(true)
-        val resLoggingService = MockHttpResponseLoggingService(false)
-        val eventPublisher = MockEventPublisher(false)
+        // given - request 예외 발생 설정
+        setUpMock(isReqException = true)
         val joinPoint = MockProceedingJoinPoint(200)
-
-        val loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
 
         // when
         loggingAspect.logRequestAndResponse(joinPoint)
@@ -30,14 +43,9 @@ class ClientLoggingAspectTest {
 
     @Test
     fun `response 로깅 - 실패`() {
-        // given
-        val reqLoggingService = MockHttpRequestLoggingService(false)
-        // g1. response 예외 발생 설정
-        val resLoggingService = MockHttpResponseLoggingService(true)
-
-        val eventPublisher = MockEventPublisher(false)
+        // given - response 예외 발생 설정
+        setUpMock(isResException = true)
         val joinPoint = MockProceedingJoinPoint(200)
-        val loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
 
         // when
         loggingAspect.logRequestAndResponse(joinPoint)
@@ -48,14 +56,9 @@ class ClientLoggingAspectTest {
 
     @Test
     fun `request, reponse 로깅 - 실패`() {
-        // g1. request 예외 발생 설정
-        val reqLoggingService = MockHttpRequestLoggingService(true)
-        // g1. response 예외 발생 설정
-        val resLoggingService = MockHttpResponseLoggingService(true)
-        val eventPublisher = MockEventPublisher(false)
+        // given - request, response 예외 발생 설정
+        setUpMock(isReqException = true, isResException = true)
         val joinPoint = MockProceedingJoinPoint(200)
-
-        val loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
 
         // when
         loggingAspect.logRequestAndResponse(joinPoint)
@@ -68,10 +71,7 @@ class ClientLoggingAspectTest {
     @Test
     fun `request, reponse 로깅 - 성공`() {
         // given
-        val reqLoggingService = MockHttpRequestLoggingService(false)
-        val resLoggingService = MockHttpResponseLoggingService(false)
-        val eventPublisher = MockEventPublisher(false)
-        val loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
+        setUpMock()
         val joinPoint = MockProceedingJoinPoint(200)
 
         // when
@@ -83,12 +83,8 @@ class ClientLoggingAspectTest {
 
     @Test
     fun `request, reponse 로깅 - 실패(event 발행 중 예외 발생)`() {
-        // given
-        val reqLoggingService = MockHttpRequestLoggingService(false)
-        val resLoggingService = MockHttpResponseLoggingService(false)
-        // g1. eventPublisher 예외 발생
-        val eventPublisher = MockEventPublisher(true)
-        val loggingAspect = ClientLoggingAspect(reqLoggingService, resLoggingService, eventPublisher)
+        // given - eventPublisher 예외 발생
+        setUpMock(isEventException = true)
         val joinPoint = MockProceedingJoinPoint(200)
 
         // when & then

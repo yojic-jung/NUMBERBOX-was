@@ -11,8 +11,8 @@ class HttpResponseLoggingServiceTest {
 
     @Test
     fun `응답 정보 로깅 - 실패(ResponseEntity 타입 아님)`() {
-        // given
-        val notResponseEntity = ""
+        // given - 문자열 전달
+        val notResponseEntity = "any"
 
         // when & then
         assertThrows<ClassCastException> {
@@ -22,7 +22,7 @@ class HttpResponseLoggingServiceTest {
 
     @Test
     fun `응답 정보 로깅 - 성공`() {
-        // given
+        // given - ResponseEntity 전달
         val statusCode = HttpStatus.OK
         val responseEntity: ResponseEntity<String> = ResponseEntity(statusCode)
 
