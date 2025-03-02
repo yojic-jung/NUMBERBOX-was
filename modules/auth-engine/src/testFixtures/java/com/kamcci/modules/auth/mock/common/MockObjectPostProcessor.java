@@ -24,7 +24,8 @@ import java.util.List;
 
 /**
  * Def. Security config 테스트를 위한 stub
- * Desc. Security 기본 동작에서 의존객체 필로한 타입별 생성
+ * Desc. Security 기본 동작에서 의존객체 필요한 타입별 생성
+ * 해당 객체를 직접 제어하기 위한 목적이 아닌 정상 구동을 위해 필요로한 의존성을 넣기 위한 목적
  */
 public class MockObjectPostProcessor implements ObjectPostProcessor<Object> {
     @Override

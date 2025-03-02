@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class JwtRequestAuthProviderTest {
     private final Map<String, Object> details = new HashMap<>();
     private JwtAuthenticationToken authentication;
-    // 테스트 대상
+    // 테스트 대상 및 더블
     private MockUserDetailsService userDetailsService;
     private MockJwtRequestUserDetailService jwtRequestUserDetailService;
     private MockAuthTokenUtil authTokenUtil;

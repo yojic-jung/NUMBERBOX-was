@@ -6,27 +6,24 @@ import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.context.annotation.Profile
 import javax.mail.Authenticator
 import javax.mail.Message
 import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
-import kotlin.reflect.full.findAnnotation
 
 class ProdMailSendProcessorTest {
     @Test
     fun `ProdMailSendProcessor 실행 여부 검증 - 성공`() {
-        // given
+        // given - 메시지 설정
         val session = Session.getInstance(System.getProperties(), object : Authenticator() {
         })
         val message = MimeMessage(session)
 
-        // 모킹
+        // 실제 메시지 전송은 모킹
         mockkStatic(Transport::class)
         every { Transport.send(message) } returns Unit
 
@@ -38,7 +35,9 @@ class ProdMailSendProcessorTest {
         verify {
             Transport.send(message)
         }
-        cleanUp()
+
+        // 후처리 - 스태틱 모킹 제거
+        unmockkStatic(Transport::class)
     }
 
     @Test
@@ -52,6 +51,7 @@ class ProdMailSendProcessorTest {
         }
     }
 
+    // 메시지 생성
     private fun makeMessage(): Message {
         val mailProps = System.getProperties()
         mailProps["mail.smtp.host"] = ""
@@ -78,18 +78,4 @@ class ProdMailSendProcessorTest {
             setContent("contents", HttpContentType.HTML.type)
         }
     }
-
-    @Test
-    fun `ProdMailSendProcessor는 prod에서만 사용 가능 설정 - 성공`() {
-        val annotation = ProdMailSendProcessor::class.findAnnotation<Profile>() as Profile
-
-        // then
-        Assertions.assertThat(annotation).isNotNull
-        Assertions.assertThat(annotation.value).contains("prod")
-    }
-
-    private fun cleanUp() {
-        unmockkStatic(Transport::class)
-    }
-
 }

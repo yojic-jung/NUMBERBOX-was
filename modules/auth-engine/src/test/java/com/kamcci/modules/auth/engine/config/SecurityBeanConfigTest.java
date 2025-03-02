@@ -19,21 +19,35 @@ import static com.kamcci.modules.auth.config.AuthConfigFixture.getAuthLoginUrlPr
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class SecurityBeanConfigTest {
-    private final SecurityBeanConfig beanConfig = new SecurityBeanConfig(getAuthJwtProperty(),
-            getAuthLoginUrlProperty());
-
     @Test
     void beanConfig_의존설정_성공() {
+        // given
+        SecurityBeanConfig beanConfig = new SecurityBeanConfig(getAuthJwtProperty(), getAuthLoginUrlProperty());
+
+        // when - bean 조회
+        // 인증 토큰 유틸
         AuthTokenUtil authTokenUtil = beanConfig.authTokenUtil();
+
+        // 비밀번호 인코더
         PasswordEncoder passwordEncoder = beanConfig.passwordEncoder();
+
+        //
         UserDetailsService userDetailsService =
                 beanConfig.loginRequestUserService(new MockLoginRequestUserDetailService());
+
+        // 토큰 응답 service
         TokenResponseService tokenResponseService =
                 beanConfig.tokenResponseService(new MockApplicationEventPublisher());
+
+        // 로그인 인증 처리 provider
         LoginRequestAuthProvider loginRequestAuthProvider = beanConfig.loginRequestAuthProvider(userDetailsService,
                 passwordEncoder);
+
+        // jwt 인증 처리 provider
         JwtRequestAuthProvider jwtRequestAuthProvider = beanConfig.jwtRequestAuthProvider(userDetailsService,
                 new MockJwtRequestUserDetailService(), authTokenUtil);
+
+        // 인증 매니저
         AuthenticationManager authenticationManager = beanConfig.authenticationManager(loginRequestAuthProvider,
                 jwtRequestAuthProvider);
 

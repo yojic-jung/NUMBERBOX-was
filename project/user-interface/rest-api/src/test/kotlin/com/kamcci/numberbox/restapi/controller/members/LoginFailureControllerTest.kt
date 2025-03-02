@@ -5,7 +5,6 @@ import com.kamcci.modules.auth.control.exception.DisabledUserException
 import com.kamcci.modules.auth.control.exception.PasswordMissMatchException
 import com.kamcci.modules.auth.control.exception.UserNotFoundException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_EMAIL
-import com.kamcci.numberbox.app.usecase.member.MemberLoginFailureUseCase
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.util.response.ResponseErrMsg
@@ -19,8 +18,6 @@ import org.springframework.mock.web.MockHttpServletRequest
 class LoginFailureControllerTest(
     @Autowired
     private val loginFailureController: LoginFailureController,
-    @Autowired
-    private val memberLoginFailureUseCase: MemberLoginFailureUseCase
 ) : BaseMockMvcTest() {
     @Test
     fun `로그인 실패 콜백 - 요청 형식 오류`() {

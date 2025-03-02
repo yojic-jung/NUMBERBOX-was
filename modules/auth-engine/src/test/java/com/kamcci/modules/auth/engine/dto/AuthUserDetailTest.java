@@ -25,14 +25,17 @@ class AuthUserDetailTest {
 
     @Test
     void equals_성공() {
+        // given - user 정보 동일하게 설정
         AuthUserDetail authDetail = new AuthUserDetail(user);
         AuthUserDetail compareDetail = new AuthUserDetail(user);
 
+        // then
         assertThat(authDetail).isEqualTo(compareDetail);
     }
 
     @Test
     void equals_실패() {
+        // given - user 정보 각기 다르게 설정
         UUID uuid = UUID.randomUUID();
         AuthUserDetail authDetail = new AuthUserDetail(user);
         AuthUserDetail compareDetail = new AuthUserDetail(new AuthUserInfo("username1", uuid, "", roleList));
@@ -41,23 +44,27 @@ class AuthUserDetailTest {
         AuthUserDetail compareDetail3 = new AuthUserDetail(new AuthUserInfo("username2", UUID.randomUUID(), "",
                 roleList));
 
+        // then
         assertThat(authDetail).isNotEqualTo(compareDetail).isNotEqualTo(compareDetail2).isNotEqualTo(compareDetail3);
     }
 
     @Test
     void equals_실패_디테일_아님() {
+        // given - 서로 다른 클래스 타입
         AuthUserDetail userDtail = new AuthUserDetail(user);
         String token = "";
+
+        // then - 클래스 타입 다르면 불일치
         assertThat(userDtail).isNotEqualTo(token);
     }
 
     @Test
     void userDetail_hashcode() {
-        // when
-        AuthUserDetail userDtail = new AuthUserDetail(user);
+        // given - user 정보 같게 설정
+        AuthUserDetail userDetail = new AuthUserDetail(user);
         AuthUserDetail compareDetail = new AuthUserDetail(user);
 
         // then
-        assertThat(userDtail).hasSameHashCodeAs(compareDetail);
+        assertThat(userDetail).hasSameHashCodeAs(compareDetail);
     }
 }

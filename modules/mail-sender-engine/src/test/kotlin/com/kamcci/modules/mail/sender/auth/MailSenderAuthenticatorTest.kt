@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class MailSenderAuthenticatorTest {
     @Test
     fun getPasswordAuthentication() {
-        // given
+        // given - 인증 프로퍼티 생성
         val userName = "userName"
         val password = "password"
         val googleAccountProp = GoogleAccountProperty(userName, password)

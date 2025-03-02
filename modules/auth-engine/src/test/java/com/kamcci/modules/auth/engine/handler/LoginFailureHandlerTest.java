@@ -32,12 +32,15 @@ class LoginFailureHandlerTest {
 
     @Test
     void 인증실패_api_호출_성공() throws ServletException, IOException {
+        // given
+        // g1. 발생 예외에 따른 예외 전환 클래스 타입
         Map<AuthenticationException, Class<? extends Exception>> exMap = new HashMap<>();
         exMap.put(new UsernameNotFoundException(""), UserNotFoundException.class);
         exMap.put(new BadCredentialsException(""), PasswordMissMatchException.class);
         exMap.put(new DisabledException(""), DisabledUserException.class);
         exMap.put(new BadInputRequestException(""), BadAuthRequestException.class);
         exMap.put(new AccountExpiredException(""), AuthInternalServerException.class);
+        // request 및 response 설정
         MockHttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
         request.setDispatcherType(DispatcherType.REQUEST);

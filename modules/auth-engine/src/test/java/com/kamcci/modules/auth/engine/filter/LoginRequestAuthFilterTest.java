@@ -27,6 +27,7 @@ class LoginRequestAuthFilterTest {
     // 테스트 데이터
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
+    // 테스트 더블
     private final AuthLoginUrlProperty authLoginUrlProperty = getAuthLoginUrlProperty();
     private MockAuthenticationManager authenticationManager;
     private MockAuthenticationSuccessHandler authenticationSuccessHandler;

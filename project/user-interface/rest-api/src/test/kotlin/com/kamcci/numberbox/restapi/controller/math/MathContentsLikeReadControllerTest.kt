@@ -26,7 +26,7 @@ class MathContentsLikeReadControllerTest : BaseMockMvcTest() {
 
     @Test
     fun `좋아요 및 저장소 여부 - 실패`() {
-        // given
+        // given - id 정수 타입 아님
         val contentsId = "ㅁㅇ"
 
         // when

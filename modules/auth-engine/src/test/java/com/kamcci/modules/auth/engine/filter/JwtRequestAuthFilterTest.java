@@ -16,11 +16,11 @@ import static com.kamcci.modules.auth.mock.common.MockAuthenticationManager.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JwtRequestAuthFilterTest {
-    // 테스트 대상
     // 테스트 데이터
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
     private final FilterChain filterChain = new MockFilterChain();
+    // 테스트 대상 및 더블
     private MockAuthenticationManager authenticationManager;
     private MockTokenResponseService tokenResponseService;
     private JwtRequestAuthFilter jwtRequestAuthFilter;

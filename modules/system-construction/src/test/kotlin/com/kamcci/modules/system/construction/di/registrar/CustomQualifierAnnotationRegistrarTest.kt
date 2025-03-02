@@ -9,15 +9,17 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.beans.factory.support.SimpleAutowireCandidateResolver
 
 class CustomQualifierAnnotationRegistrarTest {
+    private val beanFactory = DefaultListableBeanFactory()
+    private val customAnnot = CustomQualifier::class
+
+    // 테스트 대상
     private val customQualifierAnnotationRegistrar = CustomQualifierAnnotationRegistrar()
 
     @Test
     fun `Qualifier 역할 진행할 커스텀 어노테이션 설정 - 성공`() {
         // given
-        val beanFactory = DefaultListableBeanFactory()
         val qualifierResolver = MockQualifierAnnotationAutowireCandidateResolver()
         beanFactory.autowireCandidateResolver = qualifierResolver
-        val customAnnot = CustomQualifier::class
 
         // when
         customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)
@@ -32,10 +34,8 @@ class CustomQualifierAnnotationRegistrarTest {
     @Test
     fun `Qualifier 역할 진행할 커스텀 어노테이션 설정 - 실패`() {
         // given
-        val beanFactory = DefaultListableBeanFactory()
         val qualifierResolver = SimpleAutowireCandidateResolver()
         beanFactory.autowireCandidateResolver = qualifierResolver
-        val customAnnot = CustomQualifier::class
 
         // when
         customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)

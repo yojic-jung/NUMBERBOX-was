@@ -22,6 +22,12 @@ class AuthJwtUtilTest {
     static final String EMAIL = "email@email.com";
     static final UUID UNIQ_ID = UUID.randomUUID();
     static final String ROLE = "USER";
+    static final String EXPIRE_TOKEN = "eyJhbGciOiJIUzI1NiJ9" +
+            ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+    static final String INVALID_TOKEN = "111eyJ1hbGciOiJIUzI1NiJ9" +
+            ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+    static final String VALID_TOKEN = "eyJ1hbGciOiJIUzI1NiJ9" +
+            ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
     // 테스트 대상
     private final AuthJwtProperty authJwtProperty = getAuthJwtProperty();
     private final AuthJwtUtil authJwtUtil = new AuthJwtUtil(authJwtProperty);
@@ -37,6 +43,10 @@ class AuthJwtUtilTest {
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(accessToken).getBody();
+        assertAccessTokenClaims(claims, roleList);
+    }
+
+    private void assertAccessTokenClaims(Claims claims, List<String> roleList) {
         assertThat(claims).containsEntry(authJwtProperty.email(), EMAIL)
                 .containsEntry(authJwtProperty.id(), UNIQ_ID.toString()) //
                 .containsEntry(ROLE_NAME, roleList) //
@@ -74,6 +84,10 @@ class AuthJwtUtilTest {
 
         // then
         Claims claims = Jwts.parser().setSigningKey(authJwtProperty.secretKey()).parseClaimsJws(refreshToken).getBody();
+        assertRefreshTokenClaims(claims, validTime);
+    }
+
+    private void assertRefreshTokenClaims(Claims claims, long validTime) {
         assertThat(claims).containsEntry(authJwtProperty.domain(), true);
         assertThat(claims.getIssuer()).isEqualTo(authJwtProperty.issuer());
         assertThat(claims.getAudience()).isEqualTo(authJwtProperty.audience());
@@ -85,9 +99,7 @@ class AuthJwtUtilTest {
     @Test
     void 리프레시_토큰_재발급_성공() {
         // given
-        String expireToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJleHAiOjE3MzcyNTU3NzAsImlhdCI6MTczNzI1NTc2MH0.wMf4Ws6P9ZIY1ZX9KvUBa7yLLBBzM2UnVbosLkzQbpw";
-
+        String expireToken = EXPIRE_TOKEN;
         // when
         final String refreshToken = authJwtUtil.reCreateRefreshToken(expireToken);
 
@@ -100,8 +112,7 @@ class AuthJwtUtilTest {
     @Test
     void 만료된_토큰으로부터_이메일_추출_성공() {
         // given
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = EXPIRE_TOKEN;
 
         // when
         final String email = authJwtUtil.getEmail(accessToken);
@@ -113,8 +124,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰으로부터_이메일_추출_실패() {
         // given
-        final String accessToken = "eyJ1hbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = VALID_TOKEN;
 
         // when & then
         assertThrows(Exception.class, () -> {
@@ -125,8 +135,7 @@ class AuthJwtUtilTest {
     @Test
     void 만료된_토큰으로부터_id_추출_성공() {
         // given
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = EXPIRE_TOKEN;
 
         // when
         final UUID userUniqId = authJwtUtil.getUserId(accessToken);
@@ -138,8 +147,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰으로부터_id_추출_실패() {
         // given - 유효하지 않은 토큰
-        final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = INVALID_TOKEN;
 
         // when & then
         assertThrows(Exception.class, () -> {
@@ -179,8 +187,7 @@ class AuthJwtUtilTest {
     @Test
     void 만료된_토큰으로부터_권한_추출_성공() {
         // given
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = EXPIRE_TOKEN;
 
         // when
         final List<String> roleList = authJwtUtil.getRoles(accessToken);
@@ -193,9 +200,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰으로부터_권한_추출_실패() {
         // given - 유효하지 않은 토큰
-        final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
-
+        final String accessToken = INVALID_TOKEN;
         // when & then
         assertThrows(Exception.class, () -> {
             authJwtUtil.getRoles(accessToken);
@@ -218,8 +223,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰_만료로_유효성_실패() {
         // given - 만료된 토큰
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = EXPIRE_TOKEN;
 
         // when & then
         assertThrows(TokenExpirationException.class, () -> {
@@ -230,8 +234,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰_만료__유효성_검사_제외_성공() {
         // given - 만료된 토큰
-        final String accessToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = EXPIRE_TOKEN;
 
         // when & then
         assertDoesNotThrow(() -> {
@@ -242,8 +245,7 @@ class AuthJwtUtilTest {
     @Test
     void 토큰_유효성_실패() {
         // given - 유효하지 않은 jwt
-        final String accessToken = "111eyJ1hbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
+        final String accessToken = INVALID_TOKEN;
 
         // when & then
         assertThrows(Exception.class, () -> {
@@ -254,9 +256,7 @@ class AuthJwtUtilTest {
     @Test
     void 만료된_토큰_체크_성공() {
         // given
-        final String expireToken = "eyJhbGciOiJIUzI1NiJ9" +
-                ".eyJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoiNjg4ZmEyM2ItMTk0YS00NmYwLWJjMzEtMTQ2MDE4NjRmODAyIiwicm9sZXMiOlsiVVNFUiJdLCJkb21haW4uY29tIjp0cnVlLCJpc3MiOiJpc3N1ZXIiLCJzdWIiOiJzdWJqZWN0IiwiYXVkIjoiYXVkaWVuY2UiLCJpYXQiOjE3MzYwNDkxMDIsImV4cCI6MTczNjA0OTEwMn0.Q_IGuai54SFIk5eTyJMe923JkIEe5xIMBCZVBAeIo3o";
-
+        final String expireToken = EXPIRE_TOKEN;
         // when
         boolean isExpire = authJwtUtil.isExpiredToken(expireToken);
 

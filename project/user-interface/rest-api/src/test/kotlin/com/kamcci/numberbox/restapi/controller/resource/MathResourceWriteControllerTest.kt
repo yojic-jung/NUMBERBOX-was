@@ -2,7 +2,6 @@ package com.kamcci.numberbox.restapi.controller.resource
 
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
-import com.kamcci.numberbox.restapi.constant.RestApiTestConstant.PPT_SLIDE_RETURN_STR
 import com.kamcci.numberbox.restapi.sample.file.FileSampleData.getMultipartFile
 import org.junit.jupiter.api.Test
 
@@ -41,7 +40,7 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
             "midCateId" to "1",
             "cateList" to "1-1,1-2",
         )
-        val pptFile = getMultipartFile("pptFile", "name.ppt", PPT_SLIDE_RETURN_STR)
+        val pptFile = getMultipartFile("pptFile", "name.ppt", "any")
         val fileList = listOf(pptFile)
 
         // when
@@ -82,7 +81,7 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
             "midCateId" to "1",
             "cateList" to "1-1,1-2",
         )
-        val pptFile = getMultipartFile("pptFile", "name.ppt", PPT_SLIDE_RETURN_STR)
+        val pptFile = getMultipartFile("pptFile", "name.ppt", "any")
         val fileList = listOf(pptFile)
 
         // when

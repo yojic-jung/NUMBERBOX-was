@@ -41,11 +41,17 @@ class SecurityConfigTest {
     }
 
     @Test
+    void corsConfigurationSource_빈등록_설정_성공() {
+        assertThat(securityConfig.corsConfigurationSource()).isInstanceOf(CorsConfigurationSource.class);
+    }
+
+    @Test
     void filterChain_빈등록_설정_성공() throws Exception {
-        // givne
+        // given - 필터체인 의존성 설정
         HttpSecurity httpSecurity = getHttpSecurity();
         LoginRequestAuthFilter loginRequestAuthFilter = new LoginRequestAuthFilter("processUrl",
-                new MockAuthenticationManager(), new MockAuthenticationSuccessHandler(),
+                new MockAuthenticationManager(), //
+                new MockAuthenticationSuccessHandler(), //
                 new MockAuthenticationFailureHandler());
 
         // when
@@ -56,14 +62,25 @@ class SecurityConfigTest {
         assertThat(filterChain).isInstanceOf(SecurityFilterChain.class);
     }
 
-    // 테스트용 HttpSecurity 의존 설정
+    /**
+     * 테스트용 HttpSecurity 의존 설정
+     * - spring context 로딩이 없으므로 필터체인 메서드 실행 중 필요한 의존성을 직접 갖춰야함
+     * - 해당 객체를 직접 제어하기 위한 목적이 아닌 정상 구동을 위해 필요로한 의존성을 넣기 위한 목적
+     */
     private HttpSecurity getHttpSecurity() throws Exception {
+        //
         MockObjectPostProcessor mockObjectPostProcessor = new MockObjectPostProcessor();
+
+        //
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 new AuthenticationManagerBuilder(mockObjectPostProcessor);
         authenticationManagerBuilder.authenticationProvider(new MockAuthenticationProvider());
         authenticationManagerBuilder.parentAuthenticationManager(new MockAuthenticationManager());
+
+        //
         Map<Class<?>, Object> sharedObjects = new HashMap<>();
+
+        //
         GenericApplicationContext context = new GenericApplicationContext();
         context.refresh();
         sharedObjects.put(ApplicationContext.class, context);
@@ -74,10 +91,5 @@ class SecurityConfigTest {
             session.sessionAuthenticationStrategy(new ChangeSessionIdAuthenticationStrategy());
         });
         return security;
-    }
-
-    @Test
-    void corsConfigurationSource_빈등록_설정_성공() {
-        assertThat(securityConfig.corsConfigurationSource()).isInstanceOf(CorsConfigurationSource.class);
     }
 }

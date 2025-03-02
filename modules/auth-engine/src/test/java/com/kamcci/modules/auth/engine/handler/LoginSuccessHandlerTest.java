@@ -16,7 +16,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LoginSuccessHandlerTest {
-    // 테스트 대상
+    // 테스트 대상 및 더블
     private final TokenResponseService tokenResponseService = new MockTokenResponseService();
     private final LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler(tokenResponseService);
     // 테스트 데이터
@@ -25,11 +25,13 @@ class LoginSuccessHandlerTest {
 
     @Test
     void 로그인_성공() {
-        // given
+        // given - 인증 객체 설정
+        // g1. roll 설정
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(UserRoleType.USER.name()));
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("", "",
                 authorityList);
+        // g2. userId 설정
         final Map<String, Object> details = new HashMap<>();
         details.put(UserId.ATTR_NAME, UUID.randomUUID());
         authentication.setDetails(details);

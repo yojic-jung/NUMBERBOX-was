@@ -46,7 +46,7 @@ class HwpConvertControllerTest : BaseMockMvcTest() {
         // given
         val reqBody = mapOf(
             "id" to "1",
-            "contents" to "asdfjlalf",
+            "contents" to "any",
         )
 
         // when
@@ -61,7 +61,7 @@ class HwpConvertControllerTest : BaseMockMvcTest() {
         // given
         val reqBody = mapOf(
             "id" to FAIL_ID,
-            "contents" to "asdfjlalf",
+            "contents" to "any",
         )
 
         // when

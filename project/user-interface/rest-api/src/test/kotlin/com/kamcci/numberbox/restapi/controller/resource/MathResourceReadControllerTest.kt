@@ -72,5 +72,4 @@ class MathResourceReadControllerTest : BaseMockMvcTest() {
         // then
         assert2xx(resultAction)
     }
-
 }

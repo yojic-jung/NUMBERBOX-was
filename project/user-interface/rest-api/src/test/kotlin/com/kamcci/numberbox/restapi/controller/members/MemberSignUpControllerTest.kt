@@ -216,6 +216,4 @@ class MemberSignUpControllerTest : BaseMockMvcTest() {
         assert4xx(resultAction)
         assertException(resultAction, MethodArgumentNotValidException::class)
     }
-
-
 }

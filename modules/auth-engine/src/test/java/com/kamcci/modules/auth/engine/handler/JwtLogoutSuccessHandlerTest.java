@@ -10,7 +10,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JwtLogoutSuccessHandlerTest {
-    // 테스트 대상
+    // 테스트 대상 및 더블
     private final ApplicationEventPublisher eventPublisher = new MockApplicationEventPublisher();
     private final JwtLogoutSuccessHandler jwtLogoutSuccessHandler = new JwtLogoutSuccessHandler(eventPublisher);
     // 테스트 데이터
