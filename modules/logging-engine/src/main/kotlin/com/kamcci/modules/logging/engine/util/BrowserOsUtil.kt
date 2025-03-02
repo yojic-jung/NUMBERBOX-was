@@ -4,6 +4,7 @@ import com.kamcci.modules.logging.control.constant.BrowserType
 import com.kamcci.modules.logging.control.constant.OsType
 
 object BrowserOsUtil {
+    // 브라우저 정보 로깅 - os 버전에 따라 추출 문자열 다르기에 분기 처리
     fun browserLogging(browser: String?, osType: OsType): BrowserType {
         if (browser == null) return BrowserType.ETC
 
@@ -25,6 +26,7 @@ object BrowserOsUtil {
         }
     }
 
+    // os 정보 추출
     fun osLogging(os: String?): OsType {
         if (os == null) return OsType.ETC
 
