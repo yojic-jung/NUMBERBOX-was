@@ -1,9 +1,11 @@
 package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.NOT_EXIST_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.PERSIST_SUCCESS_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsReadCase
 import com.kamcci.numberbox.app.service.sample.MathContentsSampleData.getMathConIpsiSrcModifyDto
@@ -29,7 +31,7 @@ class MathContentsWriteServiceTest {
 
     @Test
     fun `사용자 수학문제 등록 - 성공`() {
-        // given
+        // given - 독립적인 MathContentsWriteService 인스턴스 생성 (동시성 제어)
         val mathContentsReadOrmPort = MockMathContentsReadCase()
         val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
@@ -41,9 +43,10 @@ class MathContentsWriteServiceTest {
         assertThat(mathContentsWriteOrmPort.executeCnt).isOne()
     }
 
+
     @Test
     fun `자체 수학문제 등록 - 성공`() {
-        // given
+        // given - 독립적인 MathContentsWriteService 인스턴스 생성 (동시성 제어)
         val mathContentsReadOrmPort = MockMathContentsReadCase()
         val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
@@ -58,19 +61,19 @@ class MathContentsWriteServiceTest {
     @Test
     fun `변형문제 등록 - 성공`() {
         // given
-        val orgContentsId = 1L
+        val orgContentsId = SUCCESS_ID
 
         // when
         val contentsId = mathContentsWriteService.createTransContents(orgContentsId, mathContentsModifyDto)
 
         // then
-        assertThat(contentsId).isEqualTo(1L)
+        assertThat(contentsId).isEqualTo(PERSIST_SUCCESS_ID)
     }
 
     @Test
     fun `변형문제 등록 - 실패(원본 문제 미존재)`() {
         // given
-        val notExistId = EXIST_ID + 1L
+        val notExistId = NOT_EXIST_ID
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
@@ -81,7 +84,7 @@ class MathContentsWriteServiceTest {
 
     @Test
     fun `입시 수학문제 등록 - 성공`() {
-        // given
+        // given - 독립적인 MathContentsWriteService 인스턴스 생성 (동시성 제어)
         val mathContentsReadOrmPort = MockMathContentsReadCase()
         val mathContentsWriteOrmPort = MockMathContentsWriteOrmPort()
         val mathContentsWriteService = MathContentsWriteService(mathContentsReadOrmPort, mathContentsWriteOrmPort)
@@ -96,7 +99,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `사용자 수학 문제 수정 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when
         assertDoesNotThrow {
@@ -127,7 +130,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `자체제작 수학 문제 수정 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when & then
         assertDoesNotThrow {
@@ -159,7 +162,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `입시 문제 수정 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when & then
         assertDoesNotThrow {
@@ -190,7 +193,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `변형 문제 수정 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when & then
         assertDoesNotThrow {
@@ -213,7 +216,7 @@ class MathContentsWriteServiceTest {
     @Test
     fun `수학 문제 삭제 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
         val memberId = UUID.randomUUID()
 
         // when & then

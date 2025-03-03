@@ -18,7 +18,7 @@ class MemberPrivateWriteServiceTest {
         val isUpdated = memberPrivateWriteService.updatePhoneNumber(phoneUpdtDto)
 
         // then
-        assertThat(isUpdated).isEqualTo(true)
+        assertThat(isUpdated).isTrue()
     }
 
     @Test
@@ -30,6 +30,6 @@ class MemberPrivateWriteServiceTest {
         val isUpdated = memberPrivateWriteService.updatePhoneNumber(phoneUpdtDto)
 
         // then
-        assertThat(isUpdated).isEqualTo(false)
+        assertThat(isUpdated).isFalse()
     }
 }

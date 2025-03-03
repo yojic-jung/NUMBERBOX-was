@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_EMAIL
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_STRING
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.NOT_EXIST_EMAIL
 import com.kamcci.numberbox.app.service.mock.port.etc.MockMemberPasswordEncoder
 import com.kamcci.numberbox.app.service.mock.port.orm.member.*
 import com.kamcci.numberbox.app.service.mock.usecase.member.MockMemberReadCase
@@ -40,8 +41,8 @@ class MemberWriteServiceTest {
     @Test
     fun `회원가입(개인정보 존재) - 성공`() {
         // given
-        val notExistEmail = EXIST_EMAIL.reversed()
-        val signUpDto = getMemberSignupDto(notExistEmail)
+        val email = NOT_EXIST_EMAIL
+        val signUpDto = getMemberSignupDto(email)
         val privateSignUpDto = getMemberPrivateSignUpDto()
 
         // when
@@ -54,8 +55,8 @@ class MemberWriteServiceTest {
     @Test
     fun `회원가입(개인정보 미존재) - 성공`() {
         // given
-        val notExistEmail = EXIST_EMAIL.reversed()
-        val signUpDto = getMemberSignupDto(notExistEmail)
+        val email = NOT_EXIST_EMAIL
+        val signUpDto = getMemberSignupDto(email)
         val privateSignUpDto = null
 
         // when
@@ -127,7 +128,7 @@ class MemberWriteServiceTest {
             profileModifyOrmPort,
             privateModifyRepo,
         )
-        mockMemberWriteOrmPort.isUpdateFail = true
+        mockMemberWriteOrmPort.isUpdateFail = true // 의존 객체 수정 실패 설정
 
         // when
         val isUpdated = memberWriteService.updatePassword(getMemberPasswdUpdtDto())
@@ -185,7 +186,6 @@ class MemberWriteServiceTest {
             profileModifyOrmPort,
             privateModifyRepo,
         )
-
         val ids = listOf(UUID.randomUUID(), UUID.randomUUID())
 
         // when

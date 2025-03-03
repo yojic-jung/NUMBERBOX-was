@@ -2,6 +2,7 @@ package com.kamcci.numberbox.app.service.member
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.member.MemberFollowWriteService.Companion.NOT_CANCELD
 import com.kamcci.numberbox.app.service.member.MemberFollowWriteService.Companion.NOT_FOLLOWED
 import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberFollowWriteOrmPort
@@ -16,11 +17,11 @@ class MemberFollowWriteServiceTest {
 
     @Test
     fun `팔로잉 - 성공`() {
-        // given
-        val followingId = 1L
+        // given - followerId는 아무 상수 상관 없음
+        val followingId = SUCCESS_ID
         val followerId = 2L
 
-        // when
+        // when & then
         assertDoesNotThrow {
             memberFollowWriteCase.following(followingId, followerId)
         }
@@ -28,7 +29,7 @@ class MemberFollowWriteServiceTest {
 
     @Test
     fun `팔로잉 - 실패`() {
-        // given
+        // given - followerId는 아무 상수 상관 없음
         val followingId = FAIL_ID
         val followerId = 2L
 
@@ -41,11 +42,11 @@ class MemberFollowWriteServiceTest {
 
     @Test
     fun `팔로잉 취소 - 성공`() {
-        // given
-        val followingId = 1L
+        // given - followerId는 아무 상수 상관 없음
+        val followingId = SUCCESS_ID
         val followerId = 2L
 
-        // when
+        // when & then
         assertDoesNotThrow {
             memberFollowWriteCase.cancel(followingId, followerId)
         }
@@ -53,7 +54,7 @@ class MemberFollowWriteServiceTest {
 
     @Test
     fun `팔로잉 취소 - 실패`() {
-        // given
+        // given - followerId는 아무 상수 상관 없음
         val followingId = FAIL_ID
         val followerId = 2L
 

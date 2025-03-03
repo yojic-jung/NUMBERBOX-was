@@ -2,6 +2,7 @@ package com.kamcci.numberbox.app.service.docs
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.PERSIST_SUCCESS_ID
 import com.kamcci.numberbox.app.service.mock.port.orm.docs.MockMathDocsUsageWriteOrmPort
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsUsageCreateDto
 import org.assertj.core.api.Assertions.assertThat
@@ -22,7 +23,7 @@ class MathDocsUsageWriteServiceTest {
         val expectedId = mathDocsUsageWriteService.create(memberId, createDto)
 
         // then
-        assertThat(expectedId).isEqualTo(1L)
+        assertThat(expectedId).isEqualTo(PERSIST_SUCCESS_ID)
     }
 
     @Test

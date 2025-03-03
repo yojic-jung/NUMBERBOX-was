@@ -5,6 +5,7 @@ import com.kamcci.numberbox.app.domain.enumeration.cs.BrowserType
 import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.mock.port.orm.cs.MockCsErrorReportWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.port.orm.docs.MockMathDocsPaperWriteOrmPort
 import org.junit.jupiter.api.Test
@@ -20,17 +21,17 @@ class CsErrorReportWriteServiceTest {
         // given
         val contentsErrDto = CsErrorReportCreateDto(
             errType = CSErrorType.MathContents,
-            contentsId = 1L, // 성공 케이스
+            contentsId = SUCCESS_ID,
             reportMemberId = UUID.randomUUID(),
-            reportContents = "contents",
+            reportContents = "any",
             clientOs = OsType.Etc,
             clientBrowser = BrowserType.Chrome,
-            firstImgPath = "root/aa",
-            firstImgName = "abc.png",
-            secondImgPath = "root/bb",
-            secondImgName = "bcd.png",
-            thirdImgPath = "root/cc.png",
-            thirdImgName = "cda.png",
+            firstImgPath = "root/fir",
+            firstImgName = "anyFir.png",
+            secondImgPath = "root/sec",
+            secondImgName = "anySec.png",
+            thirdImgPath = "root/thr",
+            thirdImgName = "anyThr.png",
             reportStts = ReportSttsType.Submit,
         )
 
@@ -45,17 +46,17 @@ class CsErrorReportWriteServiceTest {
         // given
         val docsErrDto = CsErrorReportCreateDto(
             errType = CSErrorType.MathDocs,
-            contentsId = 1L, // 성공 케이스
+            contentsId = SUCCESS_ID,
             reportMemberId = UUID.randomUUID(),
             reportContents = "contents",
             clientOs = OsType.Etc,
             clientBrowser = BrowserType.Chrome,
-            firstImgPath = "root/aa",
-            firstImgName = "abc.png",
-            secondImgPath = "root/bb",
-            secondImgName = "bcd.png",
-            thirdImgPath = "root/cc.png",
-            thirdImgName = "cda.png",
+            firstImgPath = "root/fir",
+            firstImgName = "anyFir.png",
+            secondImgPath = "root/sec",
+            secondImgName = "anySec.png",
+            thirdImgPath = "root/thr.png",
+            thirdImgName = "anyThr.png",
             reportStts = ReportSttsType.Submit,
         )
 

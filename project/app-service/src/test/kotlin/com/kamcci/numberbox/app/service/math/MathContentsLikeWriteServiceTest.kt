@@ -3,6 +3,9 @@ package com.kamcci.numberbox.app.service.math
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.NOT_EXIST_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
+import com.kamcci.numberbox.app.service.math.MathContentsLikeWriteService.Companion.NOT_EXIST
 import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsLikeWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsLikeReadCase
 import org.assertj.core.api.Assertions.assertThat
@@ -22,7 +25,7 @@ class MathContentsLikeWriteServiceTest {
     @Test
     fun `좋아요 - 성공`() {
         // given
-        val modifyDto = MathContentsLikeModifyDto(EXIST_ID + 1L, UUID.randomUUID())
+        val modifyDto = MathContentsLikeModifyDto(NOT_EXIST_ID, UUID.randomUUID())
 
         // when & then
         assertDoesNotThrow {
@@ -45,7 +48,7 @@ class MathContentsLikeWriteServiceTest {
     @Test
     fun `좋아요 삭제 - 성공`() {
         // given
-        val modifyDto = MathContentsLikeModifyDto(1L, UUID.randomUUID())
+        val modifyDto = MathContentsLikeModifyDto(SUCCESS_ID, UUID.randomUUID())
 
         // when & then
         assertDoesNotThrow {
@@ -56,12 +59,12 @@ class MathContentsLikeWriteServiceTest {
     @Test
     fun `좋아요 삭제(좋아요 누른적 없음) - 실패`() {
         // given
-        val modifyDto = MathContentsLikeModifyDto(EXIST_ID + 1L, UUID.randomUUID())
+        val modifyDto = MathContentsLikeModifyDto(NOT_EXIST_ID, UUID.randomUUID())
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
             mathContentsLikeWriteService.delete(modifyDto)
         }
-        assertThat(exception.msg).isEqualTo(MathContentsLikeWriteService.NOT_EXIST)
+        assertThat(exception.msg).isEqualTo(NOT_EXIST)
     }
 }

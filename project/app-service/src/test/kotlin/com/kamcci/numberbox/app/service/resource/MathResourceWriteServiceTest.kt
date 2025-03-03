@@ -2,6 +2,7 @@ package com.kamcci.numberbox.app.service.resource
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.mock.port.orm.resource.MockMathResourceWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.port.orm.sys.MockSysGarbageFileWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.usecase.resource.MockMathResourceReadCase
@@ -50,7 +51,7 @@ class MathResourceWriteServiceTest {
     @Test
     fun `학습 자료 삭제 - 성공`() {
         // given
-        val id = 1L
+        val id = SUCCESS_ID
         val memberId = UUID.randomUUID()
 
         // when & then

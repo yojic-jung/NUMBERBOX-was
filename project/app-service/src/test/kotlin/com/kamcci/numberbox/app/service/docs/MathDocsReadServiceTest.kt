@@ -41,7 +41,7 @@ class MathDocsReadServiceTest {
         val docsList = mathDocsReadService.makeDocs(readDto)
 
         // then
-        assertThat(docsList.size).isGreaterThan(0)
+        assertThat(docsList.size).isPositive()
     }
 
     @Test
@@ -75,9 +75,11 @@ class MathDocsReadServiceTest {
     @Test
     fun `학습지 추가 컨텐츠 조회 - 성공`() {
         // given
+        val unitId = 21001
+        val typeId = 1
         val mockMathDocsReadOrmPort = MockMathDocsReadOrmPort()
         val mathDocsReadService = MathDocsReadService(mockMathDocsReadOrmPort)
-        val readDto = MathDocsAdditionalReadDto(21001, 1, ContentsClassifyType.UserCustom)
+        val readDto = MathDocsAdditionalReadDto(unitId, typeId, ContentsClassifyType.UserCustom)
 
         // when
         mathDocsReadService.readAdditionalContents(readDto)

@@ -20,6 +20,12 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*
 
 class MemberProfileWriteServiceTest {
+    companion object {
+        // 초기화 카운트
+        const val INIT_CNT = 0
+    }
+
+    // 테스트 대상
     private val memberProfileWriteService = MemberProfileWriteService(
         MockMemberProfileReadCase(),
         MockMemberProfileWriteOrmPort(),
@@ -51,7 +57,7 @@ class MemberProfileWriteServiceTest {
 
     @Test
     fun `프로필 이미지 변경(이미지 null or empty) - 성공`() {
-        // given
+        // given - null과 empty인 case(분기 커버리지 테스트 목적)
         val fileNameNullOrEmptyIdList = listOf(
             FILE_NULL_OR_EMPTY_ID1,
             FILE_NULL_OR_EMPTY_ID2,
@@ -92,7 +98,7 @@ class MemberProfileWriteServiceTest {
     fun `프로필 닉네임 변경 - 성공`() {
         // given
         val memberId = UUID.randomUUID()
-        val nickname = "nickname"
+        val nickname = "anyNickname"
 
         // when & then
         assertDoesNotThrow {
@@ -103,8 +109,8 @@ class MemberProfileWriteServiceTest {
 
     @Test
     fun `한글 다운 횟수 변경 - 성공`() {
-        // given
-        val cnt = 0
+        // given - 다운 카운트 초기화
+        val cnt = INIT_CNT
 
         // when & then
         assertDoesNotThrow {

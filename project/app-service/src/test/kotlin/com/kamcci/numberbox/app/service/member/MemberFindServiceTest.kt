@@ -23,7 +23,7 @@ class MemberFindServiceTest {
     @Test
     fun `내 email 조회 - 성공`() {
         // given
-        val userName = "김회원"
+        val userName = "any"
         val phoneNumber = "01012341234"
 
         // when
@@ -36,10 +36,21 @@ class MemberFindServiceTest {
     @Test
     fun `임시 비밀번호 발급 - 성공`() {
         // given
+        val memberVerifyCodeEmailPort = MockMemberVerifyCodeEmailPort()
+        val memberFindService = MemberFindService(
+            MockMemberReadCase(),
+            MockMemberWriteOrmPort(),
+            memberVerifyCodeEmailPort,
+            MockMemberPasswordEncoder(),
+            MockEmailMessageTemplate(),
+        )
         val email = EXIST_EMAIL
 
         // when
         memberFindService.sendNewTempPassword(email)
+
+        // then
+        assertThat(memberVerifyCodeEmailPort.executeCnt).isOne()
     }
 
     @Test
@@ -47,7 +58,7 @@ class MemberFindServiceTest {
         // given
         val email = EXIST_EMAIL.reversed()
 
-        // when
+        // when & then
         val exception = assertThrows<BusinessInValidException> {
             memberFindService.sendNewTempPassword(email)
         }

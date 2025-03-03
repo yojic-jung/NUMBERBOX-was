@@ -18,10 +18,10 @@ class FileServiceTest {
     fun `파일 업로드 - 성공`() {
         // given
         val uploadDto = FileUploadDto(
-            name = "fileName.png",
+            name = "anyFileName.png",
             contentType = "",
             size = 1,
-            inputStream = "1".byteInputStream(),
+            inputStream = "any".byteInputStream(),
         )
         val fileType = FileType.ProfileIMG
 
@@ -37,7 +37,7 @@ class FileServiceTest {
         // given
         FileType.entries.forEach {
             // when
-            val fileNameVo = fileService.makeFileNameByType("tmp.heic", it)
+            val fileNameVo = fileService.makeFileNameByType("anyFile.heic", it)
 
             assertThat(fileNameVo.name.length).isLessThanOrEqualTo(MAX_FILE_NAME_LENGTH)
         }
@@ -46,7 +46,7 @@ class FileServiceTest {
     @Test
     fun `확장자는 그대로 가져가며 새로운 파일 이름 생성 - 성공`() {
         // given
-        val fileName = "test.png"
+        val fileName = "img.png"
         val fileType = FileType.ProfileIMG
 
         // when
@@ -65,7 +65,7 @@ class FileServiceTest {
     @Test
     fun `파일 확장자 없는 경우 - 실패`() {
         // given
-        val fileName = "test"
+        val fileName = "anyName"
         val fileType = FileType.ProfileIMG
 
         // when
@@ -83,7 +83,7 @@ class FileServiceTest {
     @Test
     fun `파일 확장자 없는 경우(dot만 있음) - 실패`() {
         // given
-        val fileName = "test."
+        val fileName = "noExt."
         val fileType = FileType.ProfileIMG
 
         // when

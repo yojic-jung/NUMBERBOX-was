@@ -9,6 +9,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.port.orm.math.MathContentsWriteOrmPort
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.PERSIST_SUCCESS_ID
 import java.util.*
 
 class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
@@ -23,7 +24,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         licenseCreateDto: MathConLicenseModifyDto
     ): Long {
         executeCnt++
-        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else 1L
+        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun saveWithSimilarSrc(
@@ -32,7 +33,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
         executeCnt++
-        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else 1L
+        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun saveWithIpsiSrc(
@@ -41,7 +42,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
         executeCnt++
-        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else 1L
+        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun saveTransContents(
@@ -50,7 +51,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         contentsModifyDto: MathContentsModifyDto
     ): Long {
         executeCnt++
-        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else 1L
+        return if (contentsModifyDto.memberId == FAIL_MEMBER_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun incrementTransConCntById(id: Long): Long {
@@ -64,7 +65,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         licenseCreateDto: MathConLicenseModifyDto
     ): Long {
         executeCnt++
-        return if (contentsId == FAIL_ID) 0L else 1L
+        return if (contentsId == FAIL_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun updateWithSimilarSrc(
@@ -74,7 +75,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         similarSrcDto: MathConSimilarSrcCreateDto
     ): Long {
         executeCnt++
-        return if (contentsId == FAIL_ID) 0L else 1L
+        return if (contentsId == FAIL_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun updateWithIpsiSrc(
@@ -84,7 +85,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         ipsiSrcCreateDto: MathConIpsiSrcModifyDto
     ): Long {
         executeCnt++
-        return if (contentsId == FAIL_ID) 0L else 1L
+        return if (contentsId == FAIL_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun updateTransContents(
@@ -93,7 +94,7 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         contentsModifyDto: MathContentsModifyDto
     ): Long {
         executeCnt++
-        return if (contentsId == FAIL_ID) 0L else 1L
+        return if (contentsId == FAIL_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun updateContentsClassifyType(
@@ -102,11 +103,11 @@ class MockMathContentsWriteOrmPort : MathContentsWriteOrmPort {
         contentsClassifyType: ContentsClassifyType
     ): Long {
         executeCnt++
-        return if (contentsId == FAIL_ID) 0L else 1L
+        return if (contentsId == FAIL_ID) 0L else PERSIST_SUCCESS_ID
     }
 
     override fun updateContentsClassifyType(memberId: UUID, contentsClassifyType: ContentsClassifyType): Long {
         executeCnt++
-        return if (memberId == FAIL_MEMBER_ID) 0L else 1L
+        return if (memberId == FAIL_MEMBER_ID) 0L else PERSIST_SUCCESS_ID
     }
 }

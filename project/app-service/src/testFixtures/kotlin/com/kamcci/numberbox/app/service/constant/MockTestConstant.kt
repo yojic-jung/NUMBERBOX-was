@@ -5,9 +5,19 @@ import java.util.*
 /**
  * 테스트 공용 상수
  *
- * - 메서드 인풋 파라미터 실패 값(동시성 제어를 위해 메서드 파라미터 값에 따라 목객체의 처리를 달리하기 위함)
+ * - 테스트 더블 메서드의 인자 값
+ * - 인자값에 따라 성공/실패, 예외를 구분하기 위함
  */
 object MockTestConstant {
+    // 성공 ID
+    val SUCCESS_ID = 1L
+
+    // 영속화 성공
+    val PERSIST_SUCCESS_ID = 1L
+
+    // 성공 email
+    val SUCCESS_EMAIL = "test@test.com"
+
     // 스텁에서 사용하는 예외 메시지
     val STUB_EXCEPTION_MSG = "실패 케이스 예외 발생"
 
@@ -17,6 +27,8 @@ object MockTestConstant {
     // exist 쿼리에서 true 반환할 ID
     val EXIST_ID = 1L
 
+    val NOT_EXIST_ID = 2L
+
     // 예외 터트리는 ID
     val EXCEPTION_ID = 3L
 
@@ -25,6 +37,8 @@ object MockTestConstant {
 
     // exist 쿼리에서 true 반환할 email
     val EXIST_EMAIL = "exist@test.com"
+
+    val NOT_EXIST_EMAIL = "notExist@test.com"
 
     // 예외 터트리는 email
     val EXCEPTION_EMAIL = "exception@test.com"
