@@ -12,7 +12,14 @@ VALUES (1, 22003, 1,
         NULL, NULL,
         '<div style=\"\">2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+1</td></tr></tbody></table>×2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+3</td></tr></tbody></table>=64에서&nbsp;2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">2a+4</td></tr></tbody></table>=2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">6</td></tr></tbody></table>이므로&nbsp;2a+4=6&nbsp; &nbsp; &nbsp;∴ a=1</div>',
         NULL, NULL, '', '', '', '', '', 'E', '1', NULL, UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), NULL, 0, 2, 1, 0, 0,
-        1, '2022-02-28 06:09:46', '2022-09-28 14:46:07', 0);
+        1, '2022-02-28 06:09:46', '2022-09-28 14:46:07', 0),
+       (3, 22003, 1,
+        '2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+1</td></tr></tbody></table>×2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+3</td></tr></tbody></table>=64일 때, 자연수 a의 값을 구하시오.<div style=\"\"></div>',
+        'sampleContentsImg', 'sampleImgPath',
+        '<div style=\"\">2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+1</td></tr></tbody></table>×2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">a+3</td></tr></tbody></table>=64에서&nbsp;2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">2a+4</td></tr></tbody></table>=2<table class=\"nbExpBox nbBox\" style=\"\"><tbody><tr><td class=\"nbExpTmp borderBox\" style=\"\">6</td></tr></tbody></table>이므로&nbsp;2a+4=6&nbsp; &nbsp; &nbsp;∴ a=1</div>',
+        'sampleSolutionImg', 'sampleSolutionImgPath', '1', '2', '3', '4', '5', 'E', '1', '1,2,3',
+        UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), '신사고', 0, 2, 1, 0, 0,
+        1, '2022-02-28 06:09:46', '2022-09-28 14:46:07', 3);
 
 -- 입시 수학 문제
 INSERT INTO `numberbox_tc`.`math_contents` (`id`, `unit_id`, `type_id`, `contents`, `contents_img`, `img_path`,

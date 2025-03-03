@@ -4,6 +4,8 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.enumeration.math.MultiChoiceType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsDummyFactory
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsDummyFactory.getInHouseContentsAllValueDummyEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.math.MathContentsDummyFactory.getInHouseContentsDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
@@ -22,38 +24,42 @@ class MathContentsEntityTest(
     @Test
     fun `MathContentsEntity 조회 - 성공`() {
         // given
-        val id = dummyEntity.contentsId
+        val allValDummyEntity = getInHouseContentsAllValueDummyEntity()
+        val id = allValDummyEntity.contentsId
 
         // when
         val mathContentsEntity = em.find(MathContentsEntity::class.java, id)
 
         // then
-        assertEntityProperty(mathContentsEntity, id)
+        assertEntityProperty(mathContentsEntity, allValDummyEntity)
     }
 
-    private fun assertEntityProperty(mathContentsEntity: MathContentsEntity, id: Long) {
-        assertThat(mathContentsEntity.id).isEqualTo(id)
-        assertThat(mathContentsEntity.unitId).isEqualTo(dummyEntity.unitId)
-        assertThat(mathContentsEntity.typeId).isEqualTo(dummyEntity.typeId)
-        assertThat(mathContentsEntity.memberId).isEqualTo(dummyEntity.memberId)
+    private fun assertEntityProperty(
+        mathContentsEntity: MathContentsEntity,
+        dummy: MathContentsDummyFactory.ExistEntityInfo
+    ) {
+        assertThat(mathContentsEntity.id).isEqualTo(dummy.contentsId)
+        assertThat(mathContentsEntity.unitId).isEqualTo(dummy.unitId)
+        assertThat(mathContentsEntity.typeId).isEqualTo(dummy.typeId)
+        assertThat(mathContentsEntity.memberId).isEqualTo(dummy.memberId)
         assertThat(mathContentsEntity.contents).isNotNull()
         assertThat(mathContentsEntity.solution).isNotNull()
-        assertThat(mathContentsEntity.contentsImg).isNull()
-        assertThat(mathContentsEntity.solutionImg).isNull()
-        assertThat(mathContentsEntity.imgPath).isNull()
-        assertThat(mathContentsEntity.solutionImgPath).isNull()
-        assertThat(mathContentsEntity.firNo).isEmpty()
-        assertThat(mathContentsEntity.secNo).isEmpty()
-        assertThat(mathContentsEntity.thrNo).isEmpty()
-        assertThat(mathContentsEntity.fourNo).isEmpty()
-        assertThat(mathContentsEntity.fifNo).isEmpty()
+        assertThat(mathContentsEntity.contentsImg).isNotNull()
+        assertThat(mathContentsEntity.solutionImg).isNotNull()
+        assertThat(mathContentsEntity.imgPath).isNotNull()
+        assertThat(mathContentsEntity.solutionImgPath).isNotNull()
+        assertThat(mathContentsEntity.firNo).isNotNull()
+        assertThat(mathContentsEntity.secNo).isNotNull()
+        assertThat(mathContentsEntity.thrNo).isNotNull()
+        assertThat(mathContentsEntity.fourNo).isNotNull()
+        assertThat(mathContentsEntity.fifNo).isNotNull()
         assertThat(mathContentsEntity.multiChoiceType).isEqualTo(MultiChoiceType.Essay)
         assertThat(mathContentsEntity.answer).isNotNull
-        assertThat(mathContentsEntity.choiceAnswer).isNull()
-        assertThat(mathContentsEntity.orgSrcRef).isNull()
+        assertThat(mathContentsEntity.choiceAnswer).isNotNull()
+        assertThat(mathContentsEntity.orgSrcRef).isNotNull()
         assertThat(mathContentsEntity.orgSrcNo).isZero()
-        assertThat(mathContentsEntity.quesLevel).isEqualTo(dummyEntity.quesLevel)
-        assertThat(mathContentsEntity.transConCnt).isEqualTo(dummyEntity.transConCtn)
+        assertThat(mathContentsEntity.quesLevel).isEqualTo(dummy.quesLevel)
+        assertThat(mathContentsEntity.transConCnt).isEqualTo(dummy.transConCtn)
         assertThat(mathContentsEntity.contentsClassify).isEqualTo(ContentsClassifyType.InHouse)
         assertThat(mathContentsEntity.svcPosbStts).isEqualTo(ContentsSvcPosbSttsType.Release)
         assertThat(mathContentsEntity.orgContentsId).isZero()

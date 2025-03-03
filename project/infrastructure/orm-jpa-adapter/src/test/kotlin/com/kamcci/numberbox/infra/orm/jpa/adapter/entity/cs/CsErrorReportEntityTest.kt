@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.enumeration.cs.CSErrorType
 import com.kamcci.numberbox.app.domain.enumeration.cs.OsType
 import com.kamcci.numberbox.app.domain.enumeration.cs.ReportSttsType
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.cs.CsErrorReportDummyFactory.getCsErrorReportDummyEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.cs.CsErrorReportDummyFactory.getCsErrorReportAllValueDummyEntity
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -19,7 +19,8 @@ class CsErrorReportEntityTest(
     @Test
     fun `CsErrorReportEntity 조회`() {
         // given
-        val id = getCsErrorReportDummyEntity().id
+        val allValDummyEntity = getCsErrorReportAllValueDummyEntity()
+        val id = allValDummyEntity.id
 
         // when
         val csErrorReportEntity = em.find(CsErrorReportEntity::class.java, id)
@@ -33,16 +34,16 @@ class CsErrorReportEntityTest(
         Assertions.assertThat(csErrorReportEntity.errType).isEqualTo(CSErrorType.Etc)
         Assertions.assertThat(csErrorReportEntity.contentsId).isZero()
         Assertions.assertThat(csErrorReportEntity.reportContents).isNotNull()
-        Assertions.assertThat(csErrorReportEntity.replyMemberId).isNull()
-        Assertions.assertThat(csErrorReportEntity.replyContents).isNull()
+        Assertions.assertThat(csErrorReportEntity.replyMemberId).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.replyContents).isNotNull()
         Assertions.assertThat(csErrorReportEntity.clientOs).isEqualTo(OsType.Windows)
         Assertions.assertThat(csErrorReportEntity.clientBrowser).isEqualTo(BrowserType.Chrome)
-        Assertions.assertThat(csErrorReportEntity.firstImgPath).isNull()
-        Assertions.assertThat(csErrorReportEntity.firstImgName).isNull()
-        Assertions.assertThat(csErrorReportEntity.secondImgPath).isNull()
-        Assertions.assertThat(csErrorReportEntity.secondImgName).isNull()
-        Assertions.assertThat(csErrorReportEntity.thirdImgPath).isNull()
-        Assertions.assertThat(csErrorReportEntity.thirdImgName).isNull()
+        Assertions.assertThat(csErrorReportEntity.firstImgPath).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.firstImgName).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.secondImgPath).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.secondImgName).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.thirdImgPath).isNotNull()
+        Assertions.assertThat(csErrorReportEntity.thirdImgName).isNotNull()
         Assertions.assertThat(csErrorReportEntity.reportStts).isEqualTo(ReportSttsType.Submit)
         Assertions.assertThat(csErrorReportEntity.sysUpdateDate).isNotNull()
         Assertions.assertThat(csErrorReportEntity.sysCreateDate).isNotNull()

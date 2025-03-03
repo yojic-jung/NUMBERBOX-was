@@ -21,5 +21,4 @@ class TCDataSourceConfig {
             .password(MysqlTCExtension.mysqlContainer.password)
             .build()
     }
-
 }

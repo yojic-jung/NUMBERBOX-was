@@ -22,6 +22,18 @@ object MathContentsDummyFactory {
             0
         )
 
+    // 자체 제작 수학문제 모든 속성값 존재
+    fun getInHouseContentsAllValueDummyEntity() =
+        ExistEntityInfo(
+            3,
+            UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20"),
+            22003,
+            1,
+            2,
+            ContentsClassifyType.InHouse,
+            3
+        )
+
     // 입시 수학문제
     fun getIpsiContentsDummyEntity() =
         ExistEntityInfo(

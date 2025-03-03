@@ -12,4 +12,9 @@ VALUES (1, 0, 0, UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), '문의 사항 운�
         null, null,
         null, null, NULL, NULL, '2022-07-29 17:19:13',
         '2022-07-29 17:18:04', 0, null,
-        null);
+        null),
+       (3, 0, 0, UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), '문의 사항 운영 테스트', 'windows', 'chrome',
+        'sampleFirImgPath', 'sampleFirImgName',
+        'secImgPath', 'secImgName', 'thrImgPath', 'thrImgName', '2022-07-29 17:19:13',
+        '2022-07-29 17:18:04', 0, UNHEX('24CA3122CDA8EA4D9BC7037CB86FDB20'),
+        'smapleReplyContents');
