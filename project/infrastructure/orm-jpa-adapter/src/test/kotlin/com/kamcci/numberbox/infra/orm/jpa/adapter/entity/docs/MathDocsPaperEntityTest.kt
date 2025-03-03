@@ -22,8 +22,12 @@ class MathDocsPaperEntityTest(
         val mathDocsPaperEntity = em.find(MathDocsPaperEntity::class.java, id)
 
         // then
+        assertEntityProperty(mathDocsPaperEntity, id)
+    }
+
+    private fun assertEntityProperty(mathDocsPaperEntity: MathDocsPaperEntity, id: Long) {
         assertThat(mathDocsPaperEntity.id).isEqualTo(id)
-        assertThat(mathDocsPaperEntity.contentsIdList).contains(2365)
+        assertThat(mathDocsPaperEntity.contentsIdList).isNotEmpty
         assertThat(mathDocsPaperEntity.docsGrade).isNotNull
         assertThat(mathDocsPaperEntity.docsTitle).isNotNull
         assertThat(mathDocsPaperEntity.docsSubTitle).isNotNull

@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.factory.resource
 
 import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import com.kamcci.numberbox.app.domain.vo.port.storage.FileNameVo
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.sample.MathResourceSampleData.getMathResourceUpdateDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.resource.MathResourceEntity
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,7 @@ class MathResourceFactoryTest {
             listOf(
                 getMathResourceUpdateDto(),
                 MathResourceUpdateDto(
-                    resourceId = 1L,
+                    resourceId = SUCCESS_ID,
                     title = "",
                     pptFilePath = null,
                     pptFileName = null,

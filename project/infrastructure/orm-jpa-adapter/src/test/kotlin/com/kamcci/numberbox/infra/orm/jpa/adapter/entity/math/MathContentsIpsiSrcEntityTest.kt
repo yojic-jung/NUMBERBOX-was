@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions
@@ -14,7 +15,7 @@ class MathContentsIpsiSrcEntityTest(
     @Test
     fun `MathContentsIpsiSrcEntity 연관관계 테스트`() {
         // given
-        val id = 1L
+        val id = SUCCESS_ID
 
         // when
         val mathContentsIpsiSrcEntity = em.find(MathContentsIpsiSrcEntity::class.java, id)

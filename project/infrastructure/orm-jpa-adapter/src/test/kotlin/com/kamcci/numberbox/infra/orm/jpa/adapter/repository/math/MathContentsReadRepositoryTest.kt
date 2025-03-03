@@ -20,13 +20,13 @@ class MathContentsReadRepositoryTest(
     @Test
     fun `문제 id로 조회`() {
         // given
-        val contentsId = getInHouseContentsDummyEntity().contentsId
+        val contentsId = inHouseDummyEntity.contentsId
 
         // when
         val mathContents = mathContentsReadRepository.readById(contentsId)
 
         // then
-        assertThat(mathContents).isNotNull
+        assertThat(mathContents?.contentsId).isEqualTo(inHouseDummyEntity.contentsId)
     }
 
     @Test
@@ -53,7 +53,7 @@ class MathContentsReadRepositoryTest(
             )
 
         // then
-        assertThat(contents).isNotNull
+        assertThat(contents?.contentsId).isEqualTo(inHouseDummyEntity.contentsId)
     }
 
     @Test
@@ -85,7 +85,9 @@ class MathContentsReadRepositoryTest(
             )
 
         // then
-        assertThat(contentsList.size).isPositive()
+        contentsList.forEach { contents ->
+            assertThat(contents.svcPosbStts).isEqualTo(svcPosbSttsType)
+        }
     }
 
     @Test
@@ -121,7 +123,9 @@ class MathContentsReadRepositoryTest(
         )
 
         // then
-        assertThat(contentsList.size).isPositive()
+        contentsList.forEach { contents ->
+            assertThat(contents.svcPosbStts).isEqualTo(svcPosbSttsType)
+        }
     }
 
     @Test
@@ -135,34 +139,43 @@ class MathContentsReadRepositoryTest(
             mathContentsReadRepository.readDetailByUnitId(inHouseDummyEntity.memberId, unitIdList, pageReq)
 
         // then
-        assertThat(contentsList.size).isPositive()
+        contentsList.forEach { contents ->
+            assertThat(unitIdList).contains(contents.unitId)
+        }
     }
 
     @Test
     fun `자체제작 수학 문제와 유사문제 출처 정보`() {
+        // given
+        val contentsId = inHouseDummyEntity.contentsId
+
         // when
-        val contents = mathContentsReadRepository.readInHouseContentsById(inHouseDummyEntity.contentsId)
+        val contents = mathContentsReadRepository.readInHouseContentsById(contentsId)
 
         // then
-        assertThat(contents).isNotNull
+        assertThat(contents?.contentsId).isEqualTo(contentsId)
     }
 
     @Test
     fun `입시 수학 문제`() {
         // given
         val ipsiDummyEntity = getIpsiContentsDummyEntity()
+        val contentsId = ipsiDummyEntity.contentsId
 
         // when
-        val contents = mathContentsReadRepository.readIpsiContentsById(ipsiDummyEntity.contentsId)
+        val contents = mathContentsReadRepository.readIpsiContentsById(contentsId)
 
         // then
-        assertThat(contents).isNotNull
+        assertThat(contents?.contentsId).isEqualTo(contentsId)
     }
 
     @Test
     fun `변형문제 갯수 조회`() {
+        // given
+        val contentsId = inHouseDummyEntity.contentsId
+
         // when
-        val transContentCnt = mathContentsReadRepository.readTransContCntById(inHouseDummyEntity.contentsId)
+        val transContentCnt = mathContentsReadRepository.readTransContCntById(contentsId)
 
         // then
         assertThat(transContentCnt).isEqualTo(inHouseDummyEntity.transConCtn)
@@ -171,13 +184,16 @@ class MathContentsReadRepositoryTest(
     @Test
     fun `문제만 조회`() {
         // given
+        val contentsId = inHouseDummyEntity.contentsId
+        val memberId = inHouseDummyEntity.memberId
+
         // when
         val contents =
-            mathContentsReadRepository.readContentsOnly(inHouseDummyEntity.contentsId, inHouseDummyEntity.memberId)
-
+            mathContentsReadRepository.readContentsOnly(contentsId, memberId)
 
         // then
-        assertThat(contents).isNotNull
+        assertThat(contents?.contentsId).isEqualTo(contentsId)
+        assertThat(contents?.memberId).isEqualTo(memberId)
     }
 
     @Test

@@ -44,6 +44,6 @@ class MemberEntityTest(
         val memberEntity = em.find(MemberEntity::class.java, memberId)
 
         // then
-        Assertions.assertThat(memberEntity.role[0].id).isEqualTo(1L)
+        Assertions.assertThat(memberEntity.role[0].id).isOne()
     }
 }

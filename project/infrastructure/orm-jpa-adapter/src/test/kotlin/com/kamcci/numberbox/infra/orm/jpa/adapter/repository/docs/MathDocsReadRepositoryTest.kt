@@ -46,7 +46,9 @@ class MathDocsReadRepositoryTest @Autowired constructor(
             mathDocsReadRepository.readAllInHouseDocsVoBy(unitIdAndTypeId, quesLevel, countByType, pageVolume)
 
         // then
-        assertThat(mathDocsVoList).isNotEmpty
+        mathDocsVoList.forEach { mathDocsVo ->
+            assertThat(quesLevel).contains(mathDocsVo.quesLevel)
+        }
     }
 
     @Test
@@ -58,7 +60,7 @@ class MathDocsReadRepositoryTest @Autowired constructor(
         val mathDocsList = mathDocsReadRepository.readDocsByContentsIdList(idList)
 
         // then
-        assertThat(mathDocsList).isNotEmpty
+        assertThat(mathDocsList[0].contentsId).isEqualTo(inHouseContentDummyEntity.contentsId)
     }
 
     @Test

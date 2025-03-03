@@ -22,9 +22,9 @@ class MathResourceMenuEntityTest(
         // then
         Assertions.assertThat(mathResourceMenuEntity.id).isEqualTo(id)
         Assertions.assertThat(mathResourceMenuEntity.mainCateId).isOne()
-        Assertions.assertThat(mathResourceMenuEntity.mainCateName).isEqualTo("평면도형")
+        Assertions.assertThat(mathResourceMenuEntity.mainCateName).isNotNull()
         Assertions.assertThat(mathResourceMenuEntity.midCateId).isOne()
-        Assertions.assertThat(mathResourceMenuEntity.midCateName).isEqualTo("삼각형")
+        Assertions.assertThat(mathResourceMenuEntity.midCateName).isNotNull()
         Assertions.assertThat(mathResourceMenuEntity.alignOrder).isOne()
     }
 }

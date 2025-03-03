@@ -7,10 +7,8 @@ import java.util.*
  * - flyway를 통해 반영한 테스트 목적 데이터 정보
  */
 object MathDocsPaperDummyFactory {
-    val DOCS_PAPER_MEMBER_ID = UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20")
-
     // 조회 목적
-    fun getDocsPaperDummyEntity4Read() = ExistEntityInfo(1L, DOCS_PAPER_MEMBER_ID)
+    fun getDocsPaperDummyEntity4Read() = ExistEntityInfo(1L, UUID.fromString("10ed5466-cda8-ea4d-9bc7-037cb86fdb20"))
 
     // 삭제 목적
     fun getDocsPaperDummyEntity4Del() = ExistEntityInfo(2L, UUID.fromString("13ed5466-cda8-ea4d-9bc7-037cb86fdb20"))

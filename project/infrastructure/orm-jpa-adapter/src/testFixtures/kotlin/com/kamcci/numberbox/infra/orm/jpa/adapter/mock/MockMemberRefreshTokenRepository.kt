@@ -5,7 +5,11 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefres
 
 class MockMemberRefreshTokenRepository : MemberRefreshTokenRepository() {
 
+    // 실행횟수
+    var executeCnt = 0
+
     override fun save(memberRefreshTokenEntity: MemberRefreshTokenEntity): Long {
+        executeCnt++
         return 1
     }
 

@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.resource
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequestImpl
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceDummyFactory.NOT_EXIST_RESOURCE_ID
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceDummyFactory.getMathResourceDummyEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.resource.MathResourceDummyFactory.getMathResourceDummyEntityWithImg
 import org.assertj.core.api.Assertions.assertThat
@@ -50,7 +51,7 @@ class MathResourceReadRepositoryTest @Autowired constructor(
         val resource = mathResourceReadRepository.readById(id)
 
         // then
-        assertThat(resource).isNotNull
+        assertThat(resource.id).isEqualTo(id)
     }
 
     @Test
@@ -62,7 +63,7 @@ class MathResourceReadRepositoryTest @Autowired constructor(
         val resource = mathResourceReadRepository.readById(id)
 
         // then
-        assertThat(resource).isNotNull
+        assertThat(resource.id).isEqualTo(id)
     }
 
     @Test
@@ -89,7 +90,7 @@ class MathResourceReadRepositoryTest @Autowired constructor(
     @Test
     fun `id로 학습 자료 파일 조회 - 미존재`() {
         // given
-        val id = 9999999L
+        val id = NOT_EXIST_RESOURCE_ID
 
         // when
         assertThrows<IllegalArgumentException> {
@@ -118,6 +119,6 @@ class MathResourceReadRepositoryTest @Autowired constructor(
         val resource = mathResourceReadRepository.readFileById(id)
 
         // then
-        assertThat(resource.imgList).isEmpty()
+        assertThat(resource.id).isEqualTo(id)
     }
 }

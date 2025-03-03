@@ -23,7 +23,7 @@ class MemberProfileReadRepositoryTest(
         val profile = memberProfileReadRepository.readByMemberId(memberId)
 
         // then
-        assertThat(profile?.id).isEqualTo(1L)
+        assertThat(profile?.memberId).isEqualTo(memberId)
     }
 
     @Test

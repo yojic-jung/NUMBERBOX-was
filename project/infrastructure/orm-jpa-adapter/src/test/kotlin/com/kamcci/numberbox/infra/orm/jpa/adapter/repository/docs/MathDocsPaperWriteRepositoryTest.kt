@@ -4,9 +4,9 @@ import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsPaperCreateDto
 import com.kamcci.numberbox.app.service.sample.MathDocsSampleData.getMathDocsPaperUpdtDto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.DOCS_PAPER_MEMBER_ID
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4AllDel
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4Del
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4Read
 import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.docs.MathDocsPaperDummyFactory.getDocsPaperDummyEntity4Updt
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
@@ -21,7 +21,7 @@ class MathDocsPaperWriteRepositoryTest @Autowired constructor(
     @Test
     fun `학습지 생성`() {
         // given
-        val memberId = DOCS_PAPER_MEMBER_ID
+        val memberId = getDocsPaperDummyEntity4Read().memberId
         val createDto = getMathDocsPaperCreateDto()
 
         // when

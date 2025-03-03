@@ -31,6 +31,6 @@ class AccessLogApiEventListenerTest {
         accessLogApiEventListener.handle(loggingDto)
 
         // then -> 이벤트 리스너 동작 확인
-        assertThat(logClientApiRepository.executeCnt).isEqualTo(1L)
+        assertThat(logClientApiRepository.executeCnt).isOne()
     }
 }

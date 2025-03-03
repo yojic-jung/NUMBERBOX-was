@@ -25,6 +25,10 @@ class CsErrorReportEntityTest(
         val csErrorReportEntity = em.find(CsErrorReportEntity::class.java, id)
 
         // then
+        assertEntityProperty(csErrorReportEntity, id)
+    }
+
+    private fun assertEntityProperty(csErrorReportEntity: CsErrorReportEntity, id: Long) {
         Assertions.assertThat(csErrorReportEntity.id).isEqualTo(id)
         Assertions.assertThat(csErrorReportEntity.errType).isEqualTo(CSErrorType.Etc)
         Assertions.assertThat(csErrorReportEntity.contentsId).isZero()

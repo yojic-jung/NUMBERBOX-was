@@ -28,6 +28,10 @@ class MathContentsEntityTest(
         val mathContentsEntity = em.find(MathContentsEntity::class.java, id)
 
         // then
+        assertEntityProperty(mathContentsEntity, id)
+    }
+
+    private fun assertEntityProperty(mathContentsEntity: MathContentsEntity, id: Long) {
         assertThat(mathContentsEntity.id).isEqualTo(id)
         assertThat(mathContentsEntity.unitId).isEqualTo(dummyEntity.unitId)
         assertThat(mathContentsEntity.typeId).isEqualTo(dummyEntity.typeId)
@@ -90,7 +94,7 @@ class MathContentsEntityTest(
     }
 
 
-    fun getMathContentsSaveEntity(): MathContentsEntity {
+    private fun getMathContentsSaveEntity(): MathContentsEntity {
         val now = LocalDateTime.now()
 
         return MathContentsEntity().apply {
@@ -124,7 +128,7 @@ class MathContentsEntityTest(
         }
     }
 
-    fun getContentsLicenseSaveEntity(): MathContentsLicenseEntity {
+    private fun getContentsLicenseSaveEntity(): MathContentsLicenseEntity {
         val now = LocalDateTime.now()
         return MathContentsLicenseEntity().apply {
             onlineLicStts = true

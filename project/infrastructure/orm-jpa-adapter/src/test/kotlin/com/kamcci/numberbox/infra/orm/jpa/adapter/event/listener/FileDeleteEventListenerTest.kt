@@ -14,7 +14,7 @@ class FileDeleteEventListenerTest {
     fun `파일 삭제 이벤트 리스너 검증`() {
 
         // given
-        val deleteDto = FileDeleteDto(GarbageFileType.S3, "", "")
+        val deleteDto = FileDeleteDto(GarbageFileType.S3, "any", "any")
 
         // when
         assertDoesNotThrow {

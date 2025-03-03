@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.cs
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest
-import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.cs.CsErrorReportDummyFactory.CS_ERR_REPORT_MEMBER_ID
+import com.kamcci.numberbox.infra.orm.jpa.adapter.dummy.cs.CsErrorReportDummyFactory.getCsErrorReportDummyEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,12 +15,13 @@ class CsErrorReportReadRepositoryTest(
     @Test
     fun `문의자 id로 조회`() {
         // given
-        val existId = CS_ERR_REPORT_MEMBER_ID
+        val dummyEntity = getCsErrorReportDummyEntity()
+        val memberId = dummyEntity.memberId
 
         // when
-        val csErrReportList = csErrorReportReadRepository.readByMemberId(existId)
+        val csErrReportList = csErrorReportReadRepository.readByMemberId(memberId)
 
         // then
-        assertThat(csErrReportList).isNotEmpty
+        assertThat(csErrReportList[0].id).isEqualTo(dummyEntity.id)
     }
 }

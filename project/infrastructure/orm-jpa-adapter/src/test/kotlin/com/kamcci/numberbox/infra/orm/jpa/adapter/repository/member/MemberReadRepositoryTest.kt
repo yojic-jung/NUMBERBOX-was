@@ -26,7 +26,7 @@ class MemberReadRepositoryTest(
         val memberId = memberReadRepo.readIdByEmail(existEmail)
 
         // then
-        assertThat(memberId).isNotNull
+        assertThat(memberId).isEqualTo(memberDummyEntity.memberId)
     }
 
     @Test

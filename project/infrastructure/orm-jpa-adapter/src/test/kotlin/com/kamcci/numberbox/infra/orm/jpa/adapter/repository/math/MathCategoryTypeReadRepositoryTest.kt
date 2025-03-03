@@ -21,6 +21,7 @@ class MathCategoryTypeReadRepositoryTest(
         // when
         val typeList = mathCategoryTypeReadRepository.readByUnitId(anyUnitId)
 
+        // then
         assertThat(typeList.size).isPositive()
     }
 
