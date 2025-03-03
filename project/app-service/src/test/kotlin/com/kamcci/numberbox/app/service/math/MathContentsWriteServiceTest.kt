@@ -1,10 +1,10 @@
 package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.CREATE_SUCCESS_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_MEMBER_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.NOT_EXIST_ID
-import com.kamcci.numberbox.app.service.constant.MockTestConstant.PERSIST_SUCCESS_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsReadCase
@@ -67,7 +67,7 @@ class MathContentsWriteServiceTest {
         val contentsId = mathContentsWriteService.createTransContents(orgContentsId, mathContentsModifyDto)
 
         // then
-        assertThat(contentsId).isEqualTo(PERSIST_SUCCESS_ID)
+        assertThat(contentsId).isEqualTo(CREATE_SUCCESS_ID)
     }
 
     @Test

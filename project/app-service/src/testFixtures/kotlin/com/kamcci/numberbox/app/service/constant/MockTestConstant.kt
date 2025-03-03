@@ -13,10 +13,7 @@ object MockTestConstant {
     val SUCCESS_ID = 1L
 
     // 영속화 성공
-    val PERSIST_SUCCESS_ID = 1L
-
-    // 성공 email
-    val SUCCESS_EMAIL = "test@test.com"
+    val CREATE_SUCCESS_ID = 1L
 
     // 스텁에서 사용하는 예외 메시지
     val STUB_EXCEPTION_MSG = "실패 케이스 예외 발생"
