@@ -41,6 +41,7 @@ class FileDeleteSchedulerTest {
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
 
+        // then
         assertThat(mockSysGarbageFileReadCase.executeCnt).isOne()
     }
 
@@ -56,6 +57,7 @@ class FileDeleteSchedulerTest {
         // when
         fileDeleteScheduler.deleteS3GarbageFile()
 
+        // then - 2번 실행 검증
         assertThat(mockSysGarbageFileReadCase.executeCnt).isEqualTo(2)
     }
 

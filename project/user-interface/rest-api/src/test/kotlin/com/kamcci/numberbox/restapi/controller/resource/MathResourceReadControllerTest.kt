@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ class MathResourceReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `카테고리 id로 조회 - 성공`() {
         // given
-        val mainCateId = 1
+        val mainCateId = SUCCESS_ID
         val reqBody = mapOf(
             "pageNum" to "0",
             "pageVolume" to "100",
@@ -30,7 +31,7 @@ class MathResourceReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `카테고리 id로 조회(카운트 함수 실행) - 성공`() {
         // given
-        val mainCateId = 1
+        val mainCateId = SUCCESS_ID
         val reqBody = mapOf(
             "pageNum" to "0",
             "pageVolume" to "2",

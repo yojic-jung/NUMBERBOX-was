@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ class MathContentsLikeReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `좋아요 및 저장소 여부 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when
         val resultAction = getRequest("$LIKE_REPO_URL/$contentsId")

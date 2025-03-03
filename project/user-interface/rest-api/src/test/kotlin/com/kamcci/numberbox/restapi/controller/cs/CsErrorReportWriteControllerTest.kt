@@ -14,7 +14,7 @@ class CsErrorReportWriteControllerTest : BaseMockMvcTest() {
     }
 
     // given
-    val reqBody = mapOf(
+    private val reqBody = mapOf(
         "errType" to "Etc",
         "contentsId" to "1",
         "reportContents" to "문의 내용",

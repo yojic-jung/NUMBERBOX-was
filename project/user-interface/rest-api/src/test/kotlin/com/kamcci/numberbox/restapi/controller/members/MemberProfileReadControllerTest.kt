@@ -2,6 +2,7 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import org.junit.jupiter.api.Test
@@ -26,7 +27,7 @@ class MemberProfileReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `다른 사람 프로필 보기 - 성공`() {
         // given
-        val profileId = 1L
+        val profileId = SUCCESS_ID
 
         // when
         val resultAction = getRequest("$MY_PROFILE_URL/$profileId")

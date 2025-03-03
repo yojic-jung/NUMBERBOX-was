@@ -2,6 +2,7 @@ package com.kamcci.numberbox.restapi.controller.hwp
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.sample.file.FileSampleData
@@ -75,7 +76,7 @@ class HwpConvertControllerTest : BaseMockMvcTest() {
     @Test
     fun `hwp 변환 컨텐츠 삭제 - 성공`() {
         // given
-        val contentsId = 1L
+        val contentsId = SUCCESS_ID
 
         // when
         val resultAction = delRequest("$HWP_TO_HTML/$contentsId", null)

@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.math
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContestGrammarModifyRequest
@@ -71,7 +72,7 @@ class MathContentsWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 문법 등록 - 성공`() {
         // given
-        val req = MathContestGrammarModifyRequest(1L, "asdf")
+        val req = MathContestGrammarModifyRequest(SUCCESS_ID, "asdf")
 
         // when
         val resultAction = postRequest(GRAMMAR_URL, req)
@@ -83,7 +84,7 @@ class MathContentsWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 삭제 - 성공`() {
         // given
-        val contentsId = 1
+        val contentsId = SUCCESS_ID
 
         // when
         val resultAction = delRequest("$DEL_URL/$contentsId")

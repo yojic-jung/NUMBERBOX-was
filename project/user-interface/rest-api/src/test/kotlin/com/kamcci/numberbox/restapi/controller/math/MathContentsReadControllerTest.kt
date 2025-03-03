@@ -2,6 +2,7 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.FAIL_ID
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.dto.request.math.MathContentsSearchRequest
@@ -21,7 +22,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 id로 조회 - 성공`() {
         // given
-        val contentsId = 1
+        val contentsId = SUCCESS_ID
         val reqBody = mapOf(
             "contentsOnly" to "true",
             "contentsClassify" to "InHouse"
@@ -55,7 +56,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 id로 조회(자체제작 문제) - 성공`() {
         // given
-        val contentsId = 1
+        val contentsId = SUCCESS_ID
         val reqBody = mapOf(
             "contentsOnly" to "false",
             "contentsClassify" to "InHouse"
@@ -71,7 +72,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 id로 조회(입시 문제) - 성공`() {
         // given
-        val contentsId = 1
+        val contentsId = SUCCESS_ID
         val reqBody = mapOf(
             "contentsClassify" to "Ipsi"
         )
@@ -85,7 +86,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `문제 id로 조회(사용자 제작 문제) - 성공`() {
         // given
-        val contentsId = 1
+        val contentsId = SUCCESS_ID
         val reqBody = mapOf(
             "contentsOnly" to "false",
             "contentsClassify" to "UserCustom"
@@ -125,7 +126,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `사용자 문제 - 성공`() {
         // given
-        val profileId = 1
+        val profileId = SUCCESS_ID
 
         // when
         val resultAction = getRequest("$USER_CONTENTS_URL/$profileId")
@@ -137,7 +138,7 @@ class MathContentsReadControllerTest : BaseMockMvcTest() {
     @Test
     fun `사용자 문제(페이징) - 성공`() {
         // given
-        val profileId = 1
+        val profileId = SUCCESS_ID
         val reqBody = mapOf(
             "pageNum" to "0",
             "pageVolume" to "100",

@@ -1,5 +1,6 @@
 package com.kamcci.numberbox.restapi.controller.resource
 
+import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
 import com.kamcci.numberbox.restapi.annotation.WebMvcUnitTest
 import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.sample.file.FileSampleData.getMultipartFile
@@ -112,7 +113,7 @@ class MathResourceWriteControllerTest : BaseMockMvcTest() {
     @Test
     fun `학습자료 삭제 - 성공`() {
         // given
-        val resourceId = 1
+        val resourceId = SUCCESS_ID
 
         // when
         val resultAction = delRequest("$PREFIX/$resourceId")
