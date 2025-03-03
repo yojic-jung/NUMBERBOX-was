@@ -23,7 +23,8 @@ class MemberVerifyCodeReadServiceTest {
         MemberVerifyCodeReadService(memberVerifyCodeReadOrmPort)
 
     companion object {
-        const val VERIFY_CODE = "3e0c5f0e-3e12-488c-be48-88fdb92c2dd0"
+        // 요청 코드 값
+        val REQ_VERIFY_CODE = UUID.fromString("3e0c5f0e-3e12-488c-be48-88fdb92c2dd0")
     }
 
 
@@ -32,7 +33,7 @@ class MemberVerifyCodeReadServiceTest {
         // given
         val email = CODE_NOT_EXIST_EMAIL
         val signUpDto =
-            MemberVerifyCodeDto(email, UUID.fromString(VERIFY_CODE), VerifyCodeType.SignUp)
+            MemberVerifyCodeDto(email, REQ_VERIFY_CODE, VerifyCodeType.SignUp)
 
         // when & then
         val exception = assertThrows<BusinessInValidException> {
@@ -46,7 +47,7 @@ class MemberVerifyCodeReadServiceTest {
         // given
         val email = EXPIRE_CODE_EMAIL
         val signUpDto =
-            MemberVerifyCodeDto(email, UUID.fromString(VERIFY_CODE), VerifyCodeType.SignUp)
+            MemberVerifyCodeDto(email, REQ_VERIFY_CODE, VerifyCodeType.SignUp)
 
 
         // when & then
