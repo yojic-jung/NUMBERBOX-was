@@ -7,9 +7,7 @@ import java.util.*
  * - flyway를 통해 반영한 테스트 목적 데이터 정보
  */
 object CsErrorReportDummyFactory {
-    val CS_ERR_REPORT_MEMBER_ID = UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20")
-
-    fun getCsErrorReportDummyEntity() = ExistEntityInfo(1L, CS_ERR_REPORT_MEMBER_ID)
+    fun getCsErrorReportDummyEntity() = ExistEntityInfo(1L, UUID.fromString("10ED5466-CDA8-EA4D-9BC7-037CB86FDB20"))
 
     class ExistEntityInfo(val id: Long, val memberId: UUID)
 
