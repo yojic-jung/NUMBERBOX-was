@@ -17,6 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 학습지 조회
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/docs")
@@ -28,6 +31,7 @@ class MathDocsReadController(
         const val NOT_MY_DOCS = "자신의 학습지가 아니거나 존재하지 않는 학습지 입니다."
     }
 
+    // 자체제작 수학문제 제작
     @GetMapping("/in-house")
     fun makeInHouseDocs(
         @ModelAttribute @Valid
@@ -37,6 +41,7 @@ class MathDocsReadController(
         return ResponseUtil.ok(mapOf("docs" to docs))
     }
 
+    // 입시 수학문제 제작
     @GetMapping("/ipsi")
     fun readIpsiDocs(
         @ModelAttribute @Valid
@@ -46,6 +51,7 @@ class MathDocsReadController(
         return ResponseUtil.ok(mapOf("docs" to docs))
     }
 
+    // 유사문제 제작
     @GetMapping("/additional")
     fun readSimilarContents(
         @ModelAttribute @Valid
@@ -55,6 +61,7 @@ class MathDocsReadController(
         return ResponseUtil.ok(mapOf("docs" to additionalContents))
     }
 
+    // 나의 학습지 조회
     @GetMapping("/{docsId}")
     fun myDocs(
         @UserId
@@ -73,6 +80,7 @@ class MathDocsReadController(
         )
     }
 
+    // 나의 학습지 목록 조회
     @GetMapping("/my")
     fun myDocsList(
         @UserId

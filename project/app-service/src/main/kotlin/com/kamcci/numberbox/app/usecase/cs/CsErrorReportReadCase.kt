@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.vo.cs.CsErrReportVo
 import java.util.*
 
 /**
- * 고객 센터 - 문의
+ * 고객 센터 - 조회
  */
 interface CsErrorReportReadCase {
     // 신고 문의 내역

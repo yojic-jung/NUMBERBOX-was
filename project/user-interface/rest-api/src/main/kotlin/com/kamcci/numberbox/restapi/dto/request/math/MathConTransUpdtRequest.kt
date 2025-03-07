@@ -4,7 +4,7 @@ import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import jakarta.validation.Valid
 
 /**
- * 변형문제 생성 request
+ * 변형문제 수정 request
  */
 data class MathConTransUpdtRequest(
     @field:ContentsCheck

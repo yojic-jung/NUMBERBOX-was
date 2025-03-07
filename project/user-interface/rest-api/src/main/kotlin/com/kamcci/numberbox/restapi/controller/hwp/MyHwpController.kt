@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 /**
- * 한글 파일 변환 컨트롤러
+ * 나의 한글 파일
  */
 @PreAuthorize("hasRole('USER')")
 @RestController
@@ -20,6 +20,7 @@ import java.util.*
 class MyHwpController(
     private val hwpConvertContentsReadCase: HwpConvertContentsReadCase,
 ) {
+    // 나의 한글 파일 목록 조회
     @GetMapping("/my")
     fun readMyHwp(
         @UserId userId: UUID

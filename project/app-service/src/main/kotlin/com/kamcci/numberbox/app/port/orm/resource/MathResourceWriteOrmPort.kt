@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.dto.resource.MathResourceUpdateDto
 import java.util.*
 
 /**
- * 학습 자료 영속화
+ * 학습 자료 변경
  */
 interface MathResourceWriteOrmPort {
     // 등록

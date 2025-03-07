@@ -26,6 +26,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 수학 문제 조회
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/content")

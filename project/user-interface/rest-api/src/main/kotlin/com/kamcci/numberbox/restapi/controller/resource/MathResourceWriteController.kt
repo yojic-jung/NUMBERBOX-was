@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
-
+/**
+ * 학습자료 변경 및 조회
+ */
 @RequestMapping("/math/resource")
 @RestController
 class MathResourceWriteController(

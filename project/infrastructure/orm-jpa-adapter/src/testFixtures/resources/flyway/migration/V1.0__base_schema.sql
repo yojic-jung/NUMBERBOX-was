@@ -1,39 +1,39 @@
 /*
- Def. 23.11 N명의수학 최종 운영 버전
+ Def. 23.11 N명의수학 운영 버전
  */
 
-DROP TABLE IF EXISTS `email_id_code`;
-CREATE TABLE `email_id_code` (
-                                 `email` varchar(60) NOT NULL,
-                                 `id_code` varchar(60) NOT NULL,
-                                 `sys_create_time` datetime NOT NULL,
-                                 PRIMARY KEY (`email`)
+DROP TABLE IF EXISTS `numberbox_tc`.`email_id_code`;
+CREATE TABLE `numberbox_tc`.`email_id_code` (
+                                                `email` varchar(60) NOT NULL,
+                                                `id_code` varchar(60) NOT NULL,
+                                                `sys_create_time` datetime NOT NULL,
+                                                PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `error_report`;
-CREATE TABLE `error_report` (
-                                `report_id` int NOT NULL AUTO_INCREMENT,
-                                `err_type` int NOT NULL,
-                                `contents_no` int DEFAULT NULL,
-                                `report_user` binary(16) NOT NULL,
-                                `report_contents` varchar(500) DEFAULT NULL,
-                                `os_info` varchar(7) NOT NULL,
-                                `browser` varchar(7) NOT NULL,
-                                `first_img_path` varchar(30) DEFAULT NULL,
-                                `first_img_name` varchar(70) DEFAULT NULL,
-                                `second_img_path` varchar(30) DEFAULT NULL,
-                                `second_img_name` varchar(70) DEFAULT NULL,
-                                `third_img_path` varchar(30) DEFAULT NULL,
-                                `third_img_name` varchar(70) DEFAULT NULL,
-                                `sys_update_date` datetime NOT NULL,
-                                `sys_create_date` datetime NOT NULL,
-                                `report_stts` int NOT NULL,
-                                `reply_user` binary(16) DEFAULT NULL,
-                                `reply_contents` varchar(500) DEFAULT NULL,
-                                PRIMARY KEY (`report_id`)
+DROP TABLE IF EXISTS `numberbox_tc`.`error_report`;
+CREATE TABLE `numberbox_tc`.`error_report` (
+                                               `report_id` int NOT NULL AUTO_INCREMENT,
+                                               `err_type` int NOT NULL,
+                                               `contents_no` int DEFAULT NULL,
+                                               `report_user` binary(16) NOT NULL,
+                                               `report_contents` varchar(500) DEFAULT NULL,
+                                               `os_info` varchar(7) NOT NULL,
+                                               `browser` varchar(7) NOT NULL,
+                                               `first_img_path` varchar(30) DEFAULT NULL,
+                                               `first_img_name` varchar(70) DEFAULT NULL,
+                                               `second_img_path` varchar(30) DEFAULT NULL,
+                                               `second_img_name` varchar(70) DEFAULT NULL,
+                                               `third_img_path` varchar(30) DEFAULT NULL,
+                                               `third_img_name` varchar(70) DEFAULT NULL,
+                                               `sys_update_date` datetime NOT NULL,
+                                               `sys_create_date` datetime NOT NULL,
+                                               `report_stts` int NOT NULL,
+                                               `reply_user` binary(16) DEFAULT NULL,
+                                               `reply_contents` varchar(500) DEFAULT NULL,
+                                               PRIMARY KEY (`report_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `formul_key`;
+DROP TABLE IF EXISTS `numberbox_tc`.`formul_key`;
 CREATE TABLE `formul_key` (
                               `id` int NOT NULL AUTO_INCREMENT,
                               `formul_order` int NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `formul_key` (
                               PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `hwp_convert_contents`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`hwp_convert_contents`;
 CREATE TABLE `hwp_convert_contents` (
                                         `convert_no` int NOT NULL AUTO_INCREMENT,
                                         `user_uniq_id` binary(16) NOT NULL,
@@ -62,9 +62,9 @@ CREATE TABLE `hwp_convert_contents` (
                                         `sys_create_date` datetime NOT NULL,
                                         `sys_update_date` datetime NOT NULL,
                                         PRIMARY KEY (`convert_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `hwp_convert_contents_statistic`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`hwp_convert_contents_statistic`;
 CREATE TABLE `hwp_convert_contents_statistic` (
                                                   `seq_no` int NOT NULL AUTO_INCREMENT,
                                                   `convert_no` int NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `hwp_convert_contents_statistic` (
                                                   PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `img_file_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`img_file_info`;
 CREATE TABLE `img_file_info` (
                                  `seq_uuid` binary(16) NOT NULL,
                                  `action_id` int NOT NULL,
@@ -86,14 +86,14 @@ CREATE TABLE `img_file_info` (
                                  PRIMARY KEY (`seq_uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_con_like_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_con_like_info`;
 CREATE TABLE `math_con_like_info` (
                                       `contents_no` int NOT NULL,
                                       `user_uniq_id` binary(16) NOT NULL,
                                       PRIMARY KEY (`contents_no`,`user_uniq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_con_repo_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_con_repo_info`;
 CREATE TABLE `math_con_repo_info` (
                                       `contents_no` int NOT NULL,
                                       `user_uniq_id` binary(16) NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE `math_con_repo_info` (
                                       PRIMARY KEY (`contents_no`,`user_uniq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_contents`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_contents`;
 CREATE TABLE `math_contents` (
                                  `contents_no` int NOT NULL AUTO_INCREMENT,
                                  `unit_uniq_no` int NOT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE `math_contents` (
                                  KEY `unit_uniq_no` (`unit_uniq_no`,`type_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_contents_comp`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_contents_comp`;
 CREATE TABLE `math_contents_comp` (
                                       `seq_no` int NOT NULL AUTO_INCREMENT,
                                       `contents_no` int NOT NULL,
@@ -150,14 +150,14 @@ CREATE TABLE `math_contents_comp` (
                                       PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_contents_grammer`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_contents_grammer`;
 CREATE TABLE `math_contents_grammer` (
                                          `contents_no` int NOT NULL,
                                          `contents_gram` text NOT NULL,
                                          PRIMARY KEY (`contents_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_contents_ipsi`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_contents_ipsi`;
 CREATE TABLE `math_contents_ipsi` (
                                       `seq_no` int NOT NULL AUTO_INCREMENT,
                                       `contents_no` int NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `math_contents_ipsi` (
                                       PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_contents_license`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_contents_license`;
 CREATE TABLE `math_contents_license` (
                                          `contents_no` int NOT NULL,
                                          `online_lic_stts` int NOT NULL,
@@ -187,7 +187,7 @@ CREATE TABLE `math_contents_license` (
                                          PRIMARY KEY (`contents_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_docs_paper`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_docs_paper`;
 CREATE TABLE `math_docs_paper` (
                                    `docs_no` int NOT NULL AUTO_INCREMENT,
                                    `contents_no_list` varchar(700) NOT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE `math_docs_paper` (
                                    PRIMARY KEY (`docs_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_docs_usage`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_docs_usage`;
 CREATE TABLE `math_docs_usage` (
                                    `docs_no` int NOT NULL AUTO_INCREMENT,
                                    `contents_no_list` varchar(700) DEFAULT NULL,
@@ -216,7 +216,7 @@ CREATE TABLE `math_docs_usage` (
                                    PRIMARY KEY (`docs_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_resource`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_resource`;
 CREATE TABLE `math_resource` (
                                  `resource_no` int NOT NULL AUTO_INCREMENT,
                                  `user_uniq_id` binary(16) NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE `math_resource` (
                                  PRIMARY KEY (`resource_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_resource_cate`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_resource_cate`;
 CREATE TABLE `math_resource_cate` (
                                       `seq_no` int NOT NULL AUTO_INCREMENT,
                                       `resource_no` int NOT NULL,
@@ -241,7 +241,7 @@ CREATE TABLE `math_resource_cate` (
                                       PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_resource_img`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_resource_img`;
 CREATE TABLE `math_resource_img` (
                                      `slide_img_no` int NOT NULL AUTO_INCREMENT,
                                      `resource_no` int NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE `math_resource_img` (
                                      PRIMARY KEY (`slide_img_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_resource_menu`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_resource_menu`;
 CREATE TABLE `math_resource_menu` (
                                       `seq_no` int NOT NULL AUTO_INCREMENT,
                                       `main_cate_no` int NOT NULL,
@@ -261,7 +261,7 @@ CREATE TABLE `math_resource_menu` (
                                       PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_type_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_type_info`;
 CREATE TABLE `math_type_info` (
                                   `unit_uniq_no` int NOT NULL,
                                   `type_no` int NOT NULL DEFAULT '0',
@@ -270,7 +270,7 @@ CREATE TABLE `math_type_info` (
                                   PRIMARY KEY (`unit_uniq_no`,`type_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_unit_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_unit_info`;
 CREATE TABLE `math_unit_info` (
                                   `unit_uniq_no` int NOT NULL,
                                   `subject` varchar(20) NOT NULL,
@@ -280,7 +280,7 @@ CREATE TABLE `math_unit_info` (
                                   PRIMARY KEY (`unit_uniq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `math_unit_keyword`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`math_unit_keyword`;
 CREATE TABLE `math_unit_keyword` (
                                      `id` int NOT NULL AUTO_INCREMENT,
                                      `unit_uniq_no` int NOT NULL,
@@ -288,7 +288,7 @@ CREATE TABLE `math_unit_keyword` (
                                      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `members`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`members`;
 CREATE TABLE `members` (
                            `user_uniq_id` binary(16) NOT NULL,
                            `email` varchar(60) NOT NULL,
@@ -302,7 +302,7 @@ CREATE TABLE `members` (
                            PRIMARY KEY (`user_uniq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `members_follow_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`members_follow_info`;
 CREATE TABLE `members_follow_info` (
                                        `following_user_no` int NOT NULL,
                                        `follower_user_no` int NOT NULL,
@@ -310,7 +310,7 @@ CREATE TABLE `members_follow_info` (
                                        PRIMARY KEY (`following_user_no`,`follower_user_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `members_private`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`members_private`;
 CREATE TABLE `members_private` (
                                    `user_uniq_id` binary(16) NOT NULL,
                                    `user_name` varchar(34) DEFAULT NULL,
@@ -319,7 +319,7 @@ CREATE TABLE `members_private` (
                                    PRIMARY KEY (`user_uniq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `members_profile`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`members_profile`;
 CREATE TABLE `members_profile` (
                                    `user_no` int NOT NULL AUTO_INCREMENT,
                                    `user_uniq_id` binary(16) NOT NULL,
@@ -333,7 +333,7 @@ CREATE TABLE `members_profile` (
                                    PRIMARY KEY (`user_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `members_role`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`members_role`;
 CREATE TABLE `members_role` (
                                 `seq_no` int NOT NULL AUTO_INCREMENT,
                                 `user_uniq_id` binary(16) NOT NULL,
@@ -342,7 +342,7 @@ CREATE TABLE `members_role` (
                                 PRIMARY KEY (`seq_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `refresh_token_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`refresh_token_info`;
 CREATE TABLE `refresh_token_info` (
                                       `id` int NOT NULL AUTO_INCREMENT,
                                       `token` varchar(300) NOT NULL,
@@ -351,7 +351,7 @@ CREATE TABLE `refresh_token_info` (
                                       PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-DROP TABLE IF EXISTS `tmp_img_file_info`;
+DROP TABLE IF EXISTS  `numberbox_tc`.`tmp_img_file_info`;
 CREATE TABLE `tmp_img_file_info` (
                                      `seq_no` int NOT NULL AUTO_INCREMENT,
                                      `action_id` int NOT NULL,

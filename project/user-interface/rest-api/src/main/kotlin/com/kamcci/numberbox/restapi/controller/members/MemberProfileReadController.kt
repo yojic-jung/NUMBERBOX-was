@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+/**
+ * 프로필 조회
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member/profile")

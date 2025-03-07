@@ -1,5 +1,8 @@
 package com.kamcci.numberbox.app.domain.enumeration.cs
 
+/**
+ * 고객센터 - 문의 타입
+ */
 enum class CSErrorType(val dbData: Int, val desc: String) {
     Etc(0, "기타"),
     MathContents(1, "수학 문제"),

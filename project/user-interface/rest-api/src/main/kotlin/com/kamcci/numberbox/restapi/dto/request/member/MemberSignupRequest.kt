@@ -7,7 +7,7 @@ import jakarta.validation.Valid
 import java.util.*
 
 /**
- * 회원 가입 요청 dto
+ * 회원 가입 요청
  */
 data class MemberSignupRequest(
     // 이메일

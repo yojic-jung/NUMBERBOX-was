@@ -4,7 +4,7 @@ import com.kamcci.numberbox.restapi.validation.file.ImgFileCheck
 import org.springframework.web.multipart.MultipartFile
 
 /**
- * 사용자 프로필 이미지 변경
+ * 사용자 프로필 이미지 변경 요청
  */
 data class ProfileImgUpdtRequest(
     @field:ImgFileCheck

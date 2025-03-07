@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.port.orm.member
 
 /**
- * 팔로잉 및 팔로워 조회
+ * 팔로잉 및 팔로워 변경
  */
 interface MemberFollowWriteOrmPort {
     // 팔로잉

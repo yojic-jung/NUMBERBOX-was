@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * 회원 조회
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")

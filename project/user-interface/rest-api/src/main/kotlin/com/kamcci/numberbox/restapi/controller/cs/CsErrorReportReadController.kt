@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 /**
- * 고객센터 - 변경
+ * 고객센터 - 조회
  */
 @PreAuthorize("hasRole('USER')")
 @RestController

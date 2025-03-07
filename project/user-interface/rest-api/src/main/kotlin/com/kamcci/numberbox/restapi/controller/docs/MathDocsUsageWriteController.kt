@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+/**
+ * 학습지 사용량 기록
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/docs/usage")
 class MathDocsUsageWriteController(
     private val mathDocsUsageWriteCase: MathDocsUsageWriteCase
 ) {
+    // 사용량 기록
     @PostMapping
     fun create(
         @UserId

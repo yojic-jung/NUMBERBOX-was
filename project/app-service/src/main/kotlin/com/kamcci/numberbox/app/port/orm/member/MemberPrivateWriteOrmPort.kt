@@ -4,6 +4,9 @@ import com.kamcci.numberbox.app.domain.dto.member.MemberPhoneUpdtDto
 import com.kamcci.numberbox.app.domain.dto.member.MemberPrivateSignUpDto
 import java.util.*
 
+/**
+ * 회원 개인정보 - 변경
+ */
 interface MemberPrivateWriteOrmPort {
     // 개인정보 등록
     fun save(memberId: UUID, privateSignUpDto: MemberPrivateSignUpDto): UUID

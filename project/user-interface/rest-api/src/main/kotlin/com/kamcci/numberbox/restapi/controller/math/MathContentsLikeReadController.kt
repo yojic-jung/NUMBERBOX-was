@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+/**
+ * 좋아요 정보 조회
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/like-repo/content")

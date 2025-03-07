@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 학습지 저장소
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/repo/content")

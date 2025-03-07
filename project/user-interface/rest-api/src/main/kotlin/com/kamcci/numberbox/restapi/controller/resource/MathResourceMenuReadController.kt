@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
+/**
+ * 학습자료 메뉴 조회
+ */
 @RequestMapping("/public/math/resource/menu")
 @RestController
 class MathResourceMenuReadController(

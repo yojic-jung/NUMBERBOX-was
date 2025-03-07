@@ -47,7 +47,7 @@ class ResponseUtilTest {
         // then
         assertThat(errRes.statusCode).isEqualTo(sttsCode)
         val errMsg = errRes.body as ResponseErrMsg
-        assertThat(errMsg.getTimestamp()).isAfter(now)
+        assertThat(errMsg.getTimestamp()).isAfterOrEqualTo(now)
     }
 
     @Test

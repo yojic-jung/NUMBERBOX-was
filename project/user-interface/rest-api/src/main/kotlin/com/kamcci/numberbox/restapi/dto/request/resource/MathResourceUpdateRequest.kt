@@ -5,7 +5,7 @@ import com.kamcci.numberbox.restapi.validation.file.PptFileCheck
 import org.springframework.web.multipart.MultipartFile
 
 /**
- * 수학 학습 자료 수정용
+ * 수학 학습 자료 수정용 요청
  */
 data class MathResourceUpdateRequest(
     val resourceId: Long,

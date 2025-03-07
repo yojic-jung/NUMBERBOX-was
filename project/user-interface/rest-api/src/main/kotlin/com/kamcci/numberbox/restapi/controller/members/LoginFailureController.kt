@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class LoginFailureController(
     private val memberLoginFailureUsecase: MemberLoginFailureUseCase
 ) {
-
+    // 로그인 실패 콜백
     @PostMapping("/login/fail")
     fun loginFailCallback(request: HttpServletRequest): ResponseEntity<Any> {
         val exception = request.getAttribute("auth.error.exception") as Exception

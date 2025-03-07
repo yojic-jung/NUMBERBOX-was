@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.dto.hwp
 import java.util.*
 
 /**
- * 수정한 html 파일 문자열
+ * 수정한 html 문자열 파일 - 수정용
  */
 data class HwpConvertContentsUpdateDto(
     val id: Long,

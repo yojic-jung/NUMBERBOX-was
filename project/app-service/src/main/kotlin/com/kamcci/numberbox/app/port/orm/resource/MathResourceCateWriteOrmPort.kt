@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.app.port.orm.resource
 
 /**
- * 학습 자료 카테고리 영속화
+ * 학습 자료 카테고리 변경
  */
 interface MathResourceCateWriteOrmPort {
     // 삭제

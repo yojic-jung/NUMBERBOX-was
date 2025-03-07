@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.enumeration.math.IpsiManageInsType
 import com.kamcci.numberbox.app.domain.enumeration.math.IpsiPaperType
 
 /**
- * 입시 수학문제 출처 정보 생성 dto
+ * 입시 수학문제 출처 정보 변경 dto
  */
 data class MathConIpsiSrcModifyDto(
     // 출제 기관

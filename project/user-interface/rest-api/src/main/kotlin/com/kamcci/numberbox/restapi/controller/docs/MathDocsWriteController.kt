@@ -12,6 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 학습지 제작 및 수정
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/docs")

@@ -12,6 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 회원 팔로우 및 팔로워 - 변경
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member/following")

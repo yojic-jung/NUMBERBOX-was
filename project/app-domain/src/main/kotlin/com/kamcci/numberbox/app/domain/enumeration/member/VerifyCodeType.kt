@@ -1,5 +1,8 @@
 package com.kamcci.numberbox.app.domain.enumeration.member
 
+/**
+ * 인증코드 타입
+ */
 enum class VerifyCodeType(val dbData: Int, val title: String) {
     SignUp(1, "회원가입"),
     Password(2, "비밀번호 변경"),

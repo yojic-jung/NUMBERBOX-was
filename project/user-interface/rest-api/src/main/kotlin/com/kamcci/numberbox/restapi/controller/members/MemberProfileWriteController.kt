@@ -17,6 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 프로필 생성 및 변경
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member/profile")

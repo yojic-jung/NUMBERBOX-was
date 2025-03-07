@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
+/**
+ * 회원 개인정보 변경
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/member")

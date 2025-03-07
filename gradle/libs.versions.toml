@@ -13,7 +13,7 @@ mysql-version = "9.0.0"
 
 java-uuid = "4.0.1"
 test-container = "1.19.5"
-flyway = "9.22.3"
+flyway = "10.16.0"
 mockito = "5.4.0"
 jackson = "2.17.2"
 mockk = "1.13.8"

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 
+/**
+ * 학습자료 조회
+ */
 @RequestMapping("/math/resource")
 @RestController
 class MathResourceReadController(

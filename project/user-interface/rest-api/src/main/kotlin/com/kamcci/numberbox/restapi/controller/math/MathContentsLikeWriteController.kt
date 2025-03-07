@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+/**
+ * 수학 문제 좋아요 - 변경
+ */
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/math/like/content")

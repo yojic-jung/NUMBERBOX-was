@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty
 
 
 /**
- * 수학문제 문법 등록
+ * 수학문제 문법 등록 요청
  */
 data class MathContestGrammarModifyRequest(
     val contentsId: Long,

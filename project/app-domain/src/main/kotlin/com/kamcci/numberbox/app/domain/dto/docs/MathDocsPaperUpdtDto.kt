@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.dto.docs
 import com.kamcci.numberbox.app.domain.enumeration.docs.DocsStatusType
 
 /**
- * 학습지 생성 dto
+ * 학습지 변경 dto
  */
 data class MathDocsPaperUpdtDto(
     val id: Long,

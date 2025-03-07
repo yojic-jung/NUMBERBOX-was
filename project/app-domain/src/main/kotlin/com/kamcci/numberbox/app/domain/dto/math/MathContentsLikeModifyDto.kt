@@ -3,7 +3,7 @@ package com.kamcci.numberbox.app.domain.dto.math
 import java.util.*
 
 /**
- * 문제 좋아요 목록에 저장
+ * 문제 좋아요 목록에 저장 및 변경
  */
 data class MathContentsLikeModifyDto(
     val contentsId: Long,

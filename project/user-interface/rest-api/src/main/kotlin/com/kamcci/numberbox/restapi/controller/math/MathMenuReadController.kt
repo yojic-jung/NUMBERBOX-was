@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * 수학 문제 단원 및 유형 메뉴 조회
+ */
 @RestController
 @RequestMapping("/public/math/menu")
 class MathMenuReadController(
@@ -21,6 +24,7 @@ class MathMenuReadController(
     private val mathContentsIpsiReadCase: MathContentsIpsiReadCase,
     private val mathFormulaKeyReadCase: MathFormulaKeyReadCase
 ) {
+    // 단원 정보 조회
     @GetMapping("/unit")
     fun readUnitCategory(): ResponseEntity<ResponseData<Any>> {
         val mathUnitList = mathCategoryUnitReadCase.readAll()
@@ -28,6 +32,7 @@ class MathMenuReadController(
         return ResponseUtil.ok(unitMap)
     }
 
+    // 유형 정보 조회
     @GetMapping("/type")
     fun readTypeCategory(
         @RequestParam("unitId") unitId: String
@@ -37,6 +42,7 @@ class MathMenuReadController(
         return ResponseUtil.ok(mapOf("mathTypeList" to mathTypeList))
     }
 
+    // 수식 단축키 조회
     @GetMapping("/shortCutKey")
     fun readShortCutKey(): ResponseEntity<ResponseData<Any>> {
         val shortcutKeyList = mathFormulaKeyReadCase.readAll()
@@ -44,6 +50,7 @@ class MathMenuReadController(
         return ResponseUtil.ok(mapOf("shortCutKey" to shortcutKeyList) + shortcutkeyGroupMap)
     }
 
+    // 입시년도 조회
     @GetMapping("/ipsi-year")
     fun readIpsiYear(): ResponseEntity<ResponseData<Any>> {
         return ResponseUtil.ok(mapOf("ipsiYear" to mathContentsIpsiReadCase.readAllIpsiYear()))
