@@ -11,7 +11,7 @@ import java.util.*
 
 class MockHwpConvertContentsWriteCase : HwpConvertContentsWriteCase {
     override fun create(createDto: HwpConvertContentsCreateDto): Long {
-        return if (createDto.fileName != FAIL_STRING) 0L else 1L
+        return if (createDto.fileName == FAIL_STRING) 0L else 1L
     }
 
     override fun update(updateDto: HwpConvertContentsUpdateDto): Long {
