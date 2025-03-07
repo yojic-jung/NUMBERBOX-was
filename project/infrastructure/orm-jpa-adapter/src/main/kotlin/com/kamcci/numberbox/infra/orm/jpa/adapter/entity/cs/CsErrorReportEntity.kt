@@ -10,6 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 고객센터 문의 내역
+ */
 @Entity
 @Table(name = "cs_error_report")
 class CsErrorReportEntity {

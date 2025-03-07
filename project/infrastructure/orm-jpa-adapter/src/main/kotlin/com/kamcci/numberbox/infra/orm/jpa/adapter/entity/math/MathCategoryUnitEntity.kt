@@ -5,6 +5,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 
+/**
+ * 단원 정보
+ */
 @Entity
 @Table(name = "math_category_unit")
 class MathCategoryUnitEntity {

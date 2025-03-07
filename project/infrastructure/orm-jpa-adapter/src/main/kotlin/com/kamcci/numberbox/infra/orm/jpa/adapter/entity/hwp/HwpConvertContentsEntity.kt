@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 한글 파일 변환 정보
+ */
 @Entity
 @Table(name = "hwp_convert_contents")
 class HwpConvertContentsEntity {

@@ -4,6 +4,9 @@ import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
+/**
+ * 회원 권한
+ */
 @Entity
 @Table(name = "members_role")
 class MemberRoleEntity {

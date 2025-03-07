@@ -6,6 +6,9 @@ import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 수학문제 저장소 저장 내역
+ */
 @Entity
 @Table(name = "math_con_repo")
 class MathContentsRepositoryEntity {

@@ -6,6 +6,9 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 
+/**
+ * 수식 단축키 기호
+ */
 @Entity
 @Table(name = "math_formula_key")
 class MathFormulaKeyEntity {

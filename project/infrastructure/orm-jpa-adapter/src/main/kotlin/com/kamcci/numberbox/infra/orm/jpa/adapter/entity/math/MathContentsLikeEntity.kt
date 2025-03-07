@@ -4,6 +4,9 @@ import jakarta.persistence.*
 import java.io.Serializable
 import java.util.*
 
+/**
+ * 수학문제 좋아요 정보
+ */
 @Entity
 @Table(name = "math_con_like")
 class MathContentsLikeEntity {

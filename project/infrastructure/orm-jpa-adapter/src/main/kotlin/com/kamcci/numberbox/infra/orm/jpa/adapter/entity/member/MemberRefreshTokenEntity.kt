@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 회원 리프레시 토큰
+ */
 @Entity
 @Table(name = "member_refresh_token")
 class MemberRefreshTokenEntity {

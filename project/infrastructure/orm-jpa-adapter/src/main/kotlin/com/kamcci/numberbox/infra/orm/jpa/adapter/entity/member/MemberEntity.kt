@@ -6,6 +6,9 @@ import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 import java.util.*
 
+/**
+ * 회원 정보
+ */
 @Entity
 @Table(name = "members")
 class MemberEntity {

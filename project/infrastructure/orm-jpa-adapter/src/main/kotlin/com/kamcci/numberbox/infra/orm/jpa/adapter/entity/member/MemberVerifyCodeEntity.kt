@@ -8,6 +8,9 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
 
+/**
+ * 회원 인증코드
+ */
 @Table(name = "members_verify_code")
 @Entity
 class MemberVerifyCodeEntity {
