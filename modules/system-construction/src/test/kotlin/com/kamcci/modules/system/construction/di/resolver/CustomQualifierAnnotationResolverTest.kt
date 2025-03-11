@@ -1,4 +1,4 @@
-package com.kamcci.modules.system.construction.di.registrar
+package com.kamcci.modules.system.construction.di.resolver
 
 import com.kamcci.modules.system.construction.mock.common.MockQualifierAnnotationAutowireCandidateResolver
 import com.kamcci.modules.system.construction.sample.CustomQualifier
@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireC
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.beans.factory.support.SimpleAutowireCandidateResolver
 
-class CustomQualifierAnnotationRegistrarTest {
+class CustomQualifierAnnotationResolverTest {
     private val beanFactory = DefaultListableBeanFactory()
     private val customAnnot = CustomQualifier::class
 
     // 테스트 대상
-    private val customQualifierAnnotationRegistrar = CustomQualifierAnnotationRegistrar()
+    private val customQualifierAnnotationResolver = CustomQualifierAnnotationResolver()
 
     @Test
     fun `Qualifier 역할 진행할 커스텀 어노테이션 설정 - 성공`() {
@@ -22,7 +22,7 @@ class CustomQualifierAnnotationRegistrarTest {
         beanFactory.autowireCandidateResolver = qualifierResolver
 
         // when
-        customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)
+        customQualifierAnnotationResolver.add(customAnnot, beanFactory)
 
         // then
         val resolver = beanFactory.autowireCandidateResolver
@@ -38,7 +38,7 @@ class CustomQualifierAnnotationRegistrarTest {
         beanFactory.autowireCandidateResolver = qualifierResolver
 
         // when
-        customQualifierAnnotationRegistrar.add(customAnnot, beanFactory)
+        customQualifierAnnotationResolver.add(customAnnot, beanFactory)
 
         // then
         assertThat(qualifierResolver).isNotInstanceOf(QualifierAnnotationAutowireCandidateResolver::class.java)

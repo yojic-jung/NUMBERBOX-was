@@ -14,7 +14,7 @@ class SystemConstructionTxConfigTest {
             "system.construction.tx.class-path.transaction",
             "com.kamcci.modules.system.construction.sample.TXExecute"
         )
-        val txConfig = SystemConstructionTxConfig(MockPlatformTransactionManager(), env)
+        val txConfig = SystemConstructionTxConfig(MockPlatformTransactionManager())
 
         // when & then
         assertThat(txConfig.txAnnotationPointcut()).isNotNull

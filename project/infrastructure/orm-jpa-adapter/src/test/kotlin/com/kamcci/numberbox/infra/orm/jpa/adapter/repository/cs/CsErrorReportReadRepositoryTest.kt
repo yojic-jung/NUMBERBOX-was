@@ -22,6 +22,6 @@ class CsErrorReportReadRepositoryTest(
         val csErrReportList = csErrorReportReadRepository.readByMemberId(memberId)
 
         // then
-        assertThat(csErrReportList[0].id).isEqualTo(dummyEntity.id)
+        assertThat(csErrReportList.last().id).isEqualTo(dummyEntity.id)
     }
 }

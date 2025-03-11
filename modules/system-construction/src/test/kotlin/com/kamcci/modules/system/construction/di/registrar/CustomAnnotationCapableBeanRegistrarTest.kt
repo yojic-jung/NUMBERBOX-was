@@ -1,8 +1,8 @@
 package com.kamcci.modules.system.construction.di.registrar
 
+import com.kamcci.modules.system.construction.di.config.CustomDIAnnotationBeanConstConfig.CUSTOM_BEAN_ANNOTATION
 import com.kamcci.modules.system.construction.di.processor.BeanDefinitionPropertyProcessor
 import com.kamcci.modules.system.construction.mock.common.MockBeanDefinitionPropertyProcessor
-import com.kamcci.modules.system.construction.sample.DiTestFixture.getCustomAnnotationProperty
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
@@ -20,12 +20,13 @@ class CustomAnnotationCapableBeanRegistrarTest {
 
         // when
         customAnnotationCapableBeanFactory.registerOnlyWith(
-            getCustomAnnotationProperty(),
+            CUSTOM_BEAN_ANNOTATION,
+            "com.kamcci.modules.system.construction.sample",
             registry
         )
 
         // then
-        val bean = registry.getBeanDefinition("testBean")
+        val bean = registry.getBeanDefinition("customPrimaryBean")
         assertThat(bean).isNotNull
     }
 }

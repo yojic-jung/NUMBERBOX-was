@@ -1,6 +1,8 @@
 package com.kamcci.modules.system.construction.tx.advice
 
 import com.kamcci.modules.system.construction.common.util.FindAnnotation.findInterfaceAnnotation
+import com.kamcci.modules.system.construction.tx.config.CustomTxUserConfig.CUSTOM_TX_ANNOTATION
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
 import org.aopalliance.intercept.MethodInterceptor
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.transaction.PlatformTransactionManager
@@ -13,20 +15,21 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
  * - 메서드 선정 알고리즘(포인트컷)에 의존하지 않음, 오직 부가기능 제공만
  */
 class SystemConstructionTXAdvice(
-    private val customTxAnnotation: Class<out Annotation>,
     private val transactionManager: PlatformTransactionManager,
 ) : MethodInterceptor {
     override fun invoke(invocation: MethodInvocation): Any? {
+        val txClazz = CUSTOM_TX_ANNOTATION.java
+
         // 타킷 메서드에 적용된 어노테이션 추출
         val method = invocation.method
-        val customTXAnnotation = method.getAnnotation(customTxAnnotation)
+        val customTXAnnotation = method.getAnnotation(txClazz)
 
         // 타킷 클래스에 적용된 어노테이션 추출
         val targetClass = method.declaringClass
-        val classAnnotation = targetClass.getAnnotation(customTxAnnotation)
+        val classAnnotation = targetClass.getAnnotation(txClazz)
 
         // 인터페이스에 적용된 어노테이션 추출
-        val interfaceAnnotation = findInterfaceAnnotation(customTxAnnotation, method)
+        val interfaceAnnotation = findInterfaceAnnotation(txClazz, method)
 
         // 어노테이션은 메서드 -> 클래스 순으로 우선순위
         val txAnnotation =
@@ -34,33 +37,34 @@ class SystemConstructionTXAdvice(
                 customTXAnnotation != null -> customTXAnnotation
                 classAnnotation != null -> classAnnotation
                 interfaceAnnotation != null -> interfaceAnnotation
-                else -> {
-                    return invocation.proceed()
-                }
+                else -> null
             }
 
         // 어노테이션에 적용된 트랜잭션 속성 객체 생성
-        val txDefinition = DefaultTransactionDefinition()
-        val isolationLevel = txAnnotation::class.java.getDeclaredMethod("isolation").invoke(txAnnotation)
-        val propagationBehavior = txAnnotation::class.java.getDeclaredMethod("propagation").invoke(txAnnotation)
-        val readOnly = txAnnotation::class.java.getDeclaredMethod("readOnly").invoke(txAnnotation)
-        txDefinition.isolationLevel = isolationLevel as Int
-        txDefinition.propagationBehavior = propagationBehavior as Int
-        txDefinition.isReadOnly = readOnly as Boolean
-        val txStatus = transactionManager.getTransaction(txDefinition)
+        val txDefinition =
+            if (txAnnotation != null) {
+                val txDefinition = DefaultTransactionDefinition()
+                txDefinition.isolationLevel = (txAnnotation as TXExecute).isolation.id
+                txDefinition.propagationBehavior = txAnnotation.propagation.id
+                txDefinition.isReadOnly = txAnnotation.readOnly
+                transactionManager.getTransaction(txDefinition)
+            } else {
+                // 어노테이션 미존재시 디폴트 값 선언
+                transactionManager.getTransaction(DefaultTransactionDefinition())
+            }
 
         try {
             val returnVal = invocation.proceed()
-            transactionManager.commit(txStatus)
+            transactionManager.commit(txDefinition)
             return returnVal
         } catch (e: RuntimeException) {
-            transactionManager.rollback(txStatus)
+            transactionManager.rollback(txDefinition)
             throw e
         } catch (e: Exception) {
-            transactionManager.rollback(txStatus)
+            transactionManager.rollback(txDefinition)
             throw e
         } catch (e: Throwable) {
-            transactionManager.rollback(txStatus)
+            transactionManager.rollback(txDefinition)
             throw e
         }
     }

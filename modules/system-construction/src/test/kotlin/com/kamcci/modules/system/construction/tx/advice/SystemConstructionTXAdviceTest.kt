@@ -2,7 +2,6 @@ package com.kamcci.modules.system.construction.tx.advice
 
 import com.kamcci.modules.system.construction.mock.common.MockPlatformTransactionManager
 import com.kamcci.modules.system.construction.sample.NonTxClass
-import com.kamcci.modules.system.construction.sample.TXExecute
 import com.kamcci.modules.system.construction.sample.TestConstant.SUCCESS
 import com.kamcci.modules.system.construction.sample.TransactionMethodTarget
 import com.kamcci.modules.system.construction.sample.TxInterfaceImpl
@@ -17,7 +16,7 @@ import kotlin.reflect.jvm.javaMethod
 class SystemConstructionTXAdviceTest {
     private val transactionManager = MockPlatformTransactionManager()
     private val systemConstructionTXAdvice: SystemConstructionTXAdvice =
-        SystemConstructionTXAdvice(TXExecute::class.java, transactionManager)
+        SystemConstructionTXAdvice(transactionManager)
 
     @Test
     fun `트랜잭션 부가기능 처리 - 성공`() {

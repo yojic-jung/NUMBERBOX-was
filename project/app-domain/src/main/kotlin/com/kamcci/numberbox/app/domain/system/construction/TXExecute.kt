@@ -18,8 +18,8 @@ import java.lang.annotation.Target
 @Documented
 annotation class TXExecute(
     val readOnly: Boolean = false,
-    val propagation: Int = 0, // Propagation.REQUIRED
-    val isolation: Int = 4 // Isolation.DEFAULT
+    val propagation: Propagation = Propagation.REQUIRED,
+    val isolation: Isolation = Isolation.DEFAULT,
 )
 
 

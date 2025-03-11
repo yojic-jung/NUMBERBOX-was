@@ -1,35 +1,18 @@
 package com.kamcci.modules.system.construction.sample
 
-import com.kamcci.modules.system.construction.di.config.CustomBeanAnnotationProperty
-
-annotation class CustomBean
-
-annotation class CustomPrimary
+import com.kamcci.numberbox.app.domain.system.construction.Aliases
+import com.kamcci.numberbox.app.domain.system.construction.Priority
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 
 annotation class CustomQualifier(val value: String)
 
-@CustomQualifier("aliases")
-@CustomPrimary
-@CustomBean
-class TestBean
+@Aliases("aliases")
+@Priority
+@UseCase
+class CustomPrimaryBean
+
+@UseCase
+class CustomHasNotOptionBean
 
 class NonAnnotatedClass
-
-object DiTestFixture {
-    fun getCustomAnnotationProperty() = CustomBeanAnnotationProperty(
-        "com.kamcci.modules.system.construction.sample.CustomBean",
-        "com.kamcci.modules.system.construction.sample",
-        "singleton",
-        "com.kamcci.modules.system.construction.sample.CustomPrimary",
-        "com.kamcci.modules.system.construction.sample.CustomQualifier"
-    )
-
-    fun getNonAnnotationProperty() = CustomBeanAnnotationProperty(
-        "com.kamcci.modules.system.construction.sample.NonAnnotatedClass",
-        "com.kamcci.modules.system.construction.sample",
-        "singleton",
-        "com.kamcci.modules.system.construction.sample.CustomPrimary",
-        "com.kamcci.modules.system.construction.sample.CustomQualifier"
-    )
-}
 

@@ -1,8 +1,7 @@
 package com.kamcci.modules.system.construction.di.processor
 
-import com.kamcci.modules.system.construction.sample.DiTestFixture.getCustomAnnotationProperty
-import com.kamcci.modules.system.construction.sample.NonAnnotatedClass
-import com.kamcci.modules.system.construction.sample.TestBean
+import com.kamcci.modules.system.construction.sample.CustomHasNotOptionBean
+import com.kamcci.modules.system.construction.sample.CustomPrimaryBean
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.support.AutowireCandidateQualifier
@@ -14,14 +13,11 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
     @Test
     fun `Primary 및 Qualifier 속성 설정 - 성공`() {
         // given
+        val primaryAnnotClass = CustomPrimaryBean::class.java
         val beanDefBuilder = genericBeanDefinition()
 
         // when
-        annotationBeanDefinitionModifyProcessor.modify(
-            getCustomAnnotationProperty(),
-            TestBean::class.java,
-            beanDefBuilder
-        )
+        annotationBeanDefinitionModifyProcessor.modify(primaryAnnotClass, beanDefBuilder)
 
         // then
         assertThat(beanDefBuilder.beanDefinition.isPrimary).isTrue()
@@ -33,14 +29,11 @@ class AnnotationBeanDefinitionPropertyProcessorTest {
     @Test
     fun `Primary 및 Qualifier 속성 설정 - 실패`() {
         // given
+        val optionHasNotBean = CustomHasNotOptionBean::class.java
         val beanDefBuilder = genericBeanDefinition()
 
         // when
-        annotationBeanDefinitionModifyProcessor.modify(
-            getCustomAnnotationProperty(),
-            NonAnnotatedClass::class.java,
-            beanDefBuilder
-        )
+        annotationBeanDefinitionModifyProcessor.modify(optionHasNotBean, beanDefBuilder)
 
         // then
         assertThat(beanDefBuilder.beanDefinition.isPrimary).isFalse()

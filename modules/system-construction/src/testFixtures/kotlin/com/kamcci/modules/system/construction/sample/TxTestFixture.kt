@@ -1,8 +1,8 @@
 package com.kamcci.modules.system.construction.sample
 
-import com.kamcci.modules.system.construction.common.util.FindAnnotation.getAnnotationClass
 import com.kamcci.modules.system.construction.sample.TestConstant.SUCCESS
-import com.kamcci.modules.system.construction.tx.pointcut.CustomAnnotationMatchingPointcut
+import com.kamcci.numberbox.app.domain.system.construction.TXExecute
+import com.kamcci.numberbox.app.domain.system.construction.UseCase
 
 
 object TestConstant {
@@ -10,7 +10,7 @@ object TestConstant {
 }
 
 @TXExecute
-@CustomBean
+@UseCase
 class TransactionMethodTarget {
     @TXExecute
     fun txMethod() = SUCCESS
@@ -46,11 +46,4 @@ class NonTxInterfaceImpl : NonTxInterface {
     override fun txMethod() = SUCCESS
     override fun txNotAnnotatedMethod() = SUCCESS
     fun nonInterfaceMethod() = SUCCESS
-}
-
-object TxFixture {
-    fun getCustomAnnotationMatchingPointcut() =
-        CustomAnnotationMatchingPointcut(
-            getAnnotationClass("com.kamcci.modules.system.construction.sample.TXExecute").java
-        )
 }
