@@ -113,18 +113,18 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 ```
 예시.
 
-|--presentation--|----------------business--------------------|----adapter----|
+|--presentation--|----------------business-------------------|----adapter----|
 
- ReadController -> ReadCase(ReadService) -------> ReadOrmPort(ReadRepository)
+ ReadController -> ReadCase: ReadService -------> ReadOrmPort: ReadRepository
 
 
-                                             ┌--> WriteOrmPort(WriteRepostiory)
+                                             ┌--> WriteOrmPort: WriteRepostiory
                                              |
-                                             |--> EmailPort(EmailAdapter)
- WriteController -> WriteCase(WriteService) -|
-                                             |--> HwpClientPort(HwpClientService)
+                                             |--> EmailPort: EmailAdapter
+ WriteController -> WriteCase: WriteService -|
+                                             |--> HwpClientPort: HwpClientService
                                              |
-                                             └--> StoragePort(S3Storage)
+                                             └--> StoragePort: S3Storage
 ```
 
 ### dto 작명 규칙
