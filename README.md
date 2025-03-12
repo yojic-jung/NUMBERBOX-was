@@ -104,9 +104,9 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 |                                     |           | Xxx__HwpClientPort    | Hwp파일 변환 변환 명세서         |
 |                                     |           | Xxx__StoragePort      | 파일 저장 및 삭제 관리 명세서       |
 | infrastructure : email-adapter      | class     | Xxx__EmailAdapter     | Xxx__EmailPort의 구현체     |
-| infrastructure : hwp-client-adapter |           | Xxx__HwpClientService | Xxx__HwpClientPort의 구현체 |
+| infrastructure : hwp-client-adapter |           | Xxx__HwpClientAdapter | Xxx__HwpClientPort의 구현체 |
 | infrastructure : orm-jpa-adapter    |           | Xxx__Repository       | Xxx__ReadOrmPort의 구현체   |
-| infrastructure : storage-adapter    |           | Xxx__S3Storage        | Xxx__StoragePort의 구현체   |
+| infrastructure : storage-adapter    |           | Xxx__S3StorageAdapter | Xxx__StoragePort의 구현체   |
 | user-interface : rest-api           |           | Xxx__ReadController   | 읽기 작업 전용 컨트롤러           |
 |                                     |           | Xxx__WriteController  | 쓰기 작업 전용 컨트롤러           |
 
@@ -122,9 +122,9 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
                                              |
                                              |--> EmailPort: EmailAdapter
  WriteController -> WriteCase: WriteService -|
-                                             |--> HwpClientPort: HwpClientService
+                                             |--> HwpClientPort: HwpClientAdapter
                                              |
-                                             └--> StoragePort: S3Storage
+                                             └--> StoragePort: S3StorageAdapter
 ```
 
 ### dto 작명 규칙

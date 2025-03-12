@@ -13,7 +13,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 @Service
-class HwpClientService(
+class HwpClientAdapter(
     private val socketFactory: SocketFactory
 ) : HwpClientPort {
     companion object {

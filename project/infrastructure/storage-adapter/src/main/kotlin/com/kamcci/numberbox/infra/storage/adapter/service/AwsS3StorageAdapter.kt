@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class AwsS3Storage(
+class AwsS3StorageAdapter(
     private val awsS3Property: AwsS3Property,
     private val s3Client: AmazonS3Client,
 ) : FileStoragePort {

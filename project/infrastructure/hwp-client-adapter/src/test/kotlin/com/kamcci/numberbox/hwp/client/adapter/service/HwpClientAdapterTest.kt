@@ -8,18 +8,18 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class HwpClientServiceTest {
+class HwpClientAdapterTest {
     companion object {
         const val RESPONSE_DATA = "TEST"
     }
 
     // 테스트 대상 설정
     private val socketFactory: SocketFactory = getSocketFactory(RESPONSE_DATA)
-    private val hwpSocketClientService = HwpClientService(socketFactory)
+    private val hwpSocketClientService = HwpClientAdapter(socketFactory)
 
     // 테스트 대상 설정 - 에러 케이스
     private val socketErrFactory: SocketFactory = getErrorSocketFactory()
-    private val hwpSocketClientServiceErrCase = HwpClientService(socketErrFactory)
+    private val hwpSocketClientServiceErrCase = HwpClientAdapter(socketErrFactory)
 
     @Test
     fun `jsonMsg to hwp 파일 변환 요청 - 성공`() {

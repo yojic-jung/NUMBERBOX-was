@@ -8,19 +8,19 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AwsS3StorageTest {
+class AwsS3StorageAdapterTest {
     companion object {
         const val FILE_NAME = "test.txt"
         const val S3_FILE_PATH = "test/$FILE_NAME"
     }
 
-    private lateinit var awsS3UploadStorage: AwsS3Storage
+    private lateinit var awsS3UploadStorage: AwsS3StorageAdapter
 
     @BeforeEach
     fun `초기화`() {
         val awsS3Property = AwsS3Property(AwsS3Property.Credentials("", ""), "", "")
         val s3Client = MockAmazonS3Client()
-        awsS3UploadStorage = AwsS3Storage(awsS3Property, s3Client)
+        awsS3UploadStorage = AwsS3StorageAdapter(awsS3Property, s3Client)
     }
 
     @AfterEach

@@ -4,7 +4,7 @@ import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.port.hwp.HwpClientPort
 import java.io.InputStream
 
-class MockHwpClientService : HwpClientPort {
+class MockHwpClientAdapter : HwpClientPort {
     override fun requestHwpFile(jsonMsg: String): ByteArray {
         return byteArrayOf()
     }
