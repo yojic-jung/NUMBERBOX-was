@@ -14,13 +14,15 @@
 
 ***
 
-- Language: Kotlin, Java 17
-- Architecture : Hexagonal
-- Module-Structure : Multi-Module
-- Framework: Spring Boot 3.2.x
-- Persistence : JPA, QueryDsl
-- Database: MySQL 8.x
-- Cloud: AWS (EC2, S3, RDS)
+- Language: **Kotlin, Java 17**
+- Architecture : **Hexagonal**
+- Module-Structure : **Multi-Module**
+- Framework: **Spring Boot 3.2.x**
+- Persistence : **JPA, QueryDsl**
+- Database: **MySQL 8.x**
+- Cloud: **AWS (EC2, S3, RDS)**
+
+  <br/>
 
 ## 시스템 구조
 
@@ -54,20 +56,18 @@
 ### project 모듈 소개
 
 project는 멀티모듈 헥사고날 아키텍쳐 구조를 갖춘 NUMBERBOX-WAS 프로젝트 소스로 이루어져있다.  
-시스템의 모든 흐름을 application layer(비즈니스)에서 결정하기 위해 app모듈은 그 어떤 의존성도 갖지 않고, 다른 모듈이 app모듈을 의존한다.  
-따라서 app 모듈은 pojo로 구성되어있다.  
-구성된 모듈의 역할은 아래와 같다.
+시스템의 모든 흐름을 application layer(비즈니스)에서 결정하기에 모든 인터페이스가 application layer에 정의되어 있다.
 
-- app-service : 비즈니스 로직 수행
-- app-domain : 비즈니스 모델(dto, vo)로 구성
-- bootstrap : 구동 모듈
+- **app-service** : 비즈니스 로직 수행
+- **app-domain** : 비즈니스 모델(dto, vo)로 구성
+- **bootstrap** : 구동 모듈
 - intrastructure : 비즈니스 로직에서 호출하는 모듈
-    - email-adapter : email 서버와 연동되어 email 전송 관련 로직 수행
-    - hwp-client-adpater : 한글 파일 변환 서버와 연동되며 한글 파일과 웹(html) 변환 처리 로직 수행
-    - orm-jpa-adapter : DB와 연동되는 영속화 레이어
-    - storage-adapter : s3와 연동하여 파일 저장 및 삭제
+    - **email-adapter** : email 서버와 연동되어 email 전송 관련 로직 수행
+    - **hwp-client-adapter** : 한글 파일 변환 서버와 연동되며 한글 파일과 웹(html) 변환 처리 로직 수행
+    - **orm-jpa-adapter** : DB와 연동되는 영속화 레이어
+    - **storage-adapter** : s3와 연동하여 파일 저장 및 삭제
 - user-interface : 비즈니스 로직을 호출
-    - user-interface : 웹서버와 연동되는 controller로 이루어짐
+    - **rest-api** : 웹서버와 연동되는 controller로 이루어짐
 
 ### modules 소개
 
@@ -75,12 +75,13 @@ project에서 사용하는 모듈로 3rd-party-library에 대한 의존성을 �
 pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 구체적인 기능 구현을 하는 engine 모듈로 이루어졌다.  
 `project 모듈 → (pojo)control 모듈 ← engine 모듈`  와 같은 의존성 방향으로 project와 라이브러리 결합도를 낮출 수 있다.
 
-- auth : 인증 및 인가
-- logging : api 요청 및 응답 로깅
-- mail-sender : 메일 서버와 연동
-- system-construction : DI와 트랜잭션 기능을 제공하는 모듈로 pojo로 구성된 project의 app 모듈에 기능 지원
+- **auth** : 인증 및 인가
+- **logging** : api 요청 및 응답 로깅
+- **mail-sender** : 메일 서버와 연동
+- **system-construction** : DI와 트랜잭션 기능을 제공하는 모듈로 pojo로 구성된 project의 app 모듈에 기능 지원
 
 **[참고]** project 및 modules가 갖춘 모듈의 상세 소개는 해당 모듈 read-me에 명시
+<br/>
 
 ## Code Convention
 
