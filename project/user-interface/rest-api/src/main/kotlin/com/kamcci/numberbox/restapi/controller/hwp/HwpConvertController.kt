@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsCreateDto
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertContentsUpdateDto
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
+import com.kamcci.numberbox.app.port.hwp.HwpClientPort
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsReadCase
 import com.kamcci.numberbox.app.usecase.hwp.HwpConvertContentsWriteCase
@@ -32,7 +32,7 @@ import java.util.*
 @RequestMapping("/hwp/convert")
 class HwpConvertController(
     private val hwpConvertFileUtil: HwpConvertFileUtil,
-    private val hwpSocketClient: HwpSocketClient,
+    private val hwpSocketClient: HwpClientPort,
     private val fileStoragePort: FileStoragePort,
     private val hwpConvertContentsWriteCase: HwpConvertContentsWriteCase,
     private val hwpConvertContentsReadCase: HwpConvertContentsReadCase,

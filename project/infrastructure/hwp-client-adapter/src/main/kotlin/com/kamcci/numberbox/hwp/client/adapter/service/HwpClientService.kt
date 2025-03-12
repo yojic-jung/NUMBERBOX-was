@@ -2,7 +2,8 @@ package com.kamcci.numberbox.hwp.client.adapter.service
 
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpExtensionType
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpRequestType
-import com.kamcci.numberbox.app.port.hwp.HwpSocketClient
+import com.kamcci.numberbox.app.port.hwp.HwpClientPort
+import com.kamcci.numberbox.hwp.client.adapter.util.SocketFactory
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -12,9 +13,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 @Service
-class HwpSocketClientService(
+class HwpClientService(
     private val socketFactory: SocketFactory
-) : HwpSocketClient {
+) : HwpClientPort {
     companion object {
         // hwp 서버에 파일 사이즈를 알려줄 영역의 크기
         const val HEADER_SIZE = 4

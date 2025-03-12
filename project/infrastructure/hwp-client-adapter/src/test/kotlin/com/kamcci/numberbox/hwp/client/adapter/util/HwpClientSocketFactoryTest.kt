@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.hwp.client.adapter.service
+package com.kamcci.numberbox.hwp.client.adapter.util
 
 import com.kamcci.numberbox.hwp.client.adapter.config.HwpSocketClientProperty
 import org.junit.jupiter.api.Assertions.assertNotNull

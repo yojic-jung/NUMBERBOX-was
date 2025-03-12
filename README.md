@@ -89,33 +89,50 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 ### interface & class 작명 규칙
 
 - 읽기 작업은 Read, 쓰기작업은 Write 용어로 구분한다.
-- Contorller에서 호출하는 인터페이스는 UseCase라는 용어에서 Case를 가져와 ReadCase, WriteCase라는 postfix를 갖는다.
-- application layer에서 호출하는 인터페이스는 Port라는 postfix를 갖고 각 역할에 맞는 용어를 앞에 붙인다.
-    - ex) OrmPort, EmailPort, StoragePort 등
+- 비즈니스 레이어의 인터페이스는 ReadCase, WriteCase라는 postfix를 갖는다.
+- 비즈니스 레이어 이후 호출되는 레이어의 인터페이스는 Port라는 postFix를 갖는다.
+    - port 인터페이스는 비즈니스 레이어(app-service)에서 정의한다.
 
-| 모듈                                  | 구분        | 클래스명                  | 역할                        |
-|-------------------------------------|-----------|-----------------------|---------------------------|
-| app-service                         | interface | Xxx__ReadCase         | 비즈니스 로직의 읽기 작업 명세서        |
-|                                     |           | Xxx__WriteCase        | 비즈니스 로직의 쓰기 작업 명세서        |
-|                                     | class     | Xxx__ReadService      | Xxx__ReadCase의 구현체        |
-|                                     |           | Xxx__WriteService     | Xxx__WriteCase의 구현체       |
-|                                     | interface | Xxx__OrmPort          | 영속화 레이어 작업 명세서            |
-|                                     |           | Xxx__EmailPort        | Email 전송 작업 명세서           |
-|                                     |           | Xxx__HwpSocketClient  | Hwp파일 변환 변환 명세서           |
-|                                     |           | Xxx__StoragePort      | 파일 저장 및 삭제 관리 명세서         |
-| infrastructure : email-adapter      | class     | Xxx__EmailAdapter     | Xxx__EmailPort의 구현체       |
-| infrastructure : hwp-client-adapter |           | Xxx__HwpClientService | Xxx__HwpSocketClient의 구현체 |
-| infrastructure : orm-jpa-adapter    |           | Xxx__Repository       | Xxx__ReadOrmPort의 구현체     |
-| infrastructure : storage-adapter    |           | Xxx__S3Storage        | Xxx__StoragePort의 구현체     |
-| user-interface : rest-api           |           | Xxx__ReadController   | 읽기 작업 전용 컨트롤러             |
-|                                     |           | Xxx__WriteController  | 쓰기 작업 전용 컨트롤러             |
+| 모듈                                  | 구분        | 클래스명                  | 역할                      |
+|-------------------------------------|-----------|-----------------------|-------------------------|
+| app-service                         | interface | Xxx__ReadCase         | 비즈니스 로직의 읽기 작업 명세서      |
+|                                     |           | Xxx__WriteCase        | 비즈니스 로직의 쓰기 작업 명세서      |
+|                                     | class     | Xxx__ReadService      | Xxx__ReadCase의 구현체      |
+|                                     |           | Xxx__WriteService     | Xxx__WriteCase의 구현체     |
+|                                     | interface | Xxx__OrmPort          | 영속화 레이어 작업 명세서          |
+|                                     |           | Xxx__EmailPort        | Email 전송 작업 명세서         |
+|                                     |           | Xxx__HwpClientPort    | Hwp파일 변환 변환 명세서         |
+|                                     |           | Xxx__StoragePort      | 파일 저장 및 삭제 관리 명세서       |
+| infrastructure : email-adapter      | class     | Xxx__EmailAdapter     | Xxx__EmailPort의 구현체     |
+| infrastructure : hwp-client-adapter |           | Xxx__HwpClientService | Xxx__HwpClientPort의 구현체 |
+| infrastructure : orm-jpa-adapter    |           | Xxx__Repository       | Xxx__ReadOrmPort의 구현체   |
+| infrastructure : storage-adapter    |           | Xxx__S3Storage        | Xxx__StoragePort의 구현체   |
+| user-interface : rest-api           |           | Xxx__ReadController   | 읽기 작업 전용 컨트롤러           |
+|                                     |           | Xxx__WriteController  | 쓰기 작업 전용 컨트롤러           |
+
+```
+예시.
+
+|--presentation--|----------------business--------------------|----adapter----|
+
+ ReadController -> ReadCase(ReadService) -------> ReadOrmPort(ReadRepository)
+
+
+                                             ┌--> WriteOrmPort(WriteRepostiory)
+                                             |
+                                             |--> EmailPort(EmailAdapter)
+ WriteController -> WriteCase(WriteService) -|
+                                             |--> HwpClientPort(HwpClientService)
+                                             |
+                                             └--> StoragePort(S3Storage)
+```
 
 ### dto 작명 규칙
 
-| 모듈                               | 클래스명        | 역할                                              |
-|----------------------------------|-------------|-------------------------------------------------|
-| app-domain                       | XxxDto      | application-layer 메서드의 input 객체                 |
-|                                  | XxxVo       | application-layer 메서드의 output 객체, 비즈니스 로직 수행 결과 |
-| infrastructure : orm-jpa-adapter | XxxEntity   | 영속화 객체                                          |
-| user-interface : rest-api        | XxxRequest  | 클라이언트 요청 데이터                                    |
-| user-interface : rest-api        | XxxResponse | 서버 응답 데이터                                       |
+| 모듈                               | 클래스명          | 역할                                              |
+|----------------------------------|---------------|-------------------------------------------------|
+| app-domain                       | Xxx__Dto      | application-layer 메서드의 input 객체                 |
+|                                  | Xxx__Vo       | application-layer 메서드의 output 객체, 비즈니스 로직 수행 결과 |
+| infrastructure : orm-jpa-adapter | Xxx__Entity   | 영속화 객체                                          |
+| user-interface : rest-api        | Xxx__Request  | 클라이언트 요청 데이터                                    |
+| user-interface : rest-api        | Xxx__Response | 서버 응답 데이터                                       |
