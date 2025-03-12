@@ -61,13 +61,13 @@ project는 멀티모듈 헥사고날 아키텍쳐 구조를 갖춘 NUMBERBOX-WAS
 - **app-service** : 비즈니스 로직 수행
 - **app-domain** : 비즈니스 모델(dto, vo)로 구성
 - **bootstrap** : 구동 모듈
-- intrastructure : 비즈니스 로직에서 호출하는 모듈
-    - **email-adapter** : email 서버와 연동되어 email 전송 관련 로직 수행
+- intrastructure
+    - **email-adapter** : email 전송 관련 로직 수행
     - **hwp-client-adapter** : 한글 파일 변환 서버와 연동되며 한글 파일과 웹(html) 변환 처리 로직 수행
-    - **orm-jpa-adapter** : DB와 연동되는 영속화 레이어
+    - **orm-jpa-adapter** : 영속화 레이어
     - **storage-adapter** : s3와 연동하여 파일 저장 및 삭제
-- user-interface : 비즈니스 로직을 호출
-    - **rest-api** : 웹서버와 연동되는 controller로 이루어짐
+- user-interface
+    - **rest-api** : controller로 이루어짐
 
 ### modules 소개
 
@@ -90,7 +90,7 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 ### interface & class 작명 규칙
 
 - 읽기 작업은 Read, 쓰기작업은 Write 용어로 구분한다.
-- 비즈니스 레이어의 인터페이스는 ReadCase, WriteCase라는 postfix를 갖는다.
+- 비즈니스 레이어의 인터페이스는 ReadCase, WriteCase라는 postFix를 갖는다.
 - 비즈니스 레이어 이후 호출되는 레이어의 인터페이스는 Port라는 postFix를 갖는다.
     - port 인터페이스는 비즈니스 레이어(app-service)에서 정의한다.
 
