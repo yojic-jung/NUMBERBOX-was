@@ -3,199 +3,119 @@
 > 위 프로젝트는 N명의수학 백엔드 프로젝트입니다.  
 > N명의수학은 초중고 수학교육과정에 맞춤화된 수학컨텐츠 제작 및 공유 플랫폼입니다.
 
-<br/>
-
 ## 개발기간
 
-> **22.02 ~ 22.11(개발) : 8개월 간 웹서비스 구축 및 수학컨텐츠 제작**<br/> **22.11 ~ 23.05(운영) : 유지보수 및 기능 업데이트**
+> **22.02 ~ 22.11(개발) : 웹서비스 구축 및 수학컨텐츠 제작**<br/>
+> **22.11 ~ 23.07(운영) : 유지보수 및 기능 업데이트**<br/>
+> **24.11 ~ 25.03(리팩토링) : 헥사고날 아키텍쳐 도입, 자바 to kotlin 전환, 관리자 제외**
 <br/>
 
-## 시스템 구성(인프라)
+## Tech Stack
 
-<br/><br/>
+***
 
-## 실행가이드
+- Language: Kotlin, Java 17
+- Architecture : Hexagonal
+- Module-Structure : Multi-Module
+- Framework: Spring Boot 3.2.x
+- Persistence : JPA, QueryDsl
+- Database: MySQL 8.x
+- Cloud: AWS (EC2, S3, RDS)
 
-> Back-end 프로젝트
+## 시스템 구조
 
-1. java8 설치
+***
 
-2. 깃을 통해 프로젝트 다운
-
-```
-git clone https://github.com/yojic-jung/NUMBERBOX-was.git
-```
-
-3. 프로젝트 루트경로로 이동
-
-```
-cd Numberbox-was
-```
-
-4. 빌드 후 실행
-
-```
-./gradlew build
-```
-
-```
-java -jar -Dspring.profiles.active=prod -Ddb_username=[DB아이디] -Ddb_passwd=[DB비밀번호] -Djwt_secret_key=[임의의 jwt시크릿키] -Ds3_bucket_name=[s3버킷이름] -Daws_s3_access_key=[s3액세스키] -Daws_s3_secret_key=[s3시크릿키] -Dopenai_secret_key=[openAi시크릿키] -Demail_address=[개인이메일] -Demail_password=[개인이메일비밀번호] $JARPATH/$JARNAME
-```
-
-<br/><br/>
-
-## Environments
-
-<img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"><img src="https://img.shields.io/badge/amazonrds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white"><img src="https://img.shields.io/badge/amazons3-1572B6?style=for-the-badge&logo=amazons3&logoColor=white"><img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=white">
-
-<img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white"><img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white"><img src="https://img.shields.io/badge/hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white">
-
-<img src="https://img.shields.io/badge/mariadb-1F305F?style=for-the-badge&logo=mariadb&logoColor=white">
-
-
-<br/>
-
-## 라이브러리
-
-* spring-boot-starter-security
-* commons-fileupload
-* jsonwebtoken
-* java-uuid-generator
-* poi-ooxml
-* iamport-rest-client-java
-* javax.mail
-* spring-cloud-starter-aws
-* aws-java-sdk-s3
-* KOMORAN
-* qlrm
-* retrofit
-  <br/><br/>
-
-## 설정파일
-
-* [build.gradle](https://github.com/yojic-jung/NUMBERBOX-was/blob/master/build.gradle)
-* [application.properties](https://github.com/yojic-jung/NUMBERBOX-was/blob/master/src/main/resources/application.properties)
-* [application-local.properties](https://github.com/yojic-jung/NUMBERBOX-was/blob/master/src/main/resources/application-local.properties)
-* [SecurityConfig.java](https://github.com/yojic-jung/NUMBERBOX-was/blob/master/src/main/java/com/numberbox/config/SecurityConfig.java)
-
-<br/><br/>
-
-## 패키지 구조
+- ### 모듈 구조
 
 ```bash
-├─.gradle
-│  ├─7.3.2
-│  ├─buildOutputCleanup
-│  └─vcs-1
-├─.logs
-├─.settings
-├─bin
-│  ├─default
-│  ├─main
-│  │  ├─com
-│  │  │  └─numberbox
-│  │  └─logs
-│  ├─querydsl
-│  │  └─queryDsl
-│  └─test
-│      └─com
-│          └─numberbox
-├─build
-│  └─tmp
-│      └─compileQuerydsl
-├─gradle
-│  └─wrapper
-├─src
-│  ├─main
-│  │  ├─java
-│  │  │  └─com
-│  │  │      └─numberbox
-│  │  │          ├─aws
-│  │  │          │  └─s3                //s3 설정 및 서비스 패키지
-│  │  │          │      ├─config 
-│  │  │          │      ├─dto
-│  │  │          │      └─service
-│  │  │          ├─common              //공통 서비스 패키지
-│  │  │          │  ├─controller
-│  │  │          │  ├─dto
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  ├─service
-│  │  │          │  └─util
-│  │  │          ├─config              //시큐리티 및 mvc설정 패키지
-│  │  │          ├─convert
-│  │  │          │  ├─controller
-│  │  │          │  ├─dto
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  └─service
-│  │  │          ├─iamport
-│  │  │          ├─jwt                //jwt생성 및 관리 패키지
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  ├─service
-│  │  │          │  └─util
-│  │  │          ├─mathdocs          //학습지 제작 관련 패키지
-│  │  │          │  ├─controller
-│  │  │          │  ├─dto
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  └─service
-│  │  │          ├─mathinfo          //수학문제 관련 패키지
-│  │  │          │  ├─controller
-│  │  │          │  ├─domain
-│  │  │          │  ├─dto
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  └─service
-│  │  │          ├─members            //회원 관련패키지
-│  │  │          │  ├─controller
-│  │  │          │  ├─domain
-│  │  │          │  ├─dto
-│  │  │          │  ├─entity
-│  │  │          │  ├─repository
-│  │  │          │  └─service
-│  │  │          ├─scheduler          //스케줄러(배치잡 수행)
-│  │  │          │  ├─job
-│  │  │          │  └─service
-│  │  │          ├─security          //시큐리티 서비스 및 핸들러 패키지
-│  │  │          │  ├─dto
-│  │  │          │  ├─handler
-│  │  │          │  ├─service
-│  │  │          │  └─util
-│  │  │          ├─serivcecenter
-│  │  │          │  └─entity
-│  │  │          └─servicecenter
-│  │  │              ├─controller
-│  │  │              ├─dto
-│  │  │              ├─repository
-│  │  │              └─service
-│  │  ├─resources
-│  │  │  └─logs            //로그파일
-│  │  │      ├─aws
-│  │  │      ├─common
-│  │  │      ├─convert
-│  │  │      ├─jwt
-│  │  │      ├─mathdocs
-│  │  │      ├─mathinfo
-│  │  │      ├─members
-│  │  │      └─servicecenter
-│  │  └─webapp
-│  │      └─static        //정적파일
-│  │          ├─contentsImg
-│  │          ├─hwpToHtml
-│  │          ├─imgFileDir
-│  │          ├─nbImg
-│  │          ├─profileImg
-│  │          ├─resourceImg
-│  │          ├─resourcePpt
-│  │          ├─resourcePptImg
-│  │          ├─solutionImg
-│  │          ├─svcCenterImg
-│  │          └─userHwp
-│  └─test
-│      └─java
-│          └─com
-│              └─numberbox
-└─Users82108gitNUMBERBOX-wassrcmainwebapplogback
+.project
+  ├─ app-domain
+  ├─ app-service
+  ├─ bootstrap
+  ├─ infrastructure
+  │     ├─ email-adapter
+  │     ├─ hwp-client-adapter
+  │     ├─ orm-jpa-adapter
+  │     └─ storage-adapter
+  └─ user-interface
+        └─ rest-api
+
+.modules
+   ├─ auth-control
+   ├─ auth-engine
+   ├─ logging-control
+   ├─ logging-engine
+   ├─ mail-sender-control
+   ├─ mail-sender-engine
+   └─ system-construction
 ```
+
+### project 모듈 소개
+
+project는 멀티모듈 헥사고날 아키텍쳐 구조를 갖춘 NUMBERBOX-WAS 프로젝트 소스로 이루어져있다.  
+시스템의 모든 흐름을 application layer(비즈니스)에서 결정하기 위해 app모듈은 그 어떤 의존성도 갖지 않고, 다른 모듈이 app모듈을 의존한다.  
+따라서 app 모듈은 pojo로 구성되어있다.  
+구성된 모듈의 역할은 아래와 같다.
+
+- app-service : 비즈니스 로직 수행
+- app-domain : 비즈니스 모델(dto, vo)로 구성
+- bootstrap : 구동 모듈
+- intrastructure : 비즈니스 로직에서 호출하는 모듈
+    - email-adapter : email 서버와 연동되어 email 전송 관련 로직 수행
+    - hwp-client-adpater : 한글 파일 변환 서버와 연동되며 한글 파일과 웹(html) 변환 처리 로직 수행
+    - orm-jpa-adapter : DB와 연동되는 영속화 레이어
+    - storage-adapter : s3와 연동하여 파일 저장 및 삭제
+- user-interface : 비즈니스 로직을 호출
+    - user-interface : 웹서버와 연동되는 controller로 이루어짐
+
+### modules 소개
+
+project에서 사용하는 모듈로 3rd-party-library에 대한 의존성을 약화시키기 위한 목적이다.  
+pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 구체적인 기능 구현을 하는 engine 모듈로 이루어졌다.  
+`project 모듈 → (pojo)control 모듈 ← engine 모듈`  와 같은 의존성 방향으로 project와 라이브러리 결합도를 낮출 수 있다.
+
+- auth : 인증 및 인가
+- logging : api 요청 및 응답 로깅
+- mail-sender : 메일 서버와 연동
+- system-construction : DI와 트랜잭션 기능을 제공하는 모듈로 pojo로 구성된 project의 app 모듈에 기능 지원
+
+**[참고]** project 및 modules가 갖춘 모듈의 상세 소개는 해당 모듈 read-me에 명시
+
+## Code Convention
+
+***
+
+### interface & class 작명 규칙
+
+- 읽기 작업은 Read, 쓰기작업은 Write 용어로 구분한다.
+- Contorller에서 호출하는 인터페이스는 UseCase라는 용어에서 Case를 가져와 ReadCase, WriteCase라는 postfix를 갖는다.
+- application layer에서 호출하는 인터페이스는 Port라는 postfix를 갖고 각 역할에 맞는 용어를 앞에 붙인다.
+    - ex) OrmPort, EmailPort, StoragePort 등
+
+| 모듈                                  | 구분        | 클래스명                  | 역할                        |
+|-------------------------------------|-----------|-----------------------|---------------------------|
+| app-service                         | interface | Xxx__ReadCase         | 비즈니스 로직의 읽기 작업 명세서        |
+|                                     |           | Xxx__WriteCase        | 비즈니스 로직의 쓰기 작업 명세서        |
+|                                     | class     | Xxx__ReadService      | Xxx__ReadCase의 구현체        |
+|                                     |           | Xxx__WriteService     | Xxx__WriteCase의 구현체       |
+|                                     | interface | Xxx__OrmPort          | 영속화 레이어 작업 명세서            |
+|                                     |           | Xxx__EmailPort        | Email 전송 작업 명세서           |
+|                                     |           | Xxx__HwpSocketClient  | Hwp파일 변환 변환 명세서           |
+|                                     |           | Xxx__StoragePort      | 파일 저장 및 삭제 관리 명세서         |
+| infrastructure : email-adapter      | class     | Xxx__EmailAdapter     | Xxx__EmailPort의 구현체       |
+| infrastructure : hwp-client-adapter |           | Xxx__HwpClientService | Xxx__HwpSocketClient의 구현체 |
+| infrastructure : orm-jpa-adapter    |           | Xxx__Repository       | Xxx__ReadOrmPort의 구현체     |
+| infrastructure : storage-adapter    |           | Xxx__S3Storage        | Xxx__StoragePort의 구현체     |
+| user-interface : rest-api           |           | Xxx__ReadController   | 읽기 작업 전용 컨트롤러             |
+|                                     |           | Xxx__WriteController  | 쓰기 작업 전용 컨트롤러             |
+
+### dto 작명 규칙
+
+| 모듈                               | 클래스명        | 역할                                              |
+|----------------------------------|-------------|-------------------------------------------------|
+| app-domain                       | XxxDto      | application-layer 메서드의 input 객체                 |
+|                                  | XxxVo       | application-layer 메서드의 output 객체, 비즈니스 로직 수행 결과 |
+| infrastructure : orm-jpa-adapter | XxxEntity   | 영속화 객체                                          |
+| user-interface : rest-api        | XxxRequest  | 클라이언트 요청 데이터                                    |
+| user-interface : rest-api        | XxxResponse | 서버 응답 데이터                                       |
