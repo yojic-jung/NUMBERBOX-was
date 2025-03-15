@@ -80,7 +80,7 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 - **mail-sender** : 메일 서버와 연동
 - **system-construction** : DI와 트랜잭션 기능을 제공하는 모듈로 pojo로 구성된 project의 app 모듈에 기능 지원
 
-**[참고]** project 및 modules가 갖춘 모듈의 상세 소개는 해당 모듈 read-me에 명시
+**[참고]** modules가 갖춘 모듈 상세 소개는 해당 모듈 read-me에 명시
 <br/><br/>
 
 ## Code Convention
