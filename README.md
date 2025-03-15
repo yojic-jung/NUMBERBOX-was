@@ -80,7 +80,9 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 - **mail-sender** : 메일 서버와 연동
 - **system-construction** : DI와 트랜잭션 기능을 제공하는 모듈로 pojo로 구성된 project의 app 모듈에 기능 지원
 
-**[참고]** modules가 갖춘 모듈 상세 소개는 해당 모듈 read-me에 명시
+**[참고]**
+해당 Readme 파일은 NUMBERBOX-was의 프로젝트를 설명하는 파일로, 프로젝트에서 사용하는 모듈(modules 하위 모듈)에 대한 설명은 제외한다.  
+modules 하위 모듈에 대한 상세 설명은 해당 모듈에서 직접 진행하며 control 모듈 하위에 Readme 파일이 존재한다.
 <br/><br/>
 
 ## Code Convention
