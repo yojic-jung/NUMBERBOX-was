@@ -130,13 +130,17 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 
 ### dto 작명 규칙
 
-| 모듈                               | 클래스명          | 역할                                              |
-|----------------------------------|---------------|-------------------------------------------------|
-| app-domain                       | Xxx__Dto      | application-layer 메서드의 input 객체                 |
-|                                  | Xxx__Vo       | application-layer 메서드의 output 객체, 비즈니스 로직 수행 결과 |
-| infrastructure : orm-jpa-adapter | Xxx__Entity   | 영속화 객체                                          |
-| user-interface : rest-api        | Xxx__Request  | 클라이언트 요청 데이터                                    |
-| user-interface : rest-api        | Xxx__Response | 서버 응답 데이터                                       |
+| 모듈                               | 클래스명            | 역할                         |
+|----------------------------------|-----------------|----------------------------|
+| app-domain                       | Xxx__CreateDto  | 비즈니스 레이어의 생성 목적 dto        |
+|                                  | Xxx__ModifyDto  | 비즈니스 레이어의 변경 및 생성 목적 dto   |
+|                                  | Xxx__DeleteDto  | 비즈니스 레이의 삭제 목적 dto         |
+|                                  | Xxx__ReadDto    | 비즈니스 레이어의 검색 조건 dto        |
+|                                  | Xxx__Vo         | 비즈니스 로직 수행 결과(read 작업 반환값) |
+| infrastructure : orm-jpa-adapter | Xxx__SaveEntity | 생성 목적 영속화 객체               |
+|                                  | Xxx__UpdtEntity | 수정 목적 영속화 객체               |
+| user-interface : rest-api        | Xxx__Request    | 클라이언트 요청 데이터               |
+| user-interface : rest-api        | Xxx__Response   | 서버 응답 데이터                  |
 
 <br/><br/>
 
@@ -195,7 +199,6 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 
 - 테스트 코드는 test, 테스트 도구 및 환경 구축은 testFixtures에 이루어져 있음
 - 순수 코틀린 코드로 이루어져있는 app-service의 테스트 환경과 유사
-  <br/><br/>
 
 ### Test Code Convention
 
