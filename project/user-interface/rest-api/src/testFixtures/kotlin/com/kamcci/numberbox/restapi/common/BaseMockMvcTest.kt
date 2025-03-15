@@ -13,6 +13,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import kotlin.reflect.KClass
 
+/**
+ * mvc 테스트에서 사용하는 유틸 메서드
+ */
 open class BaseMockMvcTest {
     @Autowired
     lateinit var mockMvc: MockMvc

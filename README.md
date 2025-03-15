@@ -7,7 +7,7 @@
 
 > **22.02 ~ 22.11(개발) : 웹서비스 구축 및 수학컨텐츠 제작**<br/>
 > **22.11 ~ 23.07(운영) : 유지보수 및 기능 업데이트**<br/>
-> **24.11 ~ 25.03(리팩토링) : 헥사고날 아키텍쳐 도입, 자바 to kotlin 전환, 관리자 제외**
+> **24.11 ~ 25.03(리팩토링) : 헥사고날 아키텍쳐 도입, 자바 to kotlin 전환, 테스트 커버리지 100% 달성**
 <br/>
 
 ## Tech Stack
@@ -137,3 +137,101 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 | infrastructure : orm-jpa-adapter | Xxx__Entity   | 영속화 객체                                          |
 | user-interface : rest-api        | Xxx__Request  | 클라이언트 요청 데이터                                    |
 | user-interface : rest-api        | Xxx__Response | 서버 응답 데이터                                       |
+
+<br/><br/>
+
+## 테스트 환경 소개
+
+***
+
+모듈 단위로 단위테스트가 작성되어 있으며 각 모듈 내에 테스트 환경 설정과 테스트 더블 등이 존재한다.
+
+### 패키지 구조
+
+```
+.src
+  ├─ main
+  ├─ test
+  └─ testFixtures
+        ├─ constant
+        ├─ mock
+        └─ sample
+```
+
+- 모든 테스트 test 하위에 작성되어있다.
+- testFixtures 하위에 테스트 환경 설정과 테스트 더블, 테스트용 샘플 데이터가 존재한다.
+    - constant : 상수파일로 테스트 더블의 메서드 인자값으로 사용되며 이 값에 따라 테스트 더블의 동작을 제어한다.
+    - mock : 테스트 더블이 존재하는 패키지이다.
+    - sample : 테스트시 사용되는 데이터로 메서드의 인지값과 반환값을 팩토리 메서드 형태로 제공한다.
+
+### 모듈별 테스트 환경
+
+#### [app-service]
+
+- app-service 모듈에서 프로젝트의 모든 인터페이스를 정의하므로 테스트 더블 또한 app-service에 모두 존재한다.
+    - user-interface나 adapter가 변경되더라도 영향 없이 재사용하기 위해서
+- 테스트 및 테스트 환경 구축을 위해 사용된 모든 도구는 순수 코틀린 코드로 작성되어있다.
+    - 테스트 검증 목적의 junit 외의 어떠한 테스트 프레임워크도 사용하지 않는다.
+
+#### [user-interface : rest-api]
+
+- controller 테스트를 위한 mockMvc 테스트 환경이 구축되어있다.
+    - controller가 호출하는 서비스 레이어 등 의존객체는 모두 모킹처리 한다. (오직 컨트롤러만 테스트 목적)  
+      ``com.kamcci.numberbox.restapi.config.RestApiWebMvcMockBeanConfig`` 어노테이션에 config 정의
+    - mockMvc 테스트에서 http 메서드에 따른 요청 형식을 유틸화한 클래스를 상속 받아 빠르게 테스트 할 수 있다.  
+      ```com.kamcci.numberbox.restapi.common.BaseMockMvcTest```
+- controller를 제외한 다른 대상은 순수 코드로 테스트한다.
+
+#### [infrastructure : orm-jpa-adapter]
+
+- repository 테스트를 위한 DataJpaTest 환경이 구축되어있다.
+    - 테스트 DB는 테스트 컨테이너를 통해 생성됨
+    - flyway를 통해 테스트 DB에 테이블 스키마와 테스트 데이터를 생성함
+    - DataJpaTest의 자동 롤백을 통해 테스트 DB의 상태를 일관되게 유지함
+    - ```com.kamcci.numberbox.infra.orm.jpa.adapter.annotation.TcDBJpaTest``` 어노테이션에 Repository 테스트 환경 구성
+- repository를 제외한 나머지 대상은 프레임워크 도움 없이 순수 프로그래밍 코드로 작성
+
+#### 나머지 모듈
+
+- 테스트 코드는 test, 테스트 도구 및 환경 구축은 testFixtures에 이루어져 있음
+- 순수 코틀린 코드로 이루어져있는 app-service의 테스트 환경과 유사
+  <br/><br/>
+
+### Test Code Convention
+
+- 테스트 더블은 모킹 대상 인터페이스명에 앞에 Mock을 붙인다.
+
+```kotlin
+class MockMemberWriteOrmPort : MemberWriteOrmPort
+```
+
+- 테스트시 인자값 또는 반환값으로 사용되는 객체는 아래와 같이 SampleData라는 클래스에서 `get실제객채명` 메서드명 규칙을 따른다.
+
+```kotlin
+object MemberSampleData {
+    fun getMemberSignupDto(email: String = "signup@test.com") = MemberSignUpDto(
+        email = email,
+        password = "1234"
+    )
+```
+
+- orm-jpa-adapter에서 flyway로 insert한 데이터의 모든 칼럼값을 프로그래밍 코드로 나타내기 어려우므로  
+  아래와 같이 조인 칼럼, 검색 조건으로 자주 사용되는 값들을 표현하여 테스트 검증시 사용할수 있는 값을 제공한다.
+    - 클래스명은 실제 엔티명 뒤에 DummyFactory라고 붙인다.
+
+```kotlin
+object MemberDummyFactory {
+    // 계정 비활성 목적
+    fun getMemberDummyEntity4Disable() = UUID.fromString("82CA3122-CDA8-EA4D-9BC7-037CB86FDB20")
+
+    // 임시 비밀번호 발급 계정
+    fun getTmpPwMemberId() = UUID.fromString("32ca3122-cda8-ea4d-9bc7-037cb86fdb20")
+
+    class ExistEntityInfo(
+        val memberId: UUID,
+        val email: String,
+        val userName: String? = null,
+        val phone: String? = null
+    )
+}
+```

@@ -18,6 +18,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 
+/**
+ * 컨트롤러 슬라이스 테스트 목적 컨텍스트 환경
+ */
 @ContextConfiguration(classes = [RestApiWebMvcMockBeanConfig::class])
 @WebMvcTest(
     value = [
