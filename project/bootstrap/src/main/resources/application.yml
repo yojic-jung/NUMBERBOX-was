@@ -11,20 +11,7 @@ spring:
         - mail-sender-env
         - storage
         - storage-env
-        - hwp-client
-
-# s3 설정
-cloud:
-  aws:
-    s3:
-      bucket: numberbox-bucket
-    credentials:
-      accessKey: AKIA4SERHKUEFTRCTG7F
-      secretKey: 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
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
+        - hwp-client-env
 
 # DI 및 transaction 커스텀 어노테이션 경로
 system:
@@ -39,6 +26,8 @@ system:
     tx:
       class-path:
         transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute
+
+# api 로깅 설정
 kamcci:
   logging:
     request:
