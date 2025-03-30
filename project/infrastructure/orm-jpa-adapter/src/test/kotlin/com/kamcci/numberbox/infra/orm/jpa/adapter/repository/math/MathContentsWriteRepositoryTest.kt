@@ -116,7 +116,7 @@ class MathContentsWriteRepositoryTest @Autowired constructor(
         em.clear()
 
         // then
-        assertThat(id).isEqualTo(contentsId)
+        assertThat(id).isOne()
     }
 
     @Test
@@ -136,7 +136,7 @@ class MathContentsWriteRepositoryTest @Autowired constructor(
         em.clear()
 
         // then
-        assertThat(id).isEqualTo(contentsId)
+        assertThat(id).isOne()
     }
 
     @Test
@@ -156,7 +156,7 @@ class MathContentsWriteRepositoryTest @Autowired constructor(
         em.clear()
 
         // then
-        assertThat(id).isEqualTo(contentsId)
+        assertThat(id).isOne()
     }
 
     @Test
@@ -175,7 +175,7 @@ class MathContentsWriteRepositoryTest @Autowired constructor(
         em.clear()
 
         // then
-        assertThat(executeRowCnt).isPositive()
+        assertThat(executeRowCnt).isOne()
     }
 
 
