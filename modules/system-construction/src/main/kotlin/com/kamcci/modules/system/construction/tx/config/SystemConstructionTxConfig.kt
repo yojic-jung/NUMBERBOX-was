@@ -20,7 +20,7 @@ class SystemConstructionTxConfig(
     @Bean
     @Qualifier("txMethod")
     fun txAnnotationPointcut(): Pointcut {
-        return AnnotationMatchingPointcut(null, CUSTOM_TX_ANNOTATION.java)
+        return AnnotationMatchingPointcut(null, CUSTOM_TX_ANNOTATION.java, true)
     }
 
     @Qualifier("txClass")

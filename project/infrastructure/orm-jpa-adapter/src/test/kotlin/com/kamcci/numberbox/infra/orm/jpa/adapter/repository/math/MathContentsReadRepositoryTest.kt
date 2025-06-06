@@ -139,6 +139,7 @@ class MathContentsReadRepositoryTest(
             mathContentsReadRepository.readDetailByUnitId(inHouseDummyEntity.memberId, unitIdList, pageReq)
 
         // then
+        // todo 실패 테스트 해야함
         contentsList.forEach { contents ->
             assertThat(unitIdList).contains(contents.unitId)
         }

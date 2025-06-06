@@ -92,6 +92,7 @@ class MathContentsReadRepository(
         return detailCommonQuery(memberId)
             .where(
                 mathContentsEntity.memberId.eq(memberId),
+                mathContentsEntity.contentsClassify.ne(ContentsClassifyType.Deleted),
                 svcPosbSttsCondition
             )
             .offset(pageReq.getOffset())
@@ -133,7 +134,8 @@ class MathContentsReadRepository(
         return detailCommonQuery(memberId)
             .where(
                 mathContentsEntity.svcPosbStts.eq(ContentsSvcPosbSttsType.Release),
-                mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse)
+                mathContentsEntity.contentsClassify.eq(ContentsClassifyType.InHouse),
+                mathContentsEntity.unitId.`in`(unitId)
                     .or(
                         mathContentsEntity.contentsClassify.eq(ContentsClassifyType.UserCustom).and(
                             mathContentsLicenseEntity.shareStts.eq(Expressions.asBoolean(true))

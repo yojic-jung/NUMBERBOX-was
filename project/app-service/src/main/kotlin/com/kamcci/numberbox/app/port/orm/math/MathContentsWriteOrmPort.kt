@@ -68,7 +68,6 @@ interface MathContentsWriteOrmPort {
      * @param   contentsId          수학문제 id
      * @param   contentsModifyDto   수학문제 정보
      * @param   licenseCreateDto    저작권 정보
-     * @return  수학문제 id
      */
     fun updateWithLicense(
         contentsId: Long,

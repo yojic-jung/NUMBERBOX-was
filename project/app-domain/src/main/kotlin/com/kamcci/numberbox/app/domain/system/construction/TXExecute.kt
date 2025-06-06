@@ -14,6 +14,7 @@ import java.lang.annotation.Target
  * @param isolation 트랜잭션 고립성 수준
  */
 @Target(ElementType.TYPE, ElementType.METHOD)
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 annotation class TXExecute(

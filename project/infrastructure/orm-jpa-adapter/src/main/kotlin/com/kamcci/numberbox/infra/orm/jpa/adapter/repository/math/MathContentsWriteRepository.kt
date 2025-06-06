@@ -112,7 +112,7 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
 
         // 영속화
         em.persist(contentsEntity)
-        return contentsEntity.id
+        return 1L
     }
 
     override fun updateWithSimilarSrc(
@@ -131,7 +131,7 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
 
         // 영속화
         em.persist(contentsEntity)
-        return contentsEntity.id
+        return 1L
     }
 
     override fun updateWithIpsiSrc(
@@ -150,7 +150,7 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
 
         // 영속화
         em.persist(contentsEntity)
-        return contentsEntity.id
+        return 1L
     }
 
     override fun updateTransContents(
@@ -161,7 +161,7 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
         val orgEntity = em.find(MathContentsEntity::class.java, contentsId)
         val contentsEntity = MathContentsFactory.getUpdtEntity(orgEntity, svcPosbSttsType, contentsModifyDto)
         em.persist(contentsEntity)
-        return contentsEntity.id
+        return 1L
     }
 
     override fun updateContentsClassifyType(
