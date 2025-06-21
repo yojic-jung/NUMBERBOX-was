@@ -57,7 +57,8 @@ public class SecurityConfig {
                         // 로그인 실패시
                         .requestMatchers(HttpMethod.POST, authLoginUrlProperty.fail()).permitAll()
                         // 전체 허용 디폴트
-                        .requestMatchers("/public/**").permitAll().anyRequest().authenticated())
+                        .requestMatchers(authLoginUrlProperty.except().toArray(new String[0])).permitAll().anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(loginRequestAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtRequestAuthFilter, LoginRequestAuthFilter.class)
