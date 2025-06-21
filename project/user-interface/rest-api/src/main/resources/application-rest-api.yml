@@ -23,6 +23,9 @@ kamcci:
         process: /login/general
         fail: /login/fail
         logout: /logout
+        except:
+          - /public/**
+          - /actuator/**
     jwt:
       secretKey: localSecret
       email: email
