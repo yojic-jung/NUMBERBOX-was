@@ -3,6 +3,8 @@ package com.kamcci.modules.auth.config;
 import com.kamcci.modules.auth.engine.config.AuthJwtProperty;
 import com.kamcci.modules.auth.engine.config.AuthLoginUrlProperty;
 
+import java.util.ArrayList;
+
 public class AuthConfigFixture {
     private AuthConfigFixture() { }
 
@@ -13,6 +15,6 @@ public class AuthConfigFixture {
     }
 
     public static AuthLoginUrlProperty getAuthLoginUrlProperty() {
-        return new AuthLoginUrlProperty("process", "fail", "logout");
+        return new AuthLoginUrlProperty("process", "fail", "logout", new ArrayList<>());
     }
 }
