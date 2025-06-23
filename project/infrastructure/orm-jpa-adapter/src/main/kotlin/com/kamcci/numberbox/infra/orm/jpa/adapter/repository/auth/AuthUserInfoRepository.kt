@@ -9,6 +9,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.log.QLogClientApiEntity.logClientApiEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
@@ -26,6 +27,7 @@ class AuthUserInfoRepository(
         return AuthUserInfo(member.email, member.id, member.password, roles)
     }
 
+    @Cacheable(cacheNames = ["refreshToken:token"], key = "#token")
     override fun loadUserIdByRefreshToken(token: String): UUID? {
         return queryFactory
             .select(memberRefreshTokenEntity.memberId)

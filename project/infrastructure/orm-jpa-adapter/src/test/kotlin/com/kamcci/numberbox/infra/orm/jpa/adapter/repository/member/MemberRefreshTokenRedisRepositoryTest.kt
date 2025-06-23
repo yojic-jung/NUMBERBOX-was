@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 @TcDBJpaTest
-class MemberRefreshTokenRepositoryTest @Autowired constructor(
+class MemberRefreshTokenRedisRepositoryTest @Autowired constructor(
     private val memberRefreshTokenRepository: MemberRefreshTokenRepository,
     private val em: EntityManager
 ) {
