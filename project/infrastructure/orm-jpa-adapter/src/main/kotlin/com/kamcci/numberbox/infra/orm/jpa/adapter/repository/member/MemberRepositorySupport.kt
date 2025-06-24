@@ -13,7 +13,7 @@ import java.util.*
 @Repository
 class MemberRepositorySupport : BaseRepository() {
 
-    @Cacheable(cacheNames = [MEMBER_EMAIL], key = "#email")
+    @Cacheable(cacheManager = "redisMemberCacheManager", cacheNames = [MEMBER_EMAIL], key = "#email")
     fun findByEmail(email: String): MemberRedisHash? {
         val memberEntity = queryFactory
             .selectFrom(memberEntity)

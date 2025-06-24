@@ -1,7 +1,12 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member.MemberRedisHash
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -11,8 +16,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.GenericToStringSerializer
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
@@ -52,38 +57,43 @@ class RedisConfig {
     }
 
     private fun defaultCacheConfiguration(): RedisCacheConfiguration {
-        val objectMapper = ObjectMapper()
         return RedisCacheConfiguration
             .defaultCacheConfig()
-            .entryTtl(Duration.ofHours(1))
+            .entryTtl(Duration.ofHours(1L))
             .disableCachingNullValues()
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer(objectMapper)
-                )
-            )
     }
 
+    @Bean
+    fun redisMemberCacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
+        return RedisCacheManager.builder(redisConnectionFactory)
+            .cacheDefaults(memberCacheConfiguration())
+            .build()
+    }
 
-    private fun listCacheConfiguration(): RedisCacheConfiguration {
+    private fun memberCacheConfiguration(): RedisCacheConfiguration {
+        val kotlinModule = KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, true)
+            .configure(KotlinFeature.NullToEmptyMap, true)
+            .configure(KotlinFeature.NullIsSameAsDefault, true)
+            .configure(KotlinFeature.SingletonSupport, true)
+            .configure(KotlinFeature.StrictNullChecks, true)
+            .build()
+
         val objectMapper = ObjectMapper()
-        objectMapper.registerModule(JavaTimeModule())
+            .registerModule(kotlinModule)
+            .registerModule(JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+
+        val serializer = Jackson2JsonRedisSerializer(objectMapper, MemberRedisHash::class.java)
 
         return RedisCacheConfiguration
             .defaultCacheConfig()
+            .entryTtl(Duration.ofHours(1L))
             .disableCachingNullValues()
-            .entryTtl(Duration.ofMinutes(5L))
-            .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer())
-            )
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(
-                    GenericJackson2JsonRedisSerializer(
-                        objectMapper
-                    )
-                )
-            )
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
     }
 
     @Bean

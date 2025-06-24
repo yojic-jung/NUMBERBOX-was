@@ -52,7 +52,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("com.fasterxml.jackson.core:jackson-databind") // ObjectMapper 포함
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310") // Java 8 날짜 타입 지원 (LocalDateTime 등)
-
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation(libs.bundles.orm.jpa.adapter)
     implementation(libs.querydsl.jpa) {
