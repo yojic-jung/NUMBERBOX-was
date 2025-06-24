@@ -1,6 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.token
 
-import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.REFRESH_TOKEN
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.REFRESH_TOKEN
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import java.io.Serializable

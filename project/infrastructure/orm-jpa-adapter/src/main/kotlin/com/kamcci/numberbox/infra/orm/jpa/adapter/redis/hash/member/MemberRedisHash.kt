@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member
 
 
-import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.MEMBER
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.MEMBER
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed

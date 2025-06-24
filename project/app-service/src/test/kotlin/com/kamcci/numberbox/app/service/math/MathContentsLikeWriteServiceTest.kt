@@ -5,7 +5,7 @@ import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.EXIST_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.NOT_EXIST_ID
 import com.kamcci.numberbox.app.service.constant.MockTestConstant.SUCCESS_ID
-import com.kamcci.numberbox.app.service.math.MathContentsLikeWriteService.Companion.NOT_EXIST
+import com.kamcci.numberbox.app.service.math.MathContentsLikeWriteService.Companion.LIKE_DELETE_FAIL
 import com.kamcci.numberbox.app.service.mock.port.orm.math.MockMathContentsLikeWriteOrmPort
 import com.kamcci.numberbox.app.service.mock.usecase.math.MockMathContentsLikeReadCase
 import org.assertj.core.api.Assertions.assertThat
@@ -42,7 +42,7 @@ class MathContentsLikeWriteServiceTest {
         val exception = assertThrows<BusinessInValidException> {
             mathContentsLikeWriteService.save(modifyDto)
         }
-        assertThat(exception.msg).isEqualTo(MathContentsLikeWriteService.ALREADY_EXIST)
+        assertThat(exception.msg).isEqualTo(MathContentsLikeWriteService.LIKE_SAVE_FAIL)
     }
 
     @Test
@@ -65,6 +65,6 @@ class MathContentsLikeWriteServiceTest {
         val exception = assertThrows<BusinessInValidException> {
             mathContentsLikeWriteService.delete(modifyDto)
         }
-        assertThat(exception.msg).isEqualTo(NOT_EXIST)
+        assertThat(exception.msg).isEqualTo(LIKE_DELETE_FAIL)
     }
 }

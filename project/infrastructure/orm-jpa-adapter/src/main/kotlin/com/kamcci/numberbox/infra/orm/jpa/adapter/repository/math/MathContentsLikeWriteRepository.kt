@@ -6,8 +6,10 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsLikeDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsLikeEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsLikeEntity.mathContentsLikeEntity
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Repository
 
+@Qualifier("jpa")
 @Repository
 class MathContentsLikeWriteRepository : MathContentsLikeWriteOrmPort, BaseRepository() {
     override fun save(modifyDto: MathContentsLikeModifyDto): Boolean {

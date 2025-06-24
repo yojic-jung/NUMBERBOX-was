@@ -2,9 +2,9 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.MEMBER_EMAIL
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.MEMBER_EMAIL
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.repository.member.MemberRedisRepository
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Caching

@@ -33,6 +33,8 @@ micro-registry-prom = "1.12.2"
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 fasterxml-jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+fasterxml-core = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+fasterxml-datatype = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
@@ -40,6 +42,7 @@ spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
 spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
 spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
 aspect-j-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspect-weaver" }
 
@@ -78,7 +81,8 @@ poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
 jsonwebtoken = { module = "io.jsonwebtoken:jjwt", version.ref = "jsonwebtoken" }
 
 [bundles]
-orm-jpa-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "mysql-connector-j", "java-uuid-generator"]
+orm-jpa-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "mysql-connector-j", "java-uuid-generator",
+    "spring-boot-data-redis", "fasterxml-jackson", "fasterxml-core", "fasterxml-datatype", ]
 orm-jpa-adapter-test = ["spring-boot-starter-test", "flyway-core", "flyway-mysql"]
 orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcontainers", "testcontainers-mysql",
     "testcontainers-jdbc", "flyway-core", "flyway-mysql"]

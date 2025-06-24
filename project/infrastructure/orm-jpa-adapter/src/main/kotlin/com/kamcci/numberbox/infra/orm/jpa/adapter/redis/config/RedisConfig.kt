@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.orm.jpa.adapter.config
+package com.kamcci.numberbox.infra.orm.jpa.adapter.redis.config
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
