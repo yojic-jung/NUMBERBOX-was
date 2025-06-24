@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.MEMBER_EMAIL
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.repository.member.MemberRedisRepository
@@ -55,11 +56,12 @@ class MemberWriteRepository(
 
     @Caching(
         evict = [
-            CacheEvict(cacheNames = ["member"], key = "#email"),
+            CacheEvict(cacheNames = [MEMBER_EMAIL], key = "#email"),
         ]
     )
     override fun updatePassword(email: String, password: String): Long {
-        memberRedisRepository.deleteByEmail(email)
+        // todo 주석 제거 해도 되는지??
+//        memberRedisRepository.deleteByEmail(email)
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)

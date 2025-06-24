@@ -6,6 +6,7 @@ import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService
 import com.kamcci.modules.logging.control.service.IPAddressService
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.REFRESH_TOKEN
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.log.QLogClientApiEntity.logClientApiEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
@@ -27,7 +28,7 @@ class AuthUserInfoRepository(
         return AuthUserInfo(member.email, member.id, member.password, roles)
     }
 
-    @Cacheable(cacheNames = ["refreshToken:token"], key = "#token")
+    @Cacheable(cacheNames = [REFRESH_TOKEN], key = "#token")
     override fun loadUserIdByRefreshToken(token: String): UUID? {
         return queryFactory
             .select(memberRefreshTokenEntity.memberId)

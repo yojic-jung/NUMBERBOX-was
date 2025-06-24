@@ -1,6 +1,7 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
+import com.kamcci.numberbox.infra.orm.jpa.adapter.common.CacheNames.MEMBER_EMAIL
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member.MemberRedisHash
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member.MemberRoleRedis
@@ -12,7 +13,7 @@ import java.util.*
 @Repository
 class MemberRepositorySupport : BaseRepository() {
 
-    @Cacheable(cacheNames = ["member:email"], key = "#email")
+    @Cacheable(cacheNames = [MEMBER_EMAIL], key = "#email")
     fun findByEmail(email: String): MemberRedisHash? {
         val memberEntity = queryFactory
             .selectFrom(memberEntity)
