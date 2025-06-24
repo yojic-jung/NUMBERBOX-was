@@ -27,7 +27,7 @@ class MathContentsLikeWriteRedisRepository(
             ?: throw BusinessSeverException(LIKE_SAVE_FAIL)
         if (addedCount > 0) {
             // 새로 추가된 좋아요면 TTL 설정 (TTL 없으면 만료 안 됨)
-            stringRedisTemplate.expire(key, 30, TimeUnit.DAYS)
+            stringRedisTemplate.expire(key, 3, TimeUnit.HOURS)
         }
         return true
     }
