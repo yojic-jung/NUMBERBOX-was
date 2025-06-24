@@ -7,6 +7,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.RedisKeyGenerator
 import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
+import java.util.concurrent.TimeUnit
 
 @Primary
 @Repository
@@ -21,8 +22,13 @@ class MathContentsLikeWriteRedisRepository(
 
     override fun save(modifyDto: MathContentsLikeModifyDto): Boolean {
         val setOps = stringRedisTemplate.opsForSet()
-        setOps.add(getMathLikeKey(modifyDto.contentsId), modifyDto.memberId.toString())
+        val key = getMathLikeKey(modifyDto.contentsId)
+        val addedCount = setOps.add(key, modifyDto.memberId.toString())
             ?: throw BusinessSeverException(LIKE_SAVE_FAIL)
+        if (addedCount > 0) {
+            // 새로 추가된 좋아요면 TTL 설정 (TTL 없으면 만료 안 됨)
+            stringRedisTemplate.expire(key, 30, TimeUnit.DAYS)
+        }
         return true
     }
 

@@ -26,6 +26,11 @@ import java.time.Duration
 @Configuration
 @EnableRedisRepositories
 class RedisConfig {
+    companion object {
+        const val REDIS_2WEEK_CACHE_MANAGER_BEAN = "redis2WeekCacheManager"
+        const val REDIS_MEMBER_CACHE_MANAGER_BEAN = "redisMemberCacheManager"
+    }
+
     private val host: String = "localhost"
     private val port = 6379
 
@@ -42,17 +47,17 @@ class RedisConfig {
             .build()
     }
 
-    @Bean
-    fun redisTtl10mCacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
+    @Bean(name = [REDIS_2WEEK_CACHE_MANAGER_BEAN])
+    fun redis2WeekCacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
         return RedisCacheManager.builder(redisConnectionFactory)
-            .cacheDefaults(ttl10mCacheConfiguration())
+            .cacheDefaults(ttl2WeekacheConfiguration())
             .build()
     }
 
-    private fun ttl10mCacheConfiguration(): RedisCacheConfiguration {
+    private fun ttl2WeekacheConfiguration(): RedisCacheConfiguration {
         return RedisCacheConfiguration
             .defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(10L))
+            .entryTtl(Duration.ofDays(14L))
             .disableCachingNullValues()
     }
 
@@ -63,7 +68,7 @@ class RedisConfig {
             .disableCachingNullValues()
     }
 
-    @Bean
+    @Bean(name = [REDIS_MEMBER_CACHE_MANAGER_BEAN])
     fun redisMemberCacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
         return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(memberCacheConfiguration())

@@ -3,6 +3,7 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.MEMBER_EMAIL
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.config.RedisConfig.Companion.REDIS_MEMBER_CACHE_MANAGER_BEAN
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member.MemberRedisHash
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.hash.member.MemberRoleRedis
 import org.springframework.cache.annotation.Cacheable
@@ -14,7 +15,7 @@ import java.util.*
 class MemberRepositorySupport : BaseRepository() {
 
     @Cacheable(
-        cacheManager = "redisMemberCacheManager",
+        cacheManager = REDIS_MEMBER_CACHE_MANAGER_BEAN,
         cacheNames = [MEMBER_EMAIL],
         key = "#email",
         unless = "#result == null"

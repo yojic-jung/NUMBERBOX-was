@@ -9,6 +9,7 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.log.QLogClientApiEntity.logClientApiEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberRefreshTokenEntity.memberRefreshTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.REFRESH_TOKEN
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.config.RedisConfig.Companion.REDIS_2WEEK_CACHE_MANAGER_BEAN
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
@@ -28,7 +29,12 @@ class AuthUserInfoRepository(
         return AuthUserInfo(member.email, member.id, member.password, roles)
     }
 
-    @Cacheable(cacheNames = [REFRESH_TOKEN], key = "#token", unless = "#result == null")
+    @Cacheable(
+        cacheManager = REDIS_2WEEK_CACHE_MANAGER_BEAN,
+        cacheNames = [REFRESH_TOKEN],
+        key = "#token",
+        unless = "#result == null"
+    )
     override fun loadUserIdByRefreshToken(token: String): UUID? {
         return queryFactory
             .select(memberRefreshTokenEntity.memberId)
