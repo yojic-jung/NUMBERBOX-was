@@ -13,12 +13,12 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-class RedisToRdbScheduler(
+class MathConLikeNRepoScheduler(
     private val stringRedisTemplate: StringRedisTemplate,
     private val mathContentsLikeWriteNativeQuery: MathContentsLikeWriteNativeQuery
 ) {
     // 좋아요 정보 rdb로 이관
-    @Scheduled(cron = "0 00 /2 * * *")
+    @Scheduled(cron = "0 0 0/2 * * *")
     fun mathLikeBulkInsert() {
         val keyList = getAllKey(MATH_CONTENTS_LIKE_WILD_CARD)
         keyList.forEach { contentsIdStr ->
@@ -34,7 +34,7 @@ class RedisToRdbScheduler(
     }
 
     // 저장소 정보 rdb로 이관
-    @Scheduled(cron = "0 00 /2 * * *")
+    @Scheduled(cron = "0 0 0/2 * * *")
     fun mathRepoBulkInsert() {
         val keyList = getAllKey(MATH_CONTENTS_REPO_WILD_CARD)
         keyList.forEach { contentsIdStr ->

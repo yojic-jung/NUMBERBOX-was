@@ -17,6 +17,7 @@ object CacheNames {
     // 수학
     const val MATH = "math"
     const val MATH_CONTENTS = MATH + SEPARATOR + "contents"
+    const val EXIST_MATH_CONTENTS = "exist" + SEPARATOR + MATH + SEPARATOR + "contents"
 
     // 좋아요
     const val MATH_CONTENTS_LIKE = MATH_CONTENTS + SEPARATOR + "like"

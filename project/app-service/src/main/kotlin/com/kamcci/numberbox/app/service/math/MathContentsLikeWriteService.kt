@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.app.service.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
 import com.kamcci.numberbox.app.domain.system.construction.TXExecute
 import com.kamcci.numberbox.app.domain.system.construction.UseCase
 import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeWriteOrmPort
@@ -26,6 +25,6 @@ class MathContentsLikeWriteService(
     @TXExecute
     override fun delete(modifyDto: MathContentsLikeModifyDto) {
         // 좋아요 취소
-        mathConLikeModifyPort.delete(modifyDto).let { if (it < 1L) throw BusinessSeverException(LIKE_DELETE_FAIL) }
+        mathConLikeModifyPort.delete(modifyDto)
     }
 }

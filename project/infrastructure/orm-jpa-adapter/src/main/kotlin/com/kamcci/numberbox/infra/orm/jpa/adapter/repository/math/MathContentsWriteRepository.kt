@@ -14,6 +14,9 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math.MathContentsFacto
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math.MathContentsIpsiFactory
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math.MathContentsLicenseFactory
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.math.MathContentsSimilarSrcFactory
+import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -164,6 +167,11 @@ class MathContentsWriteRepository : MathContentsWriteOrmPort, BaseRepository() {
         return 1L
     }
 
+    @Caching(
+        evict = [
+            CacheEvict(cacheNames = [CacheNames.EXIST_MATH_CONTENTS], key = "#contentsId"),
+        ]
+    )
     override fun updateContentsClassifyType(
         contentsId: Long,
         memberId: UUID,

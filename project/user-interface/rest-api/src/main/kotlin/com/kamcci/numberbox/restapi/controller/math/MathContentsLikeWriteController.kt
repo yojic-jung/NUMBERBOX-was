@@ -6,7 +6,6 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteCase
 import com.kamcci.numberbox.restapi.dto.request.math.ContentsIdRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
 import com.kamcci.numberbox.restapi.util.response.ResponseUtil
-import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -37,7 +36,6 @@ class MathContentsLikeWriteController(
     @DeleteMapping("/{contentsId}")
     fun likeCancelContents(
         @UserId userId: UUID,
-        @ContentsCheck
         @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
         val modifyDto = MathContentsLikeModifyDto(contentsId, userId)
