@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
 import com.kamcci.numberbox.app.port.orm.math.MathContentsLikeWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.RedisKeyGenerator.getMathLikeKey
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math.MathContentsLikeWriteRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
@@ -12,7 +13,8 @@ import java.util.concurrent.TimeUnit
 @Primary
 @Repository
 class MathContentsLikeWriteRedisRepository(
-    private val stringRedisTemplate: StringRedisTemplate
+    private val stringRedisTemplate: StringRedisTemplate,
+    private val mathContentsLikeWriteRepository: MathContentsLikeWriteRepository
 ) : MathContentsLikeWriteOrmPort {
     companion object {
         // 예외 메시지
@@ -36,7 +38,9 @@ class MathContentsLikeWriteRedisRepository(
         val setOps = stringRedisTemplate.opsForSet()
         setOps.remove(getMathLikeKey(modifyDto.contentsId), modifyDto.memberId.toString())
             ?: throw BusinessSeverException(LIKE_DELETE_FAIL)
-        return 1L
+
+        // rdb 즉시 삭제
+        return mathContentsLikeWriteRepository.delete(modifyDto)
     }
 
 }

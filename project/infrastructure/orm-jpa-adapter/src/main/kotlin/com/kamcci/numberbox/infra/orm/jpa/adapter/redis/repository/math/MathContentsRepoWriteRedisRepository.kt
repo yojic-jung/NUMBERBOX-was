@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
 import com.kamcci.numberbox.app.port.orm.math.MathContentsRepoWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.RedisKeyGenerator
+import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math.MathContentsRepoWriteRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
@@ -13,7 +14,8 @@ import java.util.concurrent.TimeUnit
 @Primary
 @Repository
 class MathContentsRepoWriteRedisRepository(
-    private val stringRedisTemplate: StringRedisTemplate
+    private val stringRedisTemplate: StringRedisTemplate,
+    private val mathContentsRepoWriteRepository: MathContentsRepoWriteRepository
 ) : MathContentsRepoWriteOrmPort {
     companion object {
         const val REPO_SAVE_FAIL = "저장소 저장에 실패"
@@ -36,6 +38,8 @@ class MathContentsRepoWriteRedisRepository(
         val setOps = stringRedisTemplate.opsForSet()
         setOps.remove(RedisKeyGenerator.getMathRepoKey(modifyDto.contentsId), modifyDto.memberId.toString())
             ?: throw BusinessSeverException(REPO_DELETE_FAIL)
-        return 1L
+
+        // rdb 즉시 삭제
+        return mathContentsRepoWriteRepository.delete(modifyDto)
     }
 }
