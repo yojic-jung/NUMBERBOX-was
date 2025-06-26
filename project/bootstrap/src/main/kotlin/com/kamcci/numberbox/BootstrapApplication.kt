@@ -11,5 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class BootstrapApplication
 
 fun main(args: Array<String>) {
+    /**
+     * teamcity test
+     */
     runApplication<BootstrapApplication>(*args)
 }
