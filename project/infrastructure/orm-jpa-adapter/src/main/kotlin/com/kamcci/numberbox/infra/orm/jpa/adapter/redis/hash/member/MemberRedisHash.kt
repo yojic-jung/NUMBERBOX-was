@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import java.util.*
 
-@RedisHash(MEMBER, timeToLive = 60L * 60 * 24 * 30)
+@RedisHash(MEMBER, timeToLive = 60L * 60 * 3)
 data class MemberRedisHash(
     @Id
     val id: UUID,

@@ -4,10 +4,7 @@ import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
-import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.MEMBER_EMAIL
 import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.repository.member.MemberRedisRepository
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
@@ -26,6 +23,7 @@ class MemberWriteRepository(
     }
 
     override fun drop(memberId: UUID): Long {
+        memberRedisRepository.deleteById(memberId)
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.humanStatus, 3)
@@ -54,14 +52,11 @@ class MemberWriteRepository(
             .execute()
     }
 
-    @Caching(
-        evict = [
-            CacheEvict(cacheNames = [MEMBER_EMAIL], key = "#email"),
-        ]
-    )
     override fun updatePassword(email: String, password: String): Long {
-        // todo 주석 제거 해도 되는지??
-//        memberRedisRepository.deleteByEmail(email)
+        memberRedisRepository.findByEmail(email)?.let {
+            memberRedisRepository.deleteById(it.id)
+        }
+
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)

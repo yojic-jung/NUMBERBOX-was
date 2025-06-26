@@ -5,13 +5,9 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface MemberRedisRepository : CrudRepository<MemberRedisHash, UUID> {
-    override fun findById(id: UUID): Optional<MemberRedisHash>
-
-    fun findByEmail(email: String): Optional<MemberRedisHash>
+    fun findByEmail(email: String): MemberRedisHash?
 
     override fun deleteById(id: UUID)
 
-    fun deleteByEmail(email: String)
-
-    fun deleteAllById(id: List<UUID>)
+    override fun deleteAllById(ids: Iterable<UUID>)
 }

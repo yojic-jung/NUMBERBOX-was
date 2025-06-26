@@ -95,7 +95,7 @@ class RedisConfig {
 
         return RedisCacheConfiguration
             .defaultCacheConfig()
-            .entryTtl(Duration.ofHours(1L))
+            .entryTtl(Duration.ofHours(3L))
             .disableCachingNullValues()
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
