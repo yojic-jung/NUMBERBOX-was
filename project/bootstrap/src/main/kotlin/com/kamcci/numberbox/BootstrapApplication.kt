@@ -13,8 +13,6 @@ class BootstrapApplication
 fun main(args: Array<String>) {
     /**
      * teamcity test
-     *
-     *
      */
     runApplication<BootstrapApplication>(*args)
 }
