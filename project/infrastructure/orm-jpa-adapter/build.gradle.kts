@@ -74,6 +74,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test> {
+    environment("TESTCONTAINERS_HOST_OVERRIDE", "host.docker.internal")
     useJUnitPlatform()
 }
 
