@@ -4,15 +4,12 @@ import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
-import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.repository.member.MemberRedisRepository
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
 
 @Repository
-class MemberWriteRepository(
-    private val memberRedisRepository: MemberRedisRepository
-) : MemberWriteOrmPort, BaseRepository() {
+class MemberWriteRepository : MemberWriteOrmPort, BaseRepository() {
     override fun save(email: String, password: String): UUID {
         val memberEntity = MemberEntity().apply {
             this.email = email
@@ -23,7 +20,6 @@ class MemberWriteRepository(
     }
 
     override fun drop(memberId: UUID): Long {
-        memberRedisRepository.deleteById(memberId)
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.humanStatus, 3)
@@ -33,7 +29,6 @@ class MemberWriteRepository(
     }
 
     override fun updatePassword(memberId: UUID, password: String): Long {
-        memberRedisRepository.deleteById(memberId)
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)
@@ -43,7 +38,6 @@ class MemberWriteRepository(
     }
 
     override fun updatePassword(memberId: List<UUID>, password: String?): Long {
-        memberRedisRepository.deleteAllById(memberId)
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)
@@ -53,10 +47,6 @@ class MemberWriteRepository(
     }
 
     override fun updatePassword(email: String, password: String): Long {
-        memberRedisRepository.findByEmail(email)?.let {
-            memberRedisRepository.deleteById(it.id)
-        }
-
         return queryFactory
             .update(memberEntity)
             .set(memberEntity.password, password)

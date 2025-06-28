@@ -26,6 +26,8 @@ include(":project:infrastructure:orm-jpa-adapter")
 include(":project:infrastructure:storage-adapter")
 include(":project:infrastructure:email-adapter")
 include(":project:infrastructure:hwp-client-adapter")
+include(":project:infrastructure:redis-adapter")
+include(":project:infrastructure:persistence-adapter")
 
 // project-ui
 include(":project:user-interface")

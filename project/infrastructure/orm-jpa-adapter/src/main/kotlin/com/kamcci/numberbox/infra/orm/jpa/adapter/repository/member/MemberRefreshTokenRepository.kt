@@ -13,6 +13,7 @@ class MemberRefreshTokenRepository : BaseRepository() {
         return memberRefreshTokenEntity.id
     }
 
+
     fun deleteByToken(token: String): Long {
         return queryFactory.delete(memberRefreshTokenEntity)
             .where(memberRefreshTokenEntity.token.eq(token))

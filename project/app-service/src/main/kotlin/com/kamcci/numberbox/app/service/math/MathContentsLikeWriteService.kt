@@ -10,11 +10,6 @@ import com.kamcci.numberbox.app.usecase.math.MathContentsLikeWriteCase
 class MathContentsLikeWriteService(
     private val mathConLikeModifyPort: MathContentsLikeWriteOrmPort
 ) : MathContentsLikeWriteCase {
-    companion object {
-        // 예외 메시지
-        const val LIKE_SAVE_FAIL = "좋아요 정보 저장되지 않음"
-        const val LIKE_DELETE_FAIL = "좋아요 취소되지 않음"
-    }
 
     @TXExecute
     override fun save(modifyDto: MathContentsLikeModifyDto) {

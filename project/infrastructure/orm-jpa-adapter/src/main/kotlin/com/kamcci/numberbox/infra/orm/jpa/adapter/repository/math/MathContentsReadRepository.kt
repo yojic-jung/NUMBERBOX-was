@@ -12,11 +12,9 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsIpsiS
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsLicenseEntity.mathContentsLicenseEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsSimilarSrcEntity.mathContentsSimilarSrcEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEntity.memberProfileEntity
-import com.kamcci.numberbox.infra.orm.jpa.adapter.redis.common.CacheNames.EXIST_MATH_CONTENTS
 import com.kamcci.numberbox.infra.orm.jpa.adapter.util.math.MathContentsExpression
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQuery
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -236,11 +234,6 @@ class MathContentsReadRepository(
             .fetchFirst()
     }
 
-    @Cacheable(
-        cacheNames = [EXIST_MATH_CONTENTS],
-        key = "#id",
-        unless = "!#result"
-    )
     override fun existById(id: Long): Boolean {
         return queryFactory
             .selectOne()

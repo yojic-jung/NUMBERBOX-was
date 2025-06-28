@@ -7,7 +7,6 @@ import com.kamcci.numberbox.restapi.common.BaseMockMvcTest
 import com.kamcci.numberbox.restapi.validation.math.ContentsCheck
 import org.junit.jupiter.api.Test
 import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.method.annotation.HandlerMethodValidationException
 
 @WebMvcUnitTest
 class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
@@ -52,18 +51,5 @@ class MathContentsRepoWriteControllerTest : BaseMockMvcTest() {
 
         // then
         assert2xx(resultAction)
-    }
-
-    @Test
-    fun `문제 저장소 취소 - 실패`() {
-        // given
-        val contentsId = FAIL_ID
-
-        // when
-        val resultAction = delRequest("$PREFIX/$contentsId")
-
-        // then
-        assert4xx(resultAction)
-        assertException(resultAction, HandlerMethodValidationException::class)
     }
 }

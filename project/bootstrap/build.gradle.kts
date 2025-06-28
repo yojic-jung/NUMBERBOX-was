@@ -28,6 +28,7 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:email-adapter"))
     implementation(project(":project:infrastructure:orm-jpa-adapter"))
+    implementation(project(":project:infrastructure:persistence-adapter"))
     implementation(project(":project:infrastructure:storage-adapter"))
     implementation(project(":project:infrastructure:hwp-client-adapter"))
     implementation(project(":project:user-interface:rest-api"))

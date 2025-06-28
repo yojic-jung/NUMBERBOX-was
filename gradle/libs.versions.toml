@@ -81,11 +81,16 @@ poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
 jsonwebtoken = { module = "io.jsonwebtoken:jjwt", version.ref = "jsonwebtoken" }
 
 [bundles]
-orm-jpa-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "mysql-connector-j", "java-uuid-generator",
-    "spring-boot-data-redis", "fasterxml-jackson", "fasterxml-core", "fasterxml-datatype", ]
+orm-jpa-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "mysql-connector-j", "java-uuid-generator"]
 orm-jpa-adapter-test = ["spring-boot-starter-test", "flyway-core", "flyway-mysql"]
 orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcontainers", "testcontainers-mysql",
     "testcontainers-jdbc", "flyway-core", "flyway-mysql"]
+
+redis-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "spring-boot-data-redis", "fasterxml-jackson",
+    "fasterxml-core", "fasterxml-datatype", ]
+
+persistence-adapter = ["spring-boot-starter", "spring-boot-data-redis", "fasterxml-jackson",
+    "fasterxml-core", "fasterxml-datatype", ]
 
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
