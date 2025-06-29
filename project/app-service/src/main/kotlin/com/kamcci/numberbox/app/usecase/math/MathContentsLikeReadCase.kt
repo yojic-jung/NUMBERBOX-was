@@ -8,4 +8,7 @@ import java.util.*
 interface MathContentsLikeReadCase {
     // 좋아요 존재여부
     fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean
+
+    // 좋아요 카운트 반환
+    fun countBy(contentsId: Long): Long
 }

@@ -20,7 +20,7 @@ class MathConLikeNRepoScheduler(
     private val mathContentsLikeWriteNativeQuery: MathContentsLikeWriteNativeQuery
 ) {
     // 좋아요 정보 rdb로 이관
-    @Scheduled(cron = "0 0 0/2 * * *")
+    @Scheduled(cron = "0 0 0/11 * * *")
     fun mathLikeBulkInsert() {
         val keyList = getAllKey(MATH_CONTENTS_LIKE_WILD_CARD)
         keyList.forEach { contentsIdStr ->
@@ -36,7 +36,7 @@ class MathConLikeNRepoScheduler(
     }
 
     // 저장소 정보 rdb로 이관
-    @Scheduled(cron = "0 0 0/2 * * *")
+    @Scheduled(cron = "0 0 0/11 * * *")
     fun mathRepoBulkInsert() {
         val keyList = getAllKey(MATH_CONTENTS_REPO_WILD_CARD)
         keyList.forEach { contentsIdStr ->

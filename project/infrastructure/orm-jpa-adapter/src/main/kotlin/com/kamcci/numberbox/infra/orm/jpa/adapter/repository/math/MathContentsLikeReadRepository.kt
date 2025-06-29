@@ -8,6 +8,16 @@ import java.util.*
 
 @Repository
 class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository() {
+    fun readMemberIdListById(contentsId: Long): List<UUID> {
+        return queryFactory
+            .select(mathContentsLikeEntity.id.memberId)
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.contentsId.eq(contentsId),
+            )
+            .fetch()
+    }
+
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
         return queryFactory
             .selectOne()
@@ -17,5 +27,15 @@ class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository(
                 mathContentsLikeEntity.id.memberId.eq(memberId),
             )
             .fetchOne() != null
+    }
+
+    override fun countBy(contentsId: Long): Long {
+        return queryFactory
+            .select(mathContentsLikeEntity.id.count())
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.contentsId.eq(contentsId),
+            )
+            .fetchFirst() ?: 0L
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 
 @Primary
 @Repository
-class MathContentsRepoWriteRedisRepository(
+class MathContentsRepoWritePersistenceRepository(
     private val mathContentsRepoRedisRepository: MathContentsRepoRedisRepository,
     private val mathContentsRepoWriteRepository: MathContentsRepoWriteRepository
 ) : MathContentsRepoWriteOrmPort {

@@ -17,6 +17,7 @@ class MathContentsRepoRedisRepository(
         const val REPO_DELETE_FAIL = "저장소 취소되지 않음"
     }
 
+
     fun save(modifyDto: MathContentsRepoModifyDto): Boolean {
         val setOps = stringRedisTemplate.opsForSet()
         val key = RedisKeyGenerator.getMathRepoKey(modifyDto.contentsId)
@@ -34,5 +35,4 @@ class MathContentsRepoRedisRepository(
         return setOps.remove(RedisKeyGenerator.getMathRepoKey(modifyDto.contentsId), modifyDto.memberId.toString())
             ?: throw BusinessSeverException(REPO_DELETE_FAIL)
     }
-
 }

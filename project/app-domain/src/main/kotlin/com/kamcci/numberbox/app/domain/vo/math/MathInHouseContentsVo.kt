@@ -92,5 +92,6 @@ data class MathInHouseContentsVo(
     // 소단원
     val thrUnit: String,
 ) {
+    var likeCount: Long = 0
     fun getMathTypeClassifyVal() = mathTypeClassify?.dbData
 }

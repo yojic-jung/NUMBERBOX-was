@@ -92,4 +92,6 @@ data class MathIpsiContentsVo(
     val secUnit: String,
     // 소단원
     val thrUnit: String,
-)
+) {
+    var likeCount: Long = 0
+}

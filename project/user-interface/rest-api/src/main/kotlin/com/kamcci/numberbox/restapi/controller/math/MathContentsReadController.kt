@@ -12,6 +12,7 @@ import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
 import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
 import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
@@ -37,6 +38,7 @@ class MathContentsReadController(
     private val mathCategoryUnitReadCase: MathCategoryUnitReadCase,
     private val mathContentsReadCase: MathContentsReadCase,
     private val mathContentsRepoReadCase: MathContentsRepoReadCase,
+    private val mathContentsLikeReadCase: MathContentsLikeReadCase
 ) {
     companion object {
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
@@ -55,17 +57,37 @@ class MathContentsReadController(
         val res =
             when {
                 // 문제만 조회
-                contentsOnly != null && contentsOnly -> mathContentsReadCase.readContentsOnly(contentsId, memberId)
+                contentsOnly != null && contentsOnly -> {
+                    val contents = mathContentsReadCase.readContentsOnly(contentsId, memberId)
+                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
+                    contents?.likeCount = likeCount
+                    contents
+                }
 
                 // 자체제작 문제는 유사문제 정보
-                contentsClassify == InHouse -> mathContentsReadCase.readInHouseContentsById(contentsId)
+                contentsClassify == InHouse -> {
+                    val contents = mathContentsReadCase.readInHouseContentsById(contentsId)
+                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
+                    contents?.likeCount = likeCount
+                    contents
+                }
 
                 // 입시 문제는 입시 출처 정보
-                contentsClassify == Ipsi -> mathContentsReadCase.readIpsiContentsById(contentsId)
+                contentsClassify == Ipsi -> {
+                    val contents = mathContentsReadCase.readIpsiContentsById(contentsId)
+                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
+                    contents?.likeCount = likeCount
+                    contents
+                }
 
                 // 그외는 라이선스 정보
-                else -> mathContentsReadCase.readById(contentsId)
-            } ?: throw BusinessInValidException(NOT_EXIST_CONTENTS)
+                else -> {
+                    val contents = mathContentsReadCase.readById(contentsId)
+                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
+                    contents?.likeCount = likeCount
+                    contents
+                }
+            }
 
         // 나의 제작문제인지 판별
         val isMine =
