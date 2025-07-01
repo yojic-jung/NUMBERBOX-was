@@ -4,8 +4,9 @@ kotlin = "1.9.22"
 spring-boot = "3.2.3"
 spring-aws = "2.2.6.RELEASE"
 spring-tx = "6.1.4"
-aws-s3 = "1.12.281"
+spring-cloud = "2023.0.0"
 
+aws-s3 = "1.12.281"
 aspect-weaver = "1.9.22"
 
 querydsl = "5.0.0"
@@ -44,6 +45,9 @@ spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools
 spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
 spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
 spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-cloud-dependencies = { module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud" }
+spring-cloud-stream = { module = "org.springframework.cloud:spring-cloud-starter-stream-kafka" }
+
 aspect-j-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspect-weaver" }
 
 spring-cloud-aws = { module = "org.springframework.cloud:spring-cloud-starter-aws", version.ref = "spring-aws" }
@@ -86,11 +90,12 @@ orm-jpa-adapter-test = ["spring-boot-starter-test", "flyway-core", "flyway-mysql
 orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcontainers", "testcontainers-mysql",
     "testcontainers-jdbc", "flyway-core", "flyway-mysql"]
 
-redis-adapter = ["kotlin-reflect", "spring-boot-data-jpa", "spring-boot-data-redis", "fasterxml-jackson",
-    "fasterxml-core", "fasterxml-datatype", ]
+redis-adapter = ["kotlin-reflect", "spring-boot-data-redis", "fasterxml-jackson", "fasterxml-core", "fasterxml-datatype", ]
 
 persistence-adapter = ["spring-boot-starter", "spring-boot-data-redis", "fasterxml-jackson",
     "fasterxml-core", "fasterxml-datatype", ]
+
+messaging-kafka-adapter = ["kotlin-reflect", "spring-cloud-stream", "spring-boot-starter-web"]
 
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
