@@ -100,7 +100,7 @@ messaging-kafka-adapter = ["kotlin-reflect", "spring-cloud-stream", "spring-boot
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
 
-hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter"]
+hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-stream", ]
 hwp-client-adapter-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
 
 storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -25,18 +26,18 @@ import java.time.Duration
 
 @Configuration
 @EnableRedisRepositories
-class RedisConfig {
+@EnableConfigurationProperties(value = [RedisServerProperty::class])
+class RedisConfig(
+    private val redisServerProperty: RedisServerProperty
+) {
     companion object {
         const val REDIS_2WEEK_CACHE_MANAGER_BEAN = "redis2WeekCacheManager"
         const val REDIS_MEMBER_CACHE_MANAGER_BEAN = "redisMemberCacheManager"
     }
 
-    private val host: String = "localhost"
-    private val port = 6379
-
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
-        return LettuceConnectionFactory(host, port)
+        return LettuceConnectionFactory(redisServerProperty.ip, redisServerProperty.port.toInt())
     }
 
     @Bean

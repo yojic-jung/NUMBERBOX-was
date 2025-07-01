@@ -11,7 +11,10 @@ spring:
         - mail-sender-env
         - storage
         - storage-env
+        - hwp-client-local
         - hwp-client-env
+        - redis-local
+        - redis-env
 
 # s3 설정
 cloud:

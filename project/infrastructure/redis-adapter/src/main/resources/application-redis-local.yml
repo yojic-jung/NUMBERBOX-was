@@ -1,0 +1,4 @@
+redis:
+  server:
+    ip: ${local.redis.server.ip}
+    port: ${local.redis.server.port}

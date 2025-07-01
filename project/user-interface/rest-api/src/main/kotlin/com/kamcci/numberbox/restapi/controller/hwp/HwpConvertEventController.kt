@@ -27,10 +27,6 @@ class HwpConvertEventController(
     private val hwpEventPort: HwpConvertEventPort,
     private val fileUseCase: FileUseCase,
 ) {
-    companion object {
-        const val NOT_MODIFIED = "수정 및 삭제 작업이 이루어지지 않았습니다."
-    }
-
     /**
      * json to hwp 변환
      * - 변환된 파일은 추후 알림을 통해 전달됨
@@ -59,13 +55,13 @@ class HwpConvertEventController(
         req: HwpFileConvertRequest
     ): ResponseEntity<ResponseData<String>> {
         // s3에 파일 업로드
-        val fileUpldDto = FileUploadDto("hwp", "application/octet-stream",req.hwpFile.size, req.hwpFile.inputStream )
+        val fileUpldDto = FileUploadDto("hwp", "application/octet-stream", req.hwpFile.size, req.hwpFile.inputStream)
         val fileNameVo = fileUseCase.upload(fileUpldDto, FileType.JsonToHWP)
-        
+
         // 업로드한 hwp 파일경로 이벤트 전달
         val event = HwpToHtmlRequestEvent(memberId, "${fileNameVo.path}/${fileNameVo.name}")
         hwpEventPort.requestHtml(event)
-        
+
         // 4. 변환 컨텐츠 조회
         return ResponseUtil.ok()
     }
