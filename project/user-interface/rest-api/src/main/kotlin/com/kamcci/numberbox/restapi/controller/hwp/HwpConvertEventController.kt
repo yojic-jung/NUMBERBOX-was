@@ -2,11 +2,14 @@ package com.kamcci.numberbox.restapi.controller.hwp
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
+import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertFileCreateDto
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpToHtmlRequestEvent
 import com.kamcci.numberbox.app.domain.dto.hwp.JsonToHwpRequestEvent
+import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpConvertFileType
 import com.kamcci.numberbox.app.domain.enumeration.port.storage.FileType
 import com.kamcci.numberbox.app.port.hwp.HwpConvertEventPort
 import com.kamcci.numberbox.app.usecase.common.FileUseCase
+import com.kamcci.numberbox.app.usecase.hwp.HwpConvertFileWriteCase
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpConvertRequest
 import com.kamcci.numberbox.restapi.dto.request.hwp.HwpFileConvertRequest
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -26,6 +29,7 @@ import java.util.*
 class HwpConvertEventController(
     private val hwpEventPort: HwpConvertEventPort,
     private val fileUseCase: FileUseCase,
+    private val hwpConvertFileWriteCase: HwpConvertFileWriteCase
 ) {
     /**
      * json to hwp 변환
@@ -38,9 +42,22 @@ class HwpConvertEventController(
         @RequestBody
         request: HwpConvertRequest
     ): ResponseEntity<ResponseData<String>> {
-        val event = JsonToHwpRequestEvent(memberId, request.jsonMsg)
-        // todo kafka에 이벤트 정상 전송 됬는지는 알아야함
+        // json 문자열 업로드
+        val fileNameVo = fileUseCase.uploadJsonData(request.jsonMsg, FileType.JsonToHWP)
+
+        // 변환 요청 정보 db 저장
+        val createDto = HwpConvertFileCreateDto(
+            memberId = memberId,
+            convertType = HwpConvertFileType.JsonToHwp,
+            originFileName = fileNameVo.getFileFullName(),
+            )
+        val id = hwpConvertFileWriteCase.create(createDto)
+        
+        // 변환 요청 이벤트 전송
+        val event = JsonToHwpRequestEvent(id, request.jsonMsg)
         hwpEventPort.requestHwp(event)
+        
+        // todo kafka에 이벤트 정상 전송 됬는지는 알아야함
         return ResponseUtil.ok()
     }
 
@@ -54,15 +71,27 @@ class HwpConvertEventController(
         @ModelAttribute @Valid
         req: HwpFileConvertRequest
     ): ResponseEntity<ResponseData<String>> {
-        // s3에 파일 업로드
-        val fileUpldDto = FileUploadDto("hwp", "application/octet-stream", req.hwpFile.size, req.hwpFile.inputStream)
-        val fileNameVo = fileUseCase.upload(fileUpldDto, FileType.JsonToHWP)
+        // s3에 변환 요청 파일 업로드
+        val fileUpldDto = FileUploadDto(
+            req.hwpFile.originalFilename ?: ".hwp",
+            "application/octet-stream",
+            req.hwpFile.size,
+            req.hwpFile.inputStream
+        )
+        val fileNameVo = fileUseCase.upload(fileUpldDto, FileType.HwpToHTML)
 
-        // 업로드한 hwp 파일경로 이벤트 전달
-        val event = HwpToHtmlRequestEvent(memberId, "${fileNameVo.path}/${fileNameVo.name}")
+        // 변환 요청 정보 db 저장
+        val createDto = HwpConvertFileCreateDto(
+            memberId = memberId,
+            convertType = HwpConvertFileType.HwpToHtml,
+            originFileName = fileNameVo.getFileFullName()
+        )
+        val id = hwpConvertFileWriteCase.create(createDto)
+        
+        // 변환 요청 이벤트 전달
+        val event = HwpToHtmlRequestEvent(id, fileNameVo.getFileFullName())
         hwpEventPort.requestHtml(event)
 
-        // 4. 변환 컨텐츠 조회
         return ResponseUtil.ok()
     }
 

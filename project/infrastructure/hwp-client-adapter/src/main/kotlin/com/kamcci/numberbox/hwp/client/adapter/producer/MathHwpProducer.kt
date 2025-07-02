@@ -15,10 +15,10 @@ class MathHwpProducer {
     private val log = LoggerFactory.getLogger(MathHwpProducer::class.java)
 
     // json to hwp 변환 요청 큐
-    private val jsonEventQueue = LinkedBlockingQueue<JsonToHwpRequestEvent?>()
+    private val jsonEventQueue = LinkedBlockingQueue<JsonToHwpRequestEvent>()
 
     // hwp to html 변환 요청 큐
-    private val fileEventQueue = LinkedBlockingQueue<HwpToHtmlRequestEvent?>()
+    private val fileEventQueue = LinkedBlockingQueue<HwpToHtmlRequestEvent>()
 
     fun publish(eventDto: JsonToHwpRequestEvent) {
         log.info("이벤트 발행 : ${eventDto}")
@@ -31,12 +31,12 @@ class MathHwpProducer {
     }
 
     @Bean(JSON_TO_HWP_PRODUCE)
-    fun jsonToHwpProducer(): Supplier<JsonToHwpRequestEvent?> {
+    fun jsonToHwpProducer(): Supplier<JsonToHwpRequestEvent> {
         return Supplier { jsonEventQueue.poll() }
     }
 
     @Bean(HWP_TO_HTML_PRODUCE)
-    fun commentProducer(): Supplier<HwpToHtmlRequestEvent?> {
+    fun commentProducer(): Supplier<HwpToHtmlRequestEvent> {
         return Supplier { fileEventQueue.poll() }
     }
 }

@@ -16,6 +16,12 @@ interface FileUseCase {
     fun upload(uploadDto: FileUploadDto, fileType: FileType): FileNameVo
 
     /**
+     * json 문자열 업로드
+     * - json 문자열을 파일로 만들어 저장함
+     */
+    fun uploadJsonData(jsonData:String, fileType: FileType): FileNameVo
+
+    /**
      * 파일 이름 및 저장 경로 생성
      */
     fun makeFileNameByType(fileName: String, fileType: FileType): FileNameVo
