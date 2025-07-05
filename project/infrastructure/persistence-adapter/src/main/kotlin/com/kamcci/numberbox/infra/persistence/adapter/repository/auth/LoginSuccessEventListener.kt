@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.persistence.adapter.repository.auth//package com.kamcci.numberbox.infra.persistence.adapter.repository
+package com.kamcci.numberbox.infra.persistence.adapter.repository.auth // package com.kamcci.numberbox.infra.persistence.adapter.repository
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
 import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberRefreshTokenFactory
@@ -20,7 +20,7 @@ import java.util.*
 class LoginSuccessEventListener(
     private val memberRepository: MemberRepositorySupport,
     private val memberRefreshTokenRepo: MemberRefreshTokenRepository,
-    private val refreshTokenRedisCacheRepository: RefreshTokenRedisCacheRepository
+    private val refreshTokenRedisCacheRepository: RefreshTokenRedisCacheRepository,
 ) {
 
     companion object {
@@ -34,14 +34,14 @@ class LoginSuccessEventListener(
     fun handle(loginSuccessEvent: LoginSuccessEvent) {
         val userId: UUID = loginSuccessEvent.userId()
         val refreshToken: String = loginSuccessEvent.refreshToken()
-        val remainedRefreshToken: String = loginSuccessEvent.remainedRefreshToken()
+        val remainedRefreshToken: String? = loginSuccessEvent.remainedRefreshToken()
 
         // 실패 횟수, 휴면 계정 초기화
         memberRepository.updateSuccessUser(userId, FAIL_CNT_ZERO, HUMAN_STATUS_ENABLE)
 
         // 기존 refreshToken 남아있는 경우 삭제
         remainedRefreshToken
-            .takeIf { it.isNotEmpty() }
+            .takeIf { !it.isNullOrEmpty() }
             ?.let {
                 // redis 캐싱 삭제
                 refreshTokenRedisCacheRepository.evictCache(it)

@@ -18,6 +18,6 @@ data class HwpConvertFileCreateDto(
     }
 
     init {
-        require(!originFileName.isEmpty()) { INVALID_FILE_NAME }
+        require(originFileName.isNotEmpty()) { INVALID_FILE_NAME }
     }
 }

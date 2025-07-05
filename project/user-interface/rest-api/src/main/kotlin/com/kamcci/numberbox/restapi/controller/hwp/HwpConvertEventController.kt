@@ -29,7 +29,7 @@ import java.util.*
 class HwpConvertEventController(
     private val hwpEventPort: HwpConvertEventPort,
     private val fileUseCase: FileUseCase,
-    private val hwpConvertFileWriteCase: HwpConvertFileWriteCase
+    private val hwpConvertFileWriteCase: HwpConvertFileWriteCase,
 ) {
     /**
      * json to hwp 변환
@@ -40,7 +40,7 @@ class HwpConvertEventController(
         @UserId
         memberId: UUID,
         @RequestBody
-        request: HwpConvertRequest
+        request: HwpConvertRequest,
     ): ResponseEntity<ResponseData<String>> {
         // json 문자열 업로드
         val fileNameVo = fileUseCase.uploadJsonData(request.jsonMsg, FileType.JsonToHWP)
@@ -50,13 +50,13 @@ class HwpConvertEventController(
             memberId = memberId,
             convertType = HwpConvertFileType.JsonToHwp,
             originFileName = fileNameVo.getFileFullName(),
-            )
+        )
         val id = hwpConvertFileWriteCase.create(createDto)
-        
+
         // 변환 요청 이벤트 전송
-        val event = JsonToHwpRequestEvent(id, request.jsonMsg)
+        val event = JsonToHwpRequestEvent(id, fileNameVo.getFileFullName())
         hwpEventPort.requestHwp(event)
-        
+
         // todo kafka에 이벤트 정상 전송 됬는지는 알아야함
         return ResponseUtil.ok()
     }
@@ -69,14 +69,14 @@ class HwpConvertEventController(
     fun makeHtml(
         @UserId memberId: UUID,
         @ModelAttribute @Valid
-        req: HwpFileConvertRequest
+        req: HwpFileConvertRequest,
     ): ResponseEntity<ResponseData<String>> {
         // s3에 변환 요청 파일 업로드
         val fileUpldDto = FileUploadDto(
             req.hwpFile.originalFilename ?: ".hwp",
             "application/octet-stream",
             req.hwpFile.size,
-            req.hwpFile.inputStream
+            req.hwpFile.inputStream,
         )
         val fileNameVo = fileUseCase.upload(fileUpldDto, FileType.HwpToHTML)
 
@@ -84,53 +84,14 @@ class HwpConvertEventController(
         val createDto = HwpConvertFileCreateDto(
             memberId = memberId,
             convertType = HwpConvertFileType.HwpToHtml,
-            originFileName = fileNameVo.getFileFullName()
+            originFileName = fileNameVo.getFileFullName(),
         )
         val id = hwpConvertFileWriteCase.create(createDto)
-        
+
         // 변환 요청 이벤트 전달
         val event = HwpToHtmlRequestEvent(id, fileNameVo.getFileFullName())
         hwpEventPort.requestHtml(event)
 
         return ResponseUtil.ok()
     }
-
-// todo
-//
-//    // 변환 컨텐츠 수정사항 저장
-//    @PutMapping("/hwp-to-html")
-//    fun update(
-//        @UserId memberId: UUID,
-//        @RequestBody
-//        request: HwpToHtmlUpdateRequest
-//    ): ResponseEntity<ResponseData<Any>> {
-//        // 변환 컨텐츠 수정
-//        hwpConvertContentsWriteCase.update(
-//            HwpConvertContentsUpdateDto(
-//                id = request.id,
-//                memberId = memberId,
-//                contents = request.contents,
-//                isGrammarConverted = true
-//            )
-//        ).let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
-//
-//        // 변환 컨텐츠 조회
-//        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
-//        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
-//    }
-//
-//    // 변환 컨텐츠 수정사항 저장
-//    @DeleteMapping("/hwp-to-html/{contentsId}")
-//    fun delete(
-//        @UserId memberId: UUID,
-//        @PathVariable contentsId: Long
-//    ): ResponseEntity<ResponseData<Any>> {
-//        // 변환 컨텐츠 수정
-//        hwpConvertContentsWriteCase.delete(contentsId, memberId)
-//            .let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
-//
-//        // 변환 컨텐츠 조회
-//        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
-//        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
-//    }
 }
