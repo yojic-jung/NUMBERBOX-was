@@ -1,7 +1,5 @@
 package com.kamcci.numberbox.app.domain.dto.hwp
 
-import java.util.UUID
-
 /**
  * hwp to html 변환 요청
  */

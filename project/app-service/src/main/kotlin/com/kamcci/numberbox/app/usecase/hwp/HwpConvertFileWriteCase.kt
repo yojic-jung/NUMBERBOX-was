@@ -2,8 +2,6 @@ package com.kamcci.numberbox.app.usecase.hwp
 
 import com.kamcci.numberbox.app.domain.dto.hwp.HwpConvertFileCreateDto
 import com.kamcci.numberbox.app.domain.system.construction.TXExecute
-import com.kamcci.numberbox.app.domain.vo.hwp.HwpConvertContentsVo
-import java.util.*
 
 /**
  *  hwp to html 변환 파일 조회

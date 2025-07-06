@@ -10,6 +10,6 @@ class MockMathContentsLikeReadCase : MathContentsLikeReadCase {
     }
 
     override fun countBy(contentsId: Long): Long {
-        TODO("Not yet implemented")
+        return 1L
     }
 }

@@ -3,7 +3,6 @@ package com.kamcci.numberbox.infra.orm.jpa.adapter.entity.hwp
 import com.kamcci.numberbox.app.domain.enumeration.hwp.HwpConvertFileType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
 import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
 import java.util.*
@@ -42,12 +41,10 @@ class HwpConvertFileEntity {
     var requestAt: LocalDateTime = LocalDateTime.now()
 
     // 변환 완료 시간
-    @NotNull
-    @Column(name = "convert_at", nullable = false)
+    @Column(name = "convert_at")
     var convertAt: LocalDateTime? = null
 
     // 삭제 시간
-    @NotNull
-    @Column(name = "deleted_at", nullable = false)
+    @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
 }

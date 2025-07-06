@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.persistence.adapter.repository.auth // package com.kamcci.numberbox.infra.persistence.adapter.repository
 
 import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
-import com.kamcci.numberbox.infra.orm.jpa.adapter.factory.member.MemberRefreshTokenFactory
+import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberRefreshTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
 import com.kamcci.numberbox.infra.redis.adapter.repository.token.RefreshTokenRedisCacheRepository
@@ -51,8 +51,10 @@ class LoginSuccessEventListener(
             }
 
         // 새로운 리프레시 토큰 저장
-        val refreshTokenEntity = MemberRefreshTokenFactory.getSaveEntity(refreshToken, userId)
-
+        val refreshTokenEntity = MemberRefreshTokenEntity().apply {
+            token = refreshToken
+            this.memberId = userId
+        }
         memberRefreshTokenRepo.save(refreshTokenEntity)
     }
 }

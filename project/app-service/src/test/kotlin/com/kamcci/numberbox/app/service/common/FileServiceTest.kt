@@ -33,6 +33,19 @@ class FileServiceTest {
     }
 
     @Test
+    fun `jsonData 업로드 - 성공`() {
+        // given
+        val jsonData = """{"id":"1"}"""
+        val fileType = FileType.JsonToHWP
+
+        // when
+        val fileNameVo = fileService.uploadJsonData(jsonData, fileType)
+
+        // then
+        assertThat(fileNameVo.path).contains(fileType.path)
+    }
+
+    @Test
     fun `파일명 70글자 이하 - 성공`() {
         // given
         FileType.entries.forEach {

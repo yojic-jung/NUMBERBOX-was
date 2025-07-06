@@ -14,6 +14,20 @@ class MathContentsLikeReadRepositoryTest(
     private val mathConLikeDummyEntity = getMathConLikeDummyEntity()
 
     @Test
+    fun `readMemberIdListById - 존재`() {
+        // given
+        val dummyEntity = mathConLikeDummyEntity
+
+        // when
+        val memberIdList =
+            mathContentsLikeReadRepository.readMemberIdListById(dummyEntity.contentsId)
+
+        // then
+        assertThat(memberIdList).isNotEmpty
+        assertThat(memberIdList[0]).isEqualTo(dummyEntity.memberId)
+    }
+
+    @Test
     fun `contentsId와 memberId로 좋아요 여부 조회 - 존재`() {
         // given
         val dummyEntity = mathConLikeDummyEntity
@@ -37,5 +51,30 @@ class MathContentsLikeReadRepositoryTest(
 
         // then
         assertThat(isExist).isFalse()
+    }
+
+    @Test
+    fun `countBy - 존재`() {
+        // given
+        val dummyEntity = mathConLikeDummyEntity
+
+        // when
+        val count =
+            mathContentsLikeReadRepository.countBy(dummyEntity.contentsId)
+
+        // then
+        assertThat(count).isOne()
+    }
+
+    @Test
+    fun `countBy - 미존재`() {
+        // given
+        val notExistId = 3L
+
+        // when
+        val count = mathContentsLikeReadRepository.countBy(notExistId)
+
+        // then
+        assertThat(count).isZero()
     }
 }

@@ -16,7 +16,7 @@ class MockFileStoragePort : FileStoragePort {
     }
 
     override fun uploadJson(jsonData: String, fileName: String) {
-        TODO("Not yet implemented")
+        if (jsonData == FAIL_STRING) throw RuntimeException(STUB_EXCEPTION_MSG)
     }
 
     override fun delete(fileName: String) {

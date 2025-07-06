@@ -87,7 +87,7 @@ class MathContentsReadController(
                     contents?.likeCount = likeCount
                     contents
                 }
-            }
+            } ?: throw BusinessInValidException(NOT_EXIST_CONTENTS)
 
         // 나의 제작문제인지 판별
         val isMine =

@@ -11,7 +11,7 @@ class MockFileUseCase : FileUseCase {
     }
 
     override fun uploadJsonData(jsonData: String, fileType: FileType): FileNameVo {
-        TODO("Not yet implemented")
+        return FileNameVo("jsonName", "jsonPath")
     }
 
     override fun makeFileNameByType(fileName: String, fileType: FileType): FileNameVo {

@@ -8,7 +8,6 @@ import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
 import org.springframework.stereotype.Service
-import software.amazon.ion.system.IonTextWriterBuilder.json
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 
@@ -55,7 +54,6 @@ class AwsS3StorageAdapter(
     override fun delete(fileName: String) {
         s3Client.deleteObject(awsS3Property.bucket, fileName)
     }
-
 
 
 }
