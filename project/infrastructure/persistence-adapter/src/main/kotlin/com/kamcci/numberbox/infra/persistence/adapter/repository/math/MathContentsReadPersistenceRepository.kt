@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.persistence.adapter.repository.math//package com.kamcci.numberbox.infra.persistence.adapter.repository
+package com.kamcci.numberbox.infra.persistence.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.common.PageRequest
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType

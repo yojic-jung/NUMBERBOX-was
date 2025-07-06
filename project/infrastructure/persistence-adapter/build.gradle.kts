@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":modules:logging-control"))
 
     implementation(libs.bundles.persistence.adapter)
+    testImplementation(libs.bundles.persistence.adapter.test)
 }
 
 tasks.withType<KotlinCompile> {
