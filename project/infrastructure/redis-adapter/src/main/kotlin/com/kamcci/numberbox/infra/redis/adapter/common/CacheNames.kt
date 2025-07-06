@@ -12,6 +12,7 @@ object CacheNames {
 
     // 회원
     const val MEMBER = "member"
+    const val MEMBER_EMAIL_VERIFY_CODE = "member" + SEPARATOR + "email" + SEPARATOR + "verify" + SEPARATOR + "code"
 
     // 수학
     const val MATH = "math"

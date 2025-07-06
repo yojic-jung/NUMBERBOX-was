@@ -15,7 +15,7 @@ class MemberVerifyCodeReadService(
 ) : MemberVerifyCodeReadCase {
     companion object {
         // 인증 코드 유효 시간
-        const val EMAIL_CODE_EXPIRE_TIME = 180
+        const val EMAIL_CODE_EXPIRE_TIME = 180L
 
         const val NOT_EXIST_CODE = "인증 코드가 존재하지 않습니다."
         const val EXPIRED_CODE = "만료된 인증 코드입니다."
@@ -24,7 +24,7 @@ class MemberVerifyCodeReadService(
 
     override fun validate(codeDto: MemberVerifyCodeDto) {
         // 1. 인증 코드 존재 여부 조회
-        val verifyCodeVo = memberVerifyCodeReadOrmPort.readByEmailAndCodeType(codeDto.email, codeDto.verifyCodeType)
+        val verifyCodeVo = memberVerifyCodeReadOrmPort.readByEmail(codeDto.email)
             ?: throw BusinessInValidException(NOT_EXIST_CODE)
 
         // 2. 인증 코드 만료여부 체크

@@ -28,7 +28,6 @@ include(":project:infrastructure:email-adapter")
 include(":project:infrastructure:hwp-client-adapter")
 include(":project:infrastructure:redis-adapter")
 include(":project:infrastructure:persistence-adapter")
-include(":project:infrastructure:messaging-kafka-adapter")
 
 // project-ui
 include(":project:user-interface")
