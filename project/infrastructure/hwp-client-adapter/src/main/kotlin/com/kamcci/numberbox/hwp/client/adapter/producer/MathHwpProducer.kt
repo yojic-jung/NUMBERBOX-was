@@ -36,7 +36,7 @@ class MathHwpProducer {
     }
 
     @Bean(HWP_TO_HTML_PRODUCE)
-    fun commentProducer(): Supplier<HwpToHtmlRequestEvent> {
+    fun hwpToHtmlProducer(): Supplier<HwpToHtmlRequestEvent> {
         return Supplier { fileEventQueue.poll() }
     }
 }

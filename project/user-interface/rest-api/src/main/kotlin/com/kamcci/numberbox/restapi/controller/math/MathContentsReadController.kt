@@ -58,59 +58,52 @@ class MathContentsReadController(
             when {
                 // 문제만 조회
                 contentsOnly != null && contentsOnly -> {
-                    val contents = mathContentsReadCase.readContentsOnly(contentsId, memberId)
-                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
-                    contents?.likeCount = likeCount
-                    contents
+                    mathContentsReadCase.readContentsOnly(contentsId, memberId)
                 }
 
                 // 자체제작 문제는 유사문제 정보
                 contentsClassify == InHouse -> {
-                    val contents = mathContentsReadCase.readInHouseContentsById(contentsId)
-                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
-                    contents?.likeCount = likeCount
-                    contents
+                    mathContentsReadCase.readInHouseContentsById(contentsId)
                 }
 
                 // 입시 문제는 입시 출처 정보
                 contentsClassify == Ipsi -> {
-                    val contents = mathContentsReadCase.readIpsiContentsById(contentsId)
-                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
-                    contents?.likeCount = likeCount
-                    contents
+                    mathContentsReadCase.readIpsiContentsById(contentsId)
                 }
 
                 // 그외는 라이선스 정보
                 else -> {
-                    val contents = mathContentsReadCase.readById(contentsId)
-                    val likeCount = mathContentsLikeReadCase.countBy(contentsId)
-                    contents?.likeCount = likeCount
-                    contents
+                    mathContentsReadCase.readById(contentsId)
                 }
             } ?: throw BusinessInValidException(NOT_EXIST_CONTENTS)
 
-        // 나의 제작문제인지 판별
+
+        // 나의 제작문제인지 판별 및 좋아요 셋팅
         val isMine =
             when {
                 contentsOnly != null && contentsOnly -> {
                     res as MathContentsOnlyVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
                 // 자체제작 문제는 유사문제 정보
                 contentsClassify == InHouse -> {
                     res as MathInHouseContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 
                 // 입시 문제는 입시 출처 정보
                 contentsClassify == Ipsi -> {
                     res as MathIpsiContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 
                 // 그외는 라이선스 정보
                 else -> {
                     res as MathContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 

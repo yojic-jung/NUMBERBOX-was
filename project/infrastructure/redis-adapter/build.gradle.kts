@@ -35,11 +35,9 @@ dependencies {
     implementation(project(":project:app-service"))
 
     implementation(libs.bundles.redis.adapter)
-
-    testImplementation("it.ozimov:embedded-redis:0.7.2")
-    testFixturesImplementation("it.ozimov:embedded-redis:0.7.2")
-
     testImplementation(testFixtures(project(":project:app-service")))
+    testImplementation(libs.bundles.redis.adapter.test)
+    testFixturesImplementation(libs.bundles.redis.adapter.test)
 }
 
 tasks.withType<KotlinCompile> {

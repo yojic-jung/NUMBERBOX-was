@@ -91,6 +91,7 @@ orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcon
     "testcontainers-jdbc", "flyway-core", "flyway-mysql"]
 
 redis-adapter = ["kotlin-reflect", "spring-boot-data-redis", "fasterxml-jackson", "fasterxml-core", "fasterxml-datatype", ]
+redis-adapter-test = ["kotlin-reflect", "spring-boot-starter-test", "spring-boot-testcontainers", ]
 
 persistence-adapter = ["spring-boot-starter", "spring-boot-data-redis", "fasterxml-jackson",
     "fasterxml-core", "fasterxml-datatype", ]

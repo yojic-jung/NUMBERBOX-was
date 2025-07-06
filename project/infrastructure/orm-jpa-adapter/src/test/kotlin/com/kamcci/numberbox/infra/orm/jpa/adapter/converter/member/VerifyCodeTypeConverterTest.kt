@@ -13,4 +13,11 @@ class VerifyCodeTypeConverterTest {
             verifyCodeTypeConverter.convertToEntityAttribute(enum?.dbData)
         }
     }
+
+    @Test
+    fun `VerifyCodeType to dbData`() {
+        VerifyCodeType.entries.forEach {
+            verifyCodeTypeConverter.convertToDatabaseColumn(it)
+        }
+    }
 }

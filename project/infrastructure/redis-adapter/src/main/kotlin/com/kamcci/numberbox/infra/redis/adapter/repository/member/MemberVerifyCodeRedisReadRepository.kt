@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import kotlin.jvm.optionals.getOrNull
 
 @Repository
-class MemberVerifyCodeReadRedisRepository(
+class MemberVerifyCodeRedisReadRepository(
     private val memberVerifyCodeRedisRepository: MemberVerifyCodeRedisRepository
 ) : MemberVerifyCodeReadOrmPort {
     override fun readByEmail(email: String): MemberVerifyCodeVo? {

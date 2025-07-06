@@ -57,7 +57,6 @@ class HwpConvertEventController(
         val event = JsonToHwpRequestEvent(id, fileNameVo.getFileFullName())
         hwpEventPort.requestHwp(event)
 
-        // todo kafka에 이벤트 정상 전송 됬는지는 알아야함
         return ResponseUtil.ok()
     }
 
@@ -73,7 +72,7 @@ class HwpConvertEventController(
     ): ResponseEntity<ResponseData<String>> {
         // s3에 변환 요청 파일 업로드
         val fileUpldDto = FileUploadDto(
-            req.hwpFile.originalFilename ?: ".hwp",
+            req.hwpFile.originalFilename!!,
             "application/octet-stream",
             req.hwpFile.size,
             req.hwpFile.inputStream,

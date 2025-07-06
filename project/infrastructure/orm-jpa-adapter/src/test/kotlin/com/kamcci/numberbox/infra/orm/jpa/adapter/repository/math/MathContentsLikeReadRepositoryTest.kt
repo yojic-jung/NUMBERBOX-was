@@ -69,7 +69,7 @@ class MathContentsLikeReadRepositoryTest(
     @Test
     fun `countBy - 미존재`() {
         // given
-        val notExistId = 3L
+        val notExistId = 0L
 
         // when
         val count = mathContentsLikeReadRepository.countBy(notExistId)

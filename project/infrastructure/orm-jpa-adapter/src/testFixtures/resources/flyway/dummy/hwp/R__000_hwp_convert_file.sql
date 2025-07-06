@@ -18,4 +18,7 @@ VALUES ('1', UNHEX('10ED5466CDA8EA4D9BC7037CB86FDB20'), '1', '15.[평가원] 202
 
 DELETE
 FROM `numberbox_tc`.`hwp_convert_file`;
-insert  into `numberbox_tc`.`hwp_convert_file` value (1, unhex('11EF86095BAA74F79600E73F9022DD9F'), 'jsonToHwp', '/test/test.json', null, '2025-06-11', null, null);
+insert  into `numberbox_tc`.`hwp_convert_file` value
+    (1, unhex('11EF86095BAA74F79600E73F9022DD9F'), 'jsonToHwp', '/test/test.json', null, '2025-06-11', null, null),
+    (2, unhex('11EF86095BAA74F79600E73F9022DD9F'), 'jsonToHwp', '/test/test.json', '/test/test.hwp', '2025-06-11', '2025-06-11', '2025-06-11')
+    ;

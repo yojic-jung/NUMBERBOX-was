@@ -61,9 +61,6 @@ dependencies {
         }
     }
 
-    testImplementation("it.ozimov:embedded-redis:0.7.2")
-    testFixturesImplementation("it.ozimov:embedded-redis:0.7.2")
-
     testImplementation(testFixtures(project(":project:app-service")))
     testFixturesImplementation(libs.bundles.orm.jpa.adapter.test)
     testFixturesImplementation(libs.bundles.orm.jpa.adapter.test.fixture)
