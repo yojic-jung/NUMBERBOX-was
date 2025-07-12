@@ -1,0 +1,74 @@
+version: "3"
+
+services:
+  redis1:
+    hostname: redis1
+    container_name: redis1
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis1.conf:/etc/redis.conf
+    ports:
+      - 7001:7001
+      - 17001:17001
+
+  redis2:
+    hostname: redis2
+    container_name: redis2
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis2.conf:/etc/redis.conf
+    ports:
+      - 7002:7002
+      - 17002:17002
+
+  redis3:
+    hostname: redis3
+    container_name: redis3
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis3.conf:/etc/redis.conf
+    ports:
+      - 7003:7003
+      - 17003:17003
+
+  redis4:
+    hostname: redis4
+    container_name: redis4
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis4.conf:/etc/redis.conf
+    ports:
+      - 7004:7004
+      - 17004:17004
+
+  redis5:
+    hostname: redis5
+    container_name: redis5
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis5.conf:/etc/redis.conf
+    ports:
+      - 7005:7005
+      - 17005:17005
+
+  redis6:
+    hostname: redis6
+    container_name: redis6
+    image: redis:latest
+    network_mode: "host"
+    command: redis-server /etc/redis.conf
+    volumes:
+      - ./redis6.conf:/etc/redis.conf
+    ports:
+      - 7006:7006
+      - 17006:17006

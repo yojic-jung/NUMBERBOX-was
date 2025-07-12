@@ -7,13 +7,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
+import io.lettuce.core.ReadFrom
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
+import org.springframework.data.redis.connection.RedisClusterConfiguration
 import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
@@ -35,9 +38,26 @@ class RedisConfig(
         const val REDIS_MEMBER_CACHE_MANAGER_BEAN = "redisMemberCacheManager"
     }
 
+    // redis 단일서버 구성
+//    @Bean
+//    fun redisConnectionFactory(): RedisConnectionFactory {
+//        return LettuceConnectionFactory(redisServerProperty.ip, redisServerProperty.port.toInt())
+//    }
+
+    // redis 클러스터 구성
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
-        return LettuceConnectionFactory(redisServerProperty.ip, redisServerProperty.port.toInt())
+        val nodes = redisServerProperty.nodes
+
+        val clusterConfig = RedisClusterConfiguration(nodes).apply {
+            maxRedirects = 3          // 선택
+        }
+
+        val lettuceClientConfig = LettuceClientConfiguration.builder()
+            .readFrom(ReadFrom.REPLICA_PREFERRED) // 읽기는 레플리카 우선
+            .build()
+
+        return LettuceConnectionFactory(clusterConfig, lettuceClientConfig)
     }
 
     @Bean

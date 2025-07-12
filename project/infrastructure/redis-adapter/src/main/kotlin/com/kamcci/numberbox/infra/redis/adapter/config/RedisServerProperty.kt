@@ -8,6 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
     ignoreInvalidFields = true
 )
 data class RedisServerProperty(
-    val ip: String,
-    val port: String,
+    val nodes: List<String>,
 )

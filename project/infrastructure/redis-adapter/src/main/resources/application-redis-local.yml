@@ -1,4 +1,4 @@
-redis:
-  server:
-    ip: ${local.redis.server.ip}
-    port: ${local.redis.server.port}
+local:
+  redis:
+    server:
+      nodes: ${local.redis.server.nodes}
