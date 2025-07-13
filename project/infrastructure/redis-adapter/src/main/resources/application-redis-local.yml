@@ -1,4 +1,3 @@
-local:
-  redis:
-    server:
-      nodes: ${local.redis.server.nodes}
+redis:
+  server:
+    nodes: ${local.redis.server.nodes}
