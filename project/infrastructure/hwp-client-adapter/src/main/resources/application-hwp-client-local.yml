@@ -10,8 +10,8 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: ${kafka.server.ip}
-          defaultBrokerPort: ${kafka.server.port}
+          brokers: 127.0.0.1
+          defaultBrokerPort: 9093
       bindings:
         jsonToHwpProduce-out-0: # 채널 이름 (함수이름-입력/출력-인덱스, 같은 함수로 여러 토픽 처리하고 싶은 경우 인덱스 구분)
           destination: jsonToHwp  # Topic 이름
