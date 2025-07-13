@@ -9,7 +9,7 @@ docker compose -f docker-compose-redis-cluster.yml up -d
 2. redis server 접속
 
 ```bash
-docker exec -it redis1 bash
+docker exec -it redis-master-1 bash
 ```
 
 3. redis-client를 통한 클러스터 구성
