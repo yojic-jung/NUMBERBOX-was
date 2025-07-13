@@ -1,62 +1,69 @@
-version: "3"
+version: '3'
 
 services:
-  redis1:
-    container_name: redis1
+  redis-master-1:
+    container_name: redis-master-1
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    restart: always
     volumes:
-      - ./redis1.conf:/etc/redis.conf
+      - ./redis-master-1.conf:/etc/redis-master-1.conf
+    command:
+      redis-server /etc/redis-master-1.conf
     ports:
-      - 7001:7001
-      - 17001:17001
+      - "7001:7001"
+      - "7002:7002"
+      - "7003:7003"
+      - "7004:7004"
+      - "7005:7005"
+      - "7006:7006"
 
-  redis2:
-    container_name: redis2
+  redis-master-2:
+    container_name: redis-master-2
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    network_mode: "service:redis-master-1"
+    restart: always
     volumes:
-      - ./redis2.conf:/etc/redis.conf
-    ports:
-      - 7002:7002
-      - 17002:17002
+      - ./redis-master-2.conf:/etc/redis-master-2.conf
+    command:
+      redis-server /etc/redis-master-2.conf
 
-  redis3:
-    container_name: redis3
+  redis-master-3:
+    container_name: redis-master-3
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    network_mode: "service:redis-master-1"
+    restart: always
     volumes:
-      - ./redis3.conf:/etc/redis.conf
-    ports:
-      - 7003:7003
-      - 17003:17003
+      - ./redis-master-3.conf:/etc/redis-master-3.conf
+    command:
+      redis-server /etc/redis-master-3.conf
 
-  redis4:
-    container_name: redis4
+  redis-replica-1:
+    container_name: redis-replica-1
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    network_mode: "service:redis-master-1"
+    restart: always
     volumes:
-      - ./redis4.conf:/etc/redis.conf
-    ports:
-      - 7004:7004
-      - 17004:17004
+      - ./redis-replica-1.conf:/etc/redis-replica-1.conf
+    command:
+      redis-server /etc/redis-replica-1.conf
 
-  redis5:
-    container_name: redis5
+  redis-replica-2:
+    container_name: redis-replica-2
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    network_mode: "service:redis-master-1"
+    restart: always
     volumes:
-      - ./redis5.conf:/etc/redis.conf
-    ports:
-      - 7005:7005
-      - 17005:17005
+      - ./redis-replica-2.conf:/etc/redis-replica-2.conf
+    command:
+      redis-server /etc/redis-replica-2.conf
 
-  redis6:
-    container_name: redis6
+  redis-replica-3:
+    container_name: redis-replica-3
     image: redis:latest
-    command: redis-server /etc/redis.conf
+    network_mode: "service:redis-master-1"
+    restart: always
     volumes:
-      - ./redis6.conf:/etc/redis.conf
-    ports:
-      - 7006:7006
-      - 17006:17006
+      - ./redis-replica-3.conf:/etc/redis-replica-3.conf
+    command:
+      redis-server /etc/redis-replica-3.conf
+

@@ -1,3 +1,9 @@
 redis:
   server:
-    nodes: ${local.redis.server.nodes}
+    nodes:
+      - ${local.redis.server.node1}
+      - ${local.redis.server.node2}
+      - ${local.redis.server.node3}
+      - ${local.redis.server.node4}
+      - ${local.redis.server.node5}
+      - ${local.redis.server.node6}

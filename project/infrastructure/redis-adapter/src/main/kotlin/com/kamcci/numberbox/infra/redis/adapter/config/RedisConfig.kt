@@ -7,7 +7,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
+import io.lettuce.core.ClientOptions
 import io.lettuce.core.ReadFrom
+import io.lettuce.core.SocketOptions
+import io.lettuce.core.cluster.ClusterClientOptions
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,6 +20,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisClusterConfiguration
 import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.connection.RedisNode
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
@@ -44,21 +49,65 @@ class RedisConfig(
 //        return LettuceConnectionFactory(redisServerProperty.ip, redisServerProperty.port.toInt())
 //    }
 
-    // redis 클러스터 구성
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
-        val nodes = redisServerProperty.nodes
+        val nodes: List<String> = redisServerProperty.nodes
+        val maxRedirects: Int = 3
+        val redisNodes = nodes.stream()
+            .map { node: String ->
+                RedisNode(node.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()[0],
+                    node.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1].toInt())
+            }
+            .toList()
 
-        val clusterConfig = RedisClusterConfiguration(nodes).apply {
-            maxRedirects = 3          // 선택
-        }
+        // (1) Redis Cluster 설정
+        val clusterConfiguration = RedisClusterConfiguration()
+        clusterConfiguration.setClusterNodes(redisNodes)
+        clusterConfiguration.setMaxRedirects(maxRedirects)
 
-        val lettuceClientConfig = LettuceClientConfiguration.builder()
-            .readFrom(ReadFrom.REPLICA_PREFERRED) // 읽기는 레플리카 우선
+        // (2) Socket 옵션
+        val socketOptions: SocketOptions = SocketOptions.builder()
+            .connectTimeout(Duration.ofMillis(100L))
+            .keepAlive(true)
             .build()
 
-        return LettuceConnectionFactory(clusterConfig, lettuceClientConfig)
+        // (3) Cluster topology refresh 옵션
+        val clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
+            .dynamicRefreshSources(true)
+            .enableAllAdaptiveRefreshTriggers()
+            .enablePeriodicRefresh(Duration.ofMinutes(30L))
+            .build()
+
+        // (4) Cluster Client 옵션
+        val clientOptions: ClientOptions = ClusterClientOptions.builder()
+            .topologyRefreshOptions(clusterTopologyRefreshOptions)
+            .socketOptions(socketOptions)
+            .build()
+
+        // (5) Lettuce Client 옵션
+        val clientConfiguration = LettuceClientConfiguration.builder()
+            .clientOptions(clientOptions)
+            .commandTimeout(Duration.ofMillis(3000L))
+            .build()
+        return LettuceConnectionFactory(clusterConfiguration, clientConfiguration)
     }
+
+    // redis 클러스터 구성
+//    @Bean
+//    fun redisConnectionFactory(): RedisConnectionFactory {
+//        val nodes = redisServerProperty.nodes
+//
+//        val clusterConfig = RedisClusterConfiguration(nodes).apply {
+//            maxRedirects = 3          // 선택
+//        }
+//
+//        val lettuceClientConfig = LettuceClientConfiguration.builder()
+//            .readFrom(ReadFrom.REPLICA_PREFERRED) // 읽기는 레플리카 우선
+//            .build()
+//
+//        return LettuceConnectionFactory(clusterConfig, lettuceClientConfig)
+//    }
 
     @Bean
     @Primary
