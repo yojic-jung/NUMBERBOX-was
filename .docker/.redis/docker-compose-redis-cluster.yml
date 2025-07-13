@@ -38,10 +38,8 @@ services:
       - 17003:17003
 
   redis4:
-    hostname: redis4
     container_name: redis4
     image: redis:latest
-    network_mode: "host"
     command: redis-server /etc/redis.conf
     volumes:
       - ./redis4.conf:/etc/redis.conf
@@ -50,10 +48,8 @@ services:
       - 17004:17004
 
   redis5:
-    hostname: redis5
     container_name: redis5
     image: redis:latest
-    network_mode: "host"
     command: redis-server /etc/redis.conf
     volumes:
       - ./redis5.conf:/etc/redis.conf
@@ -62,10 +58,8 @@ services:
       - 17005:17005
 
   redis6:
-    hostname: redis6
     container_name: redis6
     image: redis:latest
-    network_mode: "host"
     command: redis-server /etc/redis.conf
     volumes:
       - ./redis6.conf:/etc/redis.conf
