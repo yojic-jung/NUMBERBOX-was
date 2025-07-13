@@ -66,4 +66,3 @@ services:
       - ./redis-replica-3.conf:/etc/redis-replica-3.conf
     command:
       redis-server /etc/redis-replica-3.conf
-
