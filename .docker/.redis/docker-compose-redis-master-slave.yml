@@ -1,0 +1,61 @@
+services:
+  redis-master:
+    image: redis:7
+    container_name: redis-master
+    command: [ "redis-server", "/usr/local/etc/redis/redis-master.conf" ]
+    volumes:
+      - ./master/redis.conf:/usr/local/etc/redis/redis-master.conf
+    ports:
+      - "6379:6379"
+    restart: always
+
+  redis-slave-1:
+    image: redis:7
+    container_name: redis-slave-1
+    command: [ "redis-server", "/usr/local/etc/redis/redis-slave1.conf" ]
+    volumes:
+      - ./slave/redis-slave1.conf:/usr/local/etc/redis/redis-slave1.conf
+    depends_on: [ redis-master ]
+    restart: always
+
+  redis-slave-2:
+    image: redis:7
+    container_name: redis-slave-2
+    command: [ "redis-server", "/usr/local/etc/redis/redis-slave2.conf" ]
+    volumes:
+      - ./slave/redis-slave2.conf:/usr/local/etc/redis/redis-slave2.conf
+    depends_on: [ redis-master ]
+    restart: always
+
+  sentinel-1:
+    image: redis:7
+    container_name: sentinel-1
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel/sentinel1.conf:/etc/sentinel/sentinel.conf
+    ports:
+      - "26379:26379"
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always
+
+  sentinel-2:
+    image: redis:7
+    container_name: sentinel-2
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel/sentinel2.conf:/etc/sentinel/sentinel.conf
+    ports:
+      - "26380:26379"
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always
+
+  sentinel-3:
+    image: redis:7
+    container_name: sentinel-3
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel/sentinel3.conf:/etc/sentinel/sentinel.conf
+    ports:
+      - "26381:26379"
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always
