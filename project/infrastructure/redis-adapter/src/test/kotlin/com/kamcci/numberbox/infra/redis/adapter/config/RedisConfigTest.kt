@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 
 
 class RedisConfigTest {
-    private val redisConfig = RedisConfig(RedisServerProperty("localhost", "6379"))
+    private val redisConfig = RedisConfig(RedisServerProperty(listOf()))
 
     @Test
     fun `빈 초기화`() {
