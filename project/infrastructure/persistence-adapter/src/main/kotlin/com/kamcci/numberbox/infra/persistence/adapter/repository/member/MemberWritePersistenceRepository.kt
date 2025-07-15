@@ -4,6 +4,7 @@ import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberWriteRepository
 import com.kamcci.numberbox.infra.redis.adapter.repository.member.MemberRedisRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -12,7 +13,8 @@ import java.util.*
 @Primary
 @Repository
 class MemberWritePersistenceRepository(
-    private val memberWritePersistenceRepository: MemberWriteRepository,
+    @Qualifier("jpaAdapter")
+    private val memberWritePersistenceRepository: MemberWriteOrmPort,
     private val memberRedisRepository: MemberRedisRepository
 ) : MemberWriteOrmPort, BaseRepository() {
     override fun save(email: String, password: String): UUID {
@@ -31,7 +33,7 @@ class MemberWritePersistenceRepository(
         // redis 캐싱 삭제
         memberRedisRepository.deleteById(memberId)
 
-        // rdb 즉시 삭제
+        // rdb 즉시 수정
         return memberWritePersistenceRepository.updatePassword(memberId, password)
     }
 
@@ -39,7 +41,7 @@ class MemberWritePersistenceRepository(
         // redis 캐싱 삭제
         memberRedisRepository.deleteAllById(memberId)
 
-        // rdb 즉시 삭제
+        // rdb 즉시 수정
         return memberWritePersistenceRepository.updatePassword(memberId, password)
     }
 

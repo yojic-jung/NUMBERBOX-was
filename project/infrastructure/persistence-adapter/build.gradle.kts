@@ -41,6 +41,8 @@ dependencies {
 
     implementation(libs.bundles.persistence.adapter)
     testImplementation(libs.bundles.persistence.adapter.test)
+    testImplementation(testFixtures(project(":project:infrastructure:orm-jpa-adapter")))
+    testImplementation(testFixtures(project(":project:infrastructure:redis-adapter")))
 }
 
 tasks.withType<KotlinCompile> {
