@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository() {
+class MathContentsLikeReadRepository : BaseRepository() {
     fun readMemberIdListById(contentsId: Long): List<UUID> {
         return queryFactory
             .select(mathContentsLikeEntity.id.memberId)
@@ -18,7 +18,7 @@ class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository(
             .fetch()
     }
 
-    override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
+    fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
         return queryFactory
             .selectOne()
             .from(mathContentsLikeEntity)
@@ -29,7 +29,7 @@ class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository(
             .fetchOne() != null
     }
 
-    override fun countBy(contentsId: Long): Long {
+    fun countBy(contentsId: Long): Long {
         return queryFactory
             .select(mathContentsLikeEntity.id.count())
             .from(mathContentsLikeEntity)

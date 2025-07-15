@@ -2,6 +2,7 @@ package com.kamcci.numberbox.infra.redis.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.infra.redis.adapter.common.RedisKeyGenerator
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit
 @Repository
 class MathContentsLikeRedisRepository(
     private val stringRedisTemplate: StringRedisTemplate,
-) {
+): MathContentsLikeReadCase {
     companion object {
         // 예외 메시지
         const val LIKE_SAVE_FAIL = "좋아요 정보 저장되지 않음"
@@ -60,12 +61,12 @@ class MathContentsLikeRedisRepository(
             ?: throw BusinessSeverException(LIKE_DELETE_FAIL)
     }
 
-    fun existBy(contentsId: Long, memberId: UUID): Boolean {
+    override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
         val key = RedisKeyGenerator.getMathLikeKey(contentsId)
         return stringRedisTemplate.opsForSet().isMember(key, memberId.toString()) ?: false
     }
 
-    fun countBy(contentsId: Long): Long {
+    override fun countBy(contentsId: Long): Long {
         val key = RedisKeyGenerator.getMathLikeKey(contentsId)
         return stringRedisTemplate.opsForSet().size(key) ?: 0L
     }
