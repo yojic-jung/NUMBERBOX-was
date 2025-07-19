@@ -8,7 +8,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
 import io.lettuce.core.ClientOptions
-import io.lettuce.core.ReadFrom
 import io.lettuce.core.SocketOptions
 import io.lettuce.core.cluster.ClusterClientOptions
 import io.lettuce.core.cluster.ClusterTopologyRefreshOptions
@@ -43,12 +42,6 @@ class RedisConfig(
         const val REDIS_MEMBER_CACHE_MANAGER_BEAN = "redisMemberCacheManager"
     }
 
-    // redis 단일서버 구성
-//    @Bean
-//    fun redisConnectionFactory(): RedisConnectionFactory {
-//        return LettuceConnectionFactory(redisServerProperty.ip, redisServerProperty.port.toInt())
-//    }
-
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
         val nodes: List<String> = redisServerProperty.nodes
@@ -64,7 +57,7 @@ class RedisConfig(
         // (1) Redis Cluster 설정
         val clusterConfiguration = RedisClusterConfiguration()
         clusterConfiguration.setClusterNodes(redisNodes)
-        clusterConfiguration.setMaxRedirects(maxRedirects)
+        clusterConfiguration.maxRedirects = maxRedirects
 
         // (2) Socket 옵션
         val socketOptions: SocketOptions = SocketOptions.builder()
@@ -92,22 +85,6 @@ class RedisConfig(
             .build()
         return LettuceConnectionFactory(clusterConfiguration, clientConfiguration)
     }
-
-    // redis 클러스터 구성
-//    @Bean
-//    fun redisConnectionFactory(): RedisConnectionFactory {
-//        val nodes = redisServerProperty.nodes
-//
-//        val clusterConfig = RedisClusterConfiguration(nodes).apply {
-//            maxRedirects = 3          // 선택
-//        }
-//
-//        val lettuceClientConfig = LettuceClientConfiguration.builder()
-//            .readFrom(ReadFrom.REPLICA_PREFERRED) // 읽기는 레플리카 우선
-//            .build()
-//
-//        return LettuceConnectionFactory(clusterConfig, lettuceClientConfig)
-//    }
 
     @Bean
     @Primary
