@@ -2,7 +2,6 @@ package com.kamcci.numberbox.app.service.mock.port.orm.member
 
 import com.kamcci.numberbox.app.domain.vo.member.MemberVerifyCodeVo
 import com.kamcci.numberbox.app.port.orm.member.MemberVerifyCodeReadOrmPort
-import java.time.LocalDateTime
 
 class MockMemberVerifyCodeReadOrmPort : MemberVerifyCodeReadOrmPort {
     companion object {
@@ -25,8 +24,8 @@ class MockMemberVerifyCodeReadOrmPort : MemberVerifyCodeReadOrmPort {
     override fun readByEmail(email: String): MemberVerifyCodeVo? {
         return when (email) {
             CODE_NOT_EXIST_EMAIL -> null
-            EXPIRE_CODE_EMAIL -> MemberVerifyCodeVo(EXPIRE_VALID_CODE, LocalDateTime.now().minusMinutes(20))
-            else -> MemberVerifyCodeVo(VALID_RETURN_CODE, LocalDateTime.now())
+            EXPIRE_CODE_EMAIL -> MemberVerifyCodeVo(EXPIRE_VALID_CODE)
+            else -> MemberVerifyCodeVo(VALID_RETURN_CODE)
         }
     }
 }

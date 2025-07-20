@@ -2,7 +2,6 @@ package com.kamcci.numberbox.restapi.controller.members
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.usecase.member.MemberFollowReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberFollowWriteCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
 import com.kamcci.numberbox.restapi.util.response.ResponseData
@@ -20,7 +19,6 @@ import java.util.*
 @RequestMapping("/member/following")
 class MembersFollowWriteController(
     private val memberFollowWriteCase: MemberFollowWriteCase,
-    private val memberFollowReadCase: MemberFollowReadCase,
     private val memberProfileReadCase: MemberProfileReadCase
 ) {
     companion object {
@@ -34,15 +32,12 @@ class MembersFollowWriteController(
     fun following(
         @PathVariable profileId: Long,
         @UserId memberId: UUID
-    ): ResponseEntity<ResponseData<Map<String, Any>>> {
+    ): ResponseEntity<ResponseData<String>> {
         // 팔로잉 하기
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessInValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.following(profileId, myProfileId)
-
-        // 해당 사용자의 팔로워 수
-        val followerCnt = memberFollowReadCase.countFollower(profileId)
-        return ResponseUtil.ok(mapOf("followerCnt" to followerCnt))
+        return ResponseUtil.ok("")
     }
 
     /**
@@ -52,14 +47,11 @@ class MembersFollowWriteController(
     fun cancel(
         @PathVariable profileId: Long,
         @UserId memberId: UUID
-    ): ResponseEntity<ResponseData<Map<String, Any>>> {
+    ): ResponseEntity<ResponseData<String>> {
         // 팔로잉 취소
         val myProfileId = memberProfileReadCase.readProfileIdByMemberId(memberId)
             ?: throw BusinessInValidException(PROFILE_NOT_EXIST)
         memberFollowWriteCase.cancel(profileId, myProfileId)
-
-        // 해당 사용자의 팔로워 수
-        val followerCnt = memberFollowReadCase.countFollower(profileId)
-        return ResponseUtil.ok(mapOf("isSuccess" to followerCnt))
+        return ResponseUtil.ok()
     }
 }

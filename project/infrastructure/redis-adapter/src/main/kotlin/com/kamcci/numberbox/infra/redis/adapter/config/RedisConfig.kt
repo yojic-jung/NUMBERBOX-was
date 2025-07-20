@@ -138,14 +138,14 @@ class RedisConfig(
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
-        val serializer = Jackson2JsonRedisSerializer(objectMapper, MemberRedisHash::class.java)
+        val valueSerializer = Jackson2JsonRedisSerializer(objectMapper, MemberRedisHash::class.java)
 
         return RedisCacheConfiguration
             .defaultCacheConfig()
             .entryTtl(Duration.ofHours(3L))
             .disableCachingNullValues()
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(StringRedisSerializer()))
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer))
     }
 
     @Bean

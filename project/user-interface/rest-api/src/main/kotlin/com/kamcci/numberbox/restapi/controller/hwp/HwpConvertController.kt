@@ -93,15 +93,9 @@ class HwpConvertController(
             contents = htmlString,
             imgPath = imgFilePath,
         )
-        hwpConvertContentsWriteCase.create(createDto)
 
-        // 4. 변환 컨텐츠 조회
-        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
         return ResponseUtil.ok(
-            mapOf(
-                "contentsList" to contentsList,
-                "s3FileUrl" to contentsList[0].imgPath
-            )
+            mapOf("hwpConvertId" to hwpConvertContentsWriteCase.create(createDto))
         )
     }
 
@@ -111,7 +105,7 @@ class HwpConvertController(
         @UserId memberId: UUID,
         @RequestBody
         request: HwpToHtmlUpdateRequest
-    ): ResponseEntity<ResponseData<Any>> {
+    ): ResponseEntity<ResponseData<String>> {
         // 변환 컨텐츠 수정
         hwpConvertContentsWriteCase.update(
             HwpConvertContentsUpdateDto(
@@ -121,10 +115,7 @@ class HwpConvertController(
                 isGrammarConverted = true
             )
         ).let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
-
-        // 변환 컨텐츠 조회
-        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
-        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
+        return ResponseUtil.ok()
     }
 
     // 변환 컨텐츠 수정사항 저장
@@ -132,13 +123,10 @@ class HwpConvertController(
     fun delete(
         @UserId memberId: UUID,
         @PathVariable contentsId: Long
-    ): ResponseEntity<ResponseData<Any>> {
+    ): ResponseEntity<ResponseData<String>> {
         // 변환 컨텐츠 수정
         hwpConvertContentsWriteCase.delete(contentsId, memberId)
             .let { if (it != 1L) throw BusinessInValidException(NOT_MODIFIED) }
-
-        // 변환 컨텐츠 조회
-        val contentsList = hwpConvertContentsReadCase.readAllByMemberId(memberId)
-        return ResponseUtil.ok(mapOf("contentsList" to contentsList))
+        return ResponseUtil.ok()
     }
 }

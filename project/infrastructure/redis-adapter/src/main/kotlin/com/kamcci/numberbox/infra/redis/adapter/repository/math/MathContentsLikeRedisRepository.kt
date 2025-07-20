@@ -18,7 +18,7 @@ class MathContentsLikeRedisRepository(
         const val LIKE_DELETE_FAIL = "좋아요 취소되지 않음"
 
         // 캐싱 시간
-        const val LIKE_TTL = 12L
+        const val LIKE_TTL = 3L
     }
 
     fun hasLikeKey(contentsId: Long): Boolean {

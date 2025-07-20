@@ -12,7 +12,7 @@ class MemberVerifyCodeRedisReadRepository(
     override fun readByEmail(email: String): MemberVerifyCodeVo? {
         val redisHash = memberVerifyCodeRedisRepository.findById(email)
         return redisHash.getOrNull()?.let {
-            MemberVerifyCodeVo(it.verifyCode, it.sysCreateTime)
+            MemberVerifyCodeVo(it.verifyCode)
         }
     }
 }
