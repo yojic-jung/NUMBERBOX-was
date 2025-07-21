@@ -5,7 +5,6 @@ import com.kamcci.numberbox.app.service.member.MemberVerifyCodeReadService.Compa
 import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
-import java.time.LocalDateTime
 
 @RedisHash(CacheNames.MEMBER_EMAIL_VERIFY_CODE, timeToLive = EMAIL_CODE_EXPIRE_TIME)
 data class MemberVerifyCodeRedisHash(
@@ -14,5 +13,4 @@ data class MemberVerifyCodeRedisHash(
     val codeType: VerifyCodeType,
     val verifyCode: String,
     val tryCnt: Int,
-    val sysCreateTime: LocalDateTime = LocalDateTime.now()
 )

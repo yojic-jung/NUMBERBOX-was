@@ -7,7 +7,6 @@ import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDateTime
 import kotlin.jvm.optionals.getOrNull
 
 @TCRedisTest
@@ -19,9 +18,7 @@ class MemberVerifyCodeRedisRepositoryTest @Autowired constructor(
     private val codeType = VerifyCodeType.SignUp
     private val verifyCode = "any"
     private val tryCnt = 0
-    private val sysCreateTime: LocalDateTime = LocalDateTime.now()
-    private val redisHash = MemberVerifyCodeRedisHash(email, codeType, verifyCode, tryCnt, sysCreateTime)
-    private val notExistRedisHash = MemberVerifyCodeRedisHash(notExistEmail, codeType, verifyCode, tryCnt)
+    private val redisHash = MemberVerifyCodeRedisHash(email, codeType, verifyCode, tryCnt)
 
     @BeforeEach
     fun init() {
@@ -38,7 +35,6 @@ class MemberVerifyCodeRedisRepositoryTest @Autowired constructor(
         AssertionsForClassTypes.assertThat(redisHash.codeType).isEqualTo(resultRedisHash.codeType)
         AssertionsForClassTypes.assertThat(redisHash.verifyCode).isEqualTo(resultRedisHash.verifyCode)
         AssertionsForClassTypes.assertThat(redisHash.tryCnt).isEqualTo(resultRedisHash.tryCnt)
-        AssertionsForClassTypes.assertThat(redisHash.sysCreateTime).isEqualTo(resultRedisHash.sysCreateTime)
     }
 
     @Test
