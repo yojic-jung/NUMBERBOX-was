@@ -1,4 +1,4 @@
-package com.kamcci.numberbox.infra.redis.adapter.common
+package com.kamcci.numberbox.infra.persistence.adapter.core.constant
 
 /**
  * 캐시DB 키 네임

@@ -74,7 +74,7 @@ class MathContentsLikeRedisRepositoryTest @Autowired constructor(
     @Test
     fun `좋아요 키,값 존재여부 - 성공`() {
         // when
-        val isExist = mathContentsLikeRedisRepository.existBy(noneExistContentsId, UUID.randomUUID())
+        val isExist = mathContentsLikeRedisRepository.existByContentsIdAndMemberId(noneExistContentsId, UUID.randomUUID())
 
         // then
         assertThat(isExist).isFalse()

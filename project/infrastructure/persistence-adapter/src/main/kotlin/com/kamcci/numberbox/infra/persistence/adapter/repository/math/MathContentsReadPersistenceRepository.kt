@@ -6,7 +6,7 @@ import com.kamcci.numberbox.app.domain.vo.math.*
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math.MathContentsLikeReadRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math.MathContentsReadRepository
-import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames.EXIST_MATH_CONTENTS
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheNames.EXIST_MATH_CONTENTS
 import com.kamcci.numberbox.infra.redis.adapter.repository.math.MathContentsLikeRedisRepository
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Primary

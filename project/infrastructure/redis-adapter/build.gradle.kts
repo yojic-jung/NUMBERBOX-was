@@ -33,9 +33,11 @@ configurations {
 dependencies {
     implementation(project(":project:app-domain"))
     implementation(project(":project:app-service"))
+    implementation(project(":project:infrastructure:persistence-adapter-core"))
 
     implementation(libs.bundles.redis.adapter)
     testImplementation(testFixtures(project(":project:app-service")))
+    testFixturesImplementation(testFixtures(project(":project:app-service")))
     testImplementation(libs.bundles.redis.adapter.test)
     testFixturesImplementation(libs.bundles.redis.adapter.test)
 }

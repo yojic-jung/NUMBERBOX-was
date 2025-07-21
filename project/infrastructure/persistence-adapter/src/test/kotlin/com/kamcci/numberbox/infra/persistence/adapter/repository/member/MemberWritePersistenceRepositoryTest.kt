@@ -23,7 +23,7 @@ class MemberWritePersistenceRepositoryTest {
     }
 
     @Test
-    fun `(무의미) 회원등록 - 성공`() {
+    fun `(단순호출) 회원등록 - 성공`() {
         // given
         val anyEmail = "email"
         val anyPassword = "password"

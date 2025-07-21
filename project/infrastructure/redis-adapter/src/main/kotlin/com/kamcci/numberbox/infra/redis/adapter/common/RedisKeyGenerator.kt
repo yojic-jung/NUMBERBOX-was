@@ -1,8 +1,9 @@
 package com.kamcci.numberbox.infra.redis.adapter.common
 
-import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames.MATH_CONTENTS_LIKE
-import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames.MATH_CONTENTS_REPO
-import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames.SEPARATOR
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheNames.MATH_CONTENTS_LIKE
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheNames.MATH_CONTENTS_REPO
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheNames.SEPARATOR
+
 
 object RedisKeyGenerator {
     fun getMathLikeKey(mathContentsId: Long) = MATH_CONTENTS_LIKE + SEPARATOR + mathContentsId

@@ -35,12 +35,14 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":project:infrastructure:orm-jpa-adapter"))
     implementation(project(":project:infrastructure:redis-adapter"))
+    implementation(project(":project:infrastructure:persistence-adapter-core"))
 
     implementation(project(":modules:auth-control"))
     implementation(project(":modules:logging-control"))
 
     implementation(libs.bundles.persistence.adapter)
     testImplementation(libs.bundles.persistence.adapter.test)
+    testImplementation(testFixtures(project(":project:app-service")))
     testImplementation(testFixtures(project(":project:infrastructure:orm-jpa-adapter")))
     testImplementation(testFixtures(project(":project:infrastructure:redis-adapter")))
 }

@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.mock
 
 import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
-import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberWriteRepository
 import java.time.LocalDateTime
 import java.util.UUID
 

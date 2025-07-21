@@ -5,12 +5,9 @@ import com.kamcci.modules.auth.control.dto.AuthUserRole
 import com.kamcci.modules.auth.control.service.JwtRequestUserDetailService
 import com.kamcci.modules.auth.control.service.LoginRequestUserDetailService
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.auth.AuthUserInfoRepository
-import com.kamcci.numberbox.infra.redis.adapter.common.CacheNames.REFRESH_TOKEN
-import com.kamcci.numberbox.infra.redis.adapter.config.RedisConfig.Companion.REDIS_2WEEK_CACHE_MANAGER_BEAN
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRoleRedis
 import com.kamcci.numberbox.infra.redis.adapter.repository.member.MemberRedisRepository
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -47,12 +44,7 @@ class AuthUserInfoPersitenceRepository(
         return null
     }
 
-    @Cacheable(
-        cacheManager = REDIS_2WEEK_CACHE_MANAGER_BEAN,
-        cacheNames = [REFRESH_TOKEN],
-        key = "#token",
-        unless = "#result == null"
-    )
+
     override fun loadUserIdByRefreshToken(token: String): UUID? {
         return authUserInfoRepository.loadUserIdByRefreshToken(token)
     }

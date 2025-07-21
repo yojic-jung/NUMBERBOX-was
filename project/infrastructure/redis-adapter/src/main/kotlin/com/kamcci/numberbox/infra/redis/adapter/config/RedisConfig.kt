@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheManagerNames.REDIS_2WEEK_CACHE_MANAGER_BEAN
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheManagerNames.REDIS_MEMBER_CACHE_MANAGER_BEAN
 import com.kamcci.numberbox.infra.redis.adapter.hash.member.MemberRedisHash
 import io.lettuce.core.ClientOptions
 import io.lettuce.core.SocketOptions
@@ -37,10 +39,6 @@ import java.time.Duration
 class RedisConfig(
     private val redisServerProperty: RedisServerProperty
 ) {
-    companion object {
-        const val REDIS_2WEEK_CACHE_MANAGER_BEAN = "redis2WeekCacheManager"
-        const val REDIS_MEMBER_CACHE_MANAGER_BEAN = "redisMemberCacheManager"
-    }
 
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {

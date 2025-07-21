@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":project:app-service"))
     implementation(project(":modules:auth-control"))
     implementation(project(":modules:logging-control"))
+    implementation(project(":project:infrastructure:persistence-adapter-core"))
 
     implementation(libs.bundles.orm.jpa.adapter)
     implementation(libs.querydsl.jpa) {

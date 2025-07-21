@@ -4,7 +4,6 @@ import com.kamcci.modules.auth.control.dto.LoginSuccessEvent
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberRefreshTokenEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRefreshTokenRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member.MemberRepositorySupport
-import com.kamcci.numberbox.infra.redis.adapter.repository.token.RefreshTokenRedisCacheRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
@@ -20,7 +19,6 @@ import java.util.*
 class LoginSuccessEventListener(
     private val memberRepository: MemberRepositorySupport,
     private val memberRefreshTokenRepo: MemberRefreshTokenRepository,
-    private val refreshTokenRedisCacheRepository: RefreshTokenRedisCacheRepository,
 ) {
 
     companion object {
@@ -43,10 +41,6 @@ class LoginSuccessEventListener(
         remainedRefreshToken
             .takeIf { !it.isNullOrEmpty() }
             ?.let {
-                // redis 캐싱 삭제
-                refreshTokenRedisCacheRepository.evictCache(it)
-
-                // rdb 삭제
                 memberRefreshTokenRepo.deleteByToken(it)
             }
 

@@ -28,6 +28,7 @@ include(":project:infrastructure:email-adapter")
 include(":project:infrastructure:hwp-client-adapter")
 include(":project:infrastructure:redis-adapter")
 include(":project:infrastructure:persistence-adapter")
+include(":project:infrastructure:persistence-adapter-core")
 
 // project-ui
 include(":project:user-interface")
