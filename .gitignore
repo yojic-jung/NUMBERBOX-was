@@ -42,3 +42,7 @@ out/
 
 # 모든 -env.yml 파일 무시
 *-env.yml
+# 그라파나 설정 무시
+my.cnf
+**/grafana-data/
+**/prometheus-data/

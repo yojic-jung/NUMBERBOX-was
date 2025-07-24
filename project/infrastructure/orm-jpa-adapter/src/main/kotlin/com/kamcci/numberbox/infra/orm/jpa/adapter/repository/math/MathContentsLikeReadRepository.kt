@@ -1,6 +1,5 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
-import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsLikeEntity.mathContentsLikeEntity
 import org.springframework.stereotype.Repository

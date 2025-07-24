@@ -3,7 +3,7 @@ redis-cluster 구성방법
 1. redis docker-compose 실행
 
 ```bash
-docker compose -f docker-compose-redis-cluster.yml up -d  
+docker compose -f docker-compose-redis-cluster.yml -p redis_cluster up -d  
 ```
 
 2. redis server 접속

@@ -33,6 +33,7 @@ include(":project:infrastructure:persistence-adapter-core")
 // project-ui
 include(":project:user-interface")
 include(":project:user-interface:rest-api")
+include(":project:user-interface:consumer")
 
 // modules
 include(":modules")
