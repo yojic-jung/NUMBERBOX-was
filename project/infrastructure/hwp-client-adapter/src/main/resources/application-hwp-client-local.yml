@@ -6,7 +6,7 @@ hwp:
 spring:
   cloud:
     function:
-      definition: jsonToHwpProduce; jsonToHwpConsume; hwpToHtmlProduce; hwpToHtmlConsume; # Producer, Consumer 함수 이름
+      definition: jsonToHwpProduce; hwpToHtmlProduce; # Producer 함수 이름
     stream:
       kafka:
         binder:
@@ -16,18 +16,6 @@ spring:
         jsonToHwpProduce-out-0: # 채널 이름 (함수이름-입력/출력-인덱스, 같은 함수로 여러 토픽 처리하고 싶은 경우 인덱스 구분)
           destination: jsonToHwp  # Topic 이름
           content-type: application/json
-        jsonToHwpConsume-in-0:
-          destination: jsonToHwpComplete
-          content-type: application/json
-          group: hwpConvert-consumer
-          consumer:
-            max-attempts: 2
         hwpToHtmlProduce-out-0:
           destination: hwpToHtml
           content-type: application/json
-        hwpToHtmlConsume-in-0:
-          destination: hwpToHtmlComplete
-          content-type: application/json
-          group: hwpConvert-consumer
-          consumer:
-            max-attempts: 2

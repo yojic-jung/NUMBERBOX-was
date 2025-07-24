@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    function:
+      definition: jsonToHwpConsume; hwpToHtmlConsume; # Consumer 함수 이름
+    stream:
+      kafka:
+        binder:
+          brokers: 127.0.0.1
+          defaultBrokerPort: 9093
+      bindings:
+        jsonToHwpConsume-in-0:
+          destination: jsonToHwpComplete
+          content-type: application/json
+          group: hwpConvert-consumer
+          consumer:
+            max-attempts: 2
+        hwpToHtmlConsume-in-0:
+          destination: hwpToHtmlComplete
+          content-type: application/json
+          group: hwpConvert-consumer
+          consumer:
+            max-attempts: 2

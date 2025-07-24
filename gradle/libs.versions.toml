@@ -115,6 +115,9 @@ ui-rest-api = ["spring-boot-starter", "spring-boot-starter-web", "spring-boot-st
 ui-rest-api-test = ["spring-boot-starter-test", "mockito-kotlin", "io-mockk"]
 ui-rest-api-test-fixture = ["spring-boot-starter-test"]
 
+ui-consumer = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-stream", ]
+ui-consumer-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
+
 app-service-test = ["junit-jupiter", "assertj-core", "mockito-kotlin", "mockito-core"]
 
 modules-auth-engine = ["kotlin-stdlib", "spring-boot-starter-web", "spring-boot-starter-security", "jsonwebtoken",

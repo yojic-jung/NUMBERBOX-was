@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":project:infrastructure:storage-adapter"))
     implementation(project(":project:infrastructure:hwp-client-adapter"))
     implementation(project(":project:user-interface:rest-api"))
+    implementation(project(":project:user-interface:consumer"))
 
     implementation(libs.bundles.boot.strap)
     testImplementation(libs.bundles.boot.strap.test)
