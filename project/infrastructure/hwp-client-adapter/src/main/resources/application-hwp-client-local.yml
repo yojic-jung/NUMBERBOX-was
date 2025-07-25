@@ -10,12 +10,17 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: 127.0.0.1
-          defaultBrokerPort: 9093
+          brokers: 127.0.0.1:19092,127.0.0.1:19093,127.0.0.1:19094
       bindings:
         jsonToHwpProduce-out-0: # 채널 이름 (함수이름-입력/출력-인덱스, 같은 함수로 여러 토픽 처리하고 싶은 경우 인덱스 구분)
           destination: jsonToHwp  # Topic 이름
           content-type: application/json
+          producer:
+            partition-key-expression: payload.id # partition key 설정, 이 key 값에 대한 해시값으로 partition 나누어 저장됨
+            partition-count: 3
         hwpToHtmlProduce-out-0:
           destination: hwpToHtml
           content-type: application/json
+          producer:
+            partition-key-expression: payload.id # partition key 설정, 이 key 값에 대한 해시값으로 partition 나누어 저장됨
+            partition-count: 3

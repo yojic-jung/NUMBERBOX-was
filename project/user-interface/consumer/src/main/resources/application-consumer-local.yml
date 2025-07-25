@@ -5,18 +5,25 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: 127.0.0.1
-          defaultBrokerPort: 9093
+          brokers: 127.0.0.1:19092,127.0.0.1:19093,127.0.0.1:19094
       bindings:
         jsonToHwpConsume-in-0:
           destination: jsonToHwpComplete
           content-type: application/json
           group: hwpConvert-consumer
           consumer:
-            max-attempts: 2
+            max-attempts: 3
+            back-off-initial-interval: 2000  # 최초 재요청 대기시간 2초
+            back-off-multiplier: 2.0         # 재요청 할 때마다, back-off-initial-interval에 이 값을 곱해서 요청
+            back-off-max-interval: 10000     # multiplier를 곱한 값이 max-interval을 넘어가면, max-interval 에서 재요청
+            concurrency: 3
         hwpToHtmlConsume-in-0:
           destination: hwpToHtmlComplete
           content-type: application/json
           group: hwpConvert-consumer
           consumer:
-            max-attempts: 2
+            max-attempts: 3
+            back-off-initial-interval: 2000  # 최초 재요청 대기시간 2초
+            back-off-multiplier: 2.0         # 재요청 할 때마다, back-off-initial-interval에 이 값을 곱해서 요청
+            back-off-max-interval: 10000     # multiplier를 곱한 값이 max-interval을 넘어가면, max-interval 에서 재요청
+            concurrency: 3
