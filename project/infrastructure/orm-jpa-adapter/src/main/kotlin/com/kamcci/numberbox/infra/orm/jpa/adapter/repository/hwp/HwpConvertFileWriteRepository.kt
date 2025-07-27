@@ -23,6 +23,14 @@ class HwpConvertFileWriteRepository : HwpConvertFileWriteCase, BaseRepository() 
         return saveEntity.id
     }
 
+    override fun updateIsRequestSuccess(id: Long, isSuccess: Boolean): Long {
+        return queryFactory
+            .update(hwpConvertFileEntity)
+            .set(hwpConvertFileEntity.isRequestSuccess, isSuccess)
+            .where(hwpConvertFileEntity.id.eq(id))
+            .execute()
+    }
+
     fun update(id: Long, convertFileName: String): Long {
         return queryFactory
             .update(hwpConvertFileEntity)

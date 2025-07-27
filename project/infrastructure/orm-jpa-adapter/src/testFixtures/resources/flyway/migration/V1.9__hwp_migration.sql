@@ -19,6 +19,7 @@ CREATE TABLE `hwp_convert_file` (
     `origin_file_name` varchar(100) NOT NULL comment '원본 파일명',
     `convert_file_name` varchar(100) COMMENT '변환 파일명',
     `request_at` datetime NOT NULL COMMENT '요청 시간',
+    `is_request_success` tinyint(1) NOT NULL DEFAULT 0 COMMENT '요청 성공 여부 (0=실패, 1=성공)',
     `convert_at` datetime COMMENT '변환 시간',
     `deleted_at` datetime COMMENT '삭제 시간',
     PRIMARY KEY (`id`)

@@ -55,7 +55,13 @@ class HwpConvertEventController(
 
         // 변환 요청 이벤트 전송
         val event = JsonToHwpRequestEvent(id, fileNameVo.getFileFullName())
-        hwpEventPort.requestHwp(event)
+        try {
+            hwpEventPort.requestHwp(event)
+        } catch (e: Exception) {
+            throw e
+        }
+        // 변환 요청 이벤트 전달 성공 상태 변경
+        hwpConvertFileWriteCase.updateIsRequestSuccess(id, true)
 
         return ResponseUtil.ok()
     }
@@ -89,7 +95,14 @@ class HwpConvertEventController(
 
         // 변환 요청 이벤트 전달
         val event = HwpToHtmlRequestEvent(id, fileNameVo.getFileFullName())
-        hwpEventPort.requestHtml(event)
+        try {
+            hwpEventPort.requestHtml(event)
+        } catch (e: Exception) {
+            throw e
+        }
+
+        // 변환 요청 이벤트 전달 성공 상태 변경
+        hwpConvertFileWriteCase.updateIsRequestSuccess(id, true)
 
         return ResponseUtil.ok()
     }

@@ -40,6 +40,10 @@ class HwpConvertFileEntity {
     @Column(name = "request_at", nullable = false)
     var requestAt: LocalDateTime = LocalDateTime.now()
 
+    @NotNull
+    @Column(name = "is_request_success", nullable = false)
+    var isRequestSuccess: Boolean = false
+
     // 변환 완료 시간
     @Column(name = "convert_at")
     var convertAt: LocalDateTime? = null
