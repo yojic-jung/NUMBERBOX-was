@@ -10,4 +10,7 @@ interface HwpConvertFileWriteCase {
     // 변환 요청 정보 저장
     @TXExecute
     fun create(createDto: HwpConvertFileCreateDto): Long
+
+    @TXExecute
+    fun updateIsRequestSuccess(id: Long, isSuccess: Boolean): Long
 }
