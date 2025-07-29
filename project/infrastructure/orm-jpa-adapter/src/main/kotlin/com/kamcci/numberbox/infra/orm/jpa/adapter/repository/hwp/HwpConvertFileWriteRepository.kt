@@ -36,7 +36,8 @@ class HwpConvertFileWriteRepository : HwpConvertFileWriteCase, BaseRepository() 
             .update(hwpConvertFileEntity)
             .set(hwpConvertFileEntity.convertFileName, convertFileName)
             .set(hwpConvertFileEntity.convertAt, LocalDateTime.now())
-            .where(hwpConvertFileEntity.id.eq(id))
+            .where(hwpConvertFileEntity.id.eq(id),
+                    hwpConvertFileEntity.convertFileName.isNull)
             .execute()
     }
 }

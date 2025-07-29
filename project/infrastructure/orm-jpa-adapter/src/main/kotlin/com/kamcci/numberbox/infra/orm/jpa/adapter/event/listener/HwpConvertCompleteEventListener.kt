@@ -12,14 +12,12 @@ import org.springframework.transaction.annotation.Transactional
 class HwpConvertCompleteEventListener(
     private val hwpConvertFileWriteRepository: HwpConvertFileWriteRepository,
 ) {
-    @Async
     @EventListener
     @Transactional
     fun processConvertResponseEvent(event: JsonToHwpResponseEvent) {
         hwpConvertFileWriteRepository.update(event.id, event.fileName)
     }
 
-    @Async
     @EventListener
     @Transactional
     fun processConvertResponseEvent(event: HwpToHtmlResponseEvent) {

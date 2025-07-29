@@ -12,7 +12,7 @@ import java.util.function.Consumer
 
 @Component
 class MathHwpConsumer(
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     private val log = LoggerFactory.getLogger(MathHwpConsumer::class.java)
 
