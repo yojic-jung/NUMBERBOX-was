@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.redis.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
-import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
+import com.kamcci.numberbox.app.domain.exception.BusinessServerException
 import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.infra.redis.adapter.common.RedisKeyGenerator
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -47,7 +47,7 @@ class MathContentsLikeRedisRepository(
         val setOps = stringRedisTemplate.opsForSet()
         val key = RedisKeyGenerator.getMathLikeKey(modifyDto.contentsId)
         val addedCount = setOps.add(key, modifyDto.memberId.toString())
-            ?: throw BusinessSeverException(LIKE_SAVE_FAIL)
+            ?: throw BusinessServerException(LIKE_SAVE_FAIL)
         if (addedCount > 0) {
             // 새로 추가된 좋아요면 TTL 설정 (TTL 없으면 만료 안 됨)
             stringRedisTemplate.expire(key, LIKE_TTL, TimeUnit.HOURS)
@@ -58,7 +58,7 @@ class MathContentsLikeRedisRepository(
     fun delete(modifyDto: MathContentsLikeModifyDto): Long {
         val setOps = stringRedisTemplate.opsForSet()
         return setOps.remove(RedisKeyGenerator.getMathLikeKey(modifyDto.contentsId), modifyDto.memberId.toString())
-            ?: throw BusinessSeverException(LIKE_DELETE_FAIL)
+            ?: throw BusinessServerException(LIKE_DELETE_FAIL)
     }
 
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {

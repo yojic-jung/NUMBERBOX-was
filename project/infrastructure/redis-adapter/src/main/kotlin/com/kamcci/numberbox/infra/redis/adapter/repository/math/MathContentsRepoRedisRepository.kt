@@ -1,7 +1,7 @@
 package com.kamcci.numberbox.infra.redis.adapter.repository.math
 
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsRepoModifyDto
-import com.kamcci.numberbox.app.domain.exception.BusinessSeverException
+import com.kamcci.numberbox.app.domain.exception.BusinessServerException
 import com.kamcci.numberbox.infra.redis.adapter.common.RedisKeyGenerator
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
@@ -22,7 +22,7 @@ class MathContentsRepoRedisRepository(
         val setOps = stringRedisTemplate.opsForSet()
         val key = RedisKeyGenerator.getMathRepoKey(modifyDto.contentsId)
         val addedCount = setOps.add(key, modifyDto.memberId.toString())
-            ?: throw BusinessSeverException(REPO_SAVE_FAIL)
+            ?: throw BusinessServerException(REPO_SAVE_FAIL)
         if (addedCount > 0) {
             // 새로 추가된 저장소면 TTL 설정 (TTL 없으면 만료 안 됨)
             stringRedisTemplate.expire(key, 3, TimeUnit.HOURS)
@@ -33,6 +33,6 @@ class MathContentsRepoRedisRepository(
     fun delete(modifyDto: MathContentsRepoModifyDto): Long {
         val setOps = stringRedisTemplate.opsForSet()
         return setOps.remove(RedisKeyGenerator.getMathRepoKey(modifyDto.contentsId), modifyDto.memberId.toString())
-            ?: throw BusinessSeverException(REPO_DELETE_FAIL)
+            ?: throw BusinessServerException(REPO_DELETE_FAIL)
     }
 }
