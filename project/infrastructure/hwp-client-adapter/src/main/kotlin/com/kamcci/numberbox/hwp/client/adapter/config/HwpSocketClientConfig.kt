@@ -8,4 +8,4 @@ import org.springframework.context.annotation.Configuration
 @EnableConfigurationProperties(
     value = [HwpSocketClientProperty::class]
 )
-open class HwpSocketClientConfig
+class HwpSocketClientConfig

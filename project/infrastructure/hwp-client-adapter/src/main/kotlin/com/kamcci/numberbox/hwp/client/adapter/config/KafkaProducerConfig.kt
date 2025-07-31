@@ -28,10 +28,10 @@ class KafkaProducerConfig(
         ProducerConfig.LINGER_MS_CONFIG to 1000,           // 최대 대기 시간
         ProducerConfig.BUFFER_MEMORY_CONFIG to 33554432,   // 프로듀서 내부 버퍼 크기
         // 재처리 설정
-        ProducerConfig.RETRIES_CONFIG to 1,                // 재시도 횟수
-        ProducerConfig.RETRY_BACKOFF_MS_CONFIG to 500,     // 재시도간 대기 시간
+        ProducerConfig.RETRIES_CONFIG to 3,                // 재시도 횟수
+        ProducerConfig.RETRY_BACKOFF_MS_CONFIG to 2000,     // 재시도간 대기 시간
         ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG to 2000,  // 단일 요청에 대한 응답 최대 대기 시간
-        ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG to 5000, // 전체 전송 제한 시간
+        ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG to 15000, // 전체 전송 제한 시간
         // 직렬화
         ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java.name,
         ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java.name,

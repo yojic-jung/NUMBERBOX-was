@@ -58,10 +58,8 @@ class HwpConvertEventController(
         try {
             hwpEventPort.requestHwp(event)
         } catch (e: Exception) {
-            throw e
+            // 아무 처리 하지 않음 비동기 콜백에서 처리함
         }
-        // 변환 요청 이벤트 전달 성공 상태 변경
-        hwpConvertFileWriteCase.updateIsRequestSuccess(id, true)
 
         return ResponseUtil.ok()
     }
