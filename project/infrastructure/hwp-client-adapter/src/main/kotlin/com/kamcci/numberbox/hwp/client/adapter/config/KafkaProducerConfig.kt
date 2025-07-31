@@ -34,7 +34,9 @@ class KafkaProducerConfig(
         ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG to 5000, // 전체 전송 제한 시간
         // 직렬화
         ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java.name,
-        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java.name
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java.name,
+        // 압축 타입 설정
+        ProducerConfig.COMPRESSION_TYPE_CONFIG to "lz4"
     )
 
     @Bean
