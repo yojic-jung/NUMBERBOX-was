@@ -7,7 +7,6 @@ import com.kamcci.numberbox.infra.redis.adapter.repository.math.MathContentsLike
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
 
-@Primary
 @Repository
 class MathContentsLikeWritePersistenceRepository(
     private val mathContentsLikeRedisRepository: MathContentsLikeRedisRepository,

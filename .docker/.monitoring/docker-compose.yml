@@ -4,7 +4,7 @@ services:
     container_name: prometheus
     user: "1009:1009"
     ports:
-      - "9090:9090" # 외부 : 내부
+      - "9080:9090" # 외부 : 내부
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus-data:/prometheus
@@ -30,3 +30,52 @@ services:
     ports:
       - "9104:9104"
     restart: unless-stopped
+
+  redis-master1-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-master1-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7001
+    ports:
+      - "9121:9121"
+
+  redis-master2-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-master2-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7002
+    ports:
+      - "9122:9121"
+
+  redis-master3-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-master3-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7003
+    ports:
+      - "9123:9121"
+
+  redis-slave1-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-slave1-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7004
+    ports:
+      - "9124:9121"
+
+  redis-slave2-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-slave2-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7005
+    ports:
+      - "9125:9121"
+
+  redis-slave3-exporter:
+    image: "bitnami/redis-exporter:latest"
+    container_name: "redis-slave3-exporter"
+    environment:
+      - REDIS_ADDR=host.docker.internal:7006
+    ports:
+      - "9126:9121"
+
