@@ -211,12 +211,9 @@ class MathContentsReadController(
             if (likeContentsIdList.contains(it.contentsId)) it.isLikeContents = true
         }
 
-        // 2. postId에 대한 like count 전체 조회
+        // 2. like count 전체 조회
         val contentsIdList = details.map { it.contentsId }
         val likeCountList = mathContentsLikeReadCase.countBy(contentsIdList)
-        details.forEach {
-            if (likeContentsIdList.contains(it.contentsId)) it.isLikeContents = true
-        }
 
         // likeCounts를 contentsId로 맵핑
         val likeCountMap = likeCountList.associateBy({ it.contentsId }, { it.count })

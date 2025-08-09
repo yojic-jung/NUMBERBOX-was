@@ -3,8 +3,8 @@ package com.kamcci.numberbox.infra.redis.adapter.repository.math
 import com.kamcci.numberbox.app.domain.dto.math.MathContentsLikeModifyDto
 import com.kamcci.numberbox.app.domain.exception.BusinessServerException
 import com.kamcci.numberbox.app.domain.vo.math.MathLikeCountVo
+import com.kamcci.numberbox.infra.persistence.adapter.core.constant.CacheNames.MATH_CONTENTS_LIKE_COUNT
 import com.kamcci.numberbox.infra.redis.adapter.common.RedisKeyGenerator
-import com.kamcci.numberbox.infra.redis.adapter.common.RedisKeyGenerator.getMathContentsLikeCountKey
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -59,8 +59,8 @@ class MathContentsLikeRedisRepository(
 
 
         // 3. likeCount+1
-        val contentsIdCountKey = getMathContentsLikeCountKey(modifyDto.contentsId)
-        stringRedisTemplate.opsForValue().increment(contentsIdCountKey)
+        stringRedisTemplate.opsForHash<String, Long>()
+            .increment(MATH_CONTENTS_LIKE_COUNT, modifyDto.contentsId.toString(), 1)
         return true
     }
 
@@ -81,28 +81,32 @@ class MathContentsLikeRedisRepository(
             ?: throw BusinessServerException(LIKE_DELETE_FAIL)
 
         // 3. likeCount-1
-        val contentsIdCountKey = getMathContentsLikeCountKey(modifyDto.contentsId)
-        stringRedisTemplate.opsForValue().decrement(contentsIdCountKey)
+        stringRedisTemplate.opsForHash<String, Long>()
+            .increment(MATH_CONTENTS_LIKE_COUNT, modifyDto.contentsId.toString(), -1)
         return removeCount
     }
 
     fun countBy(contentsIds: List<Long>): List<MathLikeCountVo> {
-        val setOps = stringRedisTemplate.opsForSet()
+        val hashKey = "MATH_CONTENTS_LIKE_COUNT"
+        val fields = contentsIds.map { it.toString() }
+        val counts = stringRedisTemplate.opsForHash<String, String>().multiGet(hashKey, fields)
 
-        return contentsIds.mapNotNull { contentsId ->
-            val key = RedisKeyGenerator.getMathContentsLikeKey(contentsId)
-            val size = setOps.size(key)
-            if (size == null) null
-            else MathLikeCountVo(contentsId, size)
+        return contentsIds.zip(counts).mapNotNull { (contentsId, countStr) ->
+            countStr?.toLongOrNull()?.let { count ->
+                MathLikeCountVo(contentsId, count)
+            }
         }
     }
 
     fun saveLikeCount(dbCounts: List<MathLikeCountVo>) {
-        dbCounts.forEach { countVo ->
-            val key = RedisKeyGenerator.getMathContentsLikeKey(countVo.contentsId)
-            stringRedisTemplate.opsForValue().set(key, countVo.count.toString(), LIKE_TTL, TimeUnit.HOURS)
+        val map = dbCounts.associate { countVo ->
+            countVo.contentsId.toString() to countVo.count.toString()
         }
+
+        stringRedisTemplate.opsForHash<String, String>().putAll(MATH_CONTENTS_LIKE_COUNT, map)
+        stringRedisTemplate.expire(MATH_CONTENTS_LIKE_COUNT, LIKE_TTL, TimeUnit.HOURS)
     }
+
 
     fun readContentsIdByUserId(userId: UUID): List<Long> {
         val key = RedisKeyGenerator.getUserContentsLike(userId)

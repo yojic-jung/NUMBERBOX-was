@@ -29,7 +29,7 @@ class MathContentsLikeReadPersistenceRepository(
         // 미존재시 캐시 추가
         return if (contentsIdList.isEmpty()) {
             val list = mathContentsLikeReadRepository.readContentsIdByUserId(userId)
-            mathContentsLikeRedisRepository.saveUserLike(userId, contentsIdList)
+            mathContentsLikeRedisRepository.saveUserLike(userId, list)
             list
         } else contentsIdList
     }
