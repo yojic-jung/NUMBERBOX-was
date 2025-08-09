@@ -220,9 +220,7 @@ class MathContentsReadController(
 
         // details 리스트를 순회하면서 likeCount 업데이트
         details.map { detail ->
-            val updatedDetail = detail.copy() // data class라 복사해서 변경
-            updatedDetail.likeCount = likeCountMap[detail.contentsId] ?: 0
-            updatedDetail
+            detail.likeCount = likeCountMap[detail.contentsId] ?: 0
         }
     }
 

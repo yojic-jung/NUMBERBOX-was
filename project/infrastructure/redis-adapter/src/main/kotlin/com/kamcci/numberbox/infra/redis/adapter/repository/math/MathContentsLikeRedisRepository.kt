@@ -87,9 +87,8 @@ class MathContentsLikeRedisRepository(
     }
 
     fun countBy(contentsIds: List<Long>): List<MathLikeCountVo> {
-        val hashKey = "MATH_CONTENTS_LIKE_COUNT"
         val fields = contentsIds.map { it.toString() }
-        val counts = stringRedisTemplate.opsForHash<String, String>().multiGet(hashKey, fields)
+        val counts = stringRedisTemplate.opsForHash<String, String>().multiGet(MATH_CONTENTS_LIKE_COUNT, fields)
 
         return contentsIds.zip(counts).mapNotNull { (contentsId, countStr) ->
             countStr?.toLongOrNull()?.let { count ->
