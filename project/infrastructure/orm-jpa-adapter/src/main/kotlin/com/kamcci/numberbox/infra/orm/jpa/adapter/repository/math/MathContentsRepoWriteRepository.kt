@@ -6,8 +6,10 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsRepositoryDomain
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.MathContentsRepositoryEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsRepositoryEntity.mathContentsRepositoryEntity
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Repository
 
+@Qualifier("jpa")
 @Repository
 class MathContentsRepoWriteRepository : MathContentsRepoWriteOrmPort, BaseRepository() {
     override fun save(modifyDto: MathContentsRepoModifyDto): Boolean {

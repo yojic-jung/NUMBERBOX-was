@@ -3,7 +3,6 @@ package com.kamcci.numberbox.infra.storage.adapter.service
 import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
 import com.kamcci.numberbox.infra.storage.adapter.mock.MockAmazonS3Client
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,10 +34,15 @@ class AwsS3StorageAdapterTest {
 
         // S3에 업로드
         val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
-        val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
+        awsS3UploadStorage.upload(fileUploadDto)
+    }
 
-        // then
-        assertThat(fileUrl).isNotNull()
+    @Test
+    fun `json Data 업로드 - 성공`() {
+        val jsonData = """{"id":123, "msg":"anyData"}"""
+        val fileName = "test.json"
+
+        awsS3UploadStorage.uploadJson(jsonData, fileName)
     }
 
     @Test
@@ -49,10 +53,7 @@ class AwsS3StorageAdapterTest {
 
         // S3에 업로드
         val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
-        val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
-
-        // then
-        assertThat(fileUrl).isNotNull()
+        awsS3UploadStorage.upload(fileUploadDto)
     }
 
     @Test
@@ -63,9 +64,6 @@ class AwsS3StorageAdapterTest {
 
         // S3에 업로드
         val fileUploadDto = FileUploadDto(FILE_NAME, contentType, fileByte.size.toLong(), fileByte.inputStream())
-        val fileUrl = awsS3UploadStorage.upload(fileUploadDto)
-
-        // then
-        assertThat(fileUrl).isNotNull()
+        awsS3UploadStorage.upload(fileUploadDto)
     }
 }

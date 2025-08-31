@@ -2,7 +2,6 @@ package com.kamcci.numberbox.restapi.controller.math
 
 import com.kamcci.modules.auth.control.annotation.UserId
 import com.kamcci.numberbox.app.usecase.math.MathContentsGrammarWriteCase
-import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsWriteCase
 import com.kamcci.numberbox.restapi.dto.request.math.*
 import com.kamcci.numberbox.restapi.mapper.math.MathContentsMapper
@@ -21,7 +20,6 @@ import java.util.*
 @RestController
 @RequestMapping("/math/content")
 class MathContentsWriteController(
-    private val mathContentsReadCase: MathContentsReadCase,
     // 문제 제작 목적
     private val mathContentsWriteCase: MathContentsWriteCase,
     private val mathConGrammarWriteCase: MathContentsGrammarWriteCase,
@@ -40,16 +38,7 @@ class MathContentsWriteController(
 
         // 수학문제 생성
         val contentsId = mathContentsWriteCase.createUserCustomContents(contents, createReq.license)
-
-        // 생성된 문제 정보 반환
-        return ResponseUtil.ok(
-            mapOf(
-                "contents" to mathContentsReadCase.readDetailByContentsIdAndMemberId(
-                    contentsId,
-                    memberId
-                )
-            )
-        )
+        return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }
 
     // 사용자 제작 문제 수정
@@ -58,22 +47,13 @@ class MathContentsWriteController(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConLicenseUpdtRequest
-    ): ResponseEntity<ResponseData<Any>> {
+    ): ResponseEntity<ResponseData<String>> {
         // request to dto 변환
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
         mathContentsWriteCase.updateUserCustomContents(createReq.contentsId, contents, createReq.license)
-
-        // 생성된 문제 정보 반환
-        return ResponseUtil.ok(
-            mapOf(
-                "contents" to mathContentsReadCase.readDetailByContentsIdAndMemberId(
-                    createReq.contentsId,
-                    memberId
-                )
-            )
-        )
+        return ResponseUtil.ok()
     }
 
     // 변형문제 등록
@@ -88,16 +68,7 @@ class MathContentsWriteController(
 
         // 수학문제 생성
         val contentsId = mathContentsWriteCase.createTransContents(createReq.orgContentsId, contents)
-
-        // 생성된 문제 정보 반환
-        return ResponseUtil.ok(
-            mapOf(
-                "contents" to mathContentsReadCase.readDetailByContentsIdAndMemberId(
-                    contentsId,
-                    memberId
-                )
-            )
-        )
+        return ResponseUtil.ok(mapOf("contentsId" to contentsId))
     }
 
     // 변형문제 수정
@@ -106,22 +77,13 @@ class MathContentsWriteController(
         @UserId memberId: UUID,
         @RequestBody
         @Valid createReq: MathConTransUpdtRequest
-    ): ResponseEntity<ResponseData<Any>> {
+    ): ResponseEntity<ResponseData<String>> {
         // request to dto 변환
         val contents = mathContentsMapper.toContents(memberId, createReq.contents)
 
         // 수학문제 생성
         mathContentsWriteCase.updateTransContents(createReq.contentsId, contents)
-
-        // 생성된 문제 정보 반환
-        return ResponseUtil.ok(
-            mapOf(
-                "contents" to mathContentsReadCase.readDetailByContentsIdAndMemberId(
-                    createReq.contentsId,
-                    memberId
-                )
-            )
-        )
+        return ResponseUtil.ok()
     }
 
     // 문제 문법 등록

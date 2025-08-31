@@ -41,7 +41,7 @@ class SystemConstructionTXAdvice(
             }
 
         // 어노테이션에 적용된 트랜잭션 속성 객체 생성
-        val txDefinition =
+        val txStatus =
             if (txAnnotation != null) {
                 val txDefinition = DefaultTransactionDefinition()
                 txDefinition.isolationLevel = (txAnnotation as TXExecute).isolation.id
@@ -55,16 +55,16 @@ class SystemConstructionTXAdvice(
 
         try {
             val returnVal = invocation.proceed()
-            transactionManager.commit(txDefinition)
+            transactionManager.commit(txStatus)
             return returnVal
         } catch (e: RuntimeException) {
-            transactionManager.rollback(txDefinition)
+            if (!txStatus.isCompleted) transactionManager.rollback(txStatus)
             throw e
         } catch (e: Exception) {
-            transactionManager.rollback(txDefinition)
+            if (!txStatus.isCompleted) transactionManager.rollback(txStatus)
             throw e
         } catch (e: Throwable) {
-            transactionManager.rollback(txDefinition)
+            if (!txStatus.isCompleted) transactionManager.rollback(txStatus)
             throw e
         }
     }

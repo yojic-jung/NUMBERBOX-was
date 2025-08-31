@@ -15,9 +15,11 @@ import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberProfileEn
 import com.kamcci.numberbox.infra.orm.jpa.adapter.util.math.MathContentsExpression
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQuery
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
 import java.util.*
 
+@Primary
 @Repository
 class MathContentsReadRepository(
     private val mathContentsExpression: MathContentsExpression

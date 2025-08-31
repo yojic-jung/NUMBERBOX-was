@@ -30,10 +30,10 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
         val email = memberDummyEntity.email
 
         // when
-        val authUser = authUserInfoRepository.loadUserByUsername(email)
+        val memberEntity = authUserInfoRepository.findByEmail(email)
 
         // then
-        assertThat(authUser?.username).isEqualTo(email)
+        assertThat(memberEntity?.email).isEqualTo(email)
     }
 
     @Test
@@ -42,10 +42,10 @@ class AuthUserInfoRepositoryTest @Autowired constructor(
         val email = NOT_EXIST_MEMBER_EMAIL
 
         // when
-        val authUser = authUserInfoRepository.loadUserByUsername(email)
+        val memberEntity = authUserInfoRepository.findByEmail(email)
 
         // then
-        assertThat(authUser).isNull()
+        assertThat(memberEntity).isNull()
     }
 
     @Test

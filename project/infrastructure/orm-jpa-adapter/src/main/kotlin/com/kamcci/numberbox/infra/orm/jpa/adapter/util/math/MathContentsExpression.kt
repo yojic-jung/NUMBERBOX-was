@@ -205,14 +205,6 @@ class MathContentsExpression {
                     mathContentsRepositoryEntity.id.memberId.eq(memberId),
                 )
                 .exists(),
-            JPAExpressions
-                .selectOne()
-                .from(mathContentsLikeEntity)
-                .where(
-                    mathContentsLikeEntity.id.contentsId.eq(mathContentsEntity.id),
-                    mathContentsLikeEntity.id.memberId.eq(memberId),
-                )
-                .exists()
         )
 
     fun ceMathContentsOnlyVo(memberId: UUID?): ConstructorExpression<MathContentsOnlyVo> =

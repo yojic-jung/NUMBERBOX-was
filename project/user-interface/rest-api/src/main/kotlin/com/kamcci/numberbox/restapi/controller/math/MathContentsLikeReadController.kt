@@ -29,6 +29,7 @@ class MathContentsLikeReadController(
         @UserId userId: UUID,
         @PathVariable contentsId: Long
     ): ResponseEntity<ResponseData<Any>> {
+        // todo cach에서 조회
         val isMyRepoContents = mathConRepoReadUseCase.existByContentsIdAndMemberId(contentsId, userId)
         val isMyLikeContents = mathConLikeReadUseCase.existByContentsIdAndMemberId(contentsId, userId)
 

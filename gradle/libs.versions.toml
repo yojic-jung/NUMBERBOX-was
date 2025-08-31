@@ -4,8 +4,9 @@ kotlin = "1.9.22"
 spring-boot = "3.2.3"
 spring-aws = "2.2.6.RELEASE"
 spring-tx = "6.1.4"
-aws-s3 = "1.12.281"
+spring-cloud = "2023.0.0"
 
+aws-s3 = "1.12.281"
 aspect-weaver = "1.9.22"
 
 querydsl = "5.0.0"
@@ -33,6 +34,8 @@ micro-registry-prom = "1.12.2"
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 fasterxml-jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+fasterxml-core = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+fasterxml-datatype = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
@@ -40,7 +43,11 @@ spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
 spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
 spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
 spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-cloud-dependencies = { module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud" }
+spring-cloud-stream = { module = "org.springframework.cloud:spring-cloud-starter-stream-kafka" }
+
 aspect-j-weaver = { module = "org.aspectj:aspectjweaver", version.ref = "aspect-weaver" }
 
 spring-cloud-aws = { module = "org.springframework.cloud:spring-cloud-starter-aws", version.ref = "spring-aws" }
@@ -83,10 +90,18 @@ orm-jpa-adapter-test = ["spring-boot-starter-test", "flyway-core", "flyway-mysql
 orm-jpa-adapter-test-fixture = ["spring-boot-starter-test", "spring-boot-testcontainers", "testcontainers-mysql",
     "testcontainers-jdbc", "flyway-core", "flyway-mysql"]
 
+redis-adapter = ["kotlin-reflect", "spring-boot-data-redis", "fasterxml-jackson", "fasterxml-core", "fasterxml-datatype", ]
+redis-adapter-test = ["kotlin-reflect", "spring-boot-starter-test", "spring-boot-testcontainers", ]
+
+persistence-adapter = ["spring-boot-starter", "spring-boot-data-redis", "fasterxml-jackson",
+    "fasterxml-core", "fasterxml-datatype", ]
+persistence-adapter-test = ["junit-jupiter", "assertj-core", ]
+
+
 email-adapter = ["kotlin-reflect", "spring-boot-starter"]
 email-adapter-test = ["spring-boot-starter-test"]
 
-hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter"]
+hwp-client-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-stream", ]
 hwp-client-adapter-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
 
 storage-adapter = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-aws", "aws-java-sdk-s3"]
@@ -99,6 +114,9 @@ ui-rest-api = ["spring-boot-starter", "spring-boot-starter-web", "spring-boot-st
     "fasterxml-jackson", "poi-ooxml", "mapstruct"]
 ui-rest-api-test = ["spring-boot-starter-test", "mockito-kotlin", "io-mockk"]
 ui-rest-api-test-fixture = ["spring-boot-starter-test"]
+
+ui-consumer = ["kotlin-reflect", "spring-boot-starter", "spring-cloud-stream", ]
+ui-consumer-test = ["junit-jupiter", "mockito-kotlin", "io-mockk"]
 
 app-service-test = ["junit-jupiter", "assertj-core", "mockito-kotlin", "mockito-core"]
 
@@ -115,3 +133,4 @@ modules-mail-sender-engine-test = ["spring-boot-starter-test", "mockito-kotlin",
 
 modules-system-construction = ["kotlin-reflect", "spring-boot-starter", "spring-tx"]
 modules-system-construction-test = ["spring-boot-starter-test", "mockito-kotlin"]
+

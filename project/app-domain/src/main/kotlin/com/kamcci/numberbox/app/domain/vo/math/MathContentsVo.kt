@@ -90,4 +90,6 @@ data class MathContentsVo(
     val secUnit: String,
     // 소단원
     val thrUnit: String,
-)
+) {
+    var likeCount: Long = 0
+}

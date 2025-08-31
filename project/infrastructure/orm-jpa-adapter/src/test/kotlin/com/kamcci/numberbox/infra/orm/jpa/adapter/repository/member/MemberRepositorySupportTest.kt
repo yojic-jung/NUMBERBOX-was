@@ -15,18 +15,6 @@ class MemberRepositorySupportTest @Autowired constructor(
     private val memberDummyEntity = getMemberDummyEntity()
 
     @Test
-    fun `멤버엔티티 이메일로 조회 - 성공`() {
-        // given
-        val email = memberDummyEntity.email
-
-        // when
-        val memberEntity = memberRepositorySupport.findByEmail(email)
-
-        // then
-        assertThat(memberEntity).isNotNull
-    }
-
-    @Test
     fun `로그인 실패 횟수 변경`() {
         // given
         val memberId = memberDummyEntity.memberId

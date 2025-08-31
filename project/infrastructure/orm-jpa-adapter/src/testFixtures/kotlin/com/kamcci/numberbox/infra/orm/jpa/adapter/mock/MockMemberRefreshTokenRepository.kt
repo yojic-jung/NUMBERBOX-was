@@ -14,6 +14,7 @@ class MockMemberRefreshTokenRepository : MemberRefreshTokenRepository() {
     }
 
     override fun deleteByToken(token: String): Long {
+        executeCnt++
         return 1L
     }
 }

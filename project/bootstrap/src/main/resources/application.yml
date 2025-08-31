@@ -11,8 +11,12 @@ spring:
         - mail-sender-env
         - storage
         - storage-env
+        - hwp-client-local
         - hwp-client-env
-        - hwp-client-env
+        - redis-local
+        - redis-env
+        - consumer-env
+        - consumer-local
 
 # s3 설정
 cloud:
@@ -40,8 +44,6 @@ system:
     tx:
       class-path:
         transaction: com.kamcci.numberbox.app.domain.system.construction.TXExecute
-
-# api 로깅 설정
 kamcci:
   logging:
     request:

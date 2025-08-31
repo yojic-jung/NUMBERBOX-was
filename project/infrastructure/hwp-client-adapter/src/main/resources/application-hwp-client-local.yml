@@ -1,0 +1,52 @@
+hwp:
+  server:
+    ip: ${local.hwp.server.ip}
+    port: ${local.hwp.server.port}
+
+spring:
+  kafka: # 동기방식을 사용하기 위해 kafkaTemplate 직접 쓰는 방식 선택
+    bootstrap-servers: 127.0.0.1:19092,127.0.0.1:19093,127.0.0.1:19094
+    admin:
+      auto-create: false    # topic 자동 생성 방지
+      properties:
+        request.timeout.ms: 3000
+    producer:
+      acks: all   # 리더+팔로워에게 복제까지 성공한 후 성공 응답
+      retries: 1  # 재시도 횟수
+      retry-backoff-ms: 500  # 재시도간 대기 시간
+      request-timeout-ms: 2000  # 응답 최대 대기시간
+      delivery-timeout-ms: 5000 # 전체 전송 시간 제한
+      batch-size: 16000 # 배치 전송 사이즈
+      linger-ms: 1000 # 배치만큼 데이터 안 찼을씨 최대 대기 시간
+      buffer-memory: 33554432 # producer 내부 버퍼 크기
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#  cloud:  # 비동기만 지원함
+#    function:
+#      definition: jsonToHwpProduce; hwpToHtmlProduce; # Producer 함수 이름
+#    stream:
+#      kafka:
+#        binder:
+#          brokers: 127.0.0.1:19092,127.0.0.1:19093,127.0.0.1:19094
+#          producer-properties:
+#            acks: all   # 리더+팔로워에게 복제까지 성공한 후 성공 응답
+#            retries: 2  # 재시도 횟수
+#            retry-backoff-ms: 500  # 재시도간 대기 시간
+#            request-timeout-ms: 2000  # 응답 최대 대기시간
+#            delivery-timeout-ms: 5000 # 전체 전송 시간 제한
+#            batch-size: 16000 # 배치 전송 사이즈
+#            linger-ms: 1000 # 배치만큼 데이터 안 찼을씨 최대 대기 시간
+#            buffer-memory: 33554432 # producer 내부 버퍼 크기
+#            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      bindings:
+#        jsonToHwpProduce-out-0: # 채널 이름 (함수이름-입력/출력-인덱스, 같은 함수로 여러 토픽 처리하고 싶은 경우 인덱스 구분)
+#          destination: numberbox.convert.jsonToHwp.request  # Topic 이름
+#          content-type: application/json
+#          producer:
+#            partition-key-expression: payload.id # partition key 설정, 이 key 값에 대한 해시값으로 partition 나누어 저장됨
+#        hwpToHtmlProduce-out-0:
+#          destination: numberbox.convert.hwpToHtml.request
+#          content-type: application/json
+#          producer:
+#            partition-key-expression: payload.id # partition key 설정, 이 key 값에 대한 해시값으로 partition 나누어 저장됨

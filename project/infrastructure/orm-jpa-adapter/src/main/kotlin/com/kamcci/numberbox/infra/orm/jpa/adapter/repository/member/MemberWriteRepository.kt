@@ -4,10 +4,12 @@ import com.kamcci.numberbox.app.port.orm.member.MemberWriteOrmPort
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.util.*
 
+@Qualifier("jpaAdapter")
 @Repository
 class MemberWriteRepository : MemberWriteOrmPort, BaseRepository() {
     override fun save(email: String, password: String): UUID {

@@ -8,6 +8,8 @@ import com.kamcci.numberbox.app.domain.dto.common.FileUploadDto
 import com.kamcci.numberbox.app.port.storage.FileStoragePort
 import com.kamcci.numberbox.infra.storage.adapter.config.AwsS3Property
 import org.springframework.stereotype.Service
+import java.io.ByteArrayInputStream
+import java.nio.charset.StandardCharsets
 
 
 @Service
@@ -30,7 +32,28 @@ class AwsS3StorageAdapter(
         }
     }
 
+    override fun uploadJson(jsonData: String, fileName: String) {
+        val bytes = jsonData.toByteArray(StandardCharsets.UTF_8)
+        val stream = ByteArrayInputStream(bytes)
+
+        val metadata = ObjectMetadata().apply {
+            contentLength = bytes.size.toLong()
+            contentType = "application/json"
+        }
+
+        val putRequest = PutObjectRequest(
+            awsS3Property.bucket,
+            fileName,
+            stream,
+            metadata
+        ).withCannedAcl(CannedAccessControlList.PublicRead)
+
+        s3Client.putObject(putRequest)
+    }
+
     override fun delete(fileName: String) {
         s3Client.deleteObject(awsS3Property.bucket, fileName)
     }
+
+
 }

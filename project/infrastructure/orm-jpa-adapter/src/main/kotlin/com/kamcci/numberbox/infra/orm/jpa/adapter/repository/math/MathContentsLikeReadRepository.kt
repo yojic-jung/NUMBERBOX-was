@@ -1,13 +1,25 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.math
 
+import com.kamcci.numberbox.app.domain.vo.math.MathLikeCountVo
 import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.math.QMathContentsLikeEntity.mathContentsLikeEntity
+import com.querydsl.core.types.Projections
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
 class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository() {
+    fun readMemberIdListById(contentsId: Long): List<UUID> {
+        return queryFactory
+            .select(mathContentsLikeEntity.id.memberId)
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.contentsId.eq(contentsId),
+            )
+            .fetch()
+    }
+
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
         return queryFactory
             .selectOne()
@@ -17,5 +29,42 @@ class MathContentsLikeReadRepository : MathContentsLikeReadCase, BaseRepository(
                 mathContentsLikeEntity.id.memberId.eq(memberId),
             )
             .fetchOne() != null
+    }
+
+    override fun countBy(contentsId: Long): Long {
+        return queryFactory
+            .select(mathContentsLikeEntity.id.count())
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.contentsId.eq(contentsId),
+            )
+            .fetchFirst() ?: 0L
+    }
+
+    override fun readContentsIdByUserId(userId: UUID): List<Long> {
+        return queryFactory
+            .select(mathContentsLikeEntity.id.contentsId)
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.memberId.eq(userId),
+            )
+            .fetch()
+    }
+
+    override fun countBy(contentsIds: List<Long>): List<MathLikeCountVo> {
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    MathLikeCountVo::class.java,
+                    mathContentsLikeEntity.id.contentsId,
+                    mathContentsLikeEntity.id.contentsId.count()
+                )
+            )
+            .from(mathContentsLikeEntity)
+            .where(
+                mathContentsLikeEntity.id.contentsId.`in`(contentsIds),
+            )
+            .groupBy(mathContentsLikeEntity.id.contentsId)
+            .fetch()
     }
 }

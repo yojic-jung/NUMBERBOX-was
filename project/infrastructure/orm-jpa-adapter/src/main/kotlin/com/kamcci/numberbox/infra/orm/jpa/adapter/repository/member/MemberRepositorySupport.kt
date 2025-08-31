@@ -1,7 +1,6 @@
 package com.kamcci.numberbox.infra.orm.jpa.adapter.repository.member
 
 import com.kamcci.numberbox.infra.orm.jpa.adapter.base.BaseRepository
-import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.MemberEntity
 import com.kamcci.numberbox.infra.orm.jpa.adapter.entity.member.QMemberEntity.memberEntity
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -9,12 +8,6 @@ import java.util.*
 
 @Repository
 class MemberRepositorySupport : BaseRepository() {
-    fun findByEmail(email: String): MemberEntity? {
-        return queryFactory
-            .selectFrom(memberEntity)
-            .where(memberEntity.email.eq(email))
-            .fetchOne()
-    }
 
     fun updateSuccessUser(
         userUniqId: UUID,

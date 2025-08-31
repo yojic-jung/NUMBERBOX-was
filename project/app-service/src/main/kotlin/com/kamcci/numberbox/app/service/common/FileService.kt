@@ -30,6 +30,12 @@ class FileService(
         return fileNameVo
     }
 
+    override fun uploadJsonData(jsonData: String, fileType: FileType): FileNameVo {
+        val fileNameVo = makeFileNameByType(".json", fileType)
+        fileStoragePort.uploadJson(jsonData, "${fileNameVo.path}/${fileNameVo.name}")
+        return fileNameVo
+    }
+
 
     override fun makeFileNameByType(fileName: String, fileType: FileType): FileNameVo {
         val now = LocalDateTime.now()

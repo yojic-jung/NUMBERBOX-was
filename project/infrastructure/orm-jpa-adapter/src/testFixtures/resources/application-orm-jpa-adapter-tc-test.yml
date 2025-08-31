@@ -20,6 +20,9 @@ spring:
     locations:
       - classpath:/flyway/migration
       - classpath:/flyway/dummy
+
 custom:
   test-container:
     enabled: true
+  redis:
+    port: 6380

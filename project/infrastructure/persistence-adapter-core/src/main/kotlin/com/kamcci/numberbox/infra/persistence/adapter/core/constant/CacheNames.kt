@@ -1,0 +1,36 @@
+package com.kamcci.numberbox.infra.persistence.adapter.core.constant
+
+/**
+ * 캐시DB 키 네임
+ */
+object CacheNames {
+    const val WILD_CARD = "*"
+    const val SEPARATOR = ":"
+
+    // 토큰
+    const val REFRESH_TOKEN = "refreshToken"
+
+    // 회원
+    const val MEMBER = "member"
+    const val MEMBER_EMAIL_VERIFY_CODE = "member" + SEPARATOR + "email" + SEPARATOR + "verify" + SEPARATOR + "code"
+
+    // 수학
+    const val MATH = "math"
+    const val MATH_CONTENTS = MATH + SEPARATOR + "contents"
+    const val EXIST_MATH_CONTENTS = "exist" + SEPARATOR + MATH + SEPARATOR + "contents"
+
+    // 좋아요 - postId 기준
+    const val MATH_CONTENTS_LIKE = MATH_CONTENTS + SEPARATOR + "like"
+    const val MATH_CONTENTS_LIKE_WILD_CARD = MATH_CONTENTS_LIKE + SEPARATOR + WILD_CARD
+
+    // 좋아요 - userId 기준
+    const val USER_CONTENTS_LIKE = "user:{}" + SEPARATOR + MATH_CONTENTS_LIKE
+
+    // 좋아요 수 - likeCount
+    const val MATH_CONTENTS_LIKE_COUNT = MATH_CONTENTS_LIKE + SEPARATOR + "count"
+
+    // 저장소
+    const val MATH_CONTENTS_REPO = MATH_CONTENTS + SEPARATOR + "repo"
+    const val MATH_CONTENTS_REPO_WILD_CARD = MATH_CONTENTS_REPO + SEPARATOR + WILD_CARD
+
+}

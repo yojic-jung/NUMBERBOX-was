@@ -90,6 +90,10 @@ data class MathContentsDetailVo(
     val thrUnit: String,
     // 저장소 저장 여부
     val isMyRepoContents: Boolean,
+) {
     // 좋아요 여부
-    val isLikeContents: Boolean
-)
+    var isLikeContents: Boolean = false
+
+    // 좋아요 수
+    var likeCount: Long = 0
+}

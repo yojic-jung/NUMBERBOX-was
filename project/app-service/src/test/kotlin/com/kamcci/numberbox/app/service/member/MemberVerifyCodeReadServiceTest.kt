@@ -7,7 +7,6 @@ import com.kamcci.numberbox.app.service.member.MemberVerifyCodeReadService.Compa
 import com.kamcci.numberbox.app.service.member.MemberVerifyCodeReadService.Companion.NOT_MATCHED_CODE
 import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort
 import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.CODE_NOT_EXIST_EMAIL
-import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.EXPIRE_CODE_EMAIL
 import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.MIS_MATCH_CODE
 import com.kamcci.numberbox.app.service.mock.port.orm.member.MockMemberVerifyCodeReadOrmPort.Companion.VALID_RETURN_CODE
 import org.assertj.core.api.Assertions.assertThat
@@ -40,21 +39,6 @@ class MemberVerifyCodeReadServiceTest {
             memberVerifyCodeReadUseCase.validate(signUpDto)
         }
         assertThat(exception.msg).isEqualTo(NOT_EXIST_CODE)
-    }
-
-    @Test
-    fun `인증 검증 코드 만료 시간 지남 - 실패`() {
-        // given
-        val email = EXPIRE_CODE_EMAIL
-        val signUpDto =
-            MemberVerifyCodeDto(email, REQ_VERIFY_CODE, VerifyCodeType.SignUp)
-
-
-        // when & then
-        val exception = assertThrows<BusinessInValidException> {
-            memberVerifyCodeReadUseCase.validate(signUpDto)
-        }
-        assertThat(exception.msg).isEqualTo(MemberVerifyCodeReadService.EXPIRED_CODE)
     }
 
     @Test

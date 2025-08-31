@@ -7,11 +7,9 @@ import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.InH
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsClassifyType.Ipsi
 import com.kamcci.numberbox.app.domain.enumeration.math.ContentsSvcPosbSttsType
 import com.kamcci.numberbox.app.domain.exception.BusinessInValidException
-import com.kamcci.numberbox.app.domain.vo.math.MathContentsOnlyVo
-import com.kamcci.numberbox.app.domain.vo.math.MathContentsVo
-import com.kamcci.numberbox.app.domain.vo.math.MathInHouseContentsVo
-import com.kamcci.numberbox.app.domain.vo.math.MathIpsiContentsVo
+import com.kamcci.numberbox.app.domain.vo.math.*
 import com.kamcci.numberbox.app.usecase.math.MathCategoryUnitReadCase
+import com.kamcci.numberbox.app.usecase.math.MathContentsLikeReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsReadCase
 import com.kamcci.numberbox.app.usecase.math.MathContentsRepoReadCase
 import com.kamcci.numberbox.app.usecase.member.MemberProfileReadCase
@@ -37,6 +35,7 @@ class MathContentsReadController(
     private val mathCategoryUnitReadCase: MathCategoryUnitReadCase,
     private val mathContentsReadCase: MathContentsReadCase,
     private val mathContentsRepoReadCase: MathContentsRepoReadCase,
+    private val mathContentsLikeReadCase: MathContentsLikeReadCase
 ) {
     companion object {
         const val NOT_EXIST_MEMBER = "존재하지 않는 계정입니다."
@@ -55,40 +54,53 @@ class MathContentsReadController(
         val res =
             when {
                 // 문제만 조회
-                contentsOnly != null && contentsOnly -> mathContentsReadCase.readContentsOnly(contentsId, memberId)
+                contentsOnly != null && contentsOnly -> {
+                    mathContentsReadCase.readContentsOnly(contentsId, memberId)
+                }
 
                 // 자체제작 문제는 유사문제 정보
-                contentsClassify == InHouse -> mathContentsReadCase.readInHouseContentsById(contentsId)
+                contentsClassify == InHouse -> {
+                    mathContentsReadCase.readInHouseContentsById(contentsId)
+                }
 
                 // 입시 문제는 입시 출처 정보
-                contentsClassify == Ipsi -> mathContentsReadCase.readIpsiContentsById(contentsId)
+                contentsClassify == Ipsi -> {
+                    mathContentsReadCase.readIpsiContentsById(contentsId)
+                }
 
                 // 그외는 라이선스 정보
-                else -> mathContentsReadCase.readById(contentsId)
+                else -> {
+                    mathContentsReadCase.readById(contentsId)
+                }
             } ?: throw BusinessInValidException(NOT_EXIST_CONTENTS)
 
-        // 나의 제작문제인지 판별
+
+        // 나의 제작문제인지 판별 및 좋아요 셋팅
         val isMine =
             when {
                 contentsOnly != null && contentsOnly -> {
                     res as MathContentsOnlyVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
                 // 자체제작 문제는 유사문제 정보
                 contentsClassify == InHouse -> {
                     res as MathInHouseContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 
                 // 입시 문제는 입시 출처 정보
                 contentsClassify == Ipsi -> {
                     res as MathIpsiContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 
                 // 그외는 라이선스 정보
                 else -> {
                     res as MathContentsVo
+                    res.likeCount = mathContentsLikeReadCase.countBy(contentsId)
                     res.memberId == memberId
                 }
 
@@ -112,9 +124,12 @@ class MathContentsReadController(
     ): ResponseEntity<ResponseData<Any>> {
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
-        val res = mathContentsReadCase.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
+        val details = mathContentsReadCase.readDetailByMemberId(memberId, ContentsSvcPosbSttsType.Release, pageReq)
 
-        return ResponseUtil.ok(mapOf("contents" to res))
+        // 좋아요 수 셋팅
+        setLikeCount(details, memberId)
+
+        return ResponseUtil.ok(mapOf("contents" to details))
     }
 
     // 사용자 문제
@@ -132,7 +147,7 @@ class MathContentsReadController(
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
-        val res =
+        val details =
             mathContentsReadCase.readDetailByMemberId(
                 profile.memberId,
                 myMemberId,
@@ -140,10 +155,13 @@ class MathContentsReadController(
                 pageReq
             )
 
+        // 좋아요 수 셋팅
+        setLikeCount(details, myMemberId)
+
         return ResponseUtil.ok(
             mapOf(
                 "profile" to profile,
-                "contents" to res,
+                "contents" to details,
             )
         )
     }
@@ -161,9 +179,12 @@ class MathContentsReadController(
 
         // 문제 조회
         val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
-        val res = mathContentsReadCase.readDetailByUnitId(memberId, unitIdList, pageReq)
+        val details = mathContentsReadCase.readDetailByUnitId(memberId, unitIdList, pageReq)
 
-        return ResponseUtil.ok(mapOf("contents" to res))
+        // 좋아요 수 셋팅
+        setLikeCount(details, memberId)
+
+        return ResponseUtil.ok(mapOf("contents" to details))
     }
 
     // 내 저장소 문제 조회
@@ -179,6 +200,28 @@ class MathContentsReadController(
         val pageReq = PageRequestImpl(req.pageNum, req.pageVolume)
         val res = mathContentsReadCase.readById(contentsIdList, pageReq)
         return ResponseUtil.ok(mapOf("contents" to res))
+    }
+
+
+    // 좋아요 누름 여부 및 갯수 셋팅
+    private fun setLikeCount(details: List<MathContentsDetailVo>, memberId: UUID) {
+        // 1. 사용자 좋아요 누름 여부
+        val likeContentsIdList = mathContentsLikeReadCase.readContentsIdByUserId(memberId)
+        details.forEach {
+            if (likeContentsIdList.contains(it.contentsId)) it.isLikeContents = true
+        }
+
+        // 2. like count 전체 조회
+        val contentsIdList = details.map { it.contentsId }
+        val likeCountList = mathContentsLikeReadCase.countBy(contentsIdList)
+
+        // likeCounts를 contentsId로 맵핑
+        val likeCountMap = likeCountList.associateBy({ it.contentsId }, { it.count })
+
+        // details 리스트를 순회하면서 likeCount 업데이트
+        details.map { detail ->
+            detail.likeCount = likeCountMap[detail.contentsId] ?: 0
+        }
     }
 
 }

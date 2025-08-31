@@ -15,6 +15,10 @@ class MockFileStoragePort : FileStoragePort {
         if (uploadDto.name == FAIL_STRING) throw RuntimeException(STUB_EXCEPTION_MSG)
     }
 
+    override fun uploadJson(jsonData: String, fileName: String) {
+        if (jsonData == FAIL_STRING) throw RuntimeException(STUB_EXCEPTION_MSG)
+    }
+
     override fun delete(fileName: String) {
         if (fileName == FAIL_STRING || isThrowException) throw RuntimeException(STUB_EXCEPTION_MSG)
     }

@@ -84,4 +84,6 @@ data class MathContentsOnlyVo(
     val isMyRepoContents: Boolean,
     // 좋아요 여부
     val isLikeContents: Boolean
-)
+) {
+    var likeCount: Long = 0
+}

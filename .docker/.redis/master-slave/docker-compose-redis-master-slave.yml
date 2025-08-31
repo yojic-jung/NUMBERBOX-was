@@ -1,0 +1,65 @@
+services:
+  redis-master:
+    image: redis:latest
+    container_name: redis-master
+    command: [ "redis-server", "/usr/local/etc/redis/redis-master.conf" ]
+    volumes:
+      - ./redis-master.conf:/usr/local/etc/redis/redis-master.conf
+    ports:
+      - "6379:6379"
+      - "6380:6380"
+      - "6381:6381"
+      - "26379:26379"
+      - "26380:26380"
+      - "26381:26381"
+    restart: always
+
+  redis-slave-1:
+    image: redis:latest
+    container_name: redis-slave-1
+    network_mode: "service:redis-master"
+    command: [ "redis-server", "/usr/local/etc/redis/redis-slave1.conf" ]
+    volumes:
+      - ./redis-slave1.conf:/usr/local/etc/redis/redis-slave1.conf
+    depends_on: [ redis-master ]
+    restart: always
+
+  redis-slave-2:
+    image: redis:latest
+    container_name: redis-slave-2
+    network_mode: "service:redis-master"
+    command: [ "redis-server", "/usr/local/etc/redis/redis-slave2.conf" ]
+    volumes:
+      - ./redis-slave2.conf:/usr/local/etc/redis/redis-slave2.conf
+    depends_on: [ redis-master ]
+    restart: always
+
+  sentinel-1:
+    image: redis:latest
+    container_name: sentinel-1
+    network_mode: "service:redis-master"
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel1.conf:/etc/sentinel/sentinel.conf
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always
+
+  sentinel-2:
+    image: redis:latest
+    container_name: sentinel-2
+    network_mode: "service:redis-master"
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel2.conf:/etc/sentinel/sentinel.conf
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always
+
+  sentinel-3:
+    image: redis:latest
+    container_name: sentinel-3
+    network_mode: "service:redis-master"
+    command: [ "redis-sentinel", "/etc/sentinel/sentinel.conf" ]
+    volumes:
+      - ./sentinel3.conf:/etc/sentinel/sentinel.conf
+    depends_on: [ redis-master, redis-slave-1, redis-slave-2 ]
+    restart: always

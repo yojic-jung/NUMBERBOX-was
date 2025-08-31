@@ -8,4 +8,8 @@ class MockMathContentsLikeReadCase : MathContentsLikeReadCase {
     override fun existByContentsIdAndMemberId(contentsId: Long, memberId: UUID): Boolean {
         return contentsId == EXIST_ID
     }
+
+    override fun countBy(contentsId: Long): Long {
+        return 1L
+    }
 }
