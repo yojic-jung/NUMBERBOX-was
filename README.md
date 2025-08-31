@@ -8,6 +8,7 @@
 > **22.02 ~ 22.11(개발) : 웹서비스 구축 및 수학컨텐츠 제작**<br/>
 > **22.11 ~ 23.07(운영) : 유지보수 및 기능 업데이트**<br/>
 > **24.11 ~ 25.03(리팩토링) : 헥사고날 아키텍쳐 도입, 자바 to kotlin 전환, 관리자 제외**
+> **25.07 ~ 25.08(리팩토링) : Redis 도입, kafka 도입**
 <br/>
 
 ## Tech Stack
@@ -19,7 +20,8 @@
 - Module-Structure : Multi-Module
 - Framework: Spring Boot 3.2.x
 - Persistence : JPA, QueryDsl
-- Database: MySQL 8.x
+- Database: MySQL 8.x, Redis
+- Messaging : Kafka
 - Cloud: AWS (EC2, S3, RDS)
 
 ## 시스템 구조
@@ -36,9 +38,12 @@
   ├─ infrastructure
   │     ├─ email-adapter
   │     ├─ hwp-client-adapter
+  │     ├─ persistence-adapter
   │     ├─ orm-jpa-adapter
+  │     ├─ redis-adapter
   │     └─ storage-adapter
   └─ user-interface
+        └─ consumer
         └─ rest-api
 
 .modules
@@ -64,10 +69,13 @@ project는 멀티모듈 헥사고날 아키텍쳐 구조를 갖춘 NUMBERBOX-WAS
 - intrastructure : 비즈니스 로직에서 호출하는 모듈
     - email-adapter : email 서버와 연동되어 email 전송 관련 로직 수행
     - hwp-client-adpater : 한글 파일 변환 서버와 연동되며 한글 파일과 웹(html) 변환 처리 로직 수행
-    - orm-jpa-adapter : DB와 연동되는 영속화 레이어
+    - persistence-adapter : 영속화 레이어의 추상화로 RDB와 Redis를 모두 사용하는 코드 모음
+    - orm-jpa-adapter : RDB와 연동되는 영속화 레이어
+    - redis-adapter : redis DB와 연동되는 영속화 레이어
     - storage-adapter : s3와 연동하여 파일 저장 및 삭제
 - user-interface : 비즈니스 로직을 호출
     - user-interface : 웹서버와 연동되는 controller로 이루어짐
+    - consumer : pub/sub 메시징 시스템으로 메시지를 읽어들이는 consumer
 
 ### modules 소개
 
@@ -93,22 +101,25 @@ pojo 방식으로 구현된 control 모듈과 라이브러리를 의존하고 �
 - 비즈니스 레이어 이후 호출되는 레이어의 인터페이스는 Port라는 postFix를 갖는다.
     - port 인터페이스는 비즈니스 레이어(app-service)에서 정의한다.
 
-| 모듈                                  | 구분        | 클래스명                  | 역할                      |
-|-------------------------------------|-----------|-----------------------|-------------------------|
-| app-service                         | interface | Xxx__ReadCase         | 비즈니스 로직의 읽기 작업 명세서      |
-|                                     |           | Xxx__WriteCase        | 비즈니스 로직의 쓰기 작업 명세서      |
-|                                     | class     | Xxx__ReadService      | Xxx__ReadCase의 구현체      |
-|                                     |           | Xxx__WriteService     | Xxx__WriteCase의 구현체     |
-|                                     | interface | Xxx__OrmPort          | 영속화 레이어 작업 명세서          |
-|                                     |           | Xxx__EmailPort        | Email 전송 작업 명세서         |
-|                                     |           | Xxx__HwpClientPort    | Hwp파일 변환 변환 명세서         |
-|                                     |           | Xxx__StoragePort      | 파일 저장 및 삭제 관리 명세서       |
-| infrastructure : email-adapter      | class     | Xxx__EmailAdapter     | Xxx__EmailPort의 구현체     |
-| infrastructure : hwp-client-adapter |           | Xxx__HwpClientAdapter | Xxx__HwpClientPort의 구현체 |
-| infrastructure : orm-jpa-adapter    |           | Xxx__Repository       | Xxx__ReadOrmPort의 구현체   |
-| infrastructure : storage-adapter    |           | Xxx__S3StorageAdapter | Xxx__StoragePort의 구현체   |
-| user-interface : rest-api           |           | Xxx__ReadController   | 읽기 작업 전용 컨트롤러           |
-|                                     |           | Xxx__WriteController  | 쓰기 작업 전용 컨트롤러           |
+| 모듈                                   | 구분        | 클래스명                       | 역할                      |
+|--------------------------------------|-----------|----------------------------|-------------------------|
+| app-service                          | interface | Xxx__ReadCase              | 비즈니스 로직의 읽기 작업 명세서      |
+|                                      |           | Xxx__WriteCase             | 비즈니스 로직의 쓰기 작업 명세서      |
+|                                      | class     | Xxx__ReadService           | Xxx__ReadCase의 구현체      |
+|                                      |           | Xxx__WriteService          | Xxx__WriteCase의 구현체     |
+|                                      | interface | Xxx__OrmPort               | 영속화 레이어 작업 명세서          |
+|                                      |           | Xxx__EmailPort             | Email 전송 작업 명세서         |
+|                                      |           | Xxx__HwpClientPort         | Hwp파일 변환 변환 명세서         |
+|                                      |           | Xxx__StoragePort           | 파일 저장 및 삭제 관리 명세서       |
+| infrastructure : email-adapter       | class     | Xxx__EmailAdapter          | Xxx__EmailPort의 구현체     |
+| infrastructure : hwp-client-adapter  |           | Xxx__HwpClientAdapter      | Xxx__HwpClientPort의 구현체 |
+| infrastructure : persistence-adapter |           | Xxx__PersistenceRepository | Xxx__ReadOrmPort의 구현체   |
+| infrastructure : orm-jpa-adapter     |           | Xxx__Repository            | Xxx__ReadOrmPort의 구현체   |
+| infrastructure : redis-adapter       |           | Xxx__RedisRepository       | Xxx__ReadOrmPort의 구현체   |
+| infrastructure : storage-adapter     |           | Xxx__S3StorageAdapter      | Xxx__StoragePort의 구현체   |
+| user-interface : consumer            |           | Xxx__Consumer              | 읽기 작업 전용 컨트롤러           |
+| user-interface : rest-api            |           | Xxx__ReadController        | 읽기 작업 전용 컨트롤러           |
+|                                      |           | Xxx__WriteController       | 쓰기 작업 전용 컨트롤러           |
 
 ```
 예시.
